@@ -58,6 +58,11 @@ The steps are approximately as follows:
 9. Run and see a test window
 ```
 If you see a window pop up with a red background, then your configuration has been successful! You can close the window by pressing ESCAPE. Which should trigger an example key callback to close the window.
+
+![Hello World example window][logo]
+
+[logo]: images/helloworld.png "Hello WOrld example window"
+
 ## Built With
 
 * [Maven](https://maven.apache.org/) - Dependency Management
