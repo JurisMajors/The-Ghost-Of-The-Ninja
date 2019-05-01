@@ -91,4 +91,4 @@ fabric.properties
 
 # Ignore other IntelliJ garbage
 .idea/
-DBL-IIS.iml
+*.iml
