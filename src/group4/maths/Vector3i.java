@@ -13,6 +13,7 @@ public class Vector3i {
 
     /**
      * Creates vector (x,y,z)
+     *
      * @param x
      * @param y
      * @param z

@@ -92,6 +92,7 @@ public class Matrix4f {
 
     /**
      * Creates an orthographic view matrix translating world space to view space.
+     *
      * @param left
      * @param right
      * @param bottom
@@ -118,6 +119,7 @@ public class Matrix4f {
 
     /**
      * Multiplies the current matrix with other. Returns the result.
+     *
      * @param other
      * @return this * other
      */
@@ -139,6 +141,7 @@ public class Matrix4f {
 
     /**
      * Create a float buffer from the elements in this matrix
+     *
      * @return float buffer
      */
     public FloatBuffer toFloatBuffer() {
