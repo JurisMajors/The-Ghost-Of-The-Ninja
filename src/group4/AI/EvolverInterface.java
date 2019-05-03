@@ -6,7 +6,7 @@ public interface EvolverInterface {
      * Initializes necessary data structures for storing the population and
      * the population itself.
      */
-    void initPopulation();
+    void initPopulation(int size);
 
     /**
      * Does the evolution of the previously initialized population
@@ -16,6 +16,16 @@ public interface EvolverInterface {
      */
     void evolve(int nrGenerations, int popSize);
 
+    /**
+     * Save the necessary information to a file.
+     * For example, best performing network weights,
+     * fitness functions
+     */
     void saveToFile();
+
+    /**
+     * Log information about the evolution.
+     */
+    void log();
 
 }
