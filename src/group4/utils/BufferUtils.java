@@ -14,6 +14,7 @@ public class BufferUtils {
 
     /**
      * Create a byte buffer from a byte array.
+     *
      * @param array
      * @return byte buffer
      */
@@ -28,6 +29,7 @@ public class BufferUtils {
 
     /**
      * Create a float buffer from a float array.
+     *
      * @param array
      * @return float buffer
      */
@@ -41,6 +43,7 @@ public class BufferUtils {
 
     /**
      * Create an int buffer from an int array.
+     *
      * @param array
      * @return int buffer
      */
