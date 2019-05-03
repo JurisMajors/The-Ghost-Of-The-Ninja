@@ -26,8 +26,6 @@ public class Main implements Runnable {
      * The main logic for controlling the program flow of this class.
      */
     public void run() {
-        System.out.println("LWJGL " + Version.getVersion());
-
         init();
         loop();
 
