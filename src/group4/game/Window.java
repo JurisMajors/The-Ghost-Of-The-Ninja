@@ -1,4 +1,5 @@
 import org.lwjgl.glfw.GLFWVidMode;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
@@ -25,6 +26,7 @@ public class Window {
 
         // Setting the context and showing
         glfwMakeContextCurrent(window);
+        glfwSwapInterval(1); // Enable v-sync
         glfwShowWindow(window);
     }
 
