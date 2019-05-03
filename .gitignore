@@ -92,3 +92,4 @@ fabric.properties
 # Ignore other IntelliJ garbage
 .idea/
 *.iml
+target/
