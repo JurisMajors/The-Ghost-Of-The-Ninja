@@ -15,6 +15,11 @@ public class Brain {
     Brain (String filePath) {
        //TODO: read weights from the filepath
     }
+
+    public String toString() {
+        return "";
+    }
+
     /**
      * Feed forward the game state
      *
