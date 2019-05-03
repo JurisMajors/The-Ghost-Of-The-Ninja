@@ -88,8 +88,51 @@ public class Matrix4f {
         return result;
     }
 
-    public static Matrix4f orthographic(float left, float right, float bottom, float top, float near, float far) throws NotImplementedException {
-        throw new NotImplementedException();
+    /**
+     * Creates an orthographic view matrix translating world space to view space.
+     * @param left
+     * @param right
+     * @param bottom
+     * @param top
+     * @param near
+     * @param far
+     * @return orthographic matrix
+     */
+    public static Matrix4f orthographic(float left, float right, float bottom, float top, float near, float far) {
+        Matrix4f result = identity();
+
+        // squash the screen
+        result.elements[0 + 0 * 4] = 2.0f / (right - left);
+        result.elements[1 + 1 * 4] = 2.0f / (top - bottom);
+        result.elements[2 + 2 * 4] = 2.0f / (far - near);
+
+        // translate the screen
+        result.elements[0 + 3 * 4] = -1 * (right + left) / (right - left);
+        result.elements[1 + 3 * 4] = -1 * (top + bottom) / (top - bottom);
+        result.elements[2 + 3 * 4] = -1 * (far + near) / (far - near);
+
+        return result;
+    }
+
+    /**
+     * Multiplies the current matrix with other.
+     * @param other
+     * @return this * other
+     */
+    public Matrix4f multiply(Matrix4f other) {
+        Matrix4f result = new Matrix4f();
+
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                float sum = 0.0f;
+                for (int elem = 0; elem < SIZE; elem++) {
+                    sum += elements[row + elem * 4] * other.elements[elem * 4 + col];
+                }
+                result.elements[row + col * 4] = sum;
+            }
+        }
+
+        return result;
     }
 
 }
