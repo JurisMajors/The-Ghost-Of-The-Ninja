@@ -75,13 +75,21 @@ public class Main implements Runnable {
         // Set the clear color
         glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 
+        timer = new Timer();
+        boolean render = true;
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while ( !glfwWindowShouldClose(window) ) {
+            while (timer.getDeltaTime() >= timer.getFrameTime()) {
+                timer.nextFrame();
+                render = true;
+            }
 
-
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-            glfwSwapBuffers(window); // swap the color buffers
+            if (render) {
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+                glfwSwapBuffers(window); // swap the color buffers
+                render = false;
+            }
 
             // Poll for window events. The key callback above will only be
             // invoked during this call.
