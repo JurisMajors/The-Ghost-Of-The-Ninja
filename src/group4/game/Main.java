@@ -1,5 +1,6 @@
 package group4.game;
 
+import group4.tests.ShaderTest;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
@@ -86,6 +87,7 @@ public class Main implements Runnable {
             }
 
             if (render) {
+                new ShaderTest();
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
                 glfwSwapBuffers(window); // swap the color buffers
                 render = false;
