@@ -115,7 +115,7 @@ public class Matrix4f {
     }
 
     /**
-     * Multiplies the current matrix with other.
+     * Multiplies the current matrix with other. Returns the result.
      * @param other
      * @return this * other
      */
