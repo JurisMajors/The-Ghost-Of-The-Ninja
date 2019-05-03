@@ -13,6 +13,8 @@ public class Main implements Runnable {
     private Window win;
     private long window; // The id of the window
 
+    private Timer timer;
+
     /**
      * Creates a new thread on which it wel run() the game.
      */
@@ -77,8 +79,9 @@ public class Main implements Runnable {
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while ( !glfwWindowShouldClose(window) ) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
+
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             glfwSwapBuffers(window); // swap the color buffers
 
             // Poll for window events. The key callback above will only be
