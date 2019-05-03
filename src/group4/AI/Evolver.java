@@ -40,6 +40,6 @@ public class Evolver {
         int elitism = Integer.parseInt(args[1]);
         int genCount = Integer.parseInt(args[2]);
 
-        Brain result = engine.evolve(popSize, elitism, new GenerationCount(genCount));
+        // Brain result = engine.evolve(popSize, elitism, new GenerationCount(genCount));
     }
 }
