@@ -1,3 +1,4 @@
+package group4.AI;
 public abstract class AbstractGhost {
     AbstractMutation mutator;
     AbstractCrossover reproducer;

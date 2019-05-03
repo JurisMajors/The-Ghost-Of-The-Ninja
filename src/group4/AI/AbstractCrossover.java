@@ -1,3 +1,4 @@
+package group4.AI;
 public abstract class AbstractCrossover {
     /**
      * Produces a new {@link AbstractGhost} by the reproducer crossover rule
