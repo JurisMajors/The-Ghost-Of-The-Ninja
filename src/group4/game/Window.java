@@ -28,6 +28,22 @@ public class Window {
         glfwShowWindow(window);
     }
 
+    public long getWindowId() {
+        return this.window;
+    }
+
+    public int getWidth() {
+        return this.width;
+    }
+
+    public int getHeight() {
+        return this.height;
+    }
+
+    public int[] getSize() {
+        return new int[] {this.width, this.height};
+    }
+
     public void setSize(int width, int height) {
         this.width = width;
         this.height = height;

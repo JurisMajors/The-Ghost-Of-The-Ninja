@@ -14,6 +14,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Main {
 
     // The window handle
+    private Window win;
     private long window;
 
     public void run() {
@@ -46,10 +47,10 @@ public class Main {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
         // Create the window
-        window = glfwCreateWindow(300, 300, "Hello World!", NULL, NULL);
-        if ( window == NULL )
-            throw new RuntimeException("Failed to create the GLFW window");
+        win = new Window();
+        window = win.getWindowId();
 
+        // TODO: Replace with Input class
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
@@ -109,7 +110,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        new HelloWorld().run();
+        new Main().run();
     }
 
 }
