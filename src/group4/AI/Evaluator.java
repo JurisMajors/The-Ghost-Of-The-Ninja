@@ -1,12 +1,20 @@
 package group4.AI;
 
-public class Evaluator {
-    /**
-     * Run an iteration of the game with the given network.
-     * @param X the network
-     * @return the score of the network
-     */
-    public double evaluate(Brain b) {
-       return 0;
+import org.uncommons.watchmaker.framework.FitnessEvaluator;
+
+import java.util.List;
+
+public class Evaluator<Brain> implements FitnessEvaluator<Brain> {
+
+    @Override
+    public double getFitness(Brain brain, List<? extends Brain> list) {
+        //TODO: Create ghost player, play a game with it, evaluate results
+        return 0;
+    }
+
+    @Override
+    public boolean isNatural() {
+        return false; // if true then high fitness score better
+                        // if false then low fitness better
     }
 }

@@ -437,9 +437,9 @@
             <classifier>${lwjgl.natives}</classifier>
         </dependency>
         <dependency>
-            <groupId>io.jenetics</groupId>
-            <artifactId>jenetics</artifactId>
-            <version>4.4.0</version>
+            <groupId>org.uncommons.watchmaker</groupId>
+            <artifactId>watchmaker-framework</artifactId>
+            <version>0.7.0</version>
         </dependency>
     </dependencies>
 </project>
