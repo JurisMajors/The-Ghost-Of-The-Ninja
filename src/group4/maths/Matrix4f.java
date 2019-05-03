@@ -1,5 +1,9 @@
 package group4.maths;
 
+import group4.utils.BufferUtils;
+
+import java.nio.FloatBuffer;
+
 public class Matrix4f {
 
     // length and width of the matrix
@@ -131,6 +135,14 @@ public class Matrix4f {
         }
 
         return result;
+    }
+
+    /**
+     * Create a float buffer from the elements in this matrix
+     * @return float buffer
+     */
+    public FloatBuffer toFloatBuffer() {
+        return BufferUtils.getFloatBuffer(elements);
     }
 
 }
