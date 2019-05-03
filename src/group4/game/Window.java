@@ -1,3 +1,5 @@
+package group4.game;
+
 import org.lwjgl.glfw.GLFWVidMode;
 
 import static org.lwjgl.glfw.GLFW.*;
