@@ -6,7 +6,6 @@ import org.uncommons.watchmaker.framework.factories.AbstractCandidateFactory;
 import org.uncommons.watchmaker.framework.operators.EvolutionPipeline;
 import org.uncommons.watchmaker.framework.selection.RouletteWheelSelection;
 import org.uncommons.watchmaker.framework.termination.GenerationCount;
-import org.uncommons.watchmaker.framework.termination.TargetFitness;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +19,10 @@ import java.util.Random;
  * generationCount = how many generations until termination
  */
 public class Evolver {
+
+    private static void toFile(Brain b) {
+
+    }
 
     public static void main(String[] args) {
         List<EvolutionaryOperator<Brain>> operators = new LinkedList<>();
@@ -41,5 +44,6 @@ public class Evolver {
         int genCount = Integer.parseInt(args[2]);
 
         // Brain result = engine.evolve(popSize, elitism, new GenerationCount(genCount));
+        // Evolver.toFile(result);
     }
 }

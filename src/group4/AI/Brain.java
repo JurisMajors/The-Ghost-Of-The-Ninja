@@ -8,10 +8,13 @@ public class Brain {
     /**
      * Engine stuff to an actual network
      */
-    Brain() {
-        //TODO: translate to reasonable network structure
+    Brain () {
+        //TODO: given some parameters translate to a feed forward NN
     }
 
+    Brain (String filePath) {
+       //TODO: read weights from the filepath
+    }
     /**
      * Feed forward the game state
      *

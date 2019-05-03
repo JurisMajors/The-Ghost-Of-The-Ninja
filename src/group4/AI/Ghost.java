@@ -6,7 +6,7 @@ package group4.AI;
 public class Ghost { //TODO: implements Player
     Brain brain;
 
-    Ghost(Brain b) {
+    Ghost (Brain b) {
         this.brain = b;
     }
 }
