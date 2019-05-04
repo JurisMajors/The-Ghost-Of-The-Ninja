@@ -26,6 +26,6 @@ public class BrainFactory extends AbstractCandidateFactory {
 
     @Override
     public Object generateRandomCandidate(Random random) {
-        return null;
+        return new Brain(layerInfo, random.nextInt());
     }
 }

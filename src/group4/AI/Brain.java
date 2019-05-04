@@ -1,21 +1,50 @@
 package group4.AI;
 
+import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
+import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.layers.DenseLayer;
+import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.util.ModelSerializer;
+import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.learning.config.Nesterovs;
+import org.nd4j.linalg.lossfunctions.LossFunctions;
 
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Contains the neural network which acts as the "ghost" brain.
  */
 public class Brain {
     MultiLayerNetwork nn;
+    double learningRate = 0.01;
     /**
      * Engine stuff to an actual network
      */
-    Brain (int[] layerSizes) {
-        //TODO: given some parameters translate to a feed forward NN
+    Brain (int[] layerSizes, int seed) {
+        NeuralNetConfiguration.ListBuilder lb = new NeuralNetConfiguration.Builder()
+                .seed(seed)
+                .weightInit(WeightInit.XAVIER)
+                .updater(new Nesterovs(learningRate, 0.9))
+                .list();
+
+        // build the dense layers
+        for (int i = 0; i < layerSizes.length - 1; i++) {
+            lb.layer(new DenseLayer.Builder().nIn(layerSizes[i]).nOut(layerSizes[i + 1])
+                    .activation(Activation.RELU)
+                    .build());
+
+        }
+        // finalize the configuration by adding the output layer
+        MultiLayerConfiguration conf = lb.layer(new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                .activation(Activation.SOFTMAX)
+                .nIn(layerSizes[layerSizes.length - 2]).nOut(layerSizes[layerSizes.length - 1]).build())
+                .build();
+
+        // apply the configuration
+        nn = new MultiLayerNetwork(conf);
     }
 
     Brain () {
@@ -23,7 +52,6 @@ public class Brain {
     }
 
     Brain (String filePath) throws IOException {
-       //TODO: read weights from the filepath
         File f = new File(filePath);
         nn = ModelSerializer.restoreMultiLayerNetwork(f);
     }
@@ -33,7 +61,7 @@ public class Brain {
     }
 
     /**
-     * Feed forward the game state
+     * Feed forward the game state through the brain to get a move
      *
      * @param state the current state of the game
      * @return move to make
