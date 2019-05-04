@@ -7,8 +7,8 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 public class Window {
     private long window;
-    private int width = 1280;
-    private int height = 720;
+    private static int width = 1280;
+    private static int height = 720;
 
     public Window() {
         // Configure GLFW
@@ -36,20 +36,20 @@ public class Window {
         return this.window;
     }
 
-    public int getWidth() {
-        return this.width;
+    public static int getWidth() {
+        return width;
     }
 
-    public int getHeight() {
-        return this.height;
+    public static int getHeight() {
+        return height;
     }
 
-    public int[] getSize() {
-        return new int[] {this.width, this.height};
+    public static int[] getSize() {
+        return new int[] {width, height};
     }
 
-    public void setSize(int width, int height) {
-        this.width = width;
-        this.height = height;
+    public static void setSize(int w, int h) {
+        width = w;
+        height = h;
     }
 }

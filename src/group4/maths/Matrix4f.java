@@ -1,6 +1,8 @@
 package group4.maths;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import group4.utils.BufferUtils;
+
+import java.nio.FloatBuffer;
 
 public class Matrix4f {
 
@@ -90,6 +92,7 @@ public class Matrix4f {
 
     /**
      * Creates an orthographic view matrix translating world space to view space.
+     *
      * @param left
      * @param right
      * @param bottom
@@ -115,7 +118,8 @@ public class Matrix4f {
     }
 
     /**
-     * Multiplies the current matrix with other.
+     * Multiplies the current matrix with other. Returns the result.
+     *
      * @param other
      * @return this * other
      */
@@ -133,6 +137,15 @@ public class Matrix4f {
         }
 
         return result;
+    }
+
+    /**
+     * Create a float buffer from the elements in this matrix
+     *
+     * @return float buffer
+     */
+    public FloatBuffer toFloatBuffer() {
+        return BufferUtils.getFloatBuffer(elements);
     }
 
 }

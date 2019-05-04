@@ -1,10 +1,15 @@
 package group4.game;
 
+import group4.input.KeyBoard;
+import group4.input.MouseClicks;
+import group4.input.MouseMovement;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.opengl.GL;
 import group4.tests.ShaderTest;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
-import static org.lwjgl.glfw.Callbacks.*;
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -43,28 +48,28 @@ public class Main implements Runnable {
 
     /**
      * Function for all our initialization logic. E.g.:
-     *      - create the window
-     *      - create callbacks
-     *      - ...
+     * - create the window
+     * - create callbacks
+     * - ...
      */
     private void init() {
         // Setup an error callback to output errors to System.err.
         GLFWErrorCallback.createPrint(System.err).set();
 
         // Initialize GLFW. Most GLFW functions will not work before doing this.
-        if ( !glfwInit() )
+        if (!glfwInit())
             throw new IllegalStateException("Unable to initialize GLFW");
 
         // Create the window
         win = new Window();
         window = win.getWindowId();
 
-        // TODO: Replace with Input class
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-                glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
-        });
+        glfwSetKeyCallback(window, new KeyBoard());
+        // Setup mouse button callback. It will be called when a button is pressed on the mouse.
+        glfwSetMouseButtonCallback(window, new MouseClicks());
+        // Setup mouse movement callback. It will be called when the mouse moves.
+        glfwSetCursorPosCallback(window, new MouseMovement());
     }
 
     /**
@@ -80,7 +85,7 @@ public class Main implements Runnable {
         boolean render = true;
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        while ( !glfwWindowShouldClose(window) ) {
+        while (!glfwWindowShouldClose(window)) {
             while (timer.getDeltaTime() >= timer.getFrameTime()) {
                 timer.nextFrame();
                 render = true;
@@ -96,6 +101,11 @@ public class Main implements Runnable {
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();
+
+            // check if the user wants to exit the game
+            if (KeyBoard.isKeyDown(GLFW_KEY_ESCAPE)) {
+                glfwSetWindowShouldClose(window, true);
+            }
         }
     }
 
