@@ -1,12 +1,22 @@
 package group4.graphics;
 
+import group4.maths.Matrix4f;
+import group4.maths.Vector3f;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.lwjgl.opengl.GL41.*;
 
 public class Shader {
+    public static final int VERTEX_ATTRIBUTE = 0;
+    public static final int TEXCOORD_ATTRIBUTE = 1;
+    
     // For storing the program ids required for a shader.
     private int shaderId;
     private int vertShader;
     private int fragShader;
+    private Map<String, Integer> uniformLocationCache = new HashMap<>();
 
     public Shader(String vertSource, String fragSource) {
         // Create the shader program
@@ -45,8 +55,6 @@ public class Shader {
         glUseProgram(0);
     }
 
-    // TODO: setUniform functions. Which we currently might not even need.
-
     /**
      * Finds the specific location of a given uniform within the shader based on its name.
      *
@@ -54,14 +62,42 @@ public class Shader {
      * @return int, location of the uniform within the shader. -1 if uniform does not exist.
      */
     private int getUniformLocation(String name) {
-        // TODO: Cache the locations if we start doing this call often.
+        if (uniformLocationCache.containsKey(name)) {
+            return uniformLocationCache.get(name);
+        }
         int location = glGetUniformLocation(shaderId, name);
         if (location == -1) {
             System.err.printf("[WARNING] Uniform location %s does not exist in Shader %d \n", name, shaderId);
+        } else {
+            uniformLocationCache.put(name, location);
         }
         return location;
     }
 
+    public void setUniform1i(String name, int value) {
+        int location = getUniformLocation(name);
+        glUniform1i(location, value);
+    }
+
+    public void setUniform1f(String name, float value) {
+        int location = getUniformLocation(name);
+        glUniform1f(location, value);
+    }
+
+    public void setUniform2f(String name, float v1, float v2) {
+        int location = getUniformLocation(name);
+        glUniform2f(location, v1, v2);
+    }
+
+    public void setUniform3f(String name, Vector3f vector) {
+        int location = getUniformLocation(name);
+        glUniform3f(location, vector.x, vector.y, vector.z);
+    }
+
+    public void setUniformMat4f(String name, Matrix4f matrix) {
+        int location = getUniformLocation(name);
+        glUniformMatrix4fv(location, false, matrix.toFloatBuffer());
+    }
     /**
      * Given a shader type and the source code of the shader, this function creates and compiles
      * the appropriate shader for use in OpenGL.
