@@ -69,17 +69,18 @@ public class Main implements Runnable {
         glfwSetMouseButtonCallback(window, new MouseClicks());
         // Setup mouse movement callback. It will be called when the mouse moves.
         glfwSetCursorPosCallback(window, new MouseMovement());
+
+        // Some additional OpenGL configuration
+        GL.createCapabilities(); // Enable OpenGL bindings for usage by GLFW. Critical!
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     /**
      * The main game loop where we update the GameState and render (if required).
      */
     private void loop() {
-        GL.createCapabilities(); // Enable OpenGL bindings for usage by GLFW. Critical!
-
-        // Set the clear color
-        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-
         timer = new Timer();
         boolean render = true;
         ShaderTest test = new ShaderTest();
@@ -99,7 +100,6 @@ public class Main implements Runnable {
 
                 glfwSwapBuffers(window); // swap the color buffers
                 render = false;
-
             }
 
             // Poll for window events. The key callback above will only be
