@@ -96,7 +96,7 @@ public class Main implements Runnable {
             if (render) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-                test.draw();
+                test.render();
 
                 glfwSwapBuffers(window); // swap the color buffers
                 render = false;
