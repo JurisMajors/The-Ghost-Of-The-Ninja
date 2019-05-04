@@ -20,18 +20,21 @@ import java.util.Random;
  * filePath = where to store best model
  */
 public class Evolver {
+    /** nr of brains per generation **/
     public final static int populationSize = 100;
+    /** TODO **/
     public final static int elitism = (int)(populationSize * 0.2);
+    /** generation count until termination **/
     public final static int genCount = 100;
+    /** if max fit known, then terminate on that otherwise leave max val. **/
     public final static int maxFit = Integer.MAX_VALUE;
-
+    /** hidden layer sizes (dont include input/output) **/
+    public final static int[] layerSizes = new int[]{100, 200, 300, 100};
+    /** decoder of gamestates **/
+    public final static NNGameStateInterface decoder = new NNGameState();
 
     private static void toFile(Brain b, String filePath) throws IOException {
         b.toFile(filePath);
-    }
-
-    private static int[] getLayerSizes(String arg) {
-        return null;
     }
 
     public static void main(String[] args) {
@@ -45,7 +48,7 @@ public class Evolver {
         EvolutionaryOperator<Brain> pipeline = new EvolutionPipeline<>(operators);
 
         // factory of neural networks
-        AbstractCandidateFactory<Brain> factory = new BrainFactory();
+        AbstractCandidateFactory<Brain> factory = new BrainFactory(Evolver.layerSizes, decoder);
         FitnessEvaluator<Brain> fitnessEvaluator = new Evaluator<>();
         SelectionStrategy<Object> selection = new RouletteWheelSelection();
         Random rng = new MersenneTwisterRNG();

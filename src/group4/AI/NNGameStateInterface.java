@@ -7,4 +7,6 @@ public interface NNGameStateInterface {
      * @return array of doubles, size is #tiles on the screen
      */
     double[] decode(); //TODO: GameState);
+
+    int getInputSize();
 }
