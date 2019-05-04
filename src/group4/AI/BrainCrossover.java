@@ -31,6 +31,8 @@ public class BrainCrossover<Brain> extends AbstractCrossover<Brain> {
 
     @Override
     protected List<Brain> mate(Brain brain, Brain t1, int i, Random random) {
+        // below a link to see how to modify d4j weights
+        // https://stackoverflow.com/questions/42806761/initialize-custom-weights-in-deeplearning4j
         return null;
     }
 }

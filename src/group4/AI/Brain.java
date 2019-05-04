@@ -23,6 +23,7 @@ public class Brain {
     MultiLayerNetwork nn;
     NNGameStateInterface decoder;
     double learningRate = 0.01;
+    
     /**
      * Engine stuff to an actual network
      */
@@ -45,6 +46,9 @@ public class Brain {
                 .activation(Activation.SOFTMAX)
                 .nIn(layerSizes[layerSizes.length - 2]).nOut(layerSizes[layerSizes.length - 1]).build())
                 .build();
+
+        conf.setBackprop(false);
+        conf.setPretrain(false);
 
         // apply the configuration
         nn = new MultiLayerNetwork(conf);
