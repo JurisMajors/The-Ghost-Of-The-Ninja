@@ -1,23 +1,35 @@
 package group4.AI;
 
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.util.ModelSerializer;
+
+import java.io.IOException;
+import java.io.File;
+
 /**
  * Contains the neural network which acts as the "ghost" brain.
  */
 public class Brain {
-
+    MultiLayerNetwork nn;
     /**
      * Engine stuff to an actual network
      */
-    Brain () {
+    Brain (int[] layerSizes) {
         //TODO: given some parameters translate to a feed forward NN
     }
 
-    Brain (String filePath) {
-       //TODO: read weights from the filepath
+    Brain () {
+        //TODO: can do some custom network here
     }
 
-    public String toString() {
-        return "";
+    Brain (String filePath) throws IOException {
+       //TODO: read weights from the filepath
+        File f = new File(filePath);
+        nn = ModelSerializer.restoreMultiLayerNetwork(f);
+    }
+
+    void toFile(String filePath) throws IOException {
+        ModelSerializer.writeModel(this.nn, filePath, false);
     }
 
     /**
