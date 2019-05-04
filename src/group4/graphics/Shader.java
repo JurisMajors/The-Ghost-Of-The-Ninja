@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL41.*;
 public class Shader {
     public static final int VERTEX_ATTRIBUTE = 0;
     public static final int TEXCOORD_ATTRIBUTE = 1;
-    
+
     // For storing the program ids required for a shader.
     private int shaderId;
     private int vertShader;
