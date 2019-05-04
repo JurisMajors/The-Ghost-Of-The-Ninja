@@ -8,17 +8,20 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Contains the neural network which acts as the "ghost" brain.
  */
 public class Brain {
     MultiLayerNetwork nn;
+    NNGameStateInterface decoder;
     double learningRate = 0.01;
     /**
      * Engine stuff to an actual network
@@ -60,14 +63,23 @@ public class Brain {
         ModelSerializer.writeModel(this.nn, filePath, false);
     }
 
+    void setDecoder(NNGameStateInterface dec) {
+        this.decoder = dec;
+    }
+
     /**
      * Feed forward the game state through the brain to get a move
      *
-     * @param state the current state of the game
+     * @param input decoded state of the game
      * @return move to make
      */
-    public String feedForward(NNGameStateInterface state) {
+    public String feedForward(INDArray input) {
+        // this can be changed that feed forward takes
+        //  a game state as an input and does the decoding here
+        // probably preferable, but no game state class yet
         //TODO: Use better move encoding
+        List<INDArray> result = nn.feedForward(input);
+        //TODO: Translate resulting array to a move
         return "";
     }
 }

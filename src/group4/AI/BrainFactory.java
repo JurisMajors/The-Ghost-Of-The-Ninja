@@ -6,12 +6,14 @@ import java.util.Random;
 
 public class BrainFactory extends AbstractCandidateFactory {
     int[] layerInfo;
+    NNGameStateInterface decoder;
     /**
      * Give neural network sizes.
      */
     BrainFactory(int[] sizes, NNGameStateInterface decoder) {
         layerInfo = new int[sizes.length + 2]; // input and output extra
-        int input = decoder.getInputSize();
+        this.decoder = decoder;
+        int input = this.decoder.getInputSize();
 
         // input layer
         layerInfo[0] =  input;
@@ -26,6 +28,8 @@ public class BrainFactory extends AbstractCandidateFactory {
 
     @Override
     public Object generateRandomCandidate(Random random) {
-        return new Brain(layerInfo, random.nextInt());
+        Brain b = new Brain(layerInfo, random.nextInt());
+        b.setDecoder(decoder);
+        return b;
     }
 }
