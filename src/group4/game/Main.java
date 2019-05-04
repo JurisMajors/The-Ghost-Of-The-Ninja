@@ -6,8 +6,7 @@ import group4.input.MouseMovement;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import group4.tests.ShaderTest;
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
+
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
