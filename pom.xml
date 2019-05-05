@@ -452,5 +452,24 @@
             <artifactId>ashley</artifactId>
             <version>1.7.3</version>
         </dependency>
+        <!-- genetic algorithm pipeline framework -->
+        <dependency>
+            <groupId>org.uncommons.watchmaker</groupId>
+            <artifactId>watchmaker-framework</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+        <!-- neural network library -->
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-core</artifactId>
+            <version>1.0.0-beta3</version>
+        </dependency>
+        <!-- backend for NN lib, can change to GPU
+        see: https://deeplearning4j.org/docs/latest/deeplearning4j-config-maven -->
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-native-platform</artifactId>
+            <version>1.0.0-beta3</version>
+        </dependency>
     </dependencies>
 </project>

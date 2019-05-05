@@ -5,6 +5,8 @@ import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import group4.tests.ShaderTest;
+
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -67,19 +69,22 @@ public class Main implements Runnable {
         glfwSetMouseButtonCallback(window, new MouseClicks());
         // Setup mouse movement callback. It will be called when the mouse moves.
         glfwSetCursorPosCallback(window, new MouseMovement());
+
+        // Some additional OpenGL configuration
+        GL.createCapabilities(); // Enable OpenGL bindings for usage by GLFW. Critical!
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     /**
      * The main game loop where we update the GameState and render (if required).
      */
     private void loop() {
-        GL.createCapabilities(); // Enable OpenGL bindings for usage by GLFW. Critical!
-
-        // Set the clear color
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
-
         timer = new Timer();
         boolean render = true;
+        ShaderTest test = new ShaderTest();
+
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
@@ -90,6 +95,9 @@ public class Main implements Runnable {
 
             if (render) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
+                test.render();
+
                 glfwSwapBuffers(window); // swap the color buffers
                 render = false;
             }

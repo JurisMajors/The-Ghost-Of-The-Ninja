@@ -1,3 +1,5 @@
+package group4.game;
+
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
