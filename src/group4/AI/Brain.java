@@ -28,6 +28,8 @@ public class Brain {
      * Engine stuff to an actual network
      */
     Brain (int[] layerSizes, int seed) {
+        // TODO: FINALIZE NETWORK ARCHITECTURE
+
         NeuralNetConfiguration.ListBuilder lb = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .weightInit(WeightInit.XAVIER)
@@ -52,10 +54,18 @@ public class Brain {
 
         // apply the configuration
         nn = new MultiLayerNetwork(conf);
+        nn.init();
     }
 
     Brain (MultiLayerNetwork network) {
         this.nn = network;
+    }
+
+    Brain (Brain b) {
+         // clone the network
+        this.nn = b.nn.clone();
+        // pass on the level decoder too
+        this.decoder = b.decoder;
     }
 
     Brain (String filePath) throws IOException {
