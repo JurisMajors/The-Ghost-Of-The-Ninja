@@ -21,7 +21,7 @@ public abstract class Level {
 
 
     /**
-     * Initializes the level
+     * Initializes the level using factory & template method
      * Override @code{_createRoot} and @code{_createAdditionalModules} to specify the modules to be used for the level
      */
     public Level() {
@@ -31,8 +31,10 @@ public abstract class Level {
         this._modules.add(this._rootModule);
 
         this._createAdditionalModules();
-        this._checkSanity();
+
         this._currentModule = this._rootModule;
+
+        this._checkSanity();
     }
 
 
@@ -46,6 +48,9 @@ public abstract class Level {
 
         if (!this._modules.contains(this._rootModule))
             throw new IllegalStateException("Level: the root modules should be included in the level-modules");
+
+        if (this._currentModule == null)
+            throw new IllegalStateException("Level: the current module cannot be null");
     }
 
 
