@@ -1,4 +1,4 @@
-package group4.ECS;
+package group4.ECS.components;
 
 import com.badlogic.ashley.core.Component;
 
