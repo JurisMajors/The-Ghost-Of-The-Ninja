@@ -54,8 +54,8 @@ public class Brain {
         nn = new MultiLayerNetwork(conf);
     }
 
-    Brain () {
-        //TODO: can do some custom network here
+    Brain (MultiLayerNetwork network) {
+        this.nn = network;
     }
 
     Brain (String filePath) throws IOException {
@@ -69,6 +69,17 @@ public class Brain {
 
     void setDecoder(NNGameStateInterface dec) {
         this.decoder = dec;
+    }
+
+    @Override
+    protected Brain clone() {
+        // clone the network
+        MultiLayerNetwork networkClone = nn.clone();
+        // put it in a new object
+        Brain brainClone = new Brain(networkClone);
+        // pass on the level decoder too
+        brainClone.decoder = this.decoder;
+        return brainClone;
     }
 
     /**
