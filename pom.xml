@@ -451,6 +451,7 @@
             <groupId>com.badlogicgames.ashley</groupId>
             <artifactId>ashley</artifactId>
             <version>1.7.3</version>
+        </dependency>
         <!-- genetic algorithm pipeline framework -->
         <dependency>
             <groupId>org.uncommons.watchmaker</groupId>
