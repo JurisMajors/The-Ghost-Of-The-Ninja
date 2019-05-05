@@ -11,6 +11,8 @@ public class MovementSystem extends EntitySystem {
 
     public MovementSystem() {}
 
+    public MovementSystem(int priority) {}
+
     public void addedToEngine(Engine engine) {
         entities = engine.getEntitiesFor(Families.movementFamily);
     }

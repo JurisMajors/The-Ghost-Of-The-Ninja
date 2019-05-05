@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Component;
 
 import java.io.File;
 
-public class SoundComponent implements Component {
+public class AudioComponent implements Component {
 
     // don't create new file, refer to existing audio file
     public File misc = null;

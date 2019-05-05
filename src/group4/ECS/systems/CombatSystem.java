@@ -3,19 +3,18 @@ package group4.ECS.systems;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.etc.Families;
 
-public class RenderSystem extends EntitySystem {
+public class CombatSystem extends EntitySystem {
     private ImmutableArray<Entity> entities;
 
-    public RenderSystem() {}
+    public CombatSystem() {}
 
-    public RenderSystem(int priority) {}
+    public CombatSystem(int priority) {}
 
     public void addedToEngine(Engine engine) {
-        entities = engine.getEntitiesFor(Families.graphicsFamily);
+        entities = engine.getEntitiesFor(Families.combatFamily);
     }
 
     public void removedFromEngine(Engine engine) {}

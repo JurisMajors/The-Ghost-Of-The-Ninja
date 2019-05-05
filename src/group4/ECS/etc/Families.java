@@ -9,14 +9,31 @@ public class Families {
     public static final Family graphicsFamily = Family
             .all(GraphicsComponent.class, PositionComponent.class).get();
 
-    // for all entities of the physicsFamily collision, gravity etc will be calculated
+    // for all entities of the physicsFamily collision, gravity, pushback(implicit movement) etc will be calculated
     public static final Family physicsFamily = Family
             .all(PhysicsComponent.class, PositionComponent.class, MovementComponent.class)
             .one(DimensionComponent.class, GraphicsComponent.class).get();
 
-    // movement will be computed for each of the entities in movementFamily
+    // all moving entities, i.e. having a velocity and a position and an input (explicit movement)
     public static final Family movementFamily = Family
-            .all(MovementComponent.class)
-            .one(GraphicsComponent.class, DimensionComponent.class).get();
+            .all(MovementComponent.class, PositionComponent.class, AIInputComponent.class).get();
+
+    // all entities which require animation
+    public static final Family animationFamily = Family
+            .all(PositionComponent.class, GraphicsComponent.class).get();
+
+    // all entities having some sort of audio
+    public static final Family audioFamily = Family
+            .all(AudioComponent.class).get();
+
+    // all consumables, items
+    public static final Family consumableFamily = Family
+            .all(ConsumableComponent.class, PositionComponent.class).get();
+
+    // all enemies, the player and destructible objects
+    public static final Family combatFamily = Family
+            .all(PositionComponent.class, StatsComponent.class, GraphicsComponent.class).get();
+
+
 
 }
