@@ -4,7 +4,7 @@ import org.uncommons.watchmaker.framework.factories.AbstractCandidateFactory;
 
 import java.util.Random;
 
-public class BrainFactory extends AbstractCandidateFactory {
+public class BrainFactory extends AbstractCandidateFactory<Brain> {
     int[] layerInfo;
     NNGameStateInterface decoder;
     /**
@@ -27,7 +27,7 @@ public class BrainFactory extends AbstractCandidateFactory {
     }
 
     @Override
-    public Object generateRandomCandidate(Random random) {
+    public Brain generateRandomCandidate(Random random) {
         Brain b = new Brain(layerInfo, random.nextInt());
         b.setDecoder(decoder);
         return b;

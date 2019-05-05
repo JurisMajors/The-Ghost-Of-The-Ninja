@@ -9,7 +9,7 @@ import org.uncommons.watchmaker.framework.EvolutionaryOperator;
 
 import java.util.*;
 
-public class BrainMutation implements EvolutionaryOperator {
+public class BrainMutation implements EvolutionaryOperator<Brain> {
     private final NumberGenerator<Probability> mutationProb;
 
 
@@ -64,12 +64,12 @@ public class BrainMutation implements EvolutionaryOperator {
 
 
     @Override
-    public List apply(List list, Random random) {
+    public List<Brain> apply(List<Brain> list, Random random) {
         // watchmakers framework specifies that new objects have to be created
         // not modify the given
         List<Brain> mutated = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            mutated.add(apply((Brain) list.get(i), random));
+            mutated.add(apply(list.get(i), random));
         }
         return mutated;
     }

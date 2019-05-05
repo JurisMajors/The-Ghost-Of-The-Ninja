@@ -4,7 +4,7 @@ import org.uncommons.watchmaker.framework.FitnessEvaluator;
 
 import java.util.List;
 
-public class Evaluator<Brain> implements FitnessEvaluator<Brain> {
+public class Evaluator implements FitnessEvaluator<Brain> {
 
     @Override
     public double getFitness(Brain brain, List<? extends Brain> list) {

@@ -52,7 +52,7 @@ public class Evolver {
 
         // factory of neural networks
         AbstractCandidateFactory<Brain> factory = new BrainFactory(Evolver.layerSizes, decoder);
-        FitnessEvaluator<Brain> fitnessEvaluator = new Evaluator<>();
+        FitnessEvaluator<Brain> fitnessEvaluator = new Evaluator();
         SelectionStrategy<Object> selection = new RouletteWheelSelection();
         Random rng = new MersenneTwisterRNG();
 

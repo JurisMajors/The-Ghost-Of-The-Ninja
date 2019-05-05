@@ -7,7 +7,7 @@ import org.uncommons.watchmaker.framework.operators.AbstractCrossover;
 import java.util.List;
 import java.util.Random;
 
-public class BrainCrossover<Brain> extends AbstractCrossover<Brain> {
+public class BrainCrossover extends AbstractCrossover<Brain> {
 
     public BrainCrossover() {
         this(1);
