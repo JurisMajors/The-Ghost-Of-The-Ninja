@@ -3,6 +3,7 @@ package group4.levelSystem;
 import com.badlogic.ashley.core.Entity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -19,10 +20,10 @@ public class Module {
     public static final int _width = 64;
 
     // Keep track of the level that this module instance is part of
-    private Level level;
+    private Level _level;
 
     // List that keeps track of all the entities in the module
-    private List<Entity> entities;
+    private List<Entity> _entities;
 
 
     /**
@@ -32,16 +33,16 @@ public class Module {
     public Module(Level l) {
         if (l == null) throw new IllegalArgumentException("Module: Level cannot be null");
 
-        this.level = l;
-        this.entities = new ArrayList<>();
-        this.constructLevel();
+        this._level = l;
+        this._entities = new ArrayList<>();
+        this._constructModule();
     }
 
 
     /**
-     * Populates @code{this.entities} with default entities for the level
+     * Populates @code{this.entities} with default entities for the module
      */
-    private void constructLevel() {}
+    protected void _constructModule() {}
 
 
     /**
@@ -49,7 +50,7 @@ public class Module {
      * @param e the entity to add to the module
      */
     public void _addEntity(Entity e) {
-        this.entities.add(e);
+        this._entities.add(e);
     }
 
 
@@ -58,6 +59,17 @@ public class Module {
      * @param e the entity to remove from the module
      */
     public void _removeEntity(Entity e) {
-        this.entities.remove(e);
+        this._entities.remove(e);
     }
+
+
+    /**
+     * Get an iterator of the entities that are in this module
+     */
+    public Iterator<Entity> _getEntities() {
+        return this._entities.iterator();
+    }
+
+    // TODO: somehow link exits (entities) to other modules so we can call this._level.switchModule(targetModule)
+    // TODO: somehow define the entry point of the level for the player
 }
