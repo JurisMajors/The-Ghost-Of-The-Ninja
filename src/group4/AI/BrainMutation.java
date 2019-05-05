@@ -26,23 +26,22 @@ public class BrainMutation implements EvolutionaryOperator<Brain> {
     }
 
     Brain apply(Brain b, Random r) {
-        // below to see how to modify networks weights in d4j
-        // https://stackoverflow.com/questions/42806761/initialize-custom-weights-in-deeplearning4j
 
         // clone the brain
         Brain mutatedB = new Brain(b);
         // apply mutation rule
         Iterator weightIter = mutatedB.nn.paramTable().entrySet().iterator(); // get iterator over weights of the neural net
 
+        // https://stackoverflow.com/questions/42806761/initialize-custom-weights-in-deeplearning4j
         while (weightIter.hasNext()) { // loop through the weights
             Map.Entry<String, INDArray> entry = (Map.Entry<String, INDArray>) weightIter.next();
             String key = entry.getKey(); // info about the matrix, ends with W if a weight matrix
-            if (key.endsWith("W")) { // if not bias
-                INDArray w = entry.getValue();
-                // mutate the weight
-                mutateWeight(w, r);
-                mutatedB.nn.setParam(key, w);
-            }
+            if (key.endsWith("b")) continue;
+            // mutate the weight thats not bias
+            INDArray w = entry.getValue();
+            // mutate the weight
+            mutateWeight(w, r);
+            mutatedB.nn.setParam(key, w);
         }
 
         return mutatedB;
