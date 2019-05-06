@@ -1,6 +1,7 @@
 package group4.levelSystem;
 
-import com.badlogic.ashley.core.Entity;
+import group4.simpleEntitySystem.Entity;
+import group4.simpleEntitySystem.GraphicsComponent;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,7 +10,7 @@ import java.util.List;
 /**
  * This class defines the interface for modules that can be used to create levels
  * A module represents a _height * _width grid on which entities can be positioned
- *      Entities may overlap multiple cells of the grid
+ *      entities may overlap multiple cells of the grid
  * A module can have entries and exits that can link to other modules in a levelSystem (links defined on levelSystem basis)
  */
 public class Module {
@@ -70,6 +71,14 @@ public class Module {
         return this._entities.iterator();
     }
 
-    // TODO: somehow link exits (entities) to other modules so we can call this._level.switchModule(targetModule)
-    // TODO: somehow define the entry point of the level for the player
+
+    /**
+     * Draw the current state of the module
+     */
+    public void _render() {
+        for (Entity e : this._entities) {
+            // If the current entity is a graphical entity, draw it
+            e._render();
+        }
+    }
 }

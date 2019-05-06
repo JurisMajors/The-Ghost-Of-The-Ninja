@@ -1,7 +1,10 @@
 package group4.levelSystem.modules;
 
+import group4.simpleEntitySystem.entities.Block;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
+import group4.maths.Vector3f;
+import group4.maths.Vector3i;
 
 public class SimpleModule extends Module {
 
@@ -11,7 +14,11 @@ public class SimpleModule extends Module {
 
     @Override
     protected void _constructModule() {
-        // TODO: add entities to this simple module
+        Block beautifulBlock = new Block(new Vector3f(3.0f, 5.0f, 0.0f),
+                                            new Vector3f(5.0f, 5.0f, 0.0f),
+                                            new Vector3i(128, 128, 128));
+
+        this._addEntity(beautifulBlock);
     }
 
 }

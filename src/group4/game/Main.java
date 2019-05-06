@@ -3,6 +3,8 @@ package group4.game;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
+import group4.levelSystem.Level;
+import group4.levelSystem.levels.SimpleLevel;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import group4.tests.ShaderTest;
@@ -20,6 +22,8 @@ public class Main implements Runnable {
     private long window; // The id of the window
 
     private Timer timer;
+
+    private Level level;
 
     /**
      * Creates a new thread on which it wel run() the game.
@@ -75,6 +79,9 @@ public class Main implements Runnable {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        // Initialize the level
+        this.level = new SimpleLevel();
     }
 
     /**
@@ -83,7 +90,6 @@ public class Main implements Runnable {
     private void loop() {
         timer = new Timer();
         boolean render = true;
-        ShaderTest test = new ShaderTest();
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -96,7 +102,7 @@ public class Main implements Runnable {
             if (render) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-                test.render();
+                level._render();
 
                 glfwSwapBuffers(window); // swap the color buffers
                 render = false;
