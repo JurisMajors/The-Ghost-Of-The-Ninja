@@ -69,7 +69,7 @@ public abstract class Level {
     /**
      * Switches the level to the next module
      */
-    protected void switchModule(Module m) {
+    protected void _switchModule(Module m) {
         if (!this._modules.contains(m)) throw new IllegalArgumentException("Level: you cannot switch to a module that is not part of the Level");
 
         // TODO: Remove the entities of the old module from the engine
