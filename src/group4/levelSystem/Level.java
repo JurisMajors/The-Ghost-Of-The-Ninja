@@ -82,4 +82,12 @@ public abstract class Level {
     public final void _render() {
         this._currentModule._render();
     }
+
+
+    /**
+     * Get the current module of the level
+     */
+    public Module _getCurrentModule() {
+        return this._currentModule;
+    }
 }

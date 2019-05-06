@@ -1,14 +1,11 @@
 package group4.simpleEntitySystem.entities;
 
+import group4.levelSystem.Module;
 import group4.simpleEntitySystem.Entity;
 import group4.simpleEntitySystem.GraphicsComponent;
 import group4.maths.Vector3f;
-import group4.maths.Vector3i;
 
 public class Block extends Entity {
-
-    // Hold the dimensions of this block
-    private Vector3f _dimensions;
 
     /**
      * Construct an entity in a certain position (position should indicate bottom left of the block) of certain size
@@ -16,9 +13,8 @@ public class Block extends Entity {
      * @param p The position to create the entity in
      * @param d The dimensions of the block
      */
-    public Block(Vector3f p, Vector3f d) {
-        super(p);
-        this._dimensions = d;
+    public Block(Module m, Vector3f p, Vector3f d) {
+        super(m, p, d);
 
         // Construct vertex array
         float[] _vertices = new float[] {
@@ -43,7 +39,7 @@ public class Block extends Entity {
         };
 
         // Initialize the graphics component
-        this._gc = new GraphicsComponent("src/group4/res/shaders/simple", "src/group4/res/textures/debug.jpeg", _vertices, _indices, _tcs, this._getPosition());
+        this._gc = new GraphicsComponent(this, "src/group4/res/shaders/simple", "src/group4/res/textures/debug.jpeg", _vertices, _indices, _tcs, this._getPosition());
     }
 
 }
