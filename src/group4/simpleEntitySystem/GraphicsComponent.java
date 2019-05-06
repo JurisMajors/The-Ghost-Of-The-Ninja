@@ -1,5 +1,6 @@
 package group4.simpleEntitySystem;
 
+import group4.game.Main;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.VertexArray;
@@ -12,43 +13,29 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 public class GraphicsComponent {
 
-    private VertexArray triangle;
+    private VertexArray _triangle;
+    private Shader _shader;
+    private Texture _texture;
+    private Vector3f _position;
 
-    public GraphicsComponent() {
-        Matrix4f pr_matrix = Matrix4f.orthographic(-10.0f, 10.0f, -10.0f * 9.0f / 16.0f, 10.0f * 9.0f / 16.0f, -1.0f, 1.0f);
-        Shader test = ShaderParser.loadShader("src/group4/res/shaders/simple");
-        Texture tex = new Texture("src/group4/res/textures/debug.jpeg");
-        float[] vertices = new float[] {
-                -10.0f, -10.0f * 9.0f / 16.0f, 0.0f,
-                -10.0f,  10.0f * 9.0f / 16.0f, 0.0f,
-                0.0f,  10.0f * 9.0f / 16.0f, 0.0f,
-                0.0f, -10.0f * 9.0f / 16.0f, 0.0f
-        };
+    public GraphicsComponent(String shader, String texture, float[] vertices, byte[] indices, float[] tcs, Vector3f position) {
+        this._shader = ShaderParser.loadShader(shader);
+        this._texture = new Texture(texture);
+        this._triangle = new VertexArray(vertices, indices, tcs);
+        this._position = position;
+    }
 
-        byte[] indices = new byte[] {
-                0, 1, 2,
-                2, 3, 0
-        };
-
-        float[] tcs = new float[] {
-                0, 1,
-                0, 0,
-                1, 0,
-                1, 1
-        };
-
-        triangle = new VertexArray(vertices, indices, tcs);
-        test.bind();
-        tex.bind();
-        glActiveTexture(GL_TEXTURE1);
-
-        test.setUniformMat4f("pr_matrix", pr_matrix);
-        test.setUniformMat4f("vw_matrix", Matrix4f.translate(new Vector3f(0, 0, 0)));
-        test.setUniform1f("tex", 1);
-
+    public void _updatePosition(Vector3f newPos) {
+        this._position = newPos;
     }
 
     public void _render() {
-        this.triangle.render();
+        this._shader.bind();
+        this._shader.setUniformMat4f("pr_matrix", Main.pr_matrix);
+        this._shader.setUniformMat4f("vw_matrix", Matrix4f.translate(this._position));
+        this._shader.setUniform1f("tex", 1);
+        this._texture.bind();
+        glActiveTexture(GL_TEXTURE1);
+        this._triangle.render();
     }
 }

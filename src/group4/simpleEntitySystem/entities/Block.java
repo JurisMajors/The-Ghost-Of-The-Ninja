@@ -10,21 +10,40 @@ public class Block extends Entity {
     // Hold the dimensions of this block
     private Vector3f _dimensions;
 
-    // Hold the colour of this block
-    private Vector3i _colour;
-
     /**
-     * Construct an entity in a certain position (position should indicate top left of the block) of certain size
+     * Construct an entity in a certain position (position should indicate bottom left of the block) of certain size
      *
      * @param p The position to create the entity in
      * @param d The dimensions of the block
-     * @param c The colour of this block
      */
-    public Block(Vector3f p, Vector3f d, Vector3i c) {
+    public Block(Vector3f p, Vector3f d) {
         super(p);
         this._dimensions = d;
-        this._colour = c;
-        this._gc = new GraphicsComponent();
+
+        // Construct vertex array
+        float[] _vertices = new float[] {
+                0, 0, 0,
+                0, d.y,0,
+                d.x, d.y, 0,
+                d.x, 0, 0,
+        };
+
+        // Construct index array
+        byte[] _indices = new byte[] {
+                0, 1, 2,
+                2, 3, 0
+        };
+
+        // Construct texture coords
+        float[] _tcs = new float[] {
+                0, 1,
+                0, 0,
+                1, 0,
+                1, 1
+        };
+
+        // Initialize the graphics component
+        this._gc = new GraphicsComponent("src/group4/res/shaders/simple", "src/group4/res/textures/debug.jpeg", _vertices, _indices, _tcs, this._getPosition());
     }
 
 }

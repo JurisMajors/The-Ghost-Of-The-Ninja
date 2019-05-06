@@ -5,9 +5,9 @@ import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
 import group4.levelSystem.levels.SimpleLevel;
+import group4.maths.Matrix4f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-import group4.tests.ShaderTest;
 
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -24,6 +24,8 @@ public class Main implements Runnable {
     private Timer timer;
 
     private Level level;
+
+    public static final Matrix4f pr_matrix = Matrix4f.orthographic(-10.0f, 10.0f, -10.0f * 9.0f / 16.0f, 10.0f * 9.0f / 16.0f, -1.0f, 1.0f);;
 
     /**
      * Creates a new thread on which it wel run() the game.
