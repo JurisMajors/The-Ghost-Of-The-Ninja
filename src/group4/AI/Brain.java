@@ -9,7 +9,6 @@ import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 import java.io.File;
@@ -24,9 +23,7 @@ public class Brain {
     MultiLayerNetwork nn;
     /** gamestate decoder to translate to a double array **/
     NNGameStateInterface decoder;
-    /** learning rate for the model  (its only for building)**/
-    double learningRate = 0.01;
-    
+
     /**
      * Engine stuff to an actual network
      */
@@ -36,7 +33,6 @@ public class Brain {
         NeuralNetConfiguration.ListBuilder lb = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .weightInit(WeightInit.XAVIER)
-                .updater(new Nesterovs(learningRate, 0.9))
                 .list();
 
         // build the dense layers
