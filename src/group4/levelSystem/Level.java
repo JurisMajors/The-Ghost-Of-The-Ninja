@@ -42,7 +42,7 @@ public abstract class Level {
      * Checks the sanity of the level
      * @Throws IllegalStateException if the level is not sane
      */
-    private void _checkSanity() {
+    private final void _checkSanity() {
         if (this._rootModule == null)
             throw new IllegalStateException("Level: the root module cannot be null");
 
@@ -69,16 +69,25 @@ public abstract class Level {
     /**
      * Switches the level to the next module
      */
-    protected void _switchModule(Module m) {
+    protected final void _switchModule(Module m) {
         if (!this._modules.contains(m)) throw new IllegalArgumentException("Level: you cannot switch to a module that is not part of the Level");
 
-        // TODO: Remove the entities of the old module from the engine
         this._currentModule = m;
-        // TODO: Add the entities of the new module to the engine
-        // TODO: Reposition the player to the entry point of the new module
+    }
+
+
+    /**
+     * Draw the current state of the level
+     */
+//    public final void _render() {
+//        this._currentModule._render();
+//    }
+
+
+    /**
+     * Get the current module of the level
+     */
+    public Module _getCurrentModule() {
+        return this._currentModule;
     }
 }
-
-// TODO: the drawing of the level should be done by the ECS engine?
-// TODO: somehow link exits of modules to other modules
-// TODO: when/how does the level end? Exit to special "end module"?

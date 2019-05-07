@@ -1,11 +1,17 @@
 package group4.game;
 
+import com.badlogic.ashley.core.Engine;
+import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.RenderSystem;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
+import group4.levelSystem.Level;
+import group4.levelSystem.levels.SimpleLevel;
+import group4.maths.Matrix4f;
+import group4.maths.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-import group4.tests.ShaderTest;
 
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -20,6 +26,11 @@ public class Main implements Runnable {
     private long window; // The id of the window
 
     private Timer timer;
+    private Engine engine;
+    private Level level;
+
+    public static final float SCREEN_WIDTH = 20.0f;
+    public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
 
     /**
      * Creates a new thread on which it wel run() the game.
@@ -75,6 +86,12 @@ public class Main implements Runnable {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        // Initialize the level
+        this.level = new SimpleLevel();
+
+        // initialize the rendering
+        TheEngine.getInstance().addSystem(new RenderSystem());
     }
 
     /**
@@ -83,7 +100,8 @@ public class Main implements Runnable {
     private void loop() {
         timer = new Timer();
         boolean render = true;
-        ShaderTest test = new ShaderTest();
+
+        // Vector3f screenPosStepper = new Vector3f(0, 0, 0);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -96,7 +114,10 @@ public class Main implements Runnable {
             if (render) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-                test.render();
+                // Demo update: Step the screen window of the module
+                // screenPosStepper.x += 0.1f;
+                // level._getCurrentModule()._updateScreenWindow(screenPosStepper);
+                TheEngine.getInstance().update((float) timer.getDeltaTime());
 
                 glfwSwapBuffers(window); // swap the color buffers
                 render = false;

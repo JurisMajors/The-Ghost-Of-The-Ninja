@@ -12,9 +12,6 @@ public class Mappers {
     public static final ComponentMapper<PositionComponent> positionMapper =
             ComponentMapper.getFor(PositionComponent.class);
 
-    public static final ComponentMapper<DimensionComponent> dimensionMapper =
-            ComponentMapper.getFor(DimensionComponent.class);
-
     public static final ComponentMapper<PhysicsComponent> physicsMapper =
             ComponentMapper.getFor(PhysicsComponent.class);
 
