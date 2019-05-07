@@ -20,8 +20,11 @@ import java.util.List;
  * Contains the neural network which acts as the "ghost" brain.
  */
 public class Brain {
+    /** the network that does the calculations **/
     MultiLayerNetwork nn;
+    /** gamestate decoder to translate to a double array **/
     NNGameStateInterface decoder;
+    /** learning rate for the model  (its only for building)**/
     double learningRate = 0.01;
     
     /**
