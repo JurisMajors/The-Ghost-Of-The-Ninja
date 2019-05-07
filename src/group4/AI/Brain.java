@@ -68,6 +68,10 @@ public class Brain {
         this.decoder = b.decoder;
     }
 
+    Brain () {
+        this(Evolver.layerSizes, 1);
+    }
+
     Brain (String filePath) throws IOException {
         File f = new File(filePath);
         nn = ModelSerializer.restoreMultiLayerNetwork(f);

@@ -1,6 +1,5 @@
 package group4.AI;
 
-import org.nd4j.linalg.api.iter.NdIndexIterator;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.uncommons.maths.number.NumberGenerator;
@@ -11,8 +10,9 @@ import org.uncommons.watchmaker.framework.operators.DoubleArrayCrossover;
 import java.util.*;
 
 public class BrainCrossover extends AbstractCrossover<Brain> {
-    /** watchmakers implementation of crossover
-     *  that is used after subdividing the NN array
+    /**
+     * watchmakers implementation of crossover
+     * that is used after subdividing the NN array
      */
     AbstractCrossover helper;
 
@@ -90,19 +90,20 @@ public class BrainCrossover extends AbstractCrossover<Brain> {
     }
 
     private List<List<INDArray>> crossover(INDArray par1W, INDArray par2W, Random rng) {
-        List<List<INDArray>> newWeights = new ArrayList<>();
-        List<INDArray> firstOffWeights = new ArrayList<>();
-        List<INDArray> scndOffWeights = new ArrayList<>();
+        List<List<INDArray>> newWeights = new ArrayList<>(); // contains new weights for both offsprings
+        List<INDArray> firstOffWeights = new ArrayList<>(); // offspring1 weights
+        List<INDArray> scndOffWeights = new ArrayList<>(); // offspring2 weights
 
         newWeights.add(firstOffWeights);
         newWeights.add(scndOffWeights);
 
-        NdIndexIterator weightIter = new NdIndexIterator(par1W.shape());
-        while (weightIter.hasNext()) {
-            long[] nextIndex = weightIter.next();
+        long rowIndex = 0;
+        long nRows = par1W.shape()[0]; // [nRows, nCols]
+
+        while (rowIndex < nRows) {
             // TODO: Implement this part with INDarrays instead of using helper for efficiency
-            double[] p1Wd = par1W.getRow(nextIndex[0]).toDoubleVector();
-            double[] p2Wd = par2W.getRow(nextIndex[0]).toDoubleVector();
+            double[] p1Wd = par1W.getRow(rowIndex).toDoubleVector();
+            double[] p2Wd = par2W.getRow(rowIndex).toDoubleVector();
             List<double[]> helperParents = new ArrayList<>();
             helperParents.add(p1Wd);
             helperParents.add(p2Wd);
@@ -111,8 +112,10 @@ public class BrainCrossover extends AbstractCrossover<Brain> {
             // create INDarrays from doubles
             firstOffWeights.add(Nd4j.create(offspring.get(0)));
             scndOffWeights.add(Nd4j.create(offspring.get(1)));
-        }
 
+            rowIndex++;
+        }
         return newWeights;
     }
 }
+
