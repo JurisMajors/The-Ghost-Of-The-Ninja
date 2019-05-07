@@ -13,7 +13,12 @@ public class GameEngine {
      * Updates the given GameState 1 frame ahead.
      * @param gs GameState, contains all information regarding the current state space of the game
      */
-    public static void step(GameState gs) {
+    public static void update(GameState gs) {
+        // Simplified, as I don't have all entities etc yet.
+        gs.getPlayer().update();
+        gs.getActiveCamera().update();
+//        gs.getDynamicEntities().update();
 
+        // Additional logic...
     }
 }

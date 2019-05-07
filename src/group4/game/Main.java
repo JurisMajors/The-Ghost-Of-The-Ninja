@@ -1,5 +1,6 @@
 package group4.game;
 
+import group4.engine.GameState;
 import group4.engine.Timer;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
@@ -21,6 +22,8 @@ public class Main implements Runnable {
     private long window; // The id of the window
 
     private Timer timer;
+
+    private GameState gs;
 
     /**
      * Creates a new thread on which it wel run() the game.
@@ -76,6 +79,9 @@ public class Main implements Runnable {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        // Initialize the gamestate
+        gs = new GameState();
     }
 
     /**
@@ -84,7 +90,7 @@ public class Main implements Runnable {
     private void loop() {
         timer = new Timer();
         boolean render = true;
-        ShaderTest test = new ShaderTest();
+//        ShaderTest test = new ShaderTest();
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.

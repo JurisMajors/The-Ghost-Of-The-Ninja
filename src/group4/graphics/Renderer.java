@@ -16,6 +16,11 @@ public class Renderer {
      * @param gs GameState, contains all information regarding the current state space of the game
      */
     public static void render(GameState gs) {
+        // TODO: not implemented yet
+//        for (Entity e: gs.getEntities()) {
+//            e.render();
+//        }
 
+        gs.getPlayer().render();
     }
 }
