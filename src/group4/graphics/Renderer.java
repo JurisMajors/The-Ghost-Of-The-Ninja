@@ -1,4 +1,6 @@
-package group4.game;
+package group4.graphics;
+
+import group4.game.GameState;
 
 /**
  * Renderer class which is used to take in a GameState to produce a render!

@@ -1,4 +1,4 @@
-package group4.game;
+package group4.graphics;
 
 public class Camera {
 }

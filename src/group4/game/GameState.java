@@ -1,6 +1,7 @@
 package group4.game;
 
 import group4.AI.Ghost;
+import group4.graphics.Camera;
 
 public class GameState {
     private Player player;
