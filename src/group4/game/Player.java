@@ -13,7 +13,8 @@ public class Player {
 
     public Player() {
         delta = 0.0f;
-        geo = new VertexArray()
+        // TODO: isDrawable, hence needs a shape.
+//        geo = new VertexArray()
     }
 
     public void update() {
