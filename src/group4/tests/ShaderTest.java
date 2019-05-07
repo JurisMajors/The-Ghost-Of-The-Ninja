@@ -48,7 +48,7 @@ public class ShaderTest {
 
     }
 
-    public void draw() {
-        this.triangle.draw();
+    public void render() {
+        this.triangle.render();
     }
 }
