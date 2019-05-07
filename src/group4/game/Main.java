@@ -1,5 +1,6 @@
 package group4.game;
 
+import group4.engine.Timer;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;

@@ -1,4 +1,4 @@
-package group4.game;
+package group4.engine;
 
 /**
  * GameEngine / Engine class which stores the game's logic.

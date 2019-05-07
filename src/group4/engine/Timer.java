@@ -1,4 +1,4 @@
-package group4.game;
+package group4.engine;
 
 public class Timer {
     private int targetFPS; // The target targetFPS

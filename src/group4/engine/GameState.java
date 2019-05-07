@@ -1,4 +1,4 @@
-package group4.game;
+package group4.engine;
 
 import group4.AI.Ghost;
 import group4.graphics.Camera;
