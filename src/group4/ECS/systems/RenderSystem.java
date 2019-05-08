@@ -47,27 +47,29 @@ public class RenderSystem extends EntitySystem {
     /**
      * The heart piece of a system. This method gets called on each
      * update on the single instance of the engine
-     * @param deltaTime
+     * @param deltaTime time between last and current update
      */
     public void update(float deltaTime) {
-
         // for each registered entity, render it statically
         // TODO: pass on camera information
         for (Entity entity : entities) {
+            // get mapper for O(1) component retrieval
             PositionComponent pc = Mappers.positionMapper.get(entity);
-            GraphicsComponent gc = Mappers.grapicsMapper.get(entity);
+            GraphicsComponent gc = Mappers.graphicsMapper.get(entity);
 
+            // render
             gc.shader.bind();
             gc.shader.setUniformMat4f("pr_matrix", Matrix4f.orthographic(
                     0, Main.SCREEN_WIDTH, 0, Main.SCREEN_HEIGHT, -1.0f, 1.0f)
             );
+
+            // TODO: specify positioning, for the simple block, position refers to lower left corner
             gc.shader.setUniformMat4f("vw_matrix", Matrix4f.translate(pc.position));
             gc.shader.setUniform1f("tex", 1);
             gc.texture.bind();
             glActiveTexture(GL_TEXTURE1);
             gc.triangle.render();
         }
-
     }
 
     /**

@@ -3,7 +3,7 @@ package group4.ECS.etc;
 import com.badlogic.ashley.core.Engine;
 
 /**
- * The one and only engine for ECS
+ * The one and only engine for ECS (Singleton Design Pattern)
  */
 public class TheEngine {
 
@@ -12,4 +12,5 @@ public class TheEngine {
     public static Engine getInstance() {
         return engine;
     }
+
 }

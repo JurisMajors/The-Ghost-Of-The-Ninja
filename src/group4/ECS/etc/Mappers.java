@@ -15,7 +15,7 @@ public class Mappers {
     public static final ComponentMapper<PhysicsComponent> physicsMapper =
             ComponentMapper.getFor(PhysicsComponent.class);
 
-    public static final ComponentMapper<GraphicsComponent> grapicsMapper =
+    public static final ComponentMapper<GraphicsComponent> graphicsMapper =
             ComponentMapper.getFor(GraphicsComponent.class);
 
     public static final ComponentMapper<MovementComponent> movementMapper =
@@ -32,4 +32,5 @@ public class Mappers {
 
     public static final ComponentMapper<AudioComponent> audioMapper =
             ComponentMapper.getFor(AudioComponent.class);
+
 }

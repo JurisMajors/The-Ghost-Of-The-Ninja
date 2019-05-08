@@ -37,6 +37,4 @@ public class Families {
     public static final Family combatFamily = Family
             .all(PositionComponent.class, StatsComponent.class, GraphicsComponent.class).get();
 
-
-
 }

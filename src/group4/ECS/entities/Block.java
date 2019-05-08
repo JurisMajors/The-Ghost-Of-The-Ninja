@@ -6,12 +6,15 @@ import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.TheEngine;
 import group4.maths.Vector3f;
 
+/**
+ * Block entity for demonstration purposes
+ */
 public class Block extends Entity {
 
     /**
-     * Construct an entity in a certain position (position should indicate bottom left of the block) of certain size
+     * Construct a simple block in a certain position of certain size
      *
-     * @param p The position to create the entity in
+     * @param p The position of the block (lower left corner)
      * @param d The dimensions of the block
      */
     public Block(Vector3f p, Vector3f d, String shader, String texture) {
@@ -24,7 +27,7 @@ public class Block extends Entity {
                 d.x, 0, d.z,
         };
 
-        // Construct index array
+        // Construct index array (used for triangle mesh)
         byte[] indices = new byte[] {
                 0, 1, 2,
                 2, 3, 0
@@ -38,8 +41,11 @@ public class Block extends Entity {
                 1, 1
         };
 
+        // add needed components
         this.add(new PositionComponent(p));
         this.add(new GraphicsComponent(shader, texture, vertices, indices, tcs));
+
+        // register to engine
         TheEngine.getInstance().addEntity(this);
 
     }
