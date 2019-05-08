@@ -65,7 +65,7 @@ public class StandardCrossover extends AbstractBrainCrossover {
 
             INDArray p1Scnd = p1WRow.get(interval(crossoverIndex, nCols));
             INDArray p2First = p2WRow.get(interval(0, crossoverIndex));
-            scndOffWeights.add(Nd4j.concat(1, p1Scnd, p2First));
+            scndOffWeights.add(Nd4j.concat(1, p2First, p1Scnd));
 
             rowIndex++;
         }
