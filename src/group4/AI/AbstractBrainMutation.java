@@ -1,6 +1,5 @@
 package group4.AI;
 
-import org.nd4j.linalg.api.iter.NdIndexIterator;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.uncommons.maths.number.ConstantGenerator;
 import org.uncommons.maths.number.NumberGenerator;
@@ -9,19 +8,19 @@ import org.uncommons.watchmaker.framework.EvolutionaryOperator;
 
 import java.util.*;
 
-public class BrainMutation implements EvolutionaryOperator<Brain> {
-    private final NumberGenerator<Probability> mutationProb;
+public abstract class AbstractBrainMutation implements EvolutionaryOperator<Brain> {
+    protected final NumberGenerator<Probability> mutationProb;
 
 
-    public BrainMutation(Probability prob) {
+    public AbstractBrainMutation(Probability prob) {
         this(new ConstantGenerator(prob));
     }
 
-    public BrainMutation(NumberGenerator<Probability> mutationProb) {
+    public AbstractBrainMutation(NumberGenerator<Probability> mutationProb) {
         this.mutationProb = mutationProb;
     }
 
-    public BrainMutation() {
+    public AbstractBrainMutation() {
         this(new ConstantGenerator(new Probability(0.02)));
     }
 
@@ -49,17 +48,11 @@ public class BrainMutation implements EvolutionaryOperator<Brain> {
 
     /**
      * Mutates the weight according to the rng
+     * @param w weight to attempt to mutate
+     * @param rng  number generator, for determining whether to mutate
+     * @modifies w possibly mutating some elements in it according to mutationProb
      */
-    private void mutateWeight(INDArray w, Random rng) {
-        // INDArray iterator
-        NdIndexIterator iter = new NdIndexIterator(w.shape());
-        while (iter.hasNext()) { // while there are values to iterate
-            long[] nextIndex = iter.next(); // get index
-            if ((this.mutationProb.nextValue()).nextEvent(rng)) { // if should mutate by the probability
-                w.putScalar(nextIndex, rng.nextDouble()); // generate new double for the weight
-            }
-        }
-    }
+    protected abstract void mutateWeight(INDArray w, Random rng);
 
 
     @Override

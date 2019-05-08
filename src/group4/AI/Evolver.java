@@ -1,7 +1,6 @@
 package group4.AI;
 
 import org.uncommons.maths.random.MersenneTwisterRNG;
-import org.uncommons.maths.random.Probability;
 import org.uncommons.watchmaker.framework.*;
 import org.uncommons.watchmaker.framework.factories.AbstractCandidateFactory;
 import org.uncommons.watchmaker.framework.operators.EvolutionPipeline;
@@ -35,6 +34,10 @@ public class Evolver {
     public final static NNGameStateInterface decoder = new NNGameState();
     /** probability to completely change a weight of nn **/
     public final static double mutationProbability = 0.05;
+    /** Mutator **/
+    private static AbstractBrainMutation mutator = new StandardMutation();
+    /** Crossover **/
+    private static AbstractBrainCrossover crossover = new InefficientCrossover();
 
     private static void toFile(Brain b, String filePath) throws IOException {
         b.toFile(filePath);
@@ -44,8 +47,8 @@ public class Evolver {
         String path = args[0];
 
         List<EvolutionaryOperator<Brain>> operators = new LinkedList<>();
-        operators.add(new BrainCrossover());
-        operators.add(new BrainMutation(new Probability(mutationProbability)));
+        operators.add(mutator);
+        operators.add(crossover);
 
         // put them in a pipeline
         EvolutionaryOperator<Brain> pipeline = new EvolutionPipeline<>(operators);
