@@ -5,7 +5,6 @@ import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
 import group4.levelSystem.levels.SimpleLevel;
-import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -110,9 +109,9 @@ public class Main implements Runnable {
 
                 // Demo update: Step the screen window of the module
                 screenPosStepper.x += 0.1f;
-                level._getCurrentModule()._updateScreenWindow(screenPosStepper);
+                level.getCurrentModule().updateScreenWindow(screenPosStepper);
 
-                level._render();
+                level.render();
 
                 glfwSwapBuffers(window); // swap the color buffers
                 render = false;

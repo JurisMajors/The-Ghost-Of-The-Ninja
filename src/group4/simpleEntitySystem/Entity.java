@@ -9,58 +9,58 @@ import group4.maths.Vector3f;
 public class Entity {
 
     // Module of the entity
-    private Module _module;
+    private Module module;
 
     // Position of the entity
-    private Vector3f _position;
+    private Vector3f position;
 
     // Dimensions of the entity
-    private Vector3f _dimensions;
+    private Vector3f dimensions;
 
     // Possible graphics component
-    protected GraphicsComponent _gc = null;
+    protected GraphicsComponent gc = null;
 
     /**
      * Construct an entity in a certain position
      * @param p The position to create the entity in
      */
     public Entity(Module m, Vector3f p, Vector3f d) {
-        this._module = m;
-        this._position = p;
-        this._dimensions = d;
+        this.module = m;
+        this.position = p;
+        this.dimensions = d;
     }
 
 
     /**
      * Get the module of an entity
      */
-    public Module _getModule() {
-        return this._module;
+    public Module getModule() {
+        return this.module;
     }
 
 
     /**
      * Get the position of an entity
      */
-    public Vector3f _getPosition() {
-        return this._position;
+    public Vector3f getPosition() {
+        return this.position;
     }
 
 
     /**
      * Get the dimensions of an entity
      */
-    public Vector3f _getDimensions() {
-        return this._dimensions;
+    public Vector3f getDimensions() {
+        return this.dimensions;
     }
 
     /**
      * Draw the entity if it has a graphics component
      */
-    public void _render() {
+    public void render() {
         // If the current entity is a graphical entity, draw it
-        if (this._gc != null) {
-            this._gc._render();
+        if (this.gc != null) {
+            this.gc.render();
         }
     }
 

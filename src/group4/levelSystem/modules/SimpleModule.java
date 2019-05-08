@@ -12,25 +12,25 @@ public class SimpleModule extends Module {
     }
 
     @Override
-    protected void _constructModule() {
+    protected void constructModule() {
         for (int i = 0; i < 32; i++) {
             if (i % 4 != 0) {
                 Block beautifulBlock = new Block(this, new Vector3f(i * 2.0f, 0.0f, 0.0f),
                         new Vector3f(2.0f, 2.0f, 0.0f));
 
-                this._addEntity(beautifulBlock);
+                this.addEntity(beautifulBlock);
             }
             if (i % 3 == 0 && i % 4 != 0) {
                 Block beautifulBlock = new Block(this, new Vector3f(i * 2.0f, 2.0f, 0.0f),
                         new Vector3f(2.0f, 2.0f, 0.0f));
 
-                this._addEntity(beautifulBlock);
+                this.addEntity(beautifulBlock);
             }
         }
     }
 
     @Override
-    protected Vector3f _getStartScreenWindow() {
+    protected Vector3f getStartScreenWindow() {
         return new Vector3f();
     }
 
