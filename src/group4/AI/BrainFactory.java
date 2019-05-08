@@ -4,6 +4,9 @@ import org.uncommons.watchmaker.framework.factories.AbstractCandidateFactory;
 
 import java.util.Random;
 
+/**
+ * Creates a random brain
+ */
 public class BrainFactory extends AbstractCandidateFactory<Brain> {
     int[] layerInfo;
     NNGameStateInterface decoder;

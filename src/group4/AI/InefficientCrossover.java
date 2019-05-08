@@ -11,10 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Standard crossover but an inefficient implementation since it copies the weight arrays 3 times
+ */
 public class InefficientCrossover extends AbstractBrainCrossover {
     /**
      * watchmakers implementation of crossover
-     * that is used after subdividing the NN array
      */
     AbstractCrossover helper;
 

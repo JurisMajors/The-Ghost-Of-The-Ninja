@@ -8,6 +8,11 @@ import org.uncommons.maths.random.Probability;
 
 import java.util.Random;
 
+/**
+ * Applies a very basic mutation rule to the weight array.
+ * According to the given probability on initialization of the class it
+ * replaces a single element of the weight matrix by  a random double.
+ */
 public class StandardMutation extends AbstractBrainMutation{
 
     public StandardMutation(Probability prob) {

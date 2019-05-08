@@ -7,6 +7,12 @@ import org.uncommons.watchmaker.framework.operators.AbstractCrossover;
 
 import java.util.*;
 
+/**
+ * Abstract crossover class.
+ * It applies a crossover rule (specified by a non-abstract implementation) to a list of brains
+ * Crossover takes two parents and outputs two offsprings according to the crossover rule
+ * (Usually merging the weight matrices)
+ */
 public abstract class AbstractBrainCrossover extends AbstractCrossover<Brain> {
 
     public AbstractBrainCrossover() {
@@ -29,6 +35,10 @@ public abstract class AbstractBrainCrossover extends AbstractCrossover<Brain> {
         super(crossoverPointsVariable, crossoverProbabilityVariable);
     }
 
+    /**
+     * Apply the crossover rule on two parents producing two offsprings..
+     * @return offsprings in a list
+     */
     @Override
     protected List<Brain> mate(Brain parent1, Brain parent2, int i, Random random) {
         // get parent iterators over the weights

@@ -25,7 +25,7 @@ public class Brain {
     NNGameStateInterface decoder;
 
     /**
-     * Engine stuff to an actual network
+     * Given information about the layers, initialize a MLP
      */
     Brain (int[] layerSizes, int seed) {
         // TODO: FINALIZE NETWORK ARCHITECTURE
@@ -82,17 +82,6 @@ public class Brain {
 
     void setDecoder(NNGameStateInterface dec) {
         this.decoder = dec;
-    }
-
-    @Override
-    protected Brain clone() {
-        // clone the network
-        MultiLayerNetwork networkClone = nn.clone();
-        // put it in a new object
-        Brain brainClone = new Brain(networkClone);
-        // pass on the level decoder too
-        brainClone.decoder = this.decoder;
-        return brainClone;
     }
 
     /**
