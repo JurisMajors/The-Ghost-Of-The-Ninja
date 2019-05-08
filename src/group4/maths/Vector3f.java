@@ -24,4 +24,13 @@ public class Vector3f {
         this.z = z;
     }
 
+    public Vector3f scale(float d) {
+        return new Vector3f(this.x*d,this.y*d,this.z*d);
+    }
+
+    public void add(Vector3f v) {
+        this.x += v.x;
+        this.y += v.y;
+        this.z += v.z;
+    }
 }
