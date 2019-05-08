@@ -436,6 +436,7 @@
             <version>${lwjgl.version}</version>
             <classifier>${lwjgl.natives}</classifier>
         </dependency>
+
         <!-- genetic algorithm pipeline framework -->
         <dependency>
             <groupId>org.uncommons.watchmaker</groupId>
