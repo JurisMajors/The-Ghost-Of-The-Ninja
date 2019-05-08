@@ -3,7 +3,7 @@ package group4.levelSystem;
 import group4.game.Main;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
-import group4.simpleEntitySystem.Entity;
+import com.badlogic.ashley.core.Entity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -43,7 +43,7 @@ public abstract class Module {
      */
     public Module(Level l) {
         if (l == null) throw new IllegalArgumentException("Module: Level cannot be null");
-
+      
         this.level = l;
         this.entities = new ArrayList<>();
         this.constructModule();
@@ -114,21 +114,5 @@ public abstract class Module {
      */
     public Iterator<Entity> getEntities() {
         return this.entities.iterator();
-    }
-
-
-    /**
-     * Draw the current state of the module
-     */
-    public void render() {
-        for (Entity e : this.entities) {
-            // Check entity is currently on (at least partly) screen, and if so, render it
-            if (    e.getPosition().x + e.getDimensions().x >= this.screenPosition.x &&
-                    e.getPosition().x <= this.screenPosition.x + Main.SCREEN_WIDTH &&
-                    e.getPosition().y + e.getDimensions().y >= this.screenPosition.y &&
-                    e.getPosition().y <= this.screenPosition.y + Main.SCREEN_HEIGHT) {
-                e.render();
-            }
-        }
     }
 }
