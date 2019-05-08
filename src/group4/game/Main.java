@@ -31,11 +31,6 @@ public class Main implements Runnable {
     public static final float SCREEN_WIDTH = 20.0f;
     public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
 
-    private Level level;
-
-    public static final float SCREEN_WIDTH = 20.0f;
-    public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
-
     /**
      * Creates a new thread on which it wel run() the game.
      */
