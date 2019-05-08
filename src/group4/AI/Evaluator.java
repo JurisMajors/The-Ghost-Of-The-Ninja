@@ -4,7 +4,10 @@ import org.uncommons.watchmaker.framework.FitnessEvaluator;
 
 import java.util.List;
 
-public class Evaluator<Brain> implements FitnessEvaluator<Brain> {
+/**
+ * Evaluates individuals of the population
+ */
+public class Evaluator implements FitnessEvaluator<Brain> {
 
     @Override
     public double getFitness(Brain brain, List<? extends Brain> list) {
@@ -12,9 +15,11 @@ public class Evaluator<Brain> implements FitnessEvaluator<Brain> {
         return 0;
     }
 
+    /**
+     * True if high fitness is better
+     */
     @Override
     public boolean isNatural() {
-        return false; // if true then high fitness score better
-                        // if false then low fitness better
+        return false;
     }
 }

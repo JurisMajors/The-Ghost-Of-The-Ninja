@@ -9,7 +9,6 @@ import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 import java.io.File;
@@ -20,18 +19,20 @@ import java.util.List;
  * Contains the neural network which acts as the "ghost" brain.
  */
 public class Brain {
+    /** the network that does the calculations **/
     MultiLayerNetwork nn;
+    /** gamestate decoder to translate to a double array **/
     NNGameStateInterface decoder;
-    double learningRate = 0.01;
-    
+
     /**
-     * Engine stuff to an actual network
+     * Given information about the layers, initialize a MLP
      */
     Brain (int[] layerSizes, int seed) {
+        // TODO: FINALIZE NETWORK ARCHITECTURE
+
         NeuralNetConfiguration.ListBuilder lb = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .weightInit(WeightInit.XAVIER)
-                .updater(new Nesterovs(learningRate, 0.9))
                 .list();
 
         // build the dense layers
@@ -52,10 +53,22 @@ public class Brain {
 
         // apply the configuration
         nn = new MultiLayerNetwork(conf);
+        nn.init();
+    }
+
+    Brain (MultiLayerNetwork network) {
+        this.nn = network;
+    }
+
+    Brain (Brain b) {
+         // clone the network
+        this.nn = b.nn.clone();
+        // pass on the level decoder too
+        this.decoder = b.decoder;
     }
 
     Brain () {
-        //TODO: can do some custom network here
+        this(Evolver.layerSizes, 1);
     }
 
     Brain (String filePath) throws IOException {

@@ -32,6 +32,12 @@ public class Evolver {
     public final static int[] layerSizes = new int[]{100, 200, 300, 100};
     /** decoder of gamestates **/
     public final static NNGameStateInterface decoder = new NNGameState();
+    /** probability to completely change a weight of nn **/
+    public final static double mutationProbability = 0.05;
+    /** Mutator **/
+    private static AbstractBrainMutation mutator = new StandardMutation();
+    /** Crossover **/
+    private static AbstractBrainCrossover crossover = new InefficientCrossover();
 
     private static void toFile(Brain b, String filePath) throws IOException {
         b.toFile(filePath);
@@ -41,15 +47,15 @@ public class Evolver {
         String path = args[0];
 
         List<EvolutionaryOperator<Brain>> operators = new LinkedList<>();
-        operators.add(new BrainCrossover());
-        operators.add(new BrainMutation());
+        operators.add(mutator);
+        operators.add(crossover);
 
         // put them in a pipeline
         EvolutionaryOperator<Brain> pipeline = new EvolutionPipeline<>(operators);
 
         // factory of neural networks
         AbstractCandidateFactory<Brain> factory = new BrainFactory(Evolver.layerSizes, decoder);
-        FitnessEvaluator<Brain> fitnessEvaluator = new Evaluator<>();
+        FitnessEvaluator<Brain> fitnessEvaluator = new Evaluator();
         SelectionStrategy<Object> selection = new RouletteWheelSelection();
         Random rng = new MersenneTwisterRNG();
 
