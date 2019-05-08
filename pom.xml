@@ -39,6 +39,15 @@
         </plugins>
     </build>
 
+    <!-- Repository for the Entity Component System (uses releases, not snapshot versions) -->
+    <repositories>
+        <repository>
+            <id>sonatype</id>
+            <name>Sonatype</name>
+            <url>https://oss.sonatype.org/content/repositories/releases</url>
+        </repository>
+    </repositories>
+
     <properties>
         <lwjgl.version>3.2.1</lwjgl.version>
     </properties>
@@ -437,6 +446,12 @@
             <classifier>${lwjgl.natives}</classifier>
         </dependency>
 
+        <!-- Entity Component System -->
+        <dependency>
+            <groupId>com.badlogicgames.ashley</groupId>
+            <artifactId>ashley</artifactId>
+            <version>1.7.3</version>
+        </dependency>
         <!-- genetic algorithm pipeline framework -->
         <dependency>
             <groupId>org.uncommons.watchmaker</groupId>

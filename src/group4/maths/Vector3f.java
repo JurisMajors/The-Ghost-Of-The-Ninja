@@ -52,4 +52,7 @@ public class Vector3f {
         return new Vector3f(this.x - other.x, this.y - other.y, this.z - other.z);
     }
 
+    public Vector3f scale(float d) {
+        return new Vector3f(this.x*d,this.y*d,this.z*d);
+    }
 }

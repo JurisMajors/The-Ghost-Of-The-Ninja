@@ -1,5 +1,8 @@
 package group4.game;
 
+import com.badlogic.ashley.core.Engine;
+import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.RenderSystem;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
@@ -22,7 +25,7 @@ public class Main implements Runnable {
     private long window; // The id of the window
 
     private Timer timer;
-
+    private Engine engine;
     private Level level;
 
     public static final float SCREEN_WIDTH = 20.0f;
@@ -85,6 +88,9 @@ public class Main implements Runnable {
 
         // Initialize the level
         this.level = new SimpleLevel();
+
+        // initialize the rendering
+        TheEngine.getInstance().addSystem(new RenderSystem());
     }
 
     /**
@@ -95,7 +101,7 @@ public class Main implements Runnable {
         boolean render = true;
 
         Vector3f screenPosStepper = new Vector3f(0, 0, 0);
-
+      
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
@@ -108,10 +114,10 @@ public class Main implements Runnable {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
                 // Demo update: Step the screen window of the module
+
                 screenPosStepper.x += 0.1f;
                 level.getCurrentModule().updateScreenWindow(screenPosStepper);
-
-                level.render();
+                TheEngine.getInstance().update((float) timer.getDeltaTime());
 
                 glfwSwapBuffers(window); // swap the color buffers
                 render = false;

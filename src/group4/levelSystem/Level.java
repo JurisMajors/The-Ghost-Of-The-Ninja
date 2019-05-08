@@ -77,14 +77,6 @@ public abstract class Level {
 
 
     /**
-     * Draw the current state of the level
-     */
-    public final void render() {
-        this.currentModule.render();
-    }
-
-
-    /**
      * Get the current module of the level
      */
     public Module getCurrentModule() {
