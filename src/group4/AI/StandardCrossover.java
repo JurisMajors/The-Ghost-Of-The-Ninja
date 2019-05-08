@@ -11,6 +11,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Same crossover rule as {@link InefficientCrossover} however,
+ * not using the watchmakers helper and directly working with INDArrays.
+ */
 public class StandardCrossover extends AbstractBrainCrossover {
 
     public StandardCrossover() {
