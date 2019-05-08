@@ -7,6 +7,5 @@ public class PhysicsComponent implements Component {
     public float mass = 0.0f;
     public float weight = 0.0f;
     public float gravity = 9.81f;   // could also be 0.0f by default, using real values might be handy to use
-    public boolean collidable = false;
 
 }
