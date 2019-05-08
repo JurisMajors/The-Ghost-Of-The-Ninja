@@ -7,12 +7,12 @@ import group4.levelSystem.modules.SimpleModule;
 public class SimpleLevel extends Level {
 
     @Override
-    protected Module _createRoot() {
+    protected Module createRoot() {
         return new SimpleModule(this);
     }
 
     @Override
-    protected void _createAdditionalModules() {
+    protected void createAdditionalModules() {
         return;
     }
 

@@ -11,30 +11,30 @@ import java.util.List;
 public abstract class Level {
 
     // This is the module where the level starts
-    protected Module _rootModule;
+    protected Module rootModule;
 
     // Keep a list of modules in this level
-    protected List<Module> _modules;
+    protected List<Module> modules;
 
     // Keep track of the module currently on screen
-    private Module _currentModule;
+    private Module currentModule;
 
 
     /**
      * Initializes the level using factory & template method
-     * Override @code{_createRoot} and @code{_createAdditionalModules} to specify the modules to be used for the level
+     * Override @code{createRoot} and @code{createAdditionalModules} to specify the modules to be used for the level
      */
     public Level() {
-        this._modules = new ArrayList<>();
+        this.modules = new ArrayList<>();
 
-        this._rootModule = this._createRoot();
-        this._modules.add(this._rootModule);
+        this.rootModule = this.createRoot();
+        this.modules.add(this.rootModule);
 
-        this._createAdditionalModules();
+        this.createAdditionalModules();
 
-        this._currentModule = this._rootModule;
+        this.currentModule = this.rootModule;
 
-        this._checkSanity();
+        this.checkSanity();
     }
 
 
@@ -42,14 +42,14 @@ public abstract class Level {
      * Checks the sanity of the level
      * @Throws IllegalStateException if the level is not sane
      */
-    private final void _checkSanity() {
-        if (this._rootModule == null)
+    private final void checkSanity() {
+        if (this.rootModule == null)
             throw new IllegalStateException("Level: the root module cannot be null");
 
-        if (!this._modules.contains(this._rootModule))
+        if (!this.modules.contains(this.rootModule))
             throw new IllegalStateException("Level: the root modules should be included in the level-modules");
 
-        if (this._currentModule == null)
+        if (this.currentModule == null)
             throw new IllegalStateException("Level: the current module cannot be null");
     }
 
@@ -57,37 +57,29 @@ public abstract class Level {
     /**
      * This method should return the module to be used as the root module for the level
      */
-    protected abstract Module _createRoot();
+    protected abstract Module createRoot();
 
 
     /**
      * This method should add additional modules to the level if desired
      */
-    protected abstract void _createAdditionalModules();
+    protected abstract void createAdditionalModules();
 
 
     /**
      * Switches the level to the next module
      */
-    protected final void _switchModule(Module m) {
-        if (!this._modules.contains(m)) throw new IllegalArgumentException("Level: you cannot switch to a module that is not part of the Level");
+    protected final void switchModule(Module m) {
+        if (!this.modules.contains(m)) throw new IllegalArgumentException("Level: you cannot switch to a module that is not part of the Level");
 
-        this._currentModule = m;
+        this.currentModule = m;
     }
-
-
-    /**
-     * Draw the current state of the level
-     */
-//    public final void _render() {
-//        this._currentModule._render();
-//    }
 
 
     /**
      * Get the current module of the level
      */
-    public Module _getCurrentModule() {
-        return this._currentModule;
+    public Module getCurrentModule() {
+        return this.currentModule;
     }
 }

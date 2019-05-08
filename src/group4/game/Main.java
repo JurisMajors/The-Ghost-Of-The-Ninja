@@ -8,7 +8,6 @@ import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
 import group4.levelSystem.levels.SimpleLevel;
-import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -27,6 +26,11 @@ public class Main implements Runnable {
 
     private Timer timer;
     private Engine engine;
+    private Level level;
+
+    public static final float SCREEN_WIDTH = 20.0f;
+    public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
+
     private Level level;
 
     public static final float SCREEN_WIDTH = 20.0f;
@@ -101,8 +105,8 @@ public class Main implements Runnable {
         timer = new Timer();
         boolean render = true;
 
-        // Vector3f screenPosStepper = new Vector3f(0, 0, 0);
-
+        Vector3f screenPosStepper = new Vector3f(0, 0, 0);
+      
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
@@ -115,8 +119,9 @@ public class Main implements Runnable {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
                 // Demo update: Step the screen window of the module
-                // screenPosStepper.x += 0.1f;
-                // level._getCurrentModule()._updateScreenWindow(screenPosStepper);
+
+                screenPosStepper.x += 0.1f;
+                level.getCurrentModule().updateScreenWindow(screenPosStepper);
                 TheEngine.getInstance().update((float) timer.getDeltaTime());
 
                 glfwSwapBuffers(window); // swap the color buffers
