@@ -24,13 +24,35 @@ public class Vector3f {
         this.z = z;
     }
 
-    public Vector3f scale(float d) {
-        return new Vector3f(this.x*d,this.y*d,this.z*d);
+    /**
+     * Adds this vector to another vector and results the result.
+     * @param other vector
+     * @return returns this + other
+     */
+    public Vector3f add(Vector3f other) {
+        return new Vector3f(this.x + other.x, this.y + other.y, this.z + other.z);
     }
 
-    public void add(Vector3f v) {
-        this.x += v.x;
-        this.y += v.y;
-        this.z += v.z;
+    /**
+     * Adds other vector to this vector and stores the result in this vector.
+     * @param other vector
+     */
+    public void addi(Vector3f other) {
+        this.x += other.x;
+        this.y += other.y;
+        this.z += other.z;
+    }
+
+    /**
+     * Subtracts other
+     * @param other
+     * @return
+     */
+    public Vector3f sub(Vector3f other) {
+        return new Vector3f(this.x - other.x, this.y - other.y, this.z - other.z);
+    }
+
+    public Vector3f scale(float d) {
+        return new Vector3f(this.x*d,this.y*d,this.z*d);
     }
 }

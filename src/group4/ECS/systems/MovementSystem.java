@@ -19,7 +19,7 @@ public class MovementSystem extends IteratingSystem {
         PositionComponent positionComponent = Mappers.positionMapper.get(entity);
         MovementComponent movementComponent = Mappers.movementMapper.get(entity);
 
-        movementComponent.velocity.add(movementComponent.acceleration.scale(deltaTime));
-        positionComponent.position.add(movementComponent.velocity.scale(deltaTime));
+        movementComponent.velocity.addi(movementComponent.acceleration.scale(deltaTime));
+        positionComponent.position.addi(movementComponent.velocity.scale(deltaTime));
     }
 }
