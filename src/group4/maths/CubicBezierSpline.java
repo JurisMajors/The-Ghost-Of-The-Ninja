@@ -17,7 +17,7 @@ public class CubicBezierSpline extends Spline {
     @Override
     public Vector3f getPoint(float u) {
         /* cubic bezier is defined by
-         (1 - u)^3 * P_0 + 3*u*(1-u)^2 * P_1 + 3*u^2*(1-u) * P_2 + u^3 * P_3
+         (1 - u)^3 * P_0 + 3*u*(1-u)^2 * P_1 + 3*u^2*(1-u) * P_2 + 3 * u^3 * P_3
          where P_0 ... P_3 are the control points.
          */
         Vector3f result = new Vector3f();
