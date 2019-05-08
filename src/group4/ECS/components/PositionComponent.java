@@ -7,7 +7,7 @@ public class PositionComponent implements Component {
 
     public Vector3f position;
     // TODO: left, right(, down, up) as int in enum?
-    public int orientation = 0;
+    public int orientation;
 
     public PositionComponent(Vector3f position) {
         this.position = position;
@@ -17,5 +17,4 @@ public class PositionComponent implements Component {
         this.position = position;
         this.orientation = orientation;
     }
-
 }
