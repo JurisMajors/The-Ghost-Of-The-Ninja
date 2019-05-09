@@ -3,8 +3,6 @@ package group4.game;
 import com.badlogic.ashley.core.Engine;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.RenderSystem;
-import group4.engine.GameState;
-import group4.engine.Timer;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
@@ -33,7 +31,6 @@ public class Main implements Runnable {
     public static final float SCREEN_WIDTH = 20.0f;
     public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
 
-    private GameState gs;
 
     /**
      * Creates a new thread on which it wel run() the game.
@@ -90,14 +87,14 @@ public class Main implements Runnable {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        // Initialize the gamestate
-        gs = new GameState();
+        // Initialize the engine
+        engine = TheEngine.getInstance();
+
+        // Set up all engine systems
+        engine.addSystem(new RenderSystem());
 
         // Initialize the level
         this.level = new SimpleLevel();
-
-        // initialize the rendering
-        TheEngine.getInstance().addSystem(new RenderSystem());
     }
 
     /**
