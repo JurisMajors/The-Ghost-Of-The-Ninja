@@ -4,6 +4,7 @@ public class NNGameState implements NNGameStateInterface {
 
     @Override
     public double[] decode() {
+        //TODO: decode a GameState
         return new double[0];
     }
     @Override
