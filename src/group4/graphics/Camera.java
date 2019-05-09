@@ -1,21 +1,18 @@
 package group4.graphics;
 
-import group4.game.Player;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 
 public class Camera {
     public Vector3f position;
     public Matrix4f view_matrix;
-    private Player player;
-    public Camera(Player player) {
-        this.player = player;
-        this.position = player.position;
+
+    public Camera() {
+        this.position = new Vector3f(0.0f, 0.0f, 0.0f);
         this.view_matrix = Matrix4f.translate(this.position);
     }
 
-    void update() {
-        this.position = player.position;
+    public void update() {
         this.view_matrix = Matrix4f.translate(this.position);
     }
 

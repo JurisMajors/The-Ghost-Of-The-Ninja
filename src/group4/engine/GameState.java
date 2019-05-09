@@ -37,6 +37,6 @@ public class GameState {
     }
 
     public Camera getActiveCamera() {
-        return this.activeCamera();
+        return this.activeCamera;
     }
 }
