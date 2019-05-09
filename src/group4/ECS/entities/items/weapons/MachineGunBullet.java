@@ -7,11 +7,11 @@ public class MachineGunBullet extends Bullet {
 
     // TODO: possibly decouple shader from graphics ?? Passing on shader to each component
     // might be expensinve?
-    public MachineGunBullet(Vector3f p, Vector3f d, String shader) {
-        super(p, d);
+    public MachineGunBullet(Vector3f p, String shader) {
+        super(p);
 
-        // TODO: bullet texture
-        String texture = null;
+        // bullet texture (16 x 16)
+        String texture = "src/group4/res/textures/weapons/Bullet.png";
 
         // TODO: proper specs
         this.add(new PhysicsComponent(0.5f, 0.5f));

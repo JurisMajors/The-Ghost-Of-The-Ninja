@@ -1,7 +1,9 @@
 package group4.levelSystem.modules;
 
 import group4.ECS.entities.items.weapons.AK47;
+import group4.ECS.entities.items.weapons.Bullet;
 import group4.ECS.entities.items.weapons.Gun;
+import group4.ECS.entities.items.weapons.MachineGunBullet;
 import group4.maths.Vector3f;
 import group4.ECS.entities.world.Block;
 import group4.levelSystem.Level;
@@ -20,12 +22,17 @@ public class SimpleModule extends Module {
                 Block beautifulBlock = new Block(new Vector3f(i * 2.0f, 0.0f, 0.0f),
                         new Vector3f(2.0f, 2.0f, 0.0f), "src/group4/res/shaders/simple", "src/group4/res/textures/debug.jpeg");
 
-                this.addEntity(beautifulBlock);
             }
 
             Gun gun = new AK47(new Vector3f( 2.0f, 2.0f, 0.0f),
                     "src/group4/res/shaders/simple");
-            this.addEntity(gun);
+
+            Bullet bullet_0 = new MachineGunBullet(new Vector3f(2.2f, 3.0f, 0.0f),
+                     "src/group4/res/shaders/simple");
+            Bullet bullet_1 = new MachineGunBullet(new Vector3f(2.2f, 3.2f, 0.0f),
+                    "src/group4/res/shaders/simple");
+            Bullet bullet_2 = new MachineGunBullet(new Vector3f(2.2f, 3.4f, 0.0f),
+                    "src/group4/res/shaders/simple");
         }
     }
 

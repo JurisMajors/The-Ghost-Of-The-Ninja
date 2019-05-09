@@ -8,12 +8,15 @@ import group4.maths.Vector3f;
 
 public class Bullet extends Entity {
 
+    // bounding box
+    protected Vector3f d = new Vector3f(0.3f, 0.3f, 0.0f);
+
     // Construct vertex array
     protected float[] vertices = new float[] {
             0, 0, 0,
-            0, 0.1f, 0,
-            0.15f, 0.1f, 0,
-            0.15f, 0, 0,
+            0, d.y, 0,
+            d.x, d.y, 0,
+            d.x, 0, 0,
     };
 
     // Construct index array (used for triangle mesh)
@@ -30,7 +33,7 @@ public class Bullet extends Entity {
             1, 1
     };
 
-    public Bullet(Vector3f p, Vector3f d) {
+    public Bullet(Vector3f p) {
 
         // add needed components
         this.add(new PositionComponent(p));
