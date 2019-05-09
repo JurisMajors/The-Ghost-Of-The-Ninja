@@ -21,9 +21,6 @@ public class Mappers {
     public static final ComponentMapper<MovementComponent> movementMapper =
             ComponentMapper.getFor(MovementComponent.class);
 
-    public static final ComponentMapper<InputComponent> inputMapper =
-            ComponentMapper.getFor(InputComponent.class);
-
     public static final ComponentMapper<ConsumableComponent> consumableMapper =
             ComponentMapper.getFor(ConsumableComponent.class);
 
