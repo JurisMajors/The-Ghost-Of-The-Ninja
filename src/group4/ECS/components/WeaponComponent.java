@@ -5,12 +5,10 @@ import group4.ECS.etc.EntityConst;
 
 public class WeaponComponent implements Component {
 
-    public int damage;
     public int fireRate;
     public EntityConst.BulletType type;
 
-    public WeaponComponent(int damage, int fireRate, EntityConst.BulletType type) {
-        this.damage = damage;
+    public WeaponComponent(int fireRate, EntityConst.BulletType type) {
         this.fireRate = fireRate;
         this.type = type;
     }
