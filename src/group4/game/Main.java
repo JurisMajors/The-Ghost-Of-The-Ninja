@@ -114,8 +114,6 @@ public class Main implements Runnable {
         timer = new Timer();
         boolean render = true;
 
-        Vector3f screenPosStepper = new Vector3f(0, 0, 0);
-      
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
@@ -127,11 +125,7 @@ public class Main implements Runnable {
             if (render) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-                // Demo update: Step the screen window of the module
-
-                screenPosStepper.x += 0.1f;
-                level.getCurrentModule().updateScreenWindow(screenPosStepper);
-                TheEngine.getInstance().update((float) timer.getDeltaTime());
+                TheEngine.getInstance().update((float) timer.getDeltaTime()); // Update the gamestate
 
                 glfwSwapBuffers(window); // swap the color buffers
                 render = false;
