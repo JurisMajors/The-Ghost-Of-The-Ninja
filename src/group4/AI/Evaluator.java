@@ -19,16 +19,13 @@ import java.util.List;
  */
 public class Evaluator implements FitnessEvaluator<Brain> {
 
-    // current module on which the AI trains
+    /** current Module to train AI on **/
     private Module currModule;
 
-    // TODO: make timer singleton
+    /** TODO: make timer singleton **/
     private Timer timer;
 
-    // level
-    private Level level;
-
-    // TODO: find feasible time limit
+    /** TODO: find feasible time limit **/
     double timelimit;
 
     public Evaluator(Module currModule) {
@@ -36,9 +33,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         this.timer = new Timer();
         this.timelimit = 120.00;
 
-        // temporary, for now we only have the simple level
-        this.level = new SimpleLevel();
-
+        // register systems to engine
         initSystems();
     }
 
