@@ -1,19 +1,20 @@
 package group4.AI;
 
 import com.badlogic.ashley.core.Entity;
+import org.nd4j.linalg.api.ndarray.INDArray;
 import java.util.List;
 
 /**
  * This acts as a decoder of the game states.
- * Translating it in to a form such that the NN can understand it. (double array)
+ * Translating it in to a form such that the NN can understand it. (INDArray)
  */
 public interface NNGameStateInterface {
     /**
      * Translates GameState information in to a double array.
      * Used for neural network input.
-     * @return array of doubles, size is #tiles on the screen
+     * @return input for the neural net in INDAray format
      */
-    double[] decode(); //TODO: GameState);
+    INDArray decode();
 
     /**
      * Size of the decoded array
