@@ -1,5 +1,7 @@
 package group4.levelSystem.modules;
 
+import com.badlogic.gdx.math.Vector3;
+import group4.ECS.entities.Player;
 import group4.maths.Vector3f;
 import group4.ECS.entities.Block;
 import group4.levelSystem.Level;
@@ -27,6 +29,9 @@ public class SimpleModule extends Module {
                 this.addEntity(beautifulBlock);
             }
         }
+        Player player = new Player(new Vector3f(0.0f, 3.0f, 0.0f),
+                new Vector3f(2.0f, 2.0f, 0.0f), "src/group4/res/shaders/simple", "src/group4/res/textures/debug.jpeg");
+        this.addEntity(player);
     }
 
     @Override

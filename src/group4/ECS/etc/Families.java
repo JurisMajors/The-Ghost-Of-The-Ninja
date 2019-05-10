@@ -40,4 +40,8 @@ public class Families {
     // all cameras
     public static final Family cameraFamily = Family
             .all(CameraComponent.class).get();
+
+    // player tmp
+    public static final Family playerFamily = Family
+            .all(PlayerInputComponent.class).get();
 }
