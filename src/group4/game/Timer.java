@@ -80,7 +80,7 @@ public class Timer {
      * Gives the current system time as a double.
      * @return double, the current system time.
      */
-    private double getTime() {
+    public double getTime() {
         return (double) System.nanoTime() / (double) 1000000000L;
     }
 }

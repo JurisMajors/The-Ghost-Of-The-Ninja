@@ -1,5 +1,9 @@
 package group4.AI;
 
+import group4.levelSystem.Level;
+import group4.levelSystem.Module;
+import group4.levelSystem.levels.SimpleLevel;
+import group4.levelSystem.modules.SimpleModule;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.maths.random.Probability;
 import org.uncommons.watchmaker.framework.*;
@@ -39,6 +43,10 @@ public class Evolver {
     private static AbstractBrainMutation mutator = new StandardMutation(new Probability(mutationProbability));
     /** Crossover **/
     private static AbstractBrainCrossover crossover = new StandardCrossover();
+    /** the level (temporary) **/
+    private static Level level = new SimpleLevel();
+    /** TODO: list of all modules on which we want to train **/
+    private static Module currModule = new SimpleModule(level);
 
     private static void toFile(Brain b, String filePath) throws IOException {
         b.toFile(filePath);
@@ -56,7 +64,7 @@ public class Evolver {
 
         // factory of neural networks
         AbstractCandidateFactory<Brain> factory = new BrainFactory(Evolver.layerSizes, decoder);
-        FitnessEvaluator<Brain> fitnessEvaluator = new Evaluator();
+        FitnessEvaluator<Brain> fitnessEvaluator = new Evaluator(currModule);
         SelectionStrategy<Object> selection = new RouletteWheelSelection();
         Random rng = new MersenneTwisterRNG();
 

@@ -17,17 +17,22 @@ public class Families {
     public static final Family physicsFamily = Family
             .all(PhysicsComponent.class, PositionComponent.class, MovementComponent.class).get();
 
-    // all moving entities, i.e. having a velocity and a position and an input (explicit movement)
+    // all moving entities, i.e. having a velocity and a position
     public static final Family movementFamily = Family
-            .all(MovementComponent.class, PositionComponent.class, AIInputComponent.class).get();
+            .all(MovementComponent.class, PositionComponent.class).get();
 
     // all entities which require animation
+    // TODO: for now this is the same as graphics, how to represent animation?
     public static final Family animationFamily = Family
             .all(PositionComponent.class, GraphicsComponent.class).get();
 
     // all entities having some sort of audio
     public static final Family audioFamily = Family
             .all(AudioComponent.class).get();
+
+    // all entities having some sort of audio
+    public static final Family gamestateFamily = Family
+            .all(DimensionComponent.class).get();
 
     // all consumables, items
     public static final Family consumableFamily = Family
