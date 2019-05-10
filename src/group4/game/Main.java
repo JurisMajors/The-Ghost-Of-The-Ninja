@@ -2,6 +2,8 @@ package group4.game;
 
 import com.badlogic.ashley.core.Engine;
 import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.CameraSystem;
+import group4.ECS.systems.MovementSystem;
 import group4.ECS.systems.RenderSystem;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -97,6 +99,8 @@ public class Main implements Runnable {
         engine = TheEngine.getInstance();
 
         // Set up all engine systems
+        engine.addSystem(new CameraSystem());
+        engine.addSystem(new MovementSystem());
         engine.addSystem(new RenderSystem());
 
         // Initialize the level

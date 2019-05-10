@@ -62,7 +62,7 @@ public class CameraSystem extends EntitySystem {
         PositionComponent pc = Mappers.positionMapper.get(player);
 
         // Update the view matrix to be the player position
-        cc.view_matrix = Matrix4f.translate(pc.position);
+        cc.viewMatrix = Matrix4f.translate(pc.position);
     }
 
     /**

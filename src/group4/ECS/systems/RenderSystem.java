@@ -4,10 +4,12 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.utils.ImmutableArray;
+import group4.ECS.components.CameraComponent;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
+import group4.ECS.etc.TheEngine;
 import group4.game.Main;
 import group4.maths.Matrix4f;
 
@@ -52,6 +54,13 @@ public class RenderSystem extends EntitySystem {
     public void update(float deltaTime) {
         // for each registered entity, render it statically
         // TODO: pass on camera information
+        Entity mainCamera;
+        CameraComponent cc;
+            mainCamera = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0); // There should only be one camera currently
+            cc = mainCamera.getComponent(CameraComponent.class);
+
+
+
         for (Entity entity : entities) {
             // get mapper for O(1) component retrieval
             PositionComponent pc = Mappers.positionMapper.get(entity);
@@ -59,12 +68,11 @@ public class RenderSystem extends EntitySystem {
 
             // render
             gc.shader.bind();
-            gc.shader.setUniformMat4f("pr_matrix", Matrix4f.orthographic(
-                    0, Main.SCREEN_WIDTH, 0, Main.SCREEN_HEIGHT, -1.0f, 1.0f)
-            );
+            gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrix);
 
             // TODO: specify positioning, for the simple block, position refers to lower left corner
-            gc.shader.setUniformMat4f("vw_matrix", Matrix4f.translate(pc.position));
+            gc.shader.setUniformMat4f("vw_matrix", cc.viewMatrix);
+//            gc.shader.setUniformMat4f("vw_matrix", Matrix4f.translate(pc.position));
             gc.shader.setUniform1f("tex", 1);
             gc.texture.bind();
             glActiveTexture(GL_TEXTURE1);
