@@ -2,6 +2,7 @@ package group4.graphics;
 
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
+import group4.utils.ShaderParser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +10,9 @@ import java.util.Map;
 import static org.lwjgl.opengl.GL41.*;
 
 public class Shader {
+    // Storing all shader resources when preloaded.
+    public static Shader SIMPLE; // TODO: More to be added.
+
     // Storing the attribute locations for in the shader
     public static final int VERTEX_ATTRIBUTE = 0;
     public static final int TEXCOORD_ATTRIBUTE = 1;
@@ -32,6 +36,14 @@ public class Shader {
         glAttachShader(shaderId, fragShader);
         glLinkProgram(shaderId);
         glValidateProgram(shaderId);
+    }
+
+    /**
+     * Function which loads in all shaders as constants for easy access later on.
+     * Should be executed once during game initialization.
+     */
+    public static void loadAllShaders() {
+        SIMPLE = ShaderParser.loadShader("src/group4/res/shaders/simple");
     }
 
     /**
