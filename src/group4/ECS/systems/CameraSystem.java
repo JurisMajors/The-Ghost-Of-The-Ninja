@@ -54,11 +54,11 @@ public class CameraSystem extends EntitySystem {
      */
     public void update(float deltaTime) {
         // Get the camera and the player (there should be only one of both, currently)
-        Entity main_camera = entities.get(0);
-        Entity player = TheEngine.getInstance().getEntitiesFor(Families.Player).get(0);
+        Entity mainCamera = entities.get(0);
+        Entity player = TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0);
 
         // get mapper for O(1) component retrieval
-        CameraComponent cc = Mappers.cameraMapper.get(main_camera);
+        CameraComponent cc = Mappers.cameraMapper.get(mainCamera);
         PositionComponent pc = Mappers.positionMapper.get(player);
 
         // Update the view matrix to be the player position
