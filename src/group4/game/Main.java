@@ -125,7 +125,7 @@ public class Main implements Runnable {
             long now = System.nanoTime();
             long updateLength = now - lastLoopTime;
             lastLoopTime = now;
-            double delta = updateLength / ((double)optimalTime);
+            double delta = updateLength / ((double) optimalTime);
 
             // update the frame counter
             lastFpsTime += updateLength;
@@ -133,9 +133,8 @@ public class Main implements Runnable {
 
             // update our FPS counter if a second has passed since
             // we last recorded
-            if (lastFpsTime >= (long) 1e9)
-            {
-                System.out.println("(FPS: "+fps+")");
+            if (lastFpsTime >= (long) 1e9) {
+                System.out.println("(FPS: " + fps + ")");
                 lastFpsTime = 0;
                 fps = 0;
             }
@@ -160,7 +159,7 @@ public class Main implements Runnable {
             // us our final value to wait for
             // remember this is in ms, whereas our lastLoopTime etc. vars are in ns.
             try {
-                Thread.sleep((lastLoopTime-System.nanoTime() + optimalTime)/1000000 );
+                Thread.sleep((lastLoopTime - System.nanoTime() + optimalTime) / (long) 1e6);
             } catch (Exception e) {
                 continue;
             }
