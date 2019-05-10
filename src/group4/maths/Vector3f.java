@@ -151,4 +151,17 @@ public class Vector3f {
         return (float) Math.sqrt(diff.dot(diff));
     }
 
+    public void rotateXYi(float angle) {
+        float newX = (float) (this.x * Math.cos(angle) - this.y * Math.sin(angle));
+        float newY = (float) (this.x * Math.sin(angle) + this.y * Math.cos(angle));
+        this.x = newX;
+        this.y = newY;
+    }
+
+    public Vector3f rotateXY(float angle) {
+        float newX = (float) (this.x * Math.cos(angle) - this.y * Math.sin(angle));
+        float newY = (float) (this.x * Math.sin(angle) + this.y * Math.cos(angle));
+        return new Vector3f(newX, newY, this.z);
+    }
+
 }
