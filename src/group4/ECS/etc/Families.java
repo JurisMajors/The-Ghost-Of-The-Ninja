@@ -9,30 +9,26 @@ import group4.ECS.components.*;
  */
 public class Families {
 
-    // all entities of the graphicsFamily will get rendered, so they must possess graphics and a position
-    public static final Family graphicsFamily = Family
-            .all(GraphicsComponent.class, PositionComponent.class).get();
+    //All platforms
+    public static final Family platformFamily = Family.all(PlatformComponent.class).get();
 
-    // all entities of the graphicsFamily will get rendered, so they must possess graphics and a position
-    public static final Family physicsFamily = Family
-            .all(PhysicsComponent.class, PositionComponent.class, MovementComponent.class).get();
+    //All moving platforms
+    public static final Family movingPlatformFamily = Family.all(MovementComponent.class, PlatformComponent.class).get();
 
-    // all moving entities, i.e. having a velocity and a position and an input (explicit movement)
-    public static final Family movementFamily = Family
-            .all(MovementComponent.class, PositionComponent.class, AIInputComponent.class).get();
+    //All moving entities except platforms
+    public static final Family movingNonPlatformFamily = Family.all(MovementComponent.class).exclude(PlatformComponent.class).get();
 
-    // all entities which require animation
-    public static final Family animationFamily = Family
-            .all(PositionComponent.class, GraphicsComponent.class).get();
+    //All moving mobs except flying mobs
+    public static final Family movingGravityMobFamily = Family.all(GravityComponent.class, MovementComponent.class, MobComponent.class).get();
 
-    // all entities having some sort of audio
-    public static final Family audioFamily = Family
-            .all(AudioComponent.class).get();
+    //All flying mobs
+    public static final Family movingNonGravityMobFamily = Family.all(MovementComponent.class, MobComponent.class).exclude(GravityComponent.class).get();
 
-    // all consumables, items
-    public static final Family consumableFamily = Family
-            .all(ConsumableComponent.class, PositionComponent.class).get();
+    //All (moving) player(s)
+    public static final Family playerFamily = Family.all(MovementComponent.class, PlayerComponent.class).get();
 
+    //All entities (with a position)
+    public static final Family allFamily = Family.all(PositionComponent.class).get();
     // all enemies, the player and destructible objects
     public static final Family combatFamily = Family
             .all(PositionComponent.class, StatsComponent.class, GraphicsComponent.class).get();
