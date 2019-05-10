@@ -146,4 +146,9 @@ public class Vector3f {
         this.z /= len;
     }
 
+    public float euclidDist(Vector3f other) {
+        Vector3f diff = this.sub(other);
+        return (float) Math.sqrt(diff.dot(diff));
+    }
+
 }
