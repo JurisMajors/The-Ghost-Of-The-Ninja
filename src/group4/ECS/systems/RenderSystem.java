@@ -11,8 +11,8 @@ import group4.ECS.etc.Mappers;
 import group4.game.Main;
 import group4.maths.Matrix4f;
 
-import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
-import static org.lwjgl.opengles.GLES20.glActiveTexture;
+import static org.lwjgl.opengl.GL41.GL_TEXTURE1;
+import static org.lwjgl.opengl.GL41.glActiveTexture;
 
 /**
  * This system renders all entities which are in the graphicsFamily, thus having a
