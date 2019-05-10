@@ -12,6 +12,17 @@ public class Vector3f {
     }
 
     /**
+     * Creates vector (x,x,x)
+     *
+     * @param x
+     */
+    public Vector3f(float x) {
+        this.x = x;
+        this.y = x;
+        this.z = x;
+    }
+
+    /**
      * Creates vector (x,y,z)
      *
      * @param x

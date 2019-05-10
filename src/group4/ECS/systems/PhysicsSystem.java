@@ -1,28 +1,23 @@
 package group4.ECS.systems;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.ashley.systems.IteratingSystem;
+import group4.ECS.components.MovementComponent;
+import group4.ECS.components.GravityComponent;
 import group4.ECS.etc.Families;
+import group4.ECS.etc.Mappers;
 
-public class PhysicsSystem extends EntitySystem {
-    private ImmutableArray<Entity> entities;
+public class PhysicsSystem extends IteratingSystem {
 
-    public PhysicsSystem() {}
-
-    public PhysicsSystem(int priority) {}
-
-    public void addedToEngine(Engine engine) {
-        entities = engine.getEntitiesFor(Families.physicsFamily);
+    public PhysicsSystem() {
+        super(Families.physicsFamily);
     }
 
-    public void removedFromEngine(Engine engine) {}
+    @Override
+    public void processEntity(Entity entity, float deltaTime) {
+        MovementComponent movementComponent = Mappers.movementMapper.get(entity);
+        GravityComponent gravityComponent = Mappers.physicsMapper.get(entity);
 
-    public void update(float deltaTime) {}
-
-    public boolean checkProcessing() { return false; }
-
-    public void setProcessing(boolean processing) {}
-
+        movementComponent.velocity.addi(gravityComponent.gravity.scale(deltaTime));
+    }
 }
