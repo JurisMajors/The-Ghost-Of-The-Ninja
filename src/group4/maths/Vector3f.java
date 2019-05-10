@@ -21,7 +21,7 @@ public class Vector3f {
     public Vector3f(float x, float y, float z) {
         this.x = x;
         this.y = y;
-        this.z = z;
+        this.z = z;y=0;
     }
 
     /**
@@ -144,6 +144,11 @@ public class Vector3f {
         this.x /= len;
         this.y /= len;
         this.z /= len;
+    }
+
+    public float euclidDist(Vector3f other) {
+        Vector3f diff = this.sub(other);
+        return (float) Math.sqrt(diff.dot(diff));
     }
 
 }
