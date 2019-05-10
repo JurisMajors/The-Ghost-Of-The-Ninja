@@ -111,9 +111,22 @@ public class Main implements Runnable {
      * The main game loop where we update the GameState and render (if required).
      */
     private void loop() {
+        long lastLoopTime = System.nanoTime();
+        final int TARGET_FPS = 60;
+        final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
+        double lastFpsTime = 0.0;
+        int fps = 0;
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
+            // work out how long its been since the last update, this
+            // will be used to calculate how far the entities should
+            // move this loop
+            long now = System.nanoTime();
+            long updateLength = now - lastLoopTime;
+            lastLoopTime = now;
+            double delta = updateLength / ((double)OPTIMAL_TIME);
+
             // update the frame counter
             lastFpsTime += updateLength;
             fps++;
