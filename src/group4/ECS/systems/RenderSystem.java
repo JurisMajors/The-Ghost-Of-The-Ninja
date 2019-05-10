@@ -10,7 +10,6 @@ import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
-import group4.game.Main;
 import group4.maths.Matrix4f;
 
 import static org.lwjgl.opengl.GL41.GL_TEXTURE1;
@@ -54,13 +53,14 @@ public class RenderSystem extends EntitySystem {
     public void update(float deltaTime) {
         // for each registered entity, render it statically
         // TODO: pass on camera information
-        Entity mainCamera;
-        CameraComponent cc;
-            mainCamera = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0); // There should only be one camera currently
-            cc = mainCamera.getComponent(CameraComponent.class);
+        Entity camera;
+        CameraComponent camera_cc;
+        PositionComponent camera_pc;
+        camera = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0); // There should only be one camera currently
+        camera_cc = camera.getComponent(CameraComponent.class);
+        camera_pc = camera.getComponent(PositionComponent.class);
 
-
-
+        System.out.println(camera_pc.position);
         for (Entity entity : entities) {
             // get mapper for O(1) component retrieval
             PositionComponent pc = Mappers.positionMapper.get(entity);
@@ -68,10 +68,11 @@ public class RenderSystem extends EntitySystem {
 
             // render
             gc.shader.bind();
-            gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrix);
+            gc.shader.setUniformMat4f("pr_matrix", camera_cc.projectionMatrix);
 
             // TODO: specify positioning, for the simple block, position refers to lower left corner
-            gc.shader.setUniformMat4f("vw_matrix", cc.viewMatrix);
+            gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position));
+            gc.shader.setUniformMat4f("vw_matrix", camera_cc.viewMatrix);
 //            gc.shader.setUniformMat4f("vw_matrix", Matrix4f.translate(pc.position));
             gc.shader.setUniform1f("tex", 1);
             gc.texture.bind();
