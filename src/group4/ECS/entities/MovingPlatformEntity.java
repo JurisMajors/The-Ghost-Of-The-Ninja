@@ -1,5 +1,8 @@
 package group4.ECS.entities;
 
+import group4.ECS.components.MovementComponent;
+import group4.ECS.components.PlatformComponent;
+import group4.ECS.components.RangeComponent;
 import group4.maths.Vector3f;
 
 

@@ -4,7 +4,10 @@ import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.TheEngine;
+import group4.graphics.Shader;
+import group4.graphics.Texture;
 import group4.maths.Vector3f;
+import group4.utils.ShaderParser;
 
 /**
  * Block entity for demonstration purposes
@@ -17,7 +20,7 @@ public class Block extends Entity {
      * @param p The position of the block (lower left corner)
      * @param d The dimensions of the block
      */
-    public Block(Vector3f p, Vector3f d, String shader, String texture) {
+    public Block(Vector3f p, Vector3f d, String shaderPath, String texturePath) {
 
         // Construct vertex array
         float[] vertices = new float[] {
@@ -42,7 +45,11 @@ public class Block extends Entity {
         };
 
         // add needed components
-        this.add(new PositionComponent(p));
+        this.add(new PositionComponent(p, d));
+
+        Shader shader = ShaderParser.loadShader(shaderPath);
+        Texture texture = new Texture(texturePath);
+
         this.add(new GraphicsComponent(shader, texture, vertices, indices, tcs));
 
         // register to engine

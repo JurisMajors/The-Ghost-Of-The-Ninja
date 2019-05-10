@@ -7,6 +7,9 @@ import group4.maths.Vector3f;
 
 public class MobEntity extends Entity {
 
+    // joris TODO: rewrite this to subclasses
+    // joris TODO: graphics component
+
     /**
      * Creates a flying mob (not affected by gravity)
      *

@@ -7,6 +7,8 @@ import group4.maths.Vector3f;
 
 public class PlayerEntity extends Entity {
 
+    // joris TODO: graphicsComponent
+
     /**
      * Creates a player
      *
