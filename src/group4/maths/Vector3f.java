@@ -21,7 +21,7 @@ public class Vector3f {
     public Vector3f(float x, float y, float z) {
         this.x = x;
         this.y = y;
-        this.z = z;y=0;
+        this.z = z;
     }
 
     /**
