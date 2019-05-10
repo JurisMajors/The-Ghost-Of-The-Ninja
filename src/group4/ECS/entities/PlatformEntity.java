@@ -30,7 +30,7 @@ public class PlatformEntity extends Entity {
      */
     public PlatformEntity(Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f lbbCornerRange, Vector3f rtfCornerRange) {
         this.add(new PositionComponent(position, dimension));
-        //velocity of platform could only be equal to velocity or -velocity thus velocityRange=|velocity|
+        //velocity of platforms could only be equal to velocity or -velocity thus velocityRange=|velocity|
         this.add(new MovementComponent(velocity, velocity.abs()));
         //range of the center point thus lbb corner is lbbCornerRange+dimension and rtf corner is rtfCornerRange-dimension
         this.add(new RangeComponent(lbbCornerRange.add(dimension), rtfCornerRange.add(dimension.scale(-1.0f))));

@@ -7,14 +7,33 @@ import group4.maths.Vector3f;
 
 public class MobEntity extends Entity {
 
-    public MobEntity(Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f velocityRange, Vector3f acceleration){
+    /**
+     * Creates a flying mob (not affected by gravity)
+     *
+     * @param position      center point of mob
+     * @param dimension     along with the position describes a cuboid with lbbCorner=position-dimention and rtfCorner=position+dimention
+     * @param velocity      velocity vector of mob
+     * @param velocityRange restricting the velocity: -velocityRange.x<=velocity.x<=velocityRange.x and velocity.y<=velocityRange.y
+     * @param acceleration  acceleration vector of mob
+     */
+    public MobEntity(Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f velocityRange, Vector3f acceleration) {
         this.add(new PositionComponent(position, dimension));
         this.add(new MovementComponent(velocity, velocityRange, acceleration));
         this.add(new MobComponent());
         TheEngine.getInstance().addEntity(this);
     }
 
-    public MobEntity(Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f velocityRange, Vector3f acceleration, Vector3f gravity){
+    /**
+     * Creates a walking and jumping mob (no jumping if velocityRange.y=0)
+     *
+     * @param position      center point of mob
+     * @param dimension     along with the position describes a cuboid with lbbCorner=position-dimention and rtfCorner=position+dimention
+     * @param velocity      velocity vector of mob
+     * @param velocityRange restricting the velocity: -velocityRange.x<=velocity.x<=velocityRange.x and velocity.y<=velocityRange.y
+     * @param acceleration  acceleration vector of mob
+     * @param gravity       acceleration vector of mob due to gravity
+     */
+    public MobEntity(Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f velocityRange, Vector3f acceleration, Vector3f gravity) {
         this.add(new PositionComponent(position, dimension));
         this.add(new MovementComponent(velocity, velocityRange, acceleration));
         this.add(new GravityComponent(gravity));
