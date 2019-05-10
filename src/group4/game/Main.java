@@ -112,8 +112,8 @@ public class Main implements Runnable {
      */
     private void loop() {
         long lastLoopTime = System.nanoTime();
-        final int TARGET_FPS = 60;
-        final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
+        final int targetFps = 60;
+        final long optimalTime = (long) 1e9 / targetFps;
         double lastFpsTime = 0.0;
         int fps = 0;
         // Run the rendering loop until the user has attempted to close
@@ -125,7 +125,7 @@ public class Main implements Runnable {
             long now = System.nanoTime();
             long updateLength = now - lastLoopTime;
             lastLoopTime = now;
-            double delta = updateLength / ((double)OPTIMAL_TIME);
+            double delta = updateLength / ((double)optimalTime);
 
             // update the frame counter
             lastFpsTime += updateLength;
@@ -133,7 +133,7 @@ public class Main implements Runnable {
 
             // update our FPS counter if a second has passed since
             // we last recorded
-            if (lastFpsTime >= 1000000000)
+            if (lastFpsTime >= (long) 1e9)
             {
                 System.out.println("(FPS: "+fps+")");
                 lastFpsTime = 0;
@@ -160,7 +160,7 @@ public class Main implements Runnable {
             // us our final value to wait for
             // remember this is in ms, whereas our lastLoopTime etc. vars are in ns.
             try {
-                Thread.sleep((lastLoopTime-System.nanoTime() + OPTIMAL_TIME)/1000000 );
+                Thread.sleep((lastLoopTime-System.nanoTime() + optimalTime)/1000000 );
             } catch (Exception e) {
                 continue;
             }
