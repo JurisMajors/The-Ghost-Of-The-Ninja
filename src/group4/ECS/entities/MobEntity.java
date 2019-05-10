@@ -13,7 +13,7 @@ public class MobEntity extends Entity {
      * @param position      center point of mob
      * @param dimension     along with the position describes a cuboid with lbbCorner=position-dimention and rtfCorner=position+dimention
      * @param velocity      velocity vector of mob
-     * @param velocityRange restricting the velocity: -velocityRange.x<=velocity.x<=velocityRange.x and velocity.y<=velocityRange.y
+     * @param velocityRange restricting the velocity: -velocityRange.x<=velocity.x<=velocityRange.x and -velocityRange.y<=velocity.y<=velocityRange.y
      * @param acceleration  acceleration vector of mob
      */
     public MobEntity(Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f velocityRange, Vector3f acceleration) {
@@ -29,7 +29,7 @@ public class MobEntity extends Entity {
      * @param position      center point of mob
      * @param dimension     along with the position describes a cuboid with lbbCorner=position-dimention and rtfCorner=position+dimention
      * @param velocity      velocity vector of mob
-     * @param velocityRange restricting the velocity: -velocityRange.x<=velocity.x<=velocityRange.x and velocity.y<=velocityRange.y
+     * @param velocityRange restricting the velocity: -velocityRange.x<=velocity.x<=velocityRange.x and -velocityRange.y<=velocity.y<=velocityRange.y
      * @param acceleration  acceleration vector of mob
      * @param gravity       acceleration vector of mob due to gravity
      */
