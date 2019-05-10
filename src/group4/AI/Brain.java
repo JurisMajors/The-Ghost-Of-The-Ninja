@@ -90,7 +90,7 @@ public class Brain {
      * @param input decoded state of the game
      * @return move to make
      */
-    public String feedForward(INDArray input) {
+    private String feedForward(INDArray input) {
         // this can be changed that feed forward takes
         //  a game state as an input and does the decoding here
         // probably preferable, but no game state class yet
@@ -98,5 +98,13 @@ public class Brain {
         List<INDArray> result = nn.feedForward(input);
         //TODO: Translate resulting array to a move
         return "";
+    }
+
+    /**
+     * Calculates the move the ghost should take
+     * @return the move the ghost should take
+     */
+    public String think() {
+        return this.feedForward(this.decoder.decode());
     }
 }
