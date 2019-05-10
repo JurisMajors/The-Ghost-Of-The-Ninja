@@ -44,9 +44,9 @@ public class Evolver {
     /** Crossover **/
     private static AbstractBrainCrossover crossover = new StandardCrossover();
     /** the level (temporary) **/
-    private static Level level = new SimpleLevel();
-    /** TODO: list of all modules on which we want to train **/
-    private static Module currModule = new SimpleModule(level);
+    public static Level level = new SimpleLevel();
+    /** TODO: find feasible time limit **/
+    public static double timelimit = 120.00;
 
     private static void toFile(Brain b, String filePath) throws IOException {
         b.toFile(filePath);
@@ -64,7 +64,7 @@ public class Evolver {
 
         // factory of neural networks
         AbstractCandidateFactory<Brain> factory = new BrainFactory(Evolver.layerSizes, decoder);
-        FitnessEvaluator<Brain> fitnessEvaluator = new Evaluator(currModule);
+        FitnessEvaluator<Brain> fitnessEvaluator = new Evaluator();
         SelectionStrategy<Object> selection = new RouletteWheelSelection();
         Random rng = new MersenneTwisterRNG();
 
