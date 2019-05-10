@@ -1,6 +1,8 @@
 package group4.maths;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.utils.ImmutableArray;
+import group4.ECS.components.AIComponent;
 import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.Mappers;
 
@@ -27,11 +29,13 @@ public class Ray {
      * @param entities the entities that the ray might intersect
      * @return position at first intersection of a bounding box
      */
-    Vector3f cast(List<Entity> entities) {
+    public Vector3f cast(ImmutableArray<Entity> entities) {
         Vector3f closestIntersection = null; // current closest intersection of the ray
         float curDist = Float.MAX_VALUE;
         // for each entity calculate the intersection
         for (Entity e : entities) {
+            if (e.getComponent(AIComponent.class) != null) continue; // skip the ghost
+
             List<Vector3f> intersections = this.intersects(e);
             if (intersections.isEmpty()) continue;
 
