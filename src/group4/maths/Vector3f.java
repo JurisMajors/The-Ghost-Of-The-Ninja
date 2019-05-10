@@ -21,7 +21,7 @@ public class Vector3f {
     public Vector3f(float x, float y, float z) {
         this.x = x;
         this.y = y;
-        this.z = z;
+        this.z = z;y=0;
     }
 
     /**
@@ -35,7 +35,7 @@ public class Vector3f {
 
     /**
      * Adds other vector to this vector and stores the result in this vector.
-     * @param other vector
+     * @param other vectory=0;
      */
     public void addi(Vector3f other) {
         this.x += other.x;
