@@ -13,6 +13,7 @@ import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.game.Main;
 import group4.maths.Matrix4f;
+import group4.maths.Vector3f;
 
 import static org.lwjgl.opengl.GL41.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL41.glActiveTexture;
@@ -62,7 +63,8 @@ public class CameraSystem extends EntitySystem {
         PositionComponent pc = Mappers.positionMapper.get(player);
 
         // Update the view matrix to be the player position
-        cc.viewMatrix = Matrix4f.translate(pc.position);
+        // Note that player position vector should be inverted to center the view on the player
+        cc.viewMatrix = Matrix4f.translate(pc.position.scale(-1.0f));
     }
 
     /**
