@@ -42,4 +42,6 @@ public class Families {
     public static final Family combatFamily = Family
             .all(PositionComponent.class, StatsComponent.class, GraphicsComponent.class).get();
 
+    public static final Family ghostFamily = Family
+            .all(AIComponent.class).get();
 }
