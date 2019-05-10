@@ -46,9 +46,6 @@ public class Block extends Entity {
         // add needed components
         this.add(new PositionComponent(p, d));
 
-        Shader shader = ShaderParser.loadShader(shaderPath);
-        Texture texture = new Texture(texturePath);
-
         this.add(new GraphicsComponent(shader, texture, vertices, indices, tcs));
 
         // register to engine
