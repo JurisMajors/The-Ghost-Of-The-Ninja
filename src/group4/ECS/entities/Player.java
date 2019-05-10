@@ -10,6 +10,8 @@ import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
 
+// TODO: This is temporary and can be removed when a better alternative is available
+
 public class Player extends Entity {
     public Player(Vector3f p, Vector3f d, Shader shader, Texture texture) {
         float[] vertices = new float[] {

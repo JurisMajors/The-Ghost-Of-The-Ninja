@@ -5,18 +5,12 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.CameraComponent;
-import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.PositionComponent;
-import group4.ECS.entities.Camera;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
-import group4.game.Main;
 import group4.maths.Matrix4f;
-import group4.maths.Vector3f;
 
-import static org.lwjgl.opengl.GL41.GL_TEXTURE1;
-import static org.lwjgl.opengl.GL41.glActiveTexture;
 
 /**
  * This system renders all entities which are in the graphicsFamily, thus having a

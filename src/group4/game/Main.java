@@ -98,9 +98,9 @@ public class Main implements Runnable {
         // Initialize the engine
         engine = TheEngine.getInstance();
 
-        // Set up all engine systems
-        engine.addSystem(new CameraSystem());
-        engine.addSystem(new MovementSystem());
+        // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
+        engine.addSystem(new CameraSystem()); // CameraSystem must be added before RenderSystem
+        engine.addSystem(new MovementSystem()); // TODO: Probably temp and should be changed when the new movement system is ready
         engine.addSystem(new RenderSystem());
 
         // Initialize the level

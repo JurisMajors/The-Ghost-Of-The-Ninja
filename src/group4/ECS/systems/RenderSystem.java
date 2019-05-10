@@ -51,33 +51,30 @@ public class RenderSystem extends EntitySystem {
      * @param deltaTime time between last and current update
      */
     public void update(float deltaTime) {
-        // for each registered entity, render it statically
-        // TODO: pass on camera information
-        Entity camera;
-        CameraComponent camera_cc;
-        PositionComponent camera_pc;
-        camera = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0); // There should only be one camera currently
-        camera_cc = camera.getComponent(CameraComponent.class);
-        camera_pc = camera.getComponent(PositionComponent.class);
+        // Get the camera and its main component from the engine
+        Entity camera = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0); // There should only be one camera currently
+        CameraComponent cc = camera.getComponent(CameraComponent.class);
 
-        System.out.println(camera_pc.position);
         for (Entity entity : entities) {
             // get mapper for O(1) component retrieval
             PositionComponent pc = Mappers.positionMapper.get(entity);
             GraphicsComponent gc = Mappers.graphicsMapper.get(entity);
 
-            // render
+            // Bind shader
             gc.shader.bind();
-            gc.shader.setUniformMat4f("pr_matrix", camera_cc.projectionMatrix);
 
-            // TODO: specify positioning, for the simple block, position refers to lower left corner
-            gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position));
-            gc.shader.setUniformMat4f("vw_matrix", camera_cc.viewMatrix);
-//            gc.shader.setUniformMat4f("vw_matrix", Matrix4f.translate(pc.position));
-            gc.shader.setUniform1f("tex", 1);
+            // Set uniforms
+            gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrix);
+            gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers
+            gc.shader.setUniformMat4f("vw_matrix", cc.viewMatrix);
+            gc.shader.setUniform1f("tex", 1); // Specify which texture slot to use
+
+            // Bind texture and specify texture slot
             gc.texture.bind();
             glActiveTexture(GL_TEXTURE1);
-            gc.triangle.render();
+
+            // Render!
+            gc.triangle.render(); // TODO: Triangle is an arbitrary (and probably bad name) which I think still remains from the first example we had hehe.. => Change :-)
         }
     }
 
