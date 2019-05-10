@@ -30,6 +30,10 @@ public class Evaluator implements FitnessEvaluator<Brain> {
 
     public Evaluator(Module currModule) {
         this.currModule = currModule;
+
+        // clear engine
+        TheEngine.getInstance().removeAllEntities();
+
         this.timer = new Timer();
         this.timelimit = 120.00;
 
@@ -43,6 +47,11 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         // fetch gamestate, all entities which hold bounding box
         ImmutableArray<Entity> gamestate = TheEngine.getInstance().getEntitiesFor(Families.gamestateFamily);
 
+        // reinitialize engine
+        for (Entity entity : gamestate) {
+            TheEngine.getInstance().addEntity(entity);
+        }
+
         //TODO: Create ghost player, play a game with it, evaluate results
         double initTime = timer.getTime();
 
@@ -53,11 +62,6 @@ public class Evaluator implements FitnessEvaluator<Brain> {
 
         // clear engine
         TheEngine.getInstance().removeAllEntities();
-
-        // reinitialize engine
-        for (Entity entity : gamestate) {
-            TheEngine.getInstance().addEntity(entity);
-        }
 
         return 0;
     }
