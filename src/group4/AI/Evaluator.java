@@ -36,6 +36,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
 
     @Override
     public double getFitness(Brain brain, List<? extends Brain> list) {
+        // create new module
         this.currModule = ModuleFactory.createModule(Evolver.level);
 
         // fetch gamestate, all entities which hold bounding box
@@ -55,7 +56,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
             TheEngine.getInstance().update((float) timer.getDeltaTime());
         }
 
-        // clear engine
+        // clear engine for robustness
         TheEngine.getInstance().removeAllEntities();
 
         return 0;
