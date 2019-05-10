@@ -7,9 +7,14 @@ import org.uncommons.maths.random.Probability;
 import static org.nd4j.linalg.indexing.NDArrayIndex.interval;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Same crossover rule as {@link InefficientCrossover} however,
+ * not using the watchmakers helper and directly working with INDArrays.
+ */
 public class StandardCrossover extends AbstractBrainCrossover {
 
     public StandardCrossover() {
@@ -54,25 +59,16 @@ public class StandardCrossover extends AbstractBrainCrossover {
             long crossoverIndex = (1 + rng.nextInt((int) nCols - 1));
             // get parts of the parent rows
             INDArray p1First = p1WRow.get(interval(0, crossoverIndex));
-            INDArray p2Scnd = p2WRow.get(interval(0, crossoverIndex));
+            INDArray p2Scnd = p2WRow.get(interval(crossoverIndex, nCols));
             // concatenate them to one offspring
-            firstOffWeights.add(Nd4j.concat(0, p1First, p2Scnd));
+            firstOffWeights.add(Nd4j.concat(1, p1First, p2Scnd));
 
             INDArray p1Scnd = p1WRow.get(interval(crossoverIndex, nCols));
-            INDArray p2First = p2WRow.get(interval(crossoverIndex, nCols));
-            scndOffWeights.add(Nd4j.concat(0, p1Scnd, p2First));
+            INDArray p2First = p2WRow.get(interval(0, crossoverIndex));
+            scndOffWeights.add(Nd4j.concat(1, p2First, p1Scnd));
 
             rowIndex++;
         }
         return newWeights;
-    }
-
-    public static void main(String[] args) {
-        StandardCrossover sc = new StandardCrossover();
-        INDArray y1 = Nd4j.ones(1, 5);
-        INDArray x1 = Nd4j.zeros(1, 5);
-
-        List<List<INDArray>> zz = sc.crossover(x1, y1, new Random());
-        System.out.println(zz.get(0).get(0).shape()[0]);
     }
 }
