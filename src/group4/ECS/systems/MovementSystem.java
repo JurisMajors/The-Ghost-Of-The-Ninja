@@ -1,16 +1,17 @@
 package group4.ECS.systems;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import group4.ECS.components.MovementComponent;
 import group4.ECS.components.PositionComponent;
+import group4.ECS.components.MovementComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 
-public class PlayerMovementSystem extends IteratingSystem {
+public class MovementSystem extends IteratingSystem {
 
-    public PlayerMovementSystem() {
-        super(Families.movingPlayerFamily);
+    public MovementSystem() {
+        super(Family.all(PositionComponent.class, MovementComponent.class).get()); //super(Families.movementFamily);
     }
 
     @Override

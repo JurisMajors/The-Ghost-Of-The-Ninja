@@ -12,17 +12,6 @@ public class Vector3f {
     }
 
     /**
-     * Creates vector (x,x,x)
-     *
-     * @param x
-     */
-    public Vector3f(float x) {
-        this.x = x;
-        this.y = x;
-        this.z = x;
-    }
-
-    /**
      * Creates vector (x,y,z)
      *
      * @param x
@@ -33,15 +22,6 @@ public class Vector3f {
         this.x = x;
         this.y = y;
         this.z = z;
-    }
-
-    /**
-     * Creates vector (|x|,|y|,|z|)
-     *
-     * @return returns vector (|x|,|y|,|z|)
-     */
-    public Vector3f abs() {
-        return new Vector3f(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z));
     }
 
     /**

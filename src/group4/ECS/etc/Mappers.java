@@ -12,8 +12,8 @@ public class Mappers {
     public static final ComponentMapper<PositionComponent> positionMapper =
             ComponentMapper.getFor(PositionComponent.class);
 
-    public static final ComponentMapper<GravityComponent> gravityMapper =
-            ComponentMapper.getFor(GravityComponent.class);
+    public static final ComponentMapper<PhysicsComponent> physicsMapper =
+            ComponentMapper.getFor(PhysicsComponent.class);
 
     public static final ComponentMapper<GraphicsComponent> graphicsMapper =
             ComponentMapper.getFor(GraphicsComponent.class);
@@ -21,8 +21,6 @@ public class Mappers {
     public static final ComponentMapper<MovementComponent> movementMapper =
             ComponentMapper.getFor(MovementComponent.class);
 
-    public static final ComponentMapper<RangeComponent> rangeMapper =
-            ComponentMapper.getFor(RangeComponent.class);
     public static final ComponentMapper<InputComponent> inputMapper =
             ComponentMapper.getFor(InputComponent.class);
 
