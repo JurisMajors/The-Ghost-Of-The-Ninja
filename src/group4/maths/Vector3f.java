@@ -36,6 +36,15 @@ public class Vector3f {
     }
 
     /**
+     * Creates vector (|x|,|y|,|z|)
+     *
+     * @return returns vector (|x|,|y|,|z|)
+     */
+    public Vector3f abs() {
+        return new Vector3f(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z));
+    }
+
+    /**
      * Adds this vector to another vector and results the result.
      *
      * @param other vector

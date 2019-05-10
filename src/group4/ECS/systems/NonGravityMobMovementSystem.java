@@ -20,10 +20,14 @@ public class NonGravityMobMovementSystem extends IteratingSystem {
         MovementComponent movementComponent = Mappers.movementMapper.get(entity);
         PositionComponent playerPositionComponent = Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
 
-        if(positionComponent.position.x<playerPositionComponent.position.x) movementComponent.velocity.x=Math.min(movementComponent.velocityRange.x,movementComponent.velocity.x+movementComponent.acceleration.x);
-        if(positionComponent.position.x>playerPositionComponent.position.x) movementComponent.velocity.x=Math.max(-movementComponent.velocityRange.x,movementComponent.velocity.x-movementComponent.acceleration.x);
-        if(positionComponent.position.y<playerPositionComponent.position.y) movementComponent.velocity.y=Math.min(movementComponent.velocityRange.y,movementComponent.velocity.y+movementComponent.acceleration.y);
-        if(positionComponent.position.y>playerPositionComponent.position.y) movementComponent.velocity.y=Math.max(-movementComponent.velocityRange.y,movementComponent.velocity.y-movementComponent.acceleration.y);
+        if (positionComponent.position.x < playerPositionComponent.position.x)
+            movementComponent.velocity.x = Math.min(movementComponent.velocityRange.x, movementComponent.velocity.x + movementComponent.acceleration.x);
+        if (positionComponent.position.x > playerPositionComponent.position.x)
+            movementComponent.velocity.x = Math.max(-movementComponent.velocityRange.x, movementComponent.velocity.x - movementComponent.acceleration.x);
+        if (positionComponent.position.y < playerPositionComponent.position.y)
+            movementComponent.velocity.y = Math.min(movementComponent.velocityRange.y, movementComponent.velocity.y + movementComponent.acceleration.y);
+        if (positionComponent.position.y > playerPositionComponent.position.y)
+            movementComponent.velocity.y = Math.max(-movementComponent.velocityRange.y, movementComponent.velocity.y - movementComponent.acceleration.y);
 
         positionComponent.position.addi(movementComponent.velocity.scale(deltaTime));
     }
