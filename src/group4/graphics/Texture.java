@@ -11,7 +11,7 @@ import group4.utils.BufferUtils;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Texture {
-
+    public static Texture DEBUG;
     // width and height of the texture
     private int width, height;
     // internal opengl id for this texture
@@ -19,6 +19,10 @@ public class Texture {
 
     public Texture(String path) {
         texture = load(path);
+    }
+
+    public static void loadAllTextures() {
+        DEBUG = new Texture("src/group4/res/textures/debug.jpeg");
     }
 
     /**

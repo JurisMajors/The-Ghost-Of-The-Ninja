@@ -6,10 +6,12 @@ import group4.ECS.components.MovementComponent;
 import group4.ECS.components.PlayerInputComponent;
 import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.TheEngine;
+import group4.graphics.Shader;
+import group4.graphics.Texture;
 import group4.maths.Vector3f;
 
 public class Player extends Entity {
-    public Player(Vector3f p, Vector3f d, String shader, String texture) {
+    public Player(Vector3f p, Vector3f d, Shader shader, Texture texture) {
         float[] vertices = new float[] {
                 0, 0, d.z,
                 0, d.y,d.z,
