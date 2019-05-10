@@ -11,7 +11,9 @@ import group4.utils.BufferUtils;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Texture {
-    public static Texture DEBUG;
+    // Storing all texture resources when preloaded.
+    public static Texture DEBUG; // TODO: More to be added.
+
     // width and height of the texture
     private int width, height;
     // internal opengl id for this texture
@@ -21,6 +23,10 @@ public class Texture {
         texture = load(path);
     }
 
+    /**
+     * Function which loads in all textures as constants for easy access later on.
+     * Should be executed once during game initialization.
+     */
     public static void loadAllTextures() {
         DEBUG = new Texture("src/group4/res/textures/debug.jpeg");
     }
