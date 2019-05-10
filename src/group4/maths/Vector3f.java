@@ -146,4 +146,12 @@ public class Vector3f {
         this.z /= len;
     }
 
+    /**
+     * Returns a vector with absolute value for x,y,z
+     * @return vector
+     */
+    public Vector3f abs() {
+        return new Vector3f(Math.abs(x), Math.abs(y), Math.abs(z));
+    }
+
 }
