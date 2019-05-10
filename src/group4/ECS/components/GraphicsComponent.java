@@ -21,9 +21,9 @@ public class GraphicsComponent implements Component {
     public Shader shader;
     public Texture texture;
 
-    public GraphicsComponent(String shader, String texture, float[] vertices, byte[] indices, float[] tcs) {
-        this.shader = ShaderParser.loadShader(shader);
-        this.texture = new Texture(texture);
+    public GraphicsComponent(Shader shader, Texture texture, float[] vertices, byte[] indices, float[] tcs) {
+        this.shader = shader;
+        this.texture = texture;
         this.triangle = new VertexArray(vertices, indices, tcs);
     }
 
