@@ -9,6 +9,7 @@ import group4.ECS.systems.MovementSystem;
 import group4.game.Timer;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
+import group4.levelSystem.ModuleFactory;
 import group4.levelSystem.levels.SimpleLevel;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 
@@ -25,13 +26,9 @@ public class Evaluator implements FitnessEvaluator<Brain> {
     /** TODO: make timer singleton **/
     private Timer timer;
 
-    /** TODO: find feasible time limit **/
-    double timelimit;
-
-    public Evaluator(Module currModule) {
-        this.currModule = currModule;
+    public Evaluator() {
+        // init module
         this.timer = new Timer();
-        this.timelimit = 120.00;
 
         // register systems to engine
         initSystems();
@@ -39,25 +36,27 @@ public class Evaluator implements FitnessEvaluator<Brain> {
 
     @Override
     public double getFitness(Brain brain, List<? extends Brain> list) {
+        this.currModule = ModuleFactory.createModule(Evolver.level);
 
         // fetch gamestate, all entities which hold bounding box
         ImmutableArray<Entity> gamestate = TheEngine.getInstance().getEntitiesFor(Families.gamestateFamily);
+
+        // reinit gamestate
+        TheEngine.getInstance().removeAllEntities();
+        for (Entity entity : gamestate) {
+            TheEngine.getInstance().addEntity(entity);
+        }
 
         //TODO: Create ghost player, play a game with it, evaluate results
         double initTime = timer.getTime();
 
         // while we did not exceed the timelimit, play the game
-        while (timer.getTime() - initTime <= timelimit) {
+        while (timer.getTime() - initTime <= Evolver.timelimit) {
             TheEngine.getInstance().update((float) timer.getDeltaTime());
         }
 
         // clear engine
         TheEngine.getInstance().removeAllEntities();
-
-        // reinitialize engine
-        for (Entity entity : gamestate) {
-            TheEngine.getInstance().addEntity(entity);
-        }
 
         return 0;
     }
