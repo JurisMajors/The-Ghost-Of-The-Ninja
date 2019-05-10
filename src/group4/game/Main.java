@@ -25,7 +25,6 @@ public class Main implements Runnable {
     private long window; // The id of the window
 
     private Timer timer;
-    private Engine engine;
     private Level level;
 
     public static final float SCREEN_WIDTH = 20.0f;

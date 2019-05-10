@@ -30,6 +30,10 @@ public class Families {
     public static final Family audioFamily = Family
             .all(AudioComponent.class).get();
 
+    // all entities having some sort of audio
+    public static final Family gamestateFamily = Family
+            .all(DimensionComponent.class).get();
+
     // all consumables, items
     public static final Family consumableFamily = Family
             .all(ConsumableComponent.class, PositionComponent.class).get();
