@@ -7,6 +7,7 @@ import group4.ECS.etc.TheEngine;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
+import group4.utils.ShaderParser;
 
 /**
  * Block entity for demonstration purposes
@@ -20,7 +21,6 @@ public class Block extends Entity {
      * @param d The dimensions of the block
      */
     public Block(Vector3f p, Vector3f d, Shader shader, Texture texture) {
-
         // Construct vertex array
         float[] vertices = new float[] {
                 0, 0, d.z,
@@ -44,7 +44,11 @@ public class Block extends Entity {
         };
 
         // add needed components
-        this.add(new PositionComponent(p));
+        this.add(new PositionComponent(p, d));
+
+        Shader shader = ShaderParser.loadShader(shaderPath);
+        Texture texture = new Texture(texturePath);
+
         this.add(new GraphicsComponent(shader, texture, vertices, indices, tcs));
 
         // register to engine
