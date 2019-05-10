@@ -13,10 +13,12 @@ import group4.maths.Vector3f;
 public class Block extends Entity {
 
     /**
-     * Construct a simple block in a certain position of certain size
+     * Construct a simple block (flexible texture and shader) in a certain position of certain size
      *
      * @param p The position of the block (lower left corner)
      * @param d The dimensions of the block
+     * @param shader The shader for rendering the block
+     * @param texture texture to use for the block
      */
     public Block(Vector3f p, Vector3f d, String shader, String texture) {
 

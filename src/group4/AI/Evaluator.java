@@ -3,6 +3,7 @@ package group4.AI;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.utils.ImmutableArray;
+import group4.ECS.entities.Ghost;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.MovementSystem;
@@ -11,6 +12,7 @@ import group4.levelSystem.Level;
 import group4.levelSystem.Module;
 import group4.levelSystem.ModuleFactory;
 import group4.levelSystem.levels.SimpleLevel;
+import group4.maths.Vector3f;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 
 import java.util.List;
@@ -48,10 +50,12 @@ public class Evaluator implements FitnessEvaluator<Brain> {
             TheEngine.getInstance().addEntity(entity);
         }
 
-        //TODO: Create ghost player, play a game with it, evaluate results
-        double initTime = timer.getTime();
+        // add the ghost
+        // TODO: get spawn position or entrance position of module
+        TheEngine.getInstance().addEntity(new Ghost(brain, new Vector3f(), new Vector3f(2.0f, 3.0f, 0.0f)));
 
         // while we did not exceed the timelimit, play the game
+        double initTime = timer.getTime();
         while (timer.getTime() - initTime <= Evolver.timelimit) {
             TheEngine.getInstance().update((float) timer.getDeltaTime());
         }
@@ -81,6 +85,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         }
 
         // TODO: register necessary systems
+        // TODO: centralize all systems and only disable or enable them
         TheEngine.getInstance().addSystem(new MovementSystem());
     }
 

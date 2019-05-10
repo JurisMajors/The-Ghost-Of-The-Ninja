@@ -7,10 +7,11 @@ import group4.maths.Vector3f;
 
 public class AK47 extends Gun {
 
-    public AK47(Vector3f p, String shader) {
+    public AK47(Vector3f p) {
         super(p);
 
-        // AK47 texture (64 x 32)
+        // AK47 texture (64 x 32) & shader (temporary simple shader)
+        String shader = "src/group4/res/shaders/simple";
         String texture = "src/group4/res/textures/weapons/AK47.png";
 
         // add needed components

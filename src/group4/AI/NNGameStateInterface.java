@@ -1,5 +1,8 @@
 package group4.AI;
 
+import com.badlogic.ashley.core.Entity;
+import java.util.List;
+
 /**
  * This acts as a decoder of the game states.
  * Translating it in to a form such that the NN can understand it. (double array)

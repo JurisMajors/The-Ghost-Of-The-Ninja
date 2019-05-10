@@ -24,8 +24,7 @@ public class SimpleModule extends Module {
 
             }
 
-            Gun gun = new AK47(new Vector3f( 2.0f, 2.0f, 0.0f),
-                    "src/group4/res/shaders/simple");
+            Gun gun = new AK47(new Vector3f( 2.0f, 2.0f, 0.0f));
 
             Bullet bullet_0 = new MachineGunBullet(new Vector3f(2.2f, 3.0f, 0.0f),
                      "src/group4/res/shaders/simple");
