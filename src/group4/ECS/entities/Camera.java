@@ -12,8 +12,9 @@ public class Camera extends Entity {
     public Camera() {
         // add needed components
         this.add(new PositionComponent(new Vector3f(0.0f, 0.0f, 0.0f)));
-        this.add(new CameraComponent(Matrix4f.orthographic(
-                    0, Main.SCREEN_WIDTH, 0, Main.SCREEN_HEIGHT, -1.0f, 1.0f)));
+
+        // Centered projection matrix
+        this.add(new CameraComponent(Matrix4f.orthographic(-Main.SCREEN_WIDTH / 2, Main.SCREEN_WIDTH / 2, - Main.SCREEN_HEIGHT / 2, Main.SCREEN_HEIGHT / 2, -1.0f, 1.0f)));
 
         // register to engine
         TheEngine.getInstance().addEntity(this);
