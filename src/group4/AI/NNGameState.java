@@ -2,6 +2,7 @@ package group4.AI;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
+import group4.ECS.components.MobComponent;
 import group4.ECS.components.MovementComponent;
 import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.Families;
@@ -38,7 +39,7 @@ public class NNGameState implements NNGameStateInterface {
 
         double[] result = new double[this.getInputSize()];
         float deltaTheta = angleRange / this.nrRays;
-        // give velocity of the ghost
+        // give velocity of the ghost (already normalized)
         result[0] = ghostVel.x;
         result[1] = ghostVel.y;
         // give intersection info
@@ -70,7 +71,10 @@ public class NNGameState implements NNGameStateInterface {
     }
 
     private int decodeEntity(Entity e) {
-        return 0;
+        if (e.getComponent(MobComponent.class) != null) {
+            return 0;
+        }
+        return 1;
     }
 }
 
