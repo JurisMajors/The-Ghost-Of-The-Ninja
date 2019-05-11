@@ -17,13 +17,12 @@ public class Platform extends Entity {
     /**
      * Creates a static platform
      *
-     * @param position    left-bottom-back corner of the cuboid representing the platform
-     * @param dimension   such that the right-top-front corner of the cuboid representing the platform is position+dimension
-     * @param texturePath path to the texture for this platform
+     * @param position  left-bottom-back corner of the cuboid representing the platform
+     * @param dimension such that the right-top-front corner of the cuboid representing the platform is position+dimension
+     * @param shader    shader for this platform
+     * @param texture   texture for this platform
      */
-    public Platform(Vector3f position, Vector3f dimension, String texturePath, Shader shader) {
-        Texture texture = new Texture(texturePath);
-
+    public Platform(Vector3f position, Vector3f dimension, Shader shader, Texture texture) {
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
         this.add(new PlatformComponent());
