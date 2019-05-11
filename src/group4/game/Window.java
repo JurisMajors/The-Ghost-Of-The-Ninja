@@ -52,4 +52,5 @@ public class Window {
         width = w;
         height = h;
     }
+
 }

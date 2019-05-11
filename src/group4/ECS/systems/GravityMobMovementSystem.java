@@ -11,7 +11,8 @@ import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 
-public class GravityMobMovementSystem extends IteratingSystem {
+public class
+GravityMobMovementSystem extends IteratingSystem {
 
     public GravityMobMovementSystem() {
         super(Families.movingGravityMobFamily);

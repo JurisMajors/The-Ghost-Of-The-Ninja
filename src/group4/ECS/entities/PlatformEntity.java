@@ -117,7 +117,6 @@ public class PlatformEntity extends Entity {
         return new GraphicsComponent(tempShader, this.texture, va, ic, tc);
     }
 
-
     /**
      * Creates float array from a vector3f arraylist for the vertexArray class.
      * For each vector in the list it adds x, y, z separately to the float array.
@@ -160,4 +159,5 @@ public class PlatformEntity extends Entity {
         }
         return result;
     }
+
 }

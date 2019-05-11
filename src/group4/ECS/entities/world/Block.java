@@ -49,7 +49,6 @@ public class Block extends Entity {
         // add needed components
         this.add(new PositionComponent(p));
         this.add(new DimensionComponent(d));
-
         this.add(new GraphicsComponent(shader, texture, vertices, indices, tcs));
 
         // register to engine
