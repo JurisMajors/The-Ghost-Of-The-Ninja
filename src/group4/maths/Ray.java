@@ -3,6 +3,7 @@ package group4.maths;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.AIComponent;
+import group4.ECS.components.PlayerComponent;
 import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.Mappers;
 
@@ -29,18 +30,20 @@ public class Ray {
      * @param entities the entities that the ray might intersect
      * @return position at first intersection of a bounding box
      */
-    IntersectionPair cast(List<Entity> entities) {
+    public IntersectionPair cast(ImmutableArray<Entity> entities) {
         Vector3f closestIntersection = null; // current closest intersection of the ray
         Entity intersectedEntity = null; // entity twhose bounding box is intersected
         float curDist = Float.MAX_VALUE; // the distance to the intersection
 
         // for each entity calculate the intersection
         for (Entity e : entities) {
+            // TODO this does not generalize in case of CGI, maybe skip according to parameter?
             if (e.getComponent(AIComponent.class) != null) continue; // skip the ghost
+            if (e.getComponent(PlayerComponent.class) != null) continue; // skip the player
 
-            List<Vector3f> intersections = this.intersects(e);
-            if (intersections.isEmpty()) continue;
+            List<Vector3f> intersections = this.intersects(e); // get intersection points
 
+            // get minimal intersection point and update if necessary
             for (Vector3f inter : intersections) {
                 // calculate intersections distance
                 float interDist = inter.euclidDist(this.startPos);
