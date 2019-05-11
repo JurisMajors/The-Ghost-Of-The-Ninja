@@ -21,8 +21,6 @@ import java.util.List;
 public class Brain {
     /** the network that does the calculations **/
     MultiLayerNetwork nn;
-    /** gamestate decoder to translate to a double array **/
-    NNGameStateInterface decoder;
 
     /**
      * Given information about the layers, initialize a MLP
@@ -63,8 +61,6 @@ public class Brain {
     Brain (Brain b) {
          // clone the network
         this.nn = b.nn.clone();
-        // pass on the level decoder too
-        this.decoder = b.decoder;
     }
 
     Brain () {
@@ -80,23 +76,34 @@ public class Brain {
         ModelSerializer.writeModel(this.nn, filePath, false);
     }
 
-    void setDecoder(NNGameStateInterface dec) {
-        this.decoder = dec;
-    }
-
     /**
      * Feed forward the game state through the brain to get a move
      *
      * @param input decoded state of the game
      * @return move to make
      */
-    public String feedForward(INDArray input) {
+    private String feedForward(INDArray input) {
         // this can be changed that feed forward takes
         //  a game state as an input and does the decoding here
         // probably preferable, but no game state class yet
         //TODO: Use better move encoding
-        List<INDArray> result = nn.feedForward(input);
-        //TODO: Translate resulting array to a move
+        double[] result = nn.output(input).toDoubleVector();
+        int argMax = 0;
+        // get best move defined by network
+        for (int i = 1; i < result.length; i++) {
+            if (result[i] > argMax) {
+                argMax = i;
+            }
+        }
+        //TODO: translate indice to some move
         return "";
+    }
+
+    /**
+     * Calculates the move the ghost should take
+     * @return the move the ghost should take
+     */
+    public String think() {
+        return this.feedForward(Evolver.decoder.decode());
     }
 }

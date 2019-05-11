@@ -25,6 +25,16 @@ public class Vector3f {
     }
 
     /**
+     * Creates a copy of another vector
+     * @param toCopy the vector to copy
+     */
+    public Vector3f(Vector3f toCopy) {
+        this.x = toCopy.x;
+        this.y = toCopy.y;
+        this.z = toCopy.z;
+    }
+
+    /**
      * Adds this vector to another vector and results the result.
      *
      * @param other vector
@@ -144,6 +154,24 @@ public class Vector3f {
         this.x /= len;
         this.y /= len;
         this.z /= len;
+    }
+
+    public float euclidDist(Vector3f other) {
+        Vector3f diff = this.sub(other);
+        return (float) Math.sqrt(diff.dot(diff));
+    }
+
+    public void rotateXYi(float angle) {
+        float newX = (float) (this.x * Math.cos(angle) - this.y * Math.sin(angle));
+        float newY = (float) (this.x * Math.sin(angle) + this.y * Math.cos(angle));
+        this.x = newX;
+        this.y = newY;
+    }
+
+    public Vector3f rotateXY(float angle) {
+        float newX = (float) (this.x * Math.cos(angle) - this.y * Math.sin(angle));
+        float newY = (float) (this.x * Math.sin(angle) + this.y * Math.cos(angle));
+        return new Vector3f(newX, newY, this.z);
     }
 
     @Override

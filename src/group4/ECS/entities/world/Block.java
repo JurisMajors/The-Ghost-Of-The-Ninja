@@ -1,4 +1,4 @@
-package group4.ECS.entities;
+package group4.ECS.entities.world;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.DimensionComponent;
@@ -16,10 +16,12 @@ import group4.utils.ShaderParser;
 public class Block extends Entity {
 
     /**
-     * Construct a simple block in a certain position of certain size
+     * Construct a simple block (flexible texture and shader) in a certain position of certain size
      *
      * @param p The position of the block (lower left corner)
      * @param d The dimensions of the block
+     * @param shader The shader for rendering the block
+     * @param texture texture to use for the block
      */
     public Block(Vector3f p, Vector3f d, Shader shader, Texture texture) {
         // Construct vertex array
