@@ -2,7 +2,11 @@ package group4.game;
 
 import com.badlogic.ashley.core.Engine;
 import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.CameraSystem;
+import group4.ECS.systems.MovementSystem;
 import group4.ECS.systems.RenderSystem;
+import group4.graphics.Shader;
+import group4.graphics.Texture;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
@@ -30,6 +34,7 @@ public class Main implements Runnable {
 
     public static final float SCREEN_WIDTH = 20.0f;
     public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
+
 
     /**
      * Creates a new thread on which it wel run() the game.
@@ -86,11 +91,20 @@ public class Main implements Runnable {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        // Preload all resources
+        Shader.loadAllShaders();
+        Texture.loadAllTextures();
+
+        // Initialize the engine
+        engine = TheEngine.getInstance();
+
+        // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
+        engine.addSystem(new CameraSystem()); // CameraSystem must be added before RenderSystem
+        engine.addSystem(new MovementSystem()); // TODO: Probably temp and should be changed when the new movement system is ready
+        engine.addSystem(new RenderSystem());
+
         // Initialize the level
         this.level = new SimpleLevel();
-
-        // initialize the rendering
-        TheEngine.getInstance().addSystem(new RenderSystem());
     }
 
     /**
@@ -100,8 +114,6 @@ public class Main implements Runnable {
         timer = new Timer();
         boolean render = true;
 
-        Vector3f screenPosStepper = new Vector3f(0, 0, 0);
-      
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
@@ -113,11 +125,7 @@ public class Main implements Runnable {
             if (render) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-                // Demo update: Step the screen window of the module
-
-                screenPosStepper.x += 0.1f;
-                level.getCurrentModule().updateScreenWindow(screenPosStepper);
-                TheEngine.getInstance().update((float) timer.getDeltaTime());
+                TheEngine.getInstance().update((float) timer.getDeltaTime()); // Update the gamestate
 
                 glfwSwapBuffers(window); // swap the color buffers
                 render = false;

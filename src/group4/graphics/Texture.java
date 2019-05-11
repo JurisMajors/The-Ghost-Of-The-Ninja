@@ -11,6 +11,8 @@ import group4.utils.BufferUtils;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Texture {
+    // Storing all texture resources when preloaded.
+    public static Texture DEBUG; // TODO: More to be added.
 
     // width and height of the texture
     private int width, height;
@@ -19,6 +21,14 @@ public class Texture {
 
     public Texture(String path) {
         texture = load(path);
+    }
+
+    /**
+     * Function which loads in all textures as constants for easy access later on.
+     * Should be executed once during game initialization.
+     */
+    public static void loadAllTextures() {
+        DEBUG = new Texture("src/group4/res/textures/debug.jpeg");
     }
 
     /**
@@ -85,6 +95,14 @@ public class Texture {
      */
     public void unbind() {
         glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
 }

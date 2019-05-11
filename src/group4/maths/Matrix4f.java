@@ -140,6 +140,24 @@ public class Matrix4f {
     }
 
     /**
+     * Adds the current matrix to other. Returns the result.
+     *
+     * @param other
+     * @return this * other
+     */
+    public Matrix4f add(Matrix4f other) {
+        Matrix4f result = new Matrix4f();
+
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                result.elements[row + col * 4] = elements[row + col * 4] + other.elements[row + col * 4];
+            }
+        }
+
+        return result;
+    }
+
+    /**
      * Create a float buffer from the elements in this matrix
      *
      * @return float buffer

@@ -146,4 +146,17 @@ public class Vector3f {
         this.z /= len;
     }
 
+    @Override
+    public String toString() {
+        return String.format("{%f, %f, %f}", this.x, this.y, this.z);
+    }
+
+    /**
+     * Returns a vector with absolute value for x,y,z
+     * @return vector
+     */
+    public Vector3f abs() {
+        return new Vector3f(Math.abs(x), Math.abs(y), Math.abs(z));
+    }
+
 }
