@@ -1,6 +1,7 @@
 package group4.ECS.entities;
 
 import com.badlogic.ashley.core.Entity;
+import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.PlatformComponent;
 import group4.ECS.components.PositionComponent;
@@ -32,7 +33,8 @@ public class PlatformEntity extends Entity {
         this.dimension = dimension;
         this.texture = new Texture(texturePath);
 
-        this.add(new PositionComponent(position, dimension));
+        this.add(new PositionComponent(position));
+        this.add(new DimensionComponent(dimension));
         this.add(new PlatformComponent());
 
         // create the graphics component with a vertex array repeating the texture over this platform

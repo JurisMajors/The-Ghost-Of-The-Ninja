@@ -19,7 +19,8 @@ public class MobEntity extends Entity {
      * @param acceleration  acceleration vector of mob
      */
     public MobEntity(Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f velocityRange, Vector3f acceleration) {
-        this.add(new PositionComponent(position, dimension));
+        this.add(new PositionComponent(position));
+        this.add(new DimensionComponent(dimension));
         this.add(new MovementComponent(velocity, velocityRange, acceleration));
         this.add(new MobComponent());
         TheEngine.getInstance().addEntity(this);
@@ -36,7 +37,8 @@ public class MobEntity extends Entity {
      * @param gravity       acceleration vector of mob due to gravity
      */
     public MobEntity(Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f velocityRange, Vector3f acceleration, Vector3f gravity) {
-        this.add(new PositionComponent(position, dimension));
+        this.add(new PositionComponent(position));
+        this.add(new DimensionComponent(dimension));
         this.add(new MovementComponent(velocity, velocityRange, acceleration));
         this.add(new GravityComponent(gravity));
         this.add(new MobComponent());

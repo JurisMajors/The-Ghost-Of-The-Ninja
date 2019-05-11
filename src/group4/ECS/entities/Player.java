@@ -1,10 +1,7 @@
 package group4.ECS.entities;
 
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.components.GraphicsComponent;
-import group4.ECS.components.MovementComponent;
-import group4.ECS.components.PlayerInputComponent;
-import group4.ECS.components.PositionComponent;
+import group4.ECS.components.*;
 import group4.ECS.etc.TheEngine;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -36,7 +33,8 @@ public class Player extends Entity {
         };
 
         // add needed components
-        this.add(new PositionComponent(p, new Vector3f(2.0f, 0.0f, 0.0f)));
+        this.add(new PositionComponent(p));
+        this.add(new DimensionComponent(new Vector3f(2.0f, 0.0f, 0.0f)));
         this.add(new MovementComponent(new Vector3f(0.05f, 0.0f, 0.0f), new Vector3f(1.0f, 1.0f, 0.0f)));
         this.add(new GraphicsComponent(shader, texture, vertices, indices, tcs));
         this.add(new PlayerInputComponent());

@@ -20,7 +20,8 @@ public class PlayerEntity extends Entity {
      * @param gravity       acceleration vector of player due to gravity
      */
     public PlayerEntity(Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f velocityRange, Vector3f acceleration, Vector3f gravity) {
-        this.add(new PositionComponent(position, dimension));
+        this.add(new PositionComponent(position));
+        this.add(new DimensionComponent(dimension));
         this.add(new MovementComponent(velocity, velocityRange, acceleration));
         this.add(new GravityComponent(gravity));
         this.add(new PlayerComponent());
