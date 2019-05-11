@@ -24,32 +24,13 @@ public class Block extends Entity {
      * @param texture texture to use for the block
      */
     public Block(Vector3f p, Vector3f d, Shader shader, Texture texture) {
-        // Construct vertex array
-        float[] vertices = new float[] {
-                0, 0, d.z,
-                0, d.y,d.z,
-                d.x, d.y, d.z,
-                d.x, 0, d.z,
-        };
-
-        // Construct index array (used for triangle mesh)
-        byte[] indices = new byte[] {
-                0, 1, 2,
-                2, 3, 0
-        };
-
-        // Construct texture coords
-        float[] tcs = new float[] {
-                0, 1,
-                0, 0,
-                1, 0,
-                1, 1
-        };
 
         // add needed components
-        this.add(new PositionComponent(p, d));
+        this.add(new PositionComponent(p));
+        this.add(new DimensionComponent(d));
 
-        this.add(new GraphicsComponent(shader, texture, vertices, indices, tcs));
+        // create basic graphics component covering the dimension of this block
+        this.add(new GraphicsComponent(shader, texture, d));
 
         // register to engine
         TheEngine.getInstance().addEntity(this);
