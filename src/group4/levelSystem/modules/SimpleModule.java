@@ -25,11 +25,12 @@ public class SimpleModule extends Module {
             if (i % 4 != 0) {
                 Block beautifulBlock = new Block(new Vector3f(i * 2.0f, 0.0f, 0.0f),
                         new Vector3f(2.0f, 2.0f, 0.0f), Shader.SIMPLE, Texture.DEBUG);
-
+                this.addEntity(beautifulBlock);
             }
             if (i % 3 == 0 && i % 4 != 0) {
                 Block beautifulBlock = new Block(new Vector3f(i * 2.0f, 2.0f, 0.0f),
                         new Vector3f(2.0f, 2.0f, 0.0f), Shader.SIMPLE, Texture.DEBUG);
+                this.addEntity(beautifulBlock);
             }
 
             Gun gun = new AK47(new Vector3f( 2.0f, 2.0f, 0.0f));
