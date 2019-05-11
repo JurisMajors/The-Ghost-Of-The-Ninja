@@ -26,11 +26,14 @@ public class PlayerMovementSystem extends IteratingSystem {
         GravityComponent gc = Mappers.gravityMapper.get(entity);
 
         //accelerate on the x coordinate according to keyboard keys
-        if (KeyBoard.isKeyDown(GLFW_KEY_D) && !KeyBoard.isKeyDown(GLFW_KEY_A))
+        if (KeyBoard.isKeyDown(GLFW_KEY_D) && !KeyBoard.isKeyDown(GLFW_KEY_A)) {
+            System.out.println("LOL");
             mc.velocity.x = Math.min(mc.velocityRange.x, mc.velocity.x + mc.acceleration.x);
-        else if (KeyBoard.isKeyDown(GLFW_KEY_A) && !KeyBoard.isKeyDown(GLFW_KEY_D))
+        } else if (KeyBoard.isKeyDown(GLFW_KEY_A) && !KeyBoard.isKeyDown(GLFW_KEY_D)) {
             mc.velocity.x = Math.max(-mc.velocityRange.x, mc.velocity.x - mc.acceleration.x);
-        else if (mc.velocity.x != 0) mc.velocity.x -= mc.velocity.x / Math.abs(mc.velocity.x) * mc.acceleration.x;
+        } else if (mc.velocity.x != 0) {
+            mc.velocity.x -= mc.velocity.x / Math.abs(mc.velocity.x) * mc.acceleration.x;
+        }
 
         //take gravity into account
         mc.velocity.y -= gc.gravity.y;

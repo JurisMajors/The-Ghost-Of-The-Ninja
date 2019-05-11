@@ -1,17 +1,16 @@
-package group4.AI;
+package group4.AI.decoders;
 
-import com.badlogic.ashley.core.Entity;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import java.util.List;
 
 /**
  * This acts as a decoder of the game states.
  * Translating it in to a form such that the NN can understand it. (INDArray)
  */
-public interface NNGameStateInterface {
+public interface StateDecoderInterface {
     /**
      * Translates GameState information in to a double array.
      * Used for neural network input.
+     *
      * @return input for the neural net in INDAray format
      */
     INDArray decode();
