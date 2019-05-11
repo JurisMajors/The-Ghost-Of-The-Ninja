@@ -3,6 +3,7 @@ package group4.ECS.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
+import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.GravityComponent;
 import group4.ECS.components.MovementComponent;
 import group4.ECS.components.PositionComponent;
@@ -19,6 +20,7 @@ public class GravityMobMovementSystem extends IteratingSystem {
     @Override
     public void processEntity(Entity entity, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(entity);
+        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
         MovementComponent mc = Mappers.movementMapper.get(entity);
         GravityComponent gc = Mappers.gravityMapper.get(entity);
 
@@ -43,7 +45,8 @@ public class GravityMobMovementSystem extends IteratingSystem {
             if (entity != entities.get(i)) {
                 //position component of entity
                 PositionComponent epc = Mappers.positionMapper.get(entities.get(i));
-                if (epc.position.y + epc.dimension.y == pc.position.y && pc.position.x <= epc.position.x + epc.dimension.x && pc.position.x + pc.dimension.x >= epc.position.x) {
+                DimensionComponent edc = Mappers.dimensionMapper.get(entities.get(i));
+                if (epc.position.y + edc.dimension.y == pc.position.y && pc.position.x <= epc.position.x + edc.dimension.x && pc.position.x + dc.dimension.x >= epc.position.x) {
                     below = true;
                     break;
                 }
