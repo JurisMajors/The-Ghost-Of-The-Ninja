@@ -13,7 +13,7 @@ import group4.utils.ShaderParser;
 
 import java.util.ArrayList;
 
-public class PlatformEntity extends Entity {
+public class Platform extends Entity {
 
     // Store information about the platform
     private Vector3f position; // center position (for now)
@@ -27,7 +27,7 @@ public class PlatformEntity extends Entity {
      * @param dimension   such that the right-top-front corner of the cuboid representing the platform is position+dimension
      * @param texturePath path to the texture for this platform
      */
-    public PlatformEntity(Vector3f position, Vector3f dimension, String texturePath) {
+    public Platform(Vector3f position, Vector3f dimension, String texturePath) {
         // set instance variables
         this.position = position;
         this.dimension = dimension;

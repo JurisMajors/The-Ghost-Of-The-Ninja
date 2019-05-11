@@ -5,7 +5,7 @@ import group4.ECS.components.RangeComponent;
 import group4.maths.Vector3f;
 
 
-public class MovingPlatformEntity extends PlatformEntity {
+public class MovingPlatform extends Platform {
 
     /**
      * Creates a moving platform
@@ -17,7 +17,7 @@ public class MovingPlatformEntity extends PlatformEntity {
      * @param lbbCornerRange left-bottom-back corner of the cuboid representing the accessible range of the map for the platform
      * @param rtfCornerRange right-top-front corner of the cuboid representing the accessible range of the map for the platform
      */
-    public MovingPlatformEntity(Vector3f position, Vector3f dimension, String texturePath, Vector3f velocity, Vector3f lbbCornerRange, Vector3f rtfCornerRange) {
+    public MovingPlatform(Vector3f position, Vector3f dimension, String texturePath, Vector3f velocity, Vector3f lbbCornerRange, Vector3f rtfCornerRange) {
         // create position, dimension and graphics components and adds to engine
         super(position, dimension, texturePath);
 
