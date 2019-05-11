@@ -10,8 +10,8 @@ public class PositionComponent implements Component {
     /**
      * Creates a position component
      *
-     * @param position  center point of player
-     * @param dimension along with the position describes a cuboid with lbbCorner=position-dimention and rtfCorner=position+dimention
+     * @param position  left-bottom-back corner of the cuboid representing the entity
+     * @param dimension such that the right-top-front corner of the cuboid representing the entity is position+dimension
      */
     public PositionComponent(Vector3f position, Vector3f dimension) {
         this.position = position;
