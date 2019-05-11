@@ -7,14 +7,11 @@ import group4.maths.Vector3f;
 
 public class MobEntity extends Entity {
 
-    // joris TODO: rewrite this to subclasses
-    // joris TODO: graphics component
-
     /**
      * Creates a flying mob (not affected by gravity)
      *
-     * @param position      center point of mob
-     * @param dimension     along with the position describes a cuboid with lbbCorner=position-dimention and rtfCorner=position+dimention
+     * @param position      left-bottom-back corner of the cuboid representing the mob
+     * @param dimension     such that the right-top-front corner of the cuboid representing the mob is position+dimension
      * @param velocity      velocity vector of mob
      * @param velocityRange restricting the velocity: -velocityRange.x<=velocity.x<=velocityRange.x and -velocityRange.y<=velocity.y<=velocityRange.y
      * @param acceleration  acceleration vector of mob
@@ -29,8 +26,8 @@ public class MobEntity extends Entity {
     /**
      * Creates a walking and jumping mob (no jumping if velocityRange.y=0)
      *
-     * @param position      center point of mob
-     * @param dimension     along with the position describes a cuboid with lbbCorner=position-dimention and rtfCorner=position+dimention
+     * @param position      left-bottom-back corner of the cuboid representing the mob
+     * @param dimension     such that the right-top-front corner of the cuboid representing the mob is position+dimension
      * @param velocity      velocity vector of mob
      * @param velocityRange restricting the velocity: -velocityRange.x<=velocity.x<=velocityRange.x and -velocityRange.y<=velocity.y<=velocityRange.y
      * @param acceleration  acceleration vector of mob
