@@ -10,6 +10,7 @@ import group4.maths.Vector3f;
 // TODO: This is temporary and can be removed when a better alternative is available
 
 public class Player extends Entity {
+
     /**
      * Creates a player
      *
@@ -36,4 +37,18 @@ public class Player extends Entity {
         // register to engine
         TheEngine.getInstance().addEntity(this);
     }
+
+    /**
+     * Creates a player with 0 starting velocity, velocityRange of (1,1,0), 0 starting accelerating and default 9.81 gravity.
+     *
+     * @param position  center point of player
+     * @param dimension along with the position describes a cuboid with lbbCorner=position-dimention and rtfCorner=position+dimention
+     * @param shader    shader for the player
+     * @param texture   texture for the player
+     */
+    public Player(Vector3f position, Vector3f dimension, Shader shader, Texture texture) {
+        // use other constructor to create player
+        this(position, dimension, new Vector3f(), new Vector3f(1, 1, 0), new Vector3f(), new Vector3f(0, 9.81f, 0), shader, texture);
+    }
+
 }
