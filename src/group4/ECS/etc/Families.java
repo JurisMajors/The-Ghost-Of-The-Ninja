@@ -57,7 +57,10 @@ public class Families {
     public static final Family movingNonGravityMobFamily = Family.all(MovementComponent.class, MobComponent.class).exclude(GravityComponent.class).get();
 
     //All (moving) player(s)
-    public static final Family playerFamily = Family.all(MovementComponent.class, PlayerComponent.class).get();
+    // this one works for the new PlayerEntity class but is not being used yet, camera needs to be updated for this as well
+//    public static final Family playerFamily = Family.all(MovementComponent.class, PlayerComponent.class).get();
+    // below works for the Player class which is old but currently used for the camera
+    public static final Family playerFamily = Family.all(MovementComponent.class, PlayerInputComponent.class).get();
 
     //All entities (with a position component)
     public static final Family allFamily = Family.all(PositionComponent.class).get();
