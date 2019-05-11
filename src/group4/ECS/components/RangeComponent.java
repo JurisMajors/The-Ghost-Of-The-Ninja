@@ -10,8 +10,8 @@ public class RangeComponent implements Component {
     /**
      * Creates a range component
      *
-     * @param lbbCorner left-bottom-back corner of the cuboid representing the accessible range of the map for the (center of the) entity
-     * @param rtfCorner right-top-front corner of the cuboid representing the accessible range of the map for the (center of the) entity
+     * @param lbbCorner left-bottom-back corner of the cuboid representing the accessible range of the map for the (lbb corner of the) entity
+     * @param rtfCorner right-top-front corner of the cuboid representing the accessible range of the map for the (lbb corner of the) entity
      */
     public RangeComponent(Vector3f lbbCorner, Vector3f rtfCorner) {
         this.lbbCorner = lbbCorner;

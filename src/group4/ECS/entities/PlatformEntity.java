@@ -12,7 +12,6 @@ import group4.utils.ShaderParser;
 
 import java.util.ArrayList;
 
-
 public class PlatformEntity extends Entity {
 
     // Store information about the platform
@@ -23,8 +22,9 @@ public class PlatformEntity extends Entity {
     /**
      * Creates a static platform
      *
-     * @param position  center point of platform
-     * @param dimension along with the position describes a cuboid with lbbCorner=position-dimention and rtfCorner=position+dimention
+     * @param position    left-bottom-back corner of the cuboid representing the platform
+     * @param dimension   such that the right-top-front corner of the cuboid representing the platform is position+dimension
+     * @param texturePath path to the texture for this platform
      */
     public PlatformEntity(Vector3f position, Vector3f dimension, String texturePath) {
         // set instance variables
@@ -32,7 +32,6 @@ public class PlatformEntity extends Entity {
         this.dimension = dimension;
         this.texture = new Texture(texturePath);
 
-        // create needed components for most basic platform
         this.add(new PositionComponent(position, dimension));
         this.add(new PlatformComponent());
 
@@ -40,20 +39,16 @@ public class PlatformEntity extends Entity {
         GraphicsComponent graphicsComponent = createGraphicsComponent();
         this.add(graphicsComponent);
 
-        // add this entity to the engine
         TheEngine.getInstance().addEntity(this);
     }
 
-
     private GraphicsComponent createGraphicsComponent() {
-        // TODO: should not need to get the bottom left position
-        Vector3f bl = blPosition();
         int texWidth = texture.getWidth();
         int texHeight = texture.getHeight();
 
         // boundaries for the platform on the top and right (local)
-        float topY = bl.add(dimension).y;
-        float rightX = bl.add(dimension).x;
+        float topY = position.add(dimension).y;
+        float rightX = position.add(dimension).x;
 
         // temporary arraylists to store the vertex cooridnates, texture coordinates, indices
         ArrayList<Vector3f> vertexArray = new ArrayList<>();
@@ -122,15 +117,6 @@ public class PlatformEntity extends Entity {
 
 
     /**
-     * Calculates and returns the bottom left position of this platform.
-     *
-     * @return bottom left player
-     */
-    private Vector3f blPosition() {
-        return position.sub(dimension.scale(0.5f));
-    }
-
-    /**
      * Creates float array from a vector3f arraylist for the vertexArray class.
      * For each vector in the list it adds x, y, z separately to the float array.
      *
@@ -172,6 +158,4 @@ public class PlatformEntity extends Entity {
         }
         return result;
     }
-
-
 }

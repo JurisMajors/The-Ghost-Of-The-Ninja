@@ -37,7 +37,7 @@ public class Player extends Entity {
 
         // add needed components
         this.add(new PositionComponent(p, new Vector3f(2.0f, 0.0f, 0.0f)));
-        this.add(new MovementComponent(new Vector3f(1.0f, 0.0f, 0.0f), new Vector3f(1.0f, 1.0f, 0.0f)));
+        this.add(new MovementComponent(new Vector3f(0.05f, 0.0f, 0.0f), new Vector3f(1.0f, 1.0f, 0.0f)));
         this.add(new GraphicsComponent(shader, texture, vertices, indices, tcs));
         this.add(new PlayerInputComponent());
 
