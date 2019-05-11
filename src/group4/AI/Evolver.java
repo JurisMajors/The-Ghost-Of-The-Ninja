@@ -63,7 +63,7 @@ public class Evolver {
         EvolutionaryOperator<Brain> pipeline = new EvolutionPipeline<>(operators);
 
         // factory of neural networks
-        AbstractCandidateFactory<Brain> factory = new BrainFactory(Evolver.layerSizes, decoder);
+        AbstractCandidateFactory<Brain> factory = new BrainFactory(Evolver.layerSizes);
         FitnessEvaluator<Brain> fitnessEvaluator = new Evaluator();
         SelectionStrategy<Object> selection = new RouletteWheelSelection();
         Random rng = new MersenneTwisterRNG();
