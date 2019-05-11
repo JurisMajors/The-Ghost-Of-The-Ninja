@@ -3,6 +3,7 @@ package group4.maths;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.AIComponent;
+import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.PlayerComponent;
 import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.Mappers;
@@ -67,7 +68,8 @@ public class Ray {
     public List<Vector3f> intersects(Entity entity) {
         List<Vector3f> intersections = new ArrayList<>();
         PositionComponent posComp = Mappers.positionMapper.get(entity);
-        Vector3f dim = posComp.dimension;
+        DimensionComponent dimComp = Mappers.dimensionMapper.get(entity);
+        Vector3f dim = dimComp.dimension;
         Vector3f botL = posComp.position;
 
         // points of the bounding box
