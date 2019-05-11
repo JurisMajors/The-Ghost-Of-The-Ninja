@@ -1,5 +1,9 @@
 package group4.AI;
 
+import group4.levelSystem.Level;
+import group4.levelSystem.Module;
+import group4.levelSystem.levels.SimpleLevel;
+import group4.levelSystem.modules.SimpleModule;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.maths.random.Probability;
 import org.uncommons.watchmaker.framework.*;
@@ -32,13 +36,17 @@ public class Evolver {
     /** hidden layer sizes (dont include input/output) **/
     public final static int[] layerSizes = new int[]{100, 200, 300, 100};
     /** decoder of gamestates **/
-    public final static NNGameStateInterface decoder = new NNGameState();
+    public final static NNGameStateInterface decoder = new NNGameState(50);
     /** probability to completely change a weight of nn **/
     public final static double mutationProbability = 0.05;
     /** Mutator **/
     private static AbstractBrainMutation mutator = new StandardMutation(new Probability(mutationProbability));
     /** Crossover **/
     private static AbstractBrainCrossover crossover = new StandardCrossover();
+    /** the level (temporary) **/
+    public static Level level = new SimpleLevel();
+    /** TODO: find feasible time limit **/
+    public static double timelimit = 120.00;
 
     private static void toFile(Brain b, String filePath) throws IOException {
         b.toFile(filePath);
@@ -55,7 +63,7 @@ public class Evolver {
         EvolutionaryOperator<Brain> pipeline = new EvolutionPipeline<>(operators);
 
         // factory of neural networks
-        AbstractCandidateFactory<Brain> factory = new BrainFactory(Evolver.layerSizes, decoder);
+        AbstractCandidateFactory<Brain> factory = new BrainFactory(Evolver.layerSizes);
         FitnessEvaluator<Brain> fitnessEvaluator = new Evaluator();
         SelectionStrategy<Object> selection = new RouletteWheelSelection();
         Random rng = new MersenneTwisterRNG();
