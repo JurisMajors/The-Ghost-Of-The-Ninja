@@ -43,10 +43,12 @@ public class Ghost extends Entity {
 
         // add necessary components
         this.add(new AIComponent(brain));
-        this.add(new PositionComponent(p));
+        // TODO adjust to new definition of pos comp
+        //this.add(new PositionComponent(p));
         this.add(new DimensionComponent(d));
-        this.add(new GraphicsComponent(shader, texture,
-                vertices, indices, tcs));
+        // TODO adjust constructor to graphic comp
+        // this.add(new GraphicsComponent(shader, texture,
+        // vertices, indices, tcs));
 
     }
 

@@ -15,8 +15,9 @@ public class AK47 extends Gun {
         String texture = "src/group4/res/textures/weapons/AK47.png";
 
         // add needed components
-        this.add(new GraphicsComponent(shader, texture,
-                this.vertices, this.indices, this.tcs));
+        // TODO graphic comp definition
+        //this.add(new GraphicsComponent(shader, texture,
+        //        this.vertices, this.indices, this.tcs));
 
         // TODO: damage-system
         this.add(new WeaponComponent(600, EntityConst.BulletType.MACHINEGUN));
