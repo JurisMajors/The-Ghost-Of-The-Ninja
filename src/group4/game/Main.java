@@ -96,7 +96,7 @@ public class Main implements Runnable {
         Texture.loadAllTextures();
 
         // Initialize the engine
-        engine = TheEngine.getInstance();
+        Engine engine = TheEngine.getInstance();
 
         // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
         engine.addSystem(new CameraSystem()); // CameraSystem must be added before RenderSystem
