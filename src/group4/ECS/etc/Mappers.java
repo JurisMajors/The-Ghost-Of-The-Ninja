@@ -30,4 +30,6 @@ public class Mappers {
     public static final ComponentMapper<AudioComponent> audioMapper =
             ComponentMapper.getFor(AudioComponent.class);
 
+    public static final ComponentMapper<CameraComponent> cameraMapper =
+            ComponentMapper.getFor(CameraComponent.class);
 }

@@ -44,4 +44,11 @@ public class Families {
 
     public static final Family ghostFamily = Family
             .all(AIComponent.class).get();
+    // all cameras
+    public static final Family cameraFamily = Family
+            .all(CameraComponent.class).get();
+
+    // player tmp
+    public static final Family playerFamily = Family
+            .all(PlayerInputComponent.class).get();
 }

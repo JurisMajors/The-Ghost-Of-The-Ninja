@@ -21,7 +21,7 @@ public class Vector3f {
     public Vector3f(float x, float y, float z) {
         this.x = x;
         this.y = y;
-        this.z = z;y=0;
+        this.z = z;
     }
 
     /**
@@ -162,6 +162,19 @@ public class Vector3f {
         float newX = (float) (this.x * Math.cos(angle) - this.y * Math.sin(angle));
         float newY = (float) (this.x * Math.sin(angle) + this.y * Math.cos(angle));
         return new Vector3f(newX, newY, this.z);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("{%f, %f, %f}", this.x, this.y, this.z);
+    }
+
+    /**
+     * Returns a vector with absolute value for x,y,z
+     * @return vector
+     */
+    public Vector3f abs() {
+        return new Vector3f(Math.abs(x), Math.abs(y), Math.abs(z));
     }
 
 }

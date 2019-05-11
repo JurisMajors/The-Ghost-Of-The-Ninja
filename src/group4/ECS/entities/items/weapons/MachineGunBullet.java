@@ -18,7 +18,8 @@ public class MachineGunBullet extends Bullet {
         this.add(new PhysicsComponent(0.5f, 0.5f));
         this.add(new DamageComponent(10));
         this.add(new MovementComponent(new Vector3f(), new Vector3f()));
-        this.add(new GraphicsComponent(shader, texture, vertices, indices, tcs));
+        // TODO: proper shader init
+        // this.add(new GraphicsComponent(shader, texture, vertices, indices, tcs));
 
     }
 
