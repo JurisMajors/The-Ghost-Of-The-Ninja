@@ -111,25 +111,39 @@ public class Main implements Runnable {
      * The main game loop where we update the GameState and render (if required).
      */
     private void loop() {
-        timer = new Timer();
-        boolean render = true;
-
+        long lastLoopTime = System.nanoTime();
+        final int targetFps = 60;
+        final long optimalTime = (long) 1e9 / targetFps;
+        double lastFpsTime = 0.0;
+        int fps = 0;
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
-            while (timer.getDeltaTime() >= timer.getFrameTime()) {
-                timer.nextFrame();
-                render = true;
+            // work out how long its been since the last update, this
+            // will be used to calculate how far the entities should
+            // move this loop
+            long now = System.nanoTime();
+            long updateLength = now - lastLoopTime;
+            lastLoopTime = now;
+            double delta = updateLength / ((double) optimalTime);
+
+            // update the frame counter
+            lastFpsTime += updateLength;
+            fps++;
+
+            // update our FPS counter if a second has passed since
+            // we last recorded
+            if (lastFpsTime >= (long) 1e9) {
+                System.out.println("(FPS: " + fps + ")");
+                lastFpsTime = 0;
+                fps = 0;
             }
 
-            if (render) {
-                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-                TheEngine.getInstance().update((float) timer.getDeltaTime()); // Update the gamestate
+            TheEngine.getInstance().update((float) delta); // Update the gamestate
 
-                glfwSwapBuffers(window); // swap the color buffers
-                render = false;
-            }
+            glfwSwapBuffers(window); // swap the color buffers
 
             // Poll for window events. The key callback above will only be
             // invoked during this call.
@@ -138,6 +152,16 @@ public class Main implements Runnable {
             // check if the user wants to exit the game
             if (KeyBoard.isKeyDown(GLFW_KEY_ESCAPE)) {
                 glfwSetWindowShouldClose(window, true);
+            }
+            // we want each frame to take 10 milliseconds, to do this
+            // we've recorded when we started the frame. We add 10 milliseconds
+            // to this and then factor in the current time to give
+            // us our final value to wait for
+            // remember this is in ms, whereas our lastLoopTime etc. vars are in ns.
+            try {
+                Thread.sleep((lastLoopTime - System.nanoTime() + optimalTime) / (long) 1e6);
+            } catch (Exception e) {
+                continue;
             }
         }
     }
