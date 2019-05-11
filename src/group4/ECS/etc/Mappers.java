@@ -35,4 +35,10 @@ public class Mappers {
 
     public static final ComponentMapper<CameraComponent> cameraMapper =
             ComponentMapper.getFor(CameraComponent.class);
+
+    public static final ComponentMapper<GravityComponent> gravityMapper =
+            ComponentMapper.getFor(GravityComponent.class);
+
+    public static final ComponentMapper<RangeComponent> rangeMapper =
+            ComponentMapper.getFor(RangeComponent.class);
 }
