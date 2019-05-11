@@ -9,16 +9,10 @@ import group4.ECS.etc.TheEngine;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
-import group4.utils.ShaderParser;
 
 import java.util.ArrayList;
 
 public class Platform extends Entity {
-
-    // Store information about the platform
-    private Vector3f position; // center position (for now)
-    private Vector3f dimension; // size of the platform (x,y,z)
-    private Texture texture; // texture for this platform
 
     /**
      * Creates a static platform
@@ -27,24 +21,21 @@ public class Platform extends Entity {
      * @param dimension   such that the right-top-front corner of the cuboid representing the platform is position+dimension
      * @param texturePath path to the texture for this platform
      */
-    public Platform(Vector3f position, Vector3f dimension, String texturePath) {
-        // set instance variables
-        this.position = position;
-        this.dimension = dimension;
-        this.texture = new Texture(texturePath);
+    public Platform(Vector3f position, Vector3f dimension, String texturePath, Shader shader) {
+        Texture texture = new Texture(texturePath);
 
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
         this.add(new PlatformComponent());
 
         // create the graphics component with a vertex array repeating the texture over this platform
-        GraphicsComponent graphicsComponent = createGraphicsComponent();
+        GraphicsComponent graphicsComponent = createGraphicsComponent(position, dimension, texture, shader);
         this.add(graphicsComponent);
 
         TheEngine.getInstance().addEntity(this);
     }
 
-    private GraphicsComponent createGraphicsComponent() {
+    private GraphicsComponent createGraphicsComponent(Vector3f position, Vector3f dimension, Texture texture, Shader shader) {
         int texWidth = texture.getWidth();
         int texHeight = texture.getHeight();
 
@@ -110,11 +101,7 @@ public class Platform extends Entity {
         float[] tc = createTextureArray(tcArray);
         byte[] ic = createIndicesArray(indices);
 
-        // TODO: for now hardcode the shader, we might want to change this to a static global shader somewhere
-        String shaderPath = "src/group4/res/shaders/simple/";
-        Shader tempShader = ShaderParser.loadShader(shaderPath);
-
-        return new GraphicsComponent(tempShader, this.texture, va, ic, tc);
+        return new GraphicsComponent(shader, texture, va, ic, tc);
     }
 
 
