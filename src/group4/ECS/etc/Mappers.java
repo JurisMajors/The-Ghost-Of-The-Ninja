@@ -23,6 +23,9 @@ public class Mappers {
 
     public static final ComponentMapper<ConsumableComponent> consumableMapper =
             ComponentMapper.getFor(ConsumableComponent.class);
+    
+    public static final ComponentMapper<InputComponent> inputMapper =
+            ComponentMapper.getFor(InputComponent.class);
 
     public static final ComponentMapper<StatsComponent> statsMapper =
             ComponentMapper.getFor(StatsComponent.class);
