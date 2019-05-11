@@ -36,7 +36,7 @@ public class Evolver {
     /** hidden layer sizes (dont include input/output) **/
     public final static int[] layerSizes = new int[]{100, 200, 300, 100};
     /** decoder of gamestates **/
-    public final static NNGameStateInterface decoder = new NNGameState();
+    public final static NNGameStateInterface decoder = new NNGameState(50);
     /** probability to completely change a weight of nn **/
     public final static double mutationProbability = 0.05;
     /** Mutator **/

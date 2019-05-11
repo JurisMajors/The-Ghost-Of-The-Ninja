@@ -21,8 +21,6 @@ import java.util.List;
 public class Brain {
     /** the network that does the calculations **/
     MultiLayerNetwork nn;
-    /** gamestate decoder to translate to a double array **/
-    NNGameStateInterface decoder;
 
     /**
      * Given information about the layers, initialize a MLP
@@ -63,8 +61,6 @@ public class Brain {
     Brain (Brain b) {
          // clone the network
         this.nn = b.nn.clone();
-        // pass on the level decoder too
-        this.decoder = b.decoder;
     }
 
     Brain () {
@@ -78,10 +74,6 @@ public class Brain {
 
     void toFile(String filePath) throws IOException {
         ModelSerializer.writeModel(this.nn, filePath, false);
-    }
-
-    void setDecoder(NNGameStateInterface dec) {
-        this.decoder = dec;
     }
 
     /**
@@ -112,6 +104,6 @@ public class Brain {
      * @return the move the ghost should take
      */
     public String think() {
-        return this.feedForward(this.decoder.decode());
+        return this.feedForward(Evolver.decoder.decode());
     }
 }
