@@ -27,9 +27,11 @@ public class Ray {
      * @param entities the entities that the ray might intersect
      * @return position at first intersection of a bounding box
      */
-    Vector3f cast(List<Entity> entities) {
+    IntersectionPair cast(List<Entity> entities) {
         Vector3f closestIntersection = null; // current closest intersection of the ray
-        float curDist = Float.MAX_VALUE;
+        Entity intersectedEntity = null; // entity twhose bounding box is intersected
+        float curDist = Float.MAX_VALUE; // the distance to the intersection
+
         // for each entity calculate the intersection
         for (Entity e : entities) {
             List<Vector3f> intersections = this.intersects(e);
@@ -42,16 +44,12 @@ public class Ray {
                 if (interDist < curDist) {
                     curDist = interDist;
                     closestIntersection = inter;
+                    intersectedEntity = e;
                 }
             }
         }
-        // TODO: Couple it with the entity so that we can use the type of the entity as the input too
-        return closestIntersection;
-    }
 
-    private Vector3f getDimension(PositionComponent pc) {
-        // TODO: get dimensions from Venislavs branch
-        return null;
+        return new IntersectionPair(closestIntersection, intersectedEntity);
     }
 
     /**
@@ -62,7 +60,7 @@ public class Ray {
     List<Vector3f> intersects(Entity entity) {
         List<Vector3f> intersections = new ArrayList<>();
         PositionComponent posComp = Mappers.positionMapper.get(entity);
-        Vector3f dim = getDimension(posComp);
+        Vector3f dim = posComp.dimension;
         Vector3f centr = posComp.position;
 
         // points of the bounding box
