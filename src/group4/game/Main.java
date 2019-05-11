@@ -2,7 +2,11 @@ package group4.game;
 
 import com.badlogic.ashley.core.Engine;
 import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.CameraSystem;
+import group4.ECS.systems.MovementSystem;
 import group4.ECS.systems.RenderSystem;
+import group4.graphics.Shader;
+import group4.graphics.Texture;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
@@ -29,6 +33,7 @@ public class Main implements Runnable {
 
     public static final float SCREEN_WIDTH = 20.0f;
     public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
+
 
     /**
      * Creates a new thread on which it wel run() the game.
@@ -85,42 +90,59 @@ public class Main implements Runnable {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        // Preload all resources
+        Shader.loadAllShaders();
+        Texture.loadAllTextures();
+
+        // Initialize the engine
+        engine = TheEngine.getInstance();
+
+        // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
+        engine.addSystem(new CameraSystem()); // CameraSystem must be added before RenderSystem
+        engine.addSystem(new MovementSystem()); // TODO: Probably temp and should be changed when the new movement system is ready
+        engine.addSystem(new RenderSystem());
+
         // Initialize the level
         this.level = new SimpleLevel();
-
-        // initialize the rendering
-        TheEngine.getInstance().addSystem(new RenderSystem());
     }
 
     /**
      * The main game loop where we update the GameState and render (if required).
      */
     private void loop() {
-        timer = new Timer();
-        boolean render = true;
-
-        Vector3f screenPosStepper = new Vector3f(0, 0, 0);
-      
+        long lastLoopTime = System.nanoTime();
+        final int targetFps = 60;
+        final long optimalTime = (long) 1e9 / targetFps;
+        double lastFpsTime = 0.0;
+        int fps = 0;
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
-            while (timer.getDeltaTime() >= timer.getFrameTime()) {
-                timer.nextFrame();
-                render = true;
+            // work out how long its been since the last update, this
+            // will be used to calculate how far the entities should
+            // move this loop
+            long now = System.nanoTime();
+            long updateLength = now - lastLoopTime;
+            lastLoopTime = now;
+            double delta = updateLength / ((double) optimalTime);
+
+            // update the frame counter
+            lastFpsTime += updateLength;
+            fps++;
+
+            // update our FPS counter if a second has passed since
+            // we last recorded
+            if (lastFpsTime >= (long) 1e9) {
+                System.out.println("(FPS: " + fps + ")");
+                lastFpsTime = 0;
+                fps = 0;
             }
 
-            if (render) {
-                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-                // Demo update: Step the screen window of the module
+            TheEngine.getInstance().update((float) delta); // Update the gamestate
 
-                screenPosStepper.x += 0.1f;
-                level.getCurrentModule().updateScreenWindow(screenPosStepper);
-                TheEngine.getInstance().update((float) timer.getDeltaTime());
-
-                glfwSwapBuffers(window); // swap the color buffers
-                render = false;
-            }
+            glfwSwapBuffers(window); // swap the color buffers
 
             // Poll for window events. The key callback above will only be
             // invoked during this call.
@@ -129,6 +151,16 @@ public class Main implements Runnable {
             // check if the user wants to exit the game
             if (KeyBoard.isKeyDown(GLFW_KEY_ESCAPE)) {
                 glfwSetWindowShouldClose(window, true);
+            }
+            // we want each frame to take 10 milliseconds, to do this
+            // we've recorded when we started the frame. We add 10 milliseconds
+            // to this and then factor in the current time to give
+            // us our final value to wait for
+            // remember this is in ms, whereas our lastLoopTime etc. vars are in ns.
+            try {
+                Thread.sleep((lastLoopTime - System.nanoTime() + optimalTime) / (long) 1e6);
+            } catch (Exception e) {
+                continue;
             }
         }
     }
