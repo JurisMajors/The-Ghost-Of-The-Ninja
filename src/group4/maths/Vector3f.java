@@ -25,6 +25,16 @@ public class Vector3f {
     }
 
     /**
+     * Creates a copy of another vector
+     * @param toCopy the vector to copy
+     */
+    public Vector3f(Vector3f toCopy) {
+        this.x = toCopy.x;
+        this.y = toCopy.y;
+        this.z = toCopy.z;
+    }
+
+    /**
      * Adds this vector to another vector and results the result.
      *
      * @param other vector

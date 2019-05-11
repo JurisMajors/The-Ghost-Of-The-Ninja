@@ -57,17 +57,18 @@ public class Ray {
      * @param entity the entity to check for an intersection
      * @return the positions of intersections with the  bounding box of the entity
      */
-    List<Vector3f> intersects(Entity entity) {
+    public List<Vector3f> intersects(Entity entity) {
         List<Vector3f> intersections = new ArrayList<>();
         PositionComponent posComp = Mappers.positionMapper.get(entity);
         Vector3f dim = posComp.dimension;
-        Vector3f centr = posComp.position;
+        Vector3f botL = posComp.position;
 
         // points of the bounding box
-        Vector3f topLeft = new Vector3f(centr.x - dim.x, centr.y + dim.y, centr.z);
-        Vector3f topRight = new Vector3f(centr.x + dim.x, centr.y + dim.y, centr.z);
-        Vector3f botLeft = new Vector3f(centr.x - dim.x, centr.y - dim.y, centr.z);
-        Vector3f botRight = new Vector3f(centr.x + dim.x, centr.y - dim.y, centr.z);
+        // the z coordinates dont matter, since we only care about 2D intersection
+        Vector3f botLeft = new Vector3f(botL); // copy botleft
+        Vector3f topLeft = new Vector3f(botLeft.x, botLeft.y + dim.y, botLeft.z);
+        Vector3f topRight = botLeft.add(dim);
+        Vector3f botRight = new Vector3f(botLeft.x + dim.x, botLeft.y, botLeft.z);
 
         // define lines of the bounding box
         List<List<Vector3f>> lines = new ArrayList<>();
