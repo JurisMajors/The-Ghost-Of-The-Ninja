@@ -29,7 +29,6 @@ public class PlayerMovementSystem extends IteratingSystem {
 
         //accelerate on the x coordinate according to keyboard keys
         if (KeyBoard.isKeyDown(GLFW_KEY_D) && !KeyBoard.isKeyDown(GLFW_KEY_A)) {
-            System.out.println("LOL");
             mc.velocity.x = Math.min(mc.velocityRange.x, mc.velocity.x + mc.acceleration.x);
         } else if (KeyBoard.isKeyDown(GLFW_KEY_A) && !KeyBoard.isKeyDown(GLFW_KEY_D)) {
             mc.velocity.x = Math.max(-mc.velocityRange.x, mc.velocity.x - mc.acceleration.x);
