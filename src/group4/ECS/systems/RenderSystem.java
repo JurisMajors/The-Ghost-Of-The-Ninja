@@ -11,7 +11,11 @@ import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.maths.Matrix4f;
+import group4.utils.DebugUtils;
 
+import java.util.ArrayList;
+
+import static org.lwjgl.opengl.GL11.glFlush;
 import static org.lwjgl.opengl.GL41.glActiveTexture;
 
 /**
@@ -81,6 +85,16 @@ public class RenderSystem extends EntitySystem {
             // Render!
             gc.triangle.render(); // TODO: Triangle is an arbitrary (and probably bad name) which I think still remains from the first example we had hehe.. => Change :-)
         }
+
+        for (Entity a: entities) {
+            PositionComponent pca = Mappers.positionMapper.get(a);
+            for (int i = 0; i < entities.size(); i++) {
+                Entity b = entities.get(i);
+                PositionComponent pcb = Mappers.positionMapper.get(b);
+                DebugUtils.drawLine(cc.viewMatrix, pca.position, pcb.position);
+            }
+        }
+        glFlush();
     }
 
     /**
