@@ -20,7 +20,6 @@ public class Camera extends Entity {
 
         // register to engine
         TheEngine.getInstance().addEntity(this);
-
     }
 
 }

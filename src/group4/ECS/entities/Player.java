@@ -1,7 +1,6 @@
 package group4.ECS.entities;
 
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.PlayerRules;
 import group4.ECS.components.*;
 import group4.ECS.etc.TheEngine;
 import group4.graphics.Shader;
@@ -32,7 +31,8 @@ public class Player extends Entity {
         // add needed components
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
-        this.add(new MovementComponent(velocityRange));
+        // temporary!!, player should initially not move
+        this.add(new MovementComponent(new Vector3f(0.2f, 0.0f,0.0f), velocityRange));
         this.add(new GravityComponent());
         this.add(new GraphicsComponent(shader, texture, dimension));
         this.add(new PlayerComponent());

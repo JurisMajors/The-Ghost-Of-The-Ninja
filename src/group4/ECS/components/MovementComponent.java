@@ -13,6 +13,8 @@ public class MovementComponent implements Component {
 
     /**
      * default constructor (standing)
+     *
+     * @param velocityRange restricting the velocity: -velocityRange.x<=velocity.x<=velocityRange.x and (-velocityRange.y<=)velocity.y<=velocityRange.y
      */
     public MovementComponent(Vector3f velocityRange) {
         this.velocity = new Vector3f();
