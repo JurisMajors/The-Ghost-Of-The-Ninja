@@ -1,6 +1,7 @@
 package group4.ECS.entities;
 
 import com.badlogic.ashley.core.Entity;
+import group4.ECS.PlayerRules;
 import group4.ECS.components.*;
 import group4.ECS.etc.TheEngine;
 import group4.graphics.Shader;
@@ -27,7 +28,7 @@ public class Player extends Entity {
         // add needed components
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
-        this.add(new MovementComponent(velocity, velocityRange));
+        this.add(new MovementComponent(velocity, velocityRange, acceleration));
         this.add(new GravityComponent(gravity));
         this.add(new GraphicsComponent(shader, texture, dimension));
         // TODO: one of these two should go
@@ -51,4 +52,15 @@ public class Player extends Entity {
         this(position, dimension, new Vector3f(), new Vector3f(1, 1, 0), new Vector3f(), new Vector3f(0, 9.81f, 0), shader, texture);
     }
 
+    /**
+     * Initialize a player with the default rule-set {@link PlayerRules}
+      * @param position center of the player
+     * @param shader shader of the player
+     * @param texture texture of the player
+     */
+    public Player(Vector3f position, Shader shader, Texture texture) {
+        this(position, PlayerRules.dimension, PlayerRules.startVelocity,
+                PlayerRules.velocityRange, PlayerRules.acceleration,
+                PlayerRules.gravity, shader, texture);
+    }
 }
