@@ -39,7 +39,7 @@ public class PlayerMovementSystem extends IteratingSystem {
 
         boolean below = false;
         //all entities (with a position component)
-        ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.allFamily);
+        ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.collidableFamily);
         for (int i = 0; i < entities.size(); i++)
             if (entity != entities.get(i)) {
                 //position component of entity
