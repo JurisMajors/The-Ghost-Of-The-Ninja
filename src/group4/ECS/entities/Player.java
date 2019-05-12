@@ -31,8 +31,6 @@ public class Player extends Entity {
         this.add(new MovementComponent(velocity, velocityRange, acceleration));
         this.add(new GravityComponent(gravity));
         this.add(new GraphicsComponent(shader, texture, dimension));
-        // TODO: one of these two should go
-        this.add(new PlayerInputComponent());
         this.add(new PlayerComponent());
 
         // register to engine
