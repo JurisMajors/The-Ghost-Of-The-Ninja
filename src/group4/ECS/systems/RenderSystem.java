@@ -12,7 +12,6 @@ import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.maths.Matrix4f;
 
-import static org.lwjgl.opengl.GL41.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL41.glActiveTexture;
 
 /**

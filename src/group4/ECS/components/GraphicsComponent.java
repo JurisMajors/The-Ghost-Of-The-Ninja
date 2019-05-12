@@ -88,7 +88,7 @@ public class GraphicsComponent implements Component {
 
         // set instance variables
         this.shader = shader;
-        this.texture =texture;
+        this.texture = texture;
         this.triangle = new VertexArray(vertices, indices, tcs);
         this.layer = 0;
     }

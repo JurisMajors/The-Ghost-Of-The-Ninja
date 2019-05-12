@@ -1,7 +1,6 @@
 package group4.ECS.entities;
 
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.PlayerRules;
 import group4.ECS.components.*;
 import group4.ECS.etc.TheEngine;
 import group4.graphics.Shader;
@@ -12,52 +11,31 @@ import group4.maths.Vector3f;
 
 public class Player extends Entity {
 
+    /** dimension of player aka bounding box, ghost inherits in order to apply texture */
+    protected Vector3f dimension = new Vector3f(2.0f, 2.0f, 0.0f);
+
     /**
      * Creates a player
      *
-     * @param position      center point of player
-     * @param dimension     along with the position describes a cuboid with lbbCorner=position-dimention and rtfCorner=position+dimention
-     * @param velocity      velocity vector of player
-     * @param velocityRange restricting the velocity: -velocityRange.x<=velocity.x<=velocityRange.x and velocity.y<=velocityRange.y
-     * @param acceleration  acceleration vector of player
-     * @param gravity       acceleration vector of player due to gravity
-     * @param shader        shader for the player
-     * @param texture       texture for the player
+     * @param position center point of player
      */
-    public Player(Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f velocityRange, Vector3f acceleration, Vector3f gravity, Shader shader, Texture texture) {
+    public Player(Vector3f position) {
+
+        // vRange
+        Vector3f velocityRange = new Vector3f(2.0f, 2.0f, 0.0f);
+        // shader
+        Shader shader = Shader.SIMPLE;
+        // TODO: proper texture
+        Texture texture = Texture.BRICK;
+
         // add needed components
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
-        this.add(new MovementComponent(velocity, velocityRange, acceleration));
-        this.add(new GravityComponent(gravity));
+        // temporary!!, player should initially not move
+        this.add(new MovementComponent(new Vector3f(0.2f, 0.0f,0.0f), velocityRange));
+        this.add(new GravityComponent());
         this.add(new GraphicsComponent(shader, texture, dimension));
-        // TODO: one of these two should go
-        this.add(new PlayerInputComponent());
         this.add(new PlayerComponent());
     }
 
-    /**
-     * Creates a player with 0 starting velocity, velocityRange of (1,1,0), 0 starting accelerating and default 9.81 gravity.
-     *
-     * @param position  center point of player
-     * @param dimension along with the position describes a cuboid with lbbCorner=position-dimention and rtfCorner=position+dimention
-     * @param shader    shader for the player
-     * @param texture   texture for the player
-     */
-    public Player(Vector3f position, Vector3f dimension, Shader shader, Texture texture) {
-        // use other constructor to create player
-        this(position, dimension, new Vector3f(), new Vector3f(1, 1, 0), new Vector3f(), new Vector3f(0, 9.81f, 0), shader, texture);
-    }
-
-    /**
-     * Initialize a player with the default rule-set {@link PlayerRules}
-      * @param position center of the player
-     * @param shader shader of the player
-     * @param texture texture of the player
-     */
-    public Player(Vector3f position, Shader shader, Texture texture) {
-        this(position, PlayerRules.dimension, PlayerRules.startVelocity,
-                PlayerRules.velocityRange, PlayerRules.acceleration,
-                PlayerRules.gravity, shader, texture);
-    }
 }

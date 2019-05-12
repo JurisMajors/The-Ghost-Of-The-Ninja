@@ -13,7 +13,9 @@ import static org.lwjgl.opengl.GL11.*;
 public class Texture {
     // Storing all texture resources when preloaded.
     public static Texture DEBUG; // TODO: More to be added.
-    public static Texture BRICK; // TODO: More to be added.
+    public static Texture BRICK;
+    public static Texture AK47;
+    public static Texture MG_BULLET;
     public static Texture EXIT;  // TODO: More to be added.
 
     // width and height of the texture
@@ -32,6 +34,8 @@ public class Texture {
     public static void loadAllTextures() {
         DEBUG = new Texture("src/group4/res/textures/debug.jpeg");
         BRICK = new Texture("src/group4/res/textures/brick.png");
+        AK47 = new Texture("src/group4/res/textures/weapons/AK47.png");
+        MG_BULLET = new Texture("src/group4/res/textures/weapons/Bullet.png");
         EXIT = new Texture("src/group4/res/textures/exit.jpg");
     }
 

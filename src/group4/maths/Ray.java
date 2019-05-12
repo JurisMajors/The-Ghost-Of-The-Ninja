@@ -2,7 +2,7 @@ package group4.maths;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
-import group4.ECS.components.AIComponent;
+import group4.ECS.components.GhostComponent;
 import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.PlayerComponent;
 import group4.ECS.components.PositionComponent;
@@ -39,7 +39,7 @@ public class Ray {
         // for each entity calculate the intersection
         for (Entity e : entities) {
             // TODO this does not generalize in case of CGI, maybe skip according to parameter?
-            if (e.getComponent(AIComponent.class) != null) continue; // skip the ghost
+            if (e.getComponent(GhostComponent.class) != null) continue; // skip the ghost
             if (e.getComponent(PlayerComponent.class) != null) continue; // skip the player
 
             List<Vector3f> intersections = this.intersects(e); // get intersection points

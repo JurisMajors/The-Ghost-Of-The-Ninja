@@ -4,11 +4,23 @@ import com.badlogic.ashley.core.Component;
 import group4.maths.Vector3f;
 
 public class MovementComponent implements Component {
+
     public Vector3f velocity;
     public Vector3f velocityRange;
     public Vector3f acceleration;
 
     // joris TODO: subclasses
+
+    /**
+     * default constructor (standing)
+     *
+     * @param velocityRange restricting the velocity: -velocityRange.x<=velocity.x<=velocityRange.x and (-velocityRange.y<=)velocity.y<=velocityRange.y
+     */
+    public MovementComponent(Vector3f velocityRange) {
+        this.velocity = new Vector3f();
+        this.velocityRange = velocityRange;
+        this.acceleration = new Vector3f();
+    }
 
     /**
      * Creates a movement component with no acceleration (zero vector)
@@ -34,4 +46,5 @@ public class MovementComponent implements Component {
         this.velocityRange = velocityRange;
         this.acceleration = acceleration;
     }
+
 }

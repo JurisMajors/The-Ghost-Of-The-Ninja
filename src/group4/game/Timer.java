@@ -83,4 +83,5 @@ public class Timer {
     public double getTime() {
         return (double) System.nanoTime() / (double) 1000000000L;
     }
+
 }

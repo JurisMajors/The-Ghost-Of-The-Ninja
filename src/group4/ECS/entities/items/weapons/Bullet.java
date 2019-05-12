@@ -3,20 +3,19 @@ package group4.ECS.entities.items.weapons;
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.PositionComponent;
-import group4.ECS.etc.TheEngine;
 import group4.maths.Vector3f;
 
 public class Bullet extends Entity {
 
     // bounding box
-    protected Vector3f d = new Vector3f(0.3f, 0.3f, 0.0f);
+    protected Vector3f dimension = new Vector3f(0.3f, 0.3f, 0.0f);
 
     // Construct vertex array
     protected float[] vertices = new float[] {
             0, 0, 0,
-            0, d.y, 0,
-            d.x, d.y, 0,
-            d.x, 0, 0,
+            0, dimension.y, 0,
+            dimension.x, dimension.y, 0,
+            dimension.x, 0, 0,
     };
 
     // Construct index array (used for triangle mesh)
@@ -33,16 +32,13 @@ public class Bullet extends Entity {
             1, 1
     };
 
-    public Bullet(Vector3f p) {
-
+    /**
+     * @param position of Bullet
+     */
+    public Bullet(Vector3f position) {
         // add needed components
-        // TODO pos comp definition
-        //this.add(new PositionComponent(p));
-        this.add(new DimensionComponent(d));
-
-        // register to engine
-        TheEngine.getInstance().addEntity(this);
-
+        this.add(new PositionComponent(position));
+        this.add(new DimensionComponent(dimension));
     }
 
 }
