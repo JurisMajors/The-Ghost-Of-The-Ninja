@@ -23,7 +23,7 @@ public class SimpleLevel extends Level {
     @Override
     protected Player createPlayer() {
         // We don't care about the player position, as that will be initialized on level switching
-        return new Player(new Vector3f(), Shader.SIMPLE, Texture.BRICK);
+        return new Player(new Vector3f());
     }
 
 }
