@@ -28,13 +28,15 @@ public abstract class Level {
         this.modules = new ArrayList<>();
 
         this.rootModule = this.createRoot();
-        this.modules.add(this.rootModule);
+        this.addModule(this.rootModule);
 
         this.createAdditionalModules();
 
         this.currentModule = this.rootModule;
 
         this.checkSanity();
+
+        this.rootModule.load();
     }
 
 
@@ -67,12 +69,28 @@ public abstract class Level {
 
 
     /**
+     * This method adds a module to this level
+     * @param m The module to add to this level
+     */
+    protected final void addModule(Module m) {
+        this.modules.add(m);
+    }
+
+
+    /**
      * Switches the level to the next module
      */
     protected final void switchModule(Module m) {
         if (!this.modules.contains(m)) throw new IllegalArgumentException("Level: you cannot switch to a module that is not part of the Level");
 
+        // Unload the old module
+        this.currentModule.unload();
+
+        // Switch the current module to the next module
         this.currentModule = m;
+
+        // Load the new module
+        this.currentModule.load();
     }
 
 

@@ -1,5 +1,6 @@
 package group4.levelSystem;
 
+import group4.ECS.etc.TheEngine;
 import group4.game.Main;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
@@ -62,6 +63,26 @@ public abstract class Module {
      * Return the initial position of the screen window
      */
     protected abstract Vector3f getStartScreenWindow();
+
+
+    /**
+     * Load the current module into the engine, so it gets rendered
+     */
+    public final void load() {
+        for (Entity e : this.entities) {
+            TheEngine.getInstance().addEntity(e);
+        }
+    }
+
+
+    /**
+     * Unload the current module from the engine, to stop it from being rendered
+     */
+    public final void unload() {
+        for (Entity e : this.entities) {
+            TheEngine.getInstance().removeEntity(e);
+        }
+    }
 
 
     /**
