@@ -12,7 +12,7 @@ public final class PlayerRules {
     /** along with the position describes a cuboid with lbbCorner=position-dimention and rtfCorner=position+dimention **/
     public final static Vector3f dimension = new Vector3f(2.0f, 2.0f, 0.0f);
     /** Velocity when the player is initialized **/
-    public final static Vector3f startVelocity = new Vector3f(0.0f, 0.0f, 0f);
+    public final static Vector3f startVelocity = new Vector3f(0.05f, 0.0f, 0f);
     /** restricting the velocity: -velocityRange.x<=velocity.x<=velocityRange.x and velocity.y<=velocityRange.y **/
     public final static Vector3f velocityRange = new Vector3f(2.0f, 2.0f, 0.0f);
     /** the acceleration of the player **/
