@@ -12,6 +12,7 @@ import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
 import group4.levelSystem.levels.SimpleLevel;
+import group4.levelSystem.levels.TestLevel;
 import group4.maths.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -104,7 +105,7 @@ public class Main implements Runnable {
         engine.addSystem(new RenderSystem());
 
         // Initialize the level
-        this.level = new SimpleLevel();
+        this.level = new TestLevel();
     }
 
     /**
