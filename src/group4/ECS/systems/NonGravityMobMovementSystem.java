@@ -15,7 +15,7 @@ public class NonGravityMobMovementSystem extends MobMovementSystem {
     }
 
     @Override
-    protected void processGravity(Entity e, PositionComponent playerPos, float deltaTime) {
+    protected void doGravity(Entity e, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(e);
         MovementComponent mc = Mappers.movementMapper.get(e);
         PositionComponent ppc = Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));

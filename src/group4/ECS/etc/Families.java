@@ -40,7 +40,7 @@ public class Families {
 
     // all enemies, the player and destructible objects
     public static final Family combatFamily = Family
-            .all(PositionComponent.class, StatsComponent.class, GraphicsComponent.class).get();
+            .all(PositionComponent.class, DimensionComponent.class, StatsComponent.class, GraphicsComponent.class).get();
 
     public static final Family ghostFamily = Family
             .all(GhostComponent.class).get();
@@ -77,4 +77,7 @@ public class Families {
     //All entities with which collision is possible
     public static final Family collidableFamily = Family
             .all(PositionComponent.class, DimensionComponent.class).get();
+    //All entities with which collision is possible
+    public static final Family collidableMovingFamily = Family
+            .all(PositionComponent.class, MovementComponent.class, DimensionComponent.class).get();
 }
