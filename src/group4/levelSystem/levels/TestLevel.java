@@ -5,18 +5,19 @@ import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
-import group4.levelSystem.modules.SimpleModule;
+import group4.levelSystem.modules.TestModule;
 import group4.maths.Vector3f;
 
-public class SimpleLevel extends Level {
+public class TestLevel extends Level {
 
     @Override
     protected Module createRoot() {
-        return new SimpleModule(this);
+        return new TestModule(this);
     }
 
     @Override
     protected void createAdditionalModules() {
+        // For now I'll not add additional modules to this level
         return;
     }
 

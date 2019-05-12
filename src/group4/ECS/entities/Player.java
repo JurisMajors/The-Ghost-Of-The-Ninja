@@ -32,9 +32,6 @@ public class Player extends Entity {
         this.add(new GravityComponent(gravity));
         this.add(new GraphicsComponent(shader, texture, dimension));
         this.add(new PlayerComponent());
-
-        // register to engine
-        TheEngine.getInstance().addEntity(this);
     }
 
     /**
