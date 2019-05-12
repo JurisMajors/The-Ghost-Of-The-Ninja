@@ -44,7 +44,7 @@ public class SimpleModule extends Module {
         // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.
         Vector3f position = new Vector3f(0.0f, 3.0f, 0.0f);
 
-        Player player = new Player(position, Shader.SIMPLE, Texture.BRICK);
+        Player player = new Player(position);
         this.addEntity(player); // Adding the player to the module (which adds it to the engine?)
 
         // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.

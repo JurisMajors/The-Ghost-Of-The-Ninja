@@ -12,6 +12,15 @@ public class MovementComponent implements Component {
     // joris TODO: subclasses
 
     /**
+     * default constructor (standing)
+     */
+    public MovementComponent(Vector3f velocityRange) {
+        this.velocity = new Vector3f();
+        this.velocityRange = velocityRange;
+        this.acceleration = new Vector3f();
+    }
+
+    /**
      * Creates a movement component with no acceleration (zero vector)
      *
      * @param velocity      velocity vector of mob
