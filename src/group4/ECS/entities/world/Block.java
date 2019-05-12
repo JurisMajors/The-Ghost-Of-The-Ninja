@@ -32,9 +32,6 @@ public class Block extends Entity {
         // create basic graphics component covering the dimension of this block
         this.add(new GraphicsComponent(shader, texture, d));
 
-        // register to engine
-        TheEngine.getInstance().addEntity(this);
-
     }
 
 }

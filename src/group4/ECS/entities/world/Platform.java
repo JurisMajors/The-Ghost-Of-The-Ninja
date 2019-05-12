@@ -30,8 +30,6 @@ public class Platform extends Entity {
         // create the graphics component with a vertex array repeating the texture over this platform
         GraphicsComponent graphicsComponent = createGraphicsComponent(position, dimension, texture, shader);
         this.add(graphicsComponent);
-
-        TheEngine.getInstance().addEntity(this);
     }
 
     private GraphicsComponent createGraphicsComponent(Vector3f position, Vector3f dimension, Texture texture, Shader shader) {

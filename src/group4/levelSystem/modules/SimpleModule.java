@@ -41,12 +41,6 @@ public class SimpleModule extends Module {
         }
 
         // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.
-        Vector3f position = new Vector3f(0.0f, 3.0f, 0.0f);
-
-        Player player = new Player(position, Shader.SIMPLE, Texture.BRICK);
-        this.addEntity(player); // Adding the player to the module (which adds it to the engine?)
-
-        // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.
         Camera camera = new Camera();
         this.addEntity(camera); // Adding the camera to the module (which adds it to the engine?)
     }
@@ -54,5 +48,10 @@ public class SimpleModule extends Module {
     @Override
     protected Vector3f getStartScreenWindow() {
         return new Vector3f();
+    }
+
+    @Override
+    public Vector3f getPlayerInitialPosition() {
+        return new Vector3f(0.0f, 3.0f, 0.0f);
     }
 }
