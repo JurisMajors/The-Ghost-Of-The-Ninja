@@ -9,9 +9,6 @@ import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
 
-/**
- * The Ghost helper class (does not get registered on construction!)
- */
 public class Ghost extends Entity {
 
     public Ghost (Brain brain, Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f velocityRange, Vector3f acceleration, Vector3f gravity, Shader shader, Texture texture) {
