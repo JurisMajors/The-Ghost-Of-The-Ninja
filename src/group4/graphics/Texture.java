@@ -14,6 +14,7 @@ public class Texture {
     // Storing all texture resources when preloaded.
     public static Texture DEBUG; // TODO: More to be added.
     public static Texture BRICK; // TODO: More to be added.
+    public static Texture EXIT;  // TODO: More to be added.
 
     // width and height of the texture
     private int width, height;
@@ -31,6 +32,7 @@ public class Texture {
     public static void loadAllTextures() {
         DEBUG = new Texture("src/group4/res/textures/debug.jpeg");
         BRICK = new Texture("src/group4/res/textures/brick.png");
+        EXIT = new Texture("src/group4/res/textures/exit.jpg");
     }
 
     /**

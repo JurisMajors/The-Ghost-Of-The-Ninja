@@ -85,7 +85,7 @@ public class TestModule extends Module {
         // Create the exit
         Vector3f exitPosition = new Vector3f(62.0f, 4.0f, 0.0f);
         Vector3f exitDimension = new Vector3f(2.0f, 2.0f, 0.0f);
-        Block exit = new Block(exitPosition, exitDimension, Shader.SIMPLE, Texture.DEBUG);
+        Block exit = new Block(exitPosition, exitDimension, Shader.SIMPLE, Texture.EXIT);
         this.addEntity(exit);
         // TODO: Change to exit entity, but first need to know how collision detection is going to work to detect if player overlaps an exit, before I create an exit entity
     }
