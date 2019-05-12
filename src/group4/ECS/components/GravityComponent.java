@@ -11,7 +11,7 @@ public class GravityComponent implements Component {
      * default constructor for normal gravity
      */
     public GravityComponent() {
-        gravity = new Vector3f(0.0f, -9.81f, 0.0f);
+        gravity = new Vector3f(0.0f, 0.0098f, 0.0f);
     }
 
     /**
