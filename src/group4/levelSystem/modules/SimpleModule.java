@@ -42,13 +42,8 @@ public class SimpleModule extends Module {
 
         // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.
         Vector3f position = new Vector3f(0.0f, 3.0f, 0.0f);
-        Vector3f dimension = new Vector3f(2.0f, 2.0f, 0.0f);
-        Vector3f velocity = new Vector3f(0.05f, 0.0f, 0.0f);
-        Vector3f velocityRange = new Vector3f(2.0f, 2.0f, 0.0f);
-        Vector3f acceleration = new Vector3f();
-        Vector3f gravity = new Vector3f(0.0f, -9.81f, 0.0f);
 
-        Player player = new Player(position, dimension, velocity, velocityRange, acceleration, gravity, Shader.SIMPLE, Texture.BRICK);
+        Player player = new Player(position, Shader.SIMPLE, Texture.BRICK);
         this.addEntity(player); // Adding the player to the module (which adds it to the engine?)
 
         // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.

@@ -30,7 +30,7 @@ public class Families {
     public static final Family audioFamily = Family
             .all(AudioComponent.class).get();
 
-    // all entities having some sort of audio
+    // all entities having a bounding box
     public static final Family gamestateFamily = Family
             .all(DimensionComponent.class).get();
 
@@ -69,6 +69,6 @@ public class Families {
     // below works for the Player class which is old but currently used for the camera
     public static final Family playerFamily = Family.all(MovementComponent.class, PlayerInputComponent.class).get();
 
-    //All entities (with a position component)
-    public static final Family allFamily = Family.all(PositionComponent.class).get();
+    //All entities with which collision is possible
+    public static final Family collidableFamily = Family.all(PositionComponent.class, DimensionComponent.class).get();
 }
