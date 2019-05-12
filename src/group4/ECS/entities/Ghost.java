@@ -29,8 +29,6 @@ public class Ghost extends Player {
         // add needed components
         this.add(new GraphicsComponent(shader, texture, dimension));
         this.add(new GhostComponent(brain));
-
-        // NOTE: player is added to engine, since we call super(), we add the ghost on construction
     }
 
 }

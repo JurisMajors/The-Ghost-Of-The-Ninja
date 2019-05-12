@@ -2,7 +2,6 @@ package group4.ECS.entities.items.weapons;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.PositionComponent;
-import group4.ECS.etc.TheEngine;
 import group4.maths.Vector3f;
 
 public class Gun extends Entity {
@@ -29,14 +28,12 @@ public class Gun extends Entity {
             1, 1
     };
 
-    public Gun(Vector3f p) {
-
+    /**
+     * @param position position of Gun
+     */
+    public Gun(Vector3f position) {
         // add needed components
-        this.add(new PositionComponent(p));
-
-        // register to engine
-        TheEngine.getInstance().addEntity(this);
-
+        this.add(new PositionComponent(position));
     }
 
 }

@@ -16,6 +16,7 @@ public class Texture {
     public static Texture BRICK;
     public static Texture AK47;
     public static Texture MG_BULLET;
+    public static Texture EXIT;  // TODO: More to be added.
 
     // width and height of the texture
     private int width, height;
@@ -35,6 +36,7 @@ public class Texture {
         BRICK = new Texture("src/group4/res/textures/brick.png");
         AK47 = new Texture("src/group4/res/textures/weapons/AK47.png");
         MG_BULLET = new Texture("src/group4/res/textures/weapons/Bullet.png");
+        EXIT = new Texture("src/group4/res/textures/exit.jpg");
     }
 
     /**

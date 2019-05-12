@@ -24,17 +24,12 @@ public class Block extends Entity {
      * @param texture texture to use for the block
      */
     public Block(Vector3f p, Vector3f d, Shader shader, Texture texture) {
-
         // add needed components
         this.add(new PositionComponent(p));
         this.add(new DimensionComponent(d));
 
         // create basic graphics component covering the dimension of this block
         this.add(new GraphicsComponent(shader, texture, d));
-
-        // register to engine
-        TheEngine.getInstance().addEntity(this);
-
     }
 
 }

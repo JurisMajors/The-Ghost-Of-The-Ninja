@@ -7,8 +7,11 @@ import group4.maths.Vector3f;
 
 public class MachineGunBullet extends Bullet {
 
-    public MachineGunBullet(Vector3f p) {
-        super(p);
+    /**
+     * @param position of Bullet
+     */
+    public MachineGunBullet(Vector3f position) {
+        super(position);
 
         // bullet texture (16 x 16) & shader (temp simple shader)
         Shader shader = Shader.SIMPLE;
@@ -19,7 +22,6 @@ public class MachineGunBullet extends Bullet {
         this.add(new DamageComponent(10));
         this.add(new MovementComponent(new Vector3f(), new Vector3f()));
         this.add(new GraphicsComponent(shader, texture, vertices, indices, tcs));
-
     }
 
 }

@@ -29,9 +29,8 @@ public class Platform extends Entity {
 
         // create the graphics component with a vertex array repeating the texture over this platform
         GraphicsComponent graphicsComponent = createGraphicsComponent(position, dimension, texture, shader);
+//        GraphicsComponent graphicsComponent = new GraphicsComponent(shader, texture, dimension);
         this.add(graphicsComponent);
-
-        TheEngine.getInstance().addEntity(this);
     }
 
     private GraphicsComponent createGraphicsComponent(Vector3f position, Vector3f dimension, Texture texture, Shader shader) {
@@ -39,8 +38,8 @@ public class Platform extends Entity {
         int texHeight = texture.getHeight();
 
         // boundaries for the platform on the top and right (local)
-        float topY = position.add(dimension).y;
-        float rightX = position.add(dimension).x;
+        float topY = (dimension).y;
+        float rightX = (dimension).x;
 
         // temporary arraylists to store the vertex cooridnates, texture coordinates, indices
         ArrayList<Vector3f> vertexArray = new ArrayList<>();
@@ -50,35 +49,41 @@ public class Platform extends Entity {
         // keep track of at which index we are to make sure that the indices align properly
         byte startI = 0;
         // loop over all 'texture sized' blocks in this platform
-        for (int x = 0; x <= rightX; x += texWidth) {
-            for (int y = 0; y <= topY; y += texHeight) {
+        for (int x = 0; x <= rightX - 1; x += 1) {
+            for (int y = 0; y <= topY - 1; y += 1) {
                 // find the end x and y for the current texture block
-                float endY = Math.min(topY, y + texHeight);
-                float endX = Math.min(rightX, x + texWidth);
+                // TODO: remove
+                float endY = Math.min(topY, y + 1);
+                endY = y + 1;
+                float endX = Math.min(rightX, x + 1);
+                endX = x + 1;
 
                 // add a texture block with bottomleft(x,y) and topright(x+endX, y+endY)
                 // bottomleft
                 Vector3f blVertex = new Vector3f(x, y, 0.0f);
-                Vector3f blTc = new Vector3f(0, 0, 0);
-                // bottomright
-                Vector3f brVertex = new Vector3f(x + endX, y, 0.0f);
-                Vector3f brTc = new Vector3f((endX - x) / texWidth, 0, 0);
-                // topright
-                Vector3f trVertex = new Vector3f(x + endX, y + endY, 0.0f);
-                Vector3f trTc = new Vector3f((endX - x) / texWidth, (endY - y) / texHeight, 0);
+                Vector3f blTc = new Vector3f(0, 1, 0);
                 // topleft
-                Vector3f tlVertex = new Vector3f(x, y + endY, 0.0f);
-                Vector3f tlTc = new Vector3f(x, (endY - y) / texHeight, 0);
+                Vector3f tlVertex = new Vector3f(x, endY, 0.0f);
+//                Vector3f tlTc = new Vector3f(x, (endY - y) / texHeight, 0);
+                Vector3f tlTc = new Vector3f(0, 0, 0);
+                // topright
+                Vector3f trVertex = new Vector3f(endX, endY, 0.0f);
+//                Vector3f trTc = new Vector3f((endX - x) / texWidth, (endY - y) / texHeight, 0);
+                Vector3f trTc = new Vector3f(1, 0, 0);
+                // bottomright
+                Vector3f brVertex = new Vector3f(endX, y, 0.0f);
+//                Vector3f brTc = new Vector3f((endX - x) / texWidth, 0, 0);
+                Vector3f brTc = new Vector3f(1, 1, 0);
 
                 // add the vertices and texture coordinates
                 vertexArray.add(blVertex);
-                vertexArray.add(brVertex);
-                vertexArray.add(trVertex);
                 vertexArray.add(tlVertex);
+                vertexArray.add(trVertex);
+                vertexArray.add(brVertex);
                 tcArray.add(blTc);
-                tcArray.add(brTc);
-                tcArray.add(trTc);
                 tcArray.add(tlTc);
+                tcArray.add(trTc);
+                tcArray.add(brTc);
 
                 // add the correct indices to make a square out of two triangles
                 // first triangle
@@ -129,7 +134,7 @@ public class Platform extends Entity {
      * @return float array with texture coordinates
      */
     private float[] createTextureArray(ArrayList<Vector3f> al) {
-        float[] result = new float[al.size() * 3];
+        float[] result = new float[al.size() * 2];
         // add the x y z as a separate element
         for (int i = 0; i < al.size(); i++) {
             result[2 * i + 0] = al.get(i).x;

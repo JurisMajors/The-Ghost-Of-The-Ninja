@@ -23,7 +23,6 @@ public class AK47 extends Gun {
 
         // TODO: damage-system
         this.add(new WeaponComponent(600, EntityConst.BulletType.MACHINEGUN));
-
     }
 
 }

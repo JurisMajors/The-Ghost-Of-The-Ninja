@@ -33,19 +33,12 @@ public class SimpleModule extends Module {
                 this.addEntity(beautifulBlock);
             }
 
+            Gun gun = new AK47(new Vector3f(2.0f, 2.0f, 0.0f));
+
+            Bullet bullet_0 = new MachineGunBullet(new Vector3f(2.2f, 3.0f, 0.0f));
+            Bullet bullet_1 = new MachineGunBullet(new Vector3f(2.2f, 3.2f, 0.0f));
+            Bullet bullet_2 = new MachineGunBullet(new Vector3f(2.2f, 3.4f, 0.0f));
         }
-
-        Gun gun = new AK47(new Vector3f( 8.0f, 3.0f, 0.0f));
-
-        Bullet bullet_0 = new MachineGunBullet(new Vector3f(8.0f, 4.0f, 0.0f));
-        Bullet bullet_1 = new MachineGunBullet(new Vector3f(8.0f, 4.2f, 0.0f));
-        Bullet bullet_2 = new MachineGunBullet(new Vector3f(8.0f, 4.4f, 0.0f));
-
-        // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.
-        Vector3f position = new Vector3f(0.0f, 3.0f, 0.0f);
-
-        Player player = new Player(position);
-        this.addEntity(player); // Adding the player to the module (which adds it to the engine?)
 
         // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.
         Camera camera = new Camera();
@@ -55,5 +48,10 @@ public class SimpleModule extends Module {
     @Override
     protected Vector3f getStartScreenWindow() {
         return new Vector3f();
+    }
+
+    @Override
+    public Vector3f getPlayerInitialPosition() {
+        return new Vector3f(0.0f, 3.0f, 0.0f);
     }
 }
