@@ -80,7 +80,7 @@ public abstract class MobMovementSystem extends IteratingSystem {
                 PositionComponent epc = Mappers.positionMapper.get(entities.get(i));
                 DimensionComponent edc = Mappers.dimensionMapper.get(entities.get(i));
 
-                if (epc.position.y + edc.dimension.y == pc.position.y &&
+                if (epc.position.y + edc.dimension.y >= pc.position.y &&
                         pc.position.x <= epc.position.x + edc.dimension.x &&
                         pc.position.x + dc.dimension.x >= epc.position.x) {
                     return true;
