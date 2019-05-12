@@ -27,59 +27,59 @@ public class TestModule extends Module {
         // Add the LHS wall
         Vector3f tempPosition = new Vector3f();
         Vector3f tempDimension = new Vector3f(2.0f, 28.0f, 0.0f);
-        Platform LHSWall = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.DEBUG);
+        Platform LHSWall = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
         this.addEntity(LHSWall);
 
         // Add floor on which player will stand initially
         tempPosition = new Vector3f(2.0f, 0.0f, 0.0f);
         tempDimension = new Vector3f(20.0f, 2.0f, 0.0f);
-        Platform initFloor = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.DEBUG);
+        Platform initFloor = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
         this.addEntity(initFloor);
 
         // Add some blocks to potentially confuse the player on initial floor
         tempPosition = new Vector3f(2.0f, 2.0f, 0.0f);
         tempDimension = new Vector3f(2.0f, 2.0f, 0.0f);
-        Platform confusion = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.DEBUG);
+        Platform confusion = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
         this.addEntity(confusion);
 
         // Add a block for the player to jump over
         tempPosition = new Vector3f(9.0f, 2.0f, 0.0f);
         tempDimension = new Vector3f(2.0f, 2.0f, 0.0f);
-        Platform jump = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.DEBUG);
+        Platform jump = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
         this.addEntity(jump);
 
         // Create semi-stair like thing
         tempPosition = new Vector3f(22.0f, 2.0f, 0.0f);
         tempDimension = new Vector3f(5.0f, 2.0f, 0.0f);
-        Platform stairlike = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.DEBUG);
+        Platform stairlike = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
         this.addEntity(stairlike);
 
         tempPosition = new Vector3f(27.0f, 4.0f, 0.0f);
         tempDimension = new Vector3f(8.0f, 2.0f, 0.0f);
-        stairlike = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.DEBUG);
+        stairlike = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
         this.addEntity(stairlike);
 
         tempPosition = new Vector3f(35.0f, 6.0f, 0.0f);
         tempDimension = new Vector3f(5.0f, 2.0f, 0.0f);
-        stairlike = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.DEBUG);
+        stairlike = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
         this.addEntity(stairlike);
 
         // Create floor to jump on to
         tempPosition = new Vector3f(44.0f, 0.0f, 0.0f);
         tempDimension = new Vector3f(8.0f, 2.0f, 0.0f);
-        Platform jumpFloor = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.DEBUG);
+        Platform jumpFloor = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
         this.addEntity(jumpFloor);
 
         // Create a hole to jump over
         tempPosition = new Vector3f(54.0f, 0.0f, 0.0f);
         tempDimension = new Vector3f(6.0f, 2.0f, 0.0f);
-        Platform afterHole = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.DEBUG);
+        Platform afterHole = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
         this.addEntity(afterHole);
 
         // Create height increase to module end exit
         tempPosition = new Vector3f(60.0f, 2.0f, 0.0f);
         tempDimension = new Vector3f(4.0f, 2.0f, 0.0f);
-        Platform exitStairs = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.DEBUG);
+        Platform exitStairs = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
         this.addEntity(exitStairs);
 
         // Create the exit

@@ -26,7 +26,7 @@ public class Player extends Entity {
         // shader
         Shader shader = Shader.SIMPLE;
         // TODO: proper texture
-        Texture texture = Texture.BRICK;
+        Texture texture = Texture.DEBUG;
 
         // add needed components
         this.add(new PositionComponent(position));
