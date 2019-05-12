@@ -1,9 +1,9 @@
 package group4.AI;
 
+import group4.AI.decoders.ConeVisionStateDecoder;
+import group4.AI.decoders.StateDecoderInterface;
 import group4.levelSystem.Level;
-import group4.levelSystem.Module;
 import group4.levelSystem.levels.SimpleLevel;
-import group4.levelSystem.modules.SimpleModule;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.maths.random.Probability;
 import org.uncommons.watchmaker.framework.*;
@@ -36,7 +36,7 @@ public class Evolver {
     /** hidden layer sizes (dont include input/output) **/
     public final static int[] layerSizes = new int[]{100, 200, 300, 100};
     /** decoder of gamestates **/
-    public final static NNGameStateInterface decoder = new NNGameState(50);
+    public final static StateDecoderInterface decoder = new ConeVisionStateDecoder(50, 160);
     /** probability to completely change a weight of nn **/
     public final static double mutationProbability = 0.05;
     /** Mutator **/

@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import group4.maths.Vector3f;
 
 public class MovementComponent implements Component {
+
     public Vector3f velocity;
     public Vector3f velocityRange;
     public Vector3f acceleration;
@@ -34,4 +35,5 @@ public class MovementComponent implements Component {
         this.velocityRange = velocityRange;
         this.acceleration = acceleration;
     }
+
 }

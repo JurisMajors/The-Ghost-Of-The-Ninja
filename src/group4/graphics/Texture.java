@@ -111,4 +111,8 @@ public class Texture {
         return height;
     }
 
+    public int getTextureID() {
+        return texture;
+    }
+
 }

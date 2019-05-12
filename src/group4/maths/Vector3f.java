@@ -156,22 +156,41 @@ public class Vector3f {
         this.z /= len;
     }
 
+    /**
+     * Calculates the euclidean distance between two vectors
+     * @param other the other vector to calculate the distance to
+     * @return euclid distance between this and other
+     */
     public float euclidDist(Vector3f other) {
         Vector3f diff = this.sub(other);
         return (float) Math.sqrt(diff.dot(diff));
     }
 
+    /**
+     * Rotates the vector in place according to the angle in the XY place
+     * @param angle the angle in degrees to rotate over in the XY plane
+     */
     public void rotateXYi(float angle) {
-        float newX = (float) (this.x * Math.cos(angle) - this.y * Math.sin(angle));
-        float newY = (float) (this.x * Math.sin(angle) + this.y * Math.cos(angle));
-        this.x = newX;
-        this.y = newY;
+        float[] newCoords = this.getRotatedXY(angle);
+        this.x = newCoords[0];
+        this.y = newCoords[1];
     }
 
+    /**
+     * Rotates the vector according to the angle in the XY place
+     * @param angle the angle in degrees to rotate over in the XY plane
+     * @return this, but rotated over the angle
+     */
     public Vector3f rotateXY(float angle) {
+        float[] newCoords = this.getRotatedXY(angle);
+        return new Vector3f(newCoords[0], newCoords[1], this.z);
+    }
+
+    private float[] getRotatedXY(float angle) {
+        angle = (float) Math.toRadians(angle);
         float newX = (float) (this.x * Math.cos(angle) - this.y * Math.sin(angle));
         float newY = (float) (this.x * Math.sin(angle) + this.y * Math.cos(angle));
-        return new Vector3f(newX, newY, this.z);
+        return new float[]{newX, newY};
     }
 
     @Override

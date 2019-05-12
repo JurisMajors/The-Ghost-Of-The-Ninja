@@ -12,7 +12,6 @@ import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.maths.Matrix4f;
 
-import static org.lwjgl.opengl.GL41.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL41.glActiveTexture;
 
 /**
@@ -24,15 +23,18 @@ public class RenderSystem extends EntitySystem {
     // array of registered entities in the graphicsFamily
     private ImmutableArray<Entity> entities;
 
-    public RenderSystem() {}
+    public RenderSystem() {
+    }
 
     /**
      * @param priority used for creating a systems pipeline (lowest prio gets executed first)
      */
-    public RenderSystem(int priority) {}
+    public RenderSystem(int priority) {
+    }
 
     /**
      * when added to engine, this function will register all entities in the graphicsFamily
+     *
      * @param engine a single instance throughout program which manages ECS
      */
     public void addedToEngine(Engine engine) {
@@ -41,13 +43,16 @@ public class RenderSystem extends EntitySystem {
 
     /**
      * Do something when this system gets removed from engine
+     *
      * @param engine a single instance throughout program which manages ECS
      */
-    public void removedFromEngine(Engine engine) {}
+    public void removedFromEngine(Engine engine) {
+    }
 
     /**
      * The heart piece of a system. This method gets called on each
      * update on the single instance of the engine
+     *
      * @param deltaTime time between last and current update
      */
     public void update(float deltaTime) {
@@ -67,12 +72,11 @@ public class RenderSystem extends EntitySystem {
             gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrix);
             gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers
             gc.shader.setUniformMat4f("vw_matrix", cc.viewMatrix);
-            gc.shader.setUniform1f("tex", 1); // Specify which texture slot to use
+            gc.shader.setUniform1f("tex", gc.texture.getTextureID()); // Specify which texture slot to use
 
             // Bind texture and specify texture slot
             gc.texture.bind();
-            // TODO: with GL_TEXTURE1 we only see one texture across all entities
-            glActiveTexture(GL_TEXTURE0);
+            glActiveTexture(gc.texture.getTextureID());
 
             // Render!
             gc.triangle.render(); // TODO: Triangle is an arbitrary (and probably bad name) which I think still remains from the first example we had hehe.. => Change :-)
@@ -82,12 +86,16 @@ public class RenderSystem extends EntitySystem {
     /**
      * @return whether this system is active or not
      */
-    public boolean checkProcessing() { return true; }
+    public boolean checkProcessing() {
+        return true;
+    }
 
     /**
      * Set the system to be either active (true) or inactive (false)
+     *
      * @param processing in {true, false}
      */
-    public void setProcessing(boolean processing) {}
+    public void setProcessing(boolean processing) {
+    }
 
 }

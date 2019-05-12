@@ -42,8 +42,9 @@ public class SimpleModule extends Module {
         Bullet bullet_2 = new MachineGunBullet(new Vector3f(8.0f, 4.4f, 0.0f));
 
         // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.
-        Player player = new Player(new Vector3f(0.0f, 3.0f, 0.0f),
-                new Vector3f(2.0f, 2.0f, 0.0f),  Shader.SIMPLE, Texture.DEBUG);
+        Vector3f position = new Vector3f(0.0f, 3.0f, 0.0f);
+
+        Player player = new Player(position, Shader.SIMPLE, Texture.BRICK);
         this.addEntity(player); // Adding the player to the module (which adds it to the engine?)
 
         // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.

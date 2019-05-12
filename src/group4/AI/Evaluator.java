@@ -52,7 +52,8 @@ public class Evaluator implements FitnessEvaluator<Brain> {
 
         // add the ghost
         // TODO: get spawn position or entrance position of module
-        TheEngine.getInstance().addEntity(new Ghost(brain, new Vector3f(), new Vector3f(2.0f, 3.0f, 0.0f)));
+        // TODO: get shaders for ghost
+        // TheEngine.getInstance().addEntity(new Ghost(brain, new Vector3f(), new Vector3f(2.0f, 3.0f, 0.0f)));
 
         // while we did not exceed the timelimit, play the game
         double initTime = timer.getTime();

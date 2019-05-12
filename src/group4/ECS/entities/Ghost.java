@@ -2,54 +2,30 @@ package group4.ECS.entities;
 
 import com.badlogic.ashley.core.Entity;
 import group4.AI.Brain;
-import group4.ECS.components.AIComponent;
-import group4.ECS.components.DimensionComponent;
-import group4.ECS.components.GraphicsComponent;
-import group4.ECS.components.PositionComponent;
+import group4.ECS.PlayerRules;
+import group4.ECS.components.*;
+import group4.ECS.etc.TheEngine;
+import group4.graphics.Shader;
+import group4.graphics.Texture;
 import group4.maths.Vector3f;
 
-/**
- * The Ghost helper class (does not get registered on construction!)
- */
 public class Ghost extends Entity {
 
-    public Ghost(Brain brain, Vector3f p, Vector3f d) {
+    public Ghost (Brain brain, Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f velocityRange, Vector3f acceleration, Vector3f gravity, Shader shader, Texture texture) {
+        // add needed components
+        this.add(new PositionComponent(position));
+        this.add(new DimensionComponent(dimension));
+        this.add(new MovementComponent(velocity, velocityRange, acceleration));
+        this.add(new GravityComponent(gravity));
+        this.add(new GraphicsComponent(shader, texture, dimension));
+        this.add(new GhostComponent(brain));
 
-        // Construct vertex array
-        float[] vertices = new float[] {
-                0, 0, 0,
-                0, d.y, 0,
-                d.x, d.y, 0,
-                d.x, 0, 0,
-        };
+        // register to engine
+        TheEngine.getInstance().addEntity(this);
+    }
 
-        // Construct index array (used for triangle mesh)
-        byte[] indices = new byte[] {
-                0, 1, 2,
-                2, 3, 0
-        };
-
-        // Construct texture coords
-        float[] tcs = new float[] {
-                0, 1,
-                0, 0,
-                1, 0,
-                1, 1
-        };
-
-        // TODO: Ghost texture & shader
-        String shader = null;
-        String texture = null;
-
-        // add necessary components
-        this.add(new AIComponent(brain));
-        // TODO adjust to new definition of pos comp
-        //this.add(new PositionComponent(p));
-        this.add(new DimensionComponent(d));
-        // TODO adjust constructor to graphic comp
-        // this.add(new GraphicsComponent(shader, texture,
-        // vertices, indices, tcs));
-
+    public Ghost (Brain brain, Vector3f pos, Shader shader, Texture texture) {
+        this(brain, pos, PlayerRules.dimension, PlayerRules.startVelocity, PlayerRules.velocityRange, PlayerRules.acceleration, PlayerRules.acceleration, shader, texture);
     }
 
 }

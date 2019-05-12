@@ -30,7 +30,7 @@ public class Families {
     public static final Family audioFamily = Family
             .all(AudioComponent.class).get();
 
-    // all entities having some sort of audio
+    // all entities having a bounding box
     public static final Family gamestateFamily = Family
             .all(DimensionComponent.class).get();
 
@@ -43,29 +43,38 @@ public class Families {
             .all(PositionComponent.class, StatsComponent.class, GraphicsComponent.class).get();
 
     public static final Family ghostFamily = Family
-            .all(AIComponent.class).get();
+            .all(GhostComponent.class).get();
+
     // all cameras
     public static final Family cameraFamily = Family
             .all(CameraComponent.class).get();
 
     // all platforms
-    public static final Family platformFamily = Family.all(PlatformComponent.class).get();
+    public static final Family platformFamily = Family
+            .all(PlatformComponent.class).get();
 
     // all moving platforms
-    public static final Family movingPlatformFamily = Family.all(MovementComponent.class, PlatformComponent.class).get();
+    public static final Family movingPlatformFamily = Family
+            .all(MovementComponent.class, PlatformComponent.class).get();
 
     // all moving entities except platforms
-    public static final Family movingNonPlatformFamily = Family.all(MovementComponent.class).exclude(PlatformComponent.class).get();
+    public static final Family movingNonPlatformFamily = Family
+            .all(MovementComponent.class).exclude(PlatformComponent.class).get();
 
     // all moving mobs except flying mobs
-    public static final Family movingGravityMobFamily = Family.all(GravityComponent.class, MovementComponent.class, MobComponent.class).get();
+    public static final Family movingGravityMobFamily = Family
+            .all(GravityComponent.class, MovementComponent.class, MobComponent.class).get();
 
     // all flying mobs
-    public static final Family movingNonGravityMobFamily = Family.all(MovementComponent.class, MobComponent.class).exclude(GravityComponent.class).get();
+    public static final Family movingNonGravityMobFamily = Family
+            .all(MovementComponent.class, MobComponent.class).exclude(GravityComponent.class).get();
 
     // player
-    public static final Family playerFamily = Family.all(MovementComponent.class, PlayerComponent.class).get();
+    public static final Family playerFamily = Family
+            .all(MovementComponent.class, PlayerComponent.class)
+            .exclude(GhostComponent.class).get();
 
-    // all entities (with a position component)
-    public static final Family allFamily = Family.all(PositionComponent.class).get();
+    //All entities with which collision is possible
+    public static final Family collidableFamily = Family
+            .all(PositionComponent.class, DimensionComponent.class).get();
 }
