@@ -27,7 +27,8 @@ public abstract class MobMovementSystem extends IteratingSystem {
                 getEntitiesFor(Families.playerFamily).get(0));
 
         move(entity, playerPos, deltaTime);
-        processGravity(entity, playerPos, deltaTime);
+        doGravity(entity, deltaTime);
+
 
         pc.position.addi(mc.velocity.scale(deltaTime));
 
@@ -46,49 +47,10 @@ public abstract class MobMovementSystem extends IteratingSystem {
         }
     }
 
-    protected void processGravity(Entity e, PositionComponent playerPos, float deltaTime) {
-        PositionComponent pc = Mappers.positionMapper.get(e);
+    protected void doGravity(Entity e, float deltaTime) {
         MovementComponent mc = Mappers.movementMapper.get(e);
         GravityComponent gc = Mappers.gravityMapper.get(e);
-
         //take gravity into account
         mc.velocity.y -= gc.gravity.y;
-
-        // if nobody below continue processing movement
-        if (!MobMovementSystem.hasBelow(e)) return;
-
-        //no downward velocity
-        if (mc.velocity.y < 0){
-            mc.velocity.y = 0;
-        }
-        //accelerate on the y coordinate (jump) towards player
-        if (pc.position.y < playerPos.position.y) {
-            mc.velocity.y = Math.min(mc.velocityRange.y, mc.velocity.y + mc.acceleration.y);
-        }
     }
-
-    public static boolean hasBelow(Entity e) {
-        PositionComponent pc = Mappers.positionMapper.get(e);
-        DimensionComponent dc = Mappers.dimensionMapper.get(e);
-
-        //all entities (with a position component)
-        ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.collidableFamily);
-        for (int i = 0; i < entities.size(); i++) {
-
-            if (e != entities.get(i)) {
-                //position component of entity
-                PositionComponent epc = Mappers.positionMapper.get(entities.get(i));
-                DimensionComponent edc = Mappers.dimensionMapper.get(entities.get(i));
-
-                if (epc.position.y + edc.dimension.y >= pc.position.y &&
-                        pc.position.x <= epc.position.x + edc.dimension.x &&
-                        pc.position.x + dc.dimension.x >= epc.position.x) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
 }
-
