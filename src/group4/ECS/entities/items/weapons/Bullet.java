@@ -36,8 +36,7 @@ public class Bullet extends Entity {
     public Bullet(Vector3f p) {
 
         // add needed components
-        // TODO pos comp definition
-        //this.add(new PositionComponent(p));
+        this.add(new PositionComponent(p));
         this.add(new DimensionComponent(d));
 
         // register to engine

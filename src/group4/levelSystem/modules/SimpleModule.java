@@ -33,12 +33,13 @@ public class SimpleModule extends Module {
                 this.addEntity(beautifulBlock);
             }
 
-            Gun gun = new AK47(new Vector3f( 2.0f, 2.0f, 0.0f));
-
-            Bullet bullet_0 = new MachineGunBullet(new Vector3f(2.2f, 3.0f, 0.0f));
-            Bullet bullet_1 = new MachineGunBullet(new Vector3f(2.2f, 3.2f, 0.0f));
-            Bullet bullet_2 = new MachineGunBullet(new Vector3f(2.2f, 3.4f, 0.0f));
         }
+
+        Gun gun = new AK47(new Vector3f( 8.0f, 3.0f, 0.0f));
+
+        Bullet bullet_0 = new MachineGunBullet(new Vector3f(8.0f, 4.0f, 0.0f));
+        Bullet bullet_1 = new MachineGunBullet(new Vector3f(8.0f, 4.2f, 0.0f));
+        Bullet bullet_2 = new MachineGunBullet(new Vector3f(8.0f, 4.4f, 0.0f));
 
         // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.
         Player player = new Player(new Vector3f(0.0f, 3.0f, 0.0f),

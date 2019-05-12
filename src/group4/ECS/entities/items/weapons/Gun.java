@@ -32,8 +32,7 @@ public class Gun extends Entity {
     public Gun(Vector3f p) {
 
         // add needed components
-        // TODO adjust to new definition of position component
-        // this.add(new PositionComponent(p));
+        this.add(new PositionComponent(p));
 
         // register to engine
         TheEngine.getInstance().addEntity(this);

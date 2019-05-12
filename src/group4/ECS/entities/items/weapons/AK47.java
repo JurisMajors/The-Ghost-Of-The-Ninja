@@ -6,7 +6,6 @@ import group4.ECS.etc.EntityConst;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
-import group4.utils.ShaderParser;
 
 public class AK47 extends Gun {
 
@@ -14,8 +13,8 @@ public class AK47 extends Gun {
         super(p);
 
         // AK47 texture (64 x 32) & shader (temporary simple shader)
-        Shader shader = ShaderParser.loadShader("src/group4/res/shaders/simple");
-        Texture texture = new Texture("src/group4/res/textures/weapons/AK47.png");
+        Shader shader = Shader.SIMPLE;
+        Texture texture = Texture.AK47;
 
         // add needed components
         // TODO graphic comp definition

@@ -12,7 +12,7 @@ import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.maths.Matrix4f;
 
-import static org.lwjgl.opengl.GL41.GL_TEXTURE1;
+import static org.lwjgl.opengl.GL41.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL41.glActiveTexture;
 
 /**
@@ -71,7 +71,8 @@ public class RenderSystem extends EntitySystem {
 
             // Bind texture and specify texture slot
             gc.texture.bind();
-            glActiveTexture(GL_TEXTURE1);
+            // TODO: with GL_TEXTURE1 we only see one texture across all entities
+            glActiveTexture(GL_TEXTURE0);
 
             // Render!
             gc.triangle.render(); // TODO: Triangle is an arbitrary (and probably bad name) which I think still remains from the first example we had hehe.. => Change :-)
