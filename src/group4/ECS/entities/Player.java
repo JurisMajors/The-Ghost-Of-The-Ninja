@@ -34,9 +34,6 @@ public class Player extends Entity {
         // TODO: one of these two should go
         this.add(new PlayerInputComponent());
         this.add(new PlayerComponent());
-
-        // register to engine
-        TheEngine.getInstance().addEntity(this);
     }
 
     /**

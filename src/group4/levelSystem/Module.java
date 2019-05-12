@@ -66,6 +66,12 @@ public abstract class Module {
 
 
     /**
+     * Return the initial position of the player in the module
+     */
+    public abstract Vector3f getPlayerInitialPosition();
+
+
+    /**
      * Load the current module into the engine, so it gets rendered
      */
     public final void load() {
