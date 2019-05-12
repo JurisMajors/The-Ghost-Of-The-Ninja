@@ -49,7 +49,7 @@ public class CollisionSystem extends IteratingSystem {
             mc.velocity.x = this.capDirection(mc.velocity.x, mc.velocityRange.x);
             mc.velocity.y = this.capDirection(mc.velocity.y, mc.velocityRange.y);
             // move in that direction
-            curPos.addi(colDim.scale(deltaTime));
+            curPos.addi(colDim);
         }
     }
 
