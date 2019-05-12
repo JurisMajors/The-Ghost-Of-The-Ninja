@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import group4.ECS.components.MovementComponent;
 import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.Families;
@@ -62,17 +63,9 @@ public class CollisionSystem extends IteratingSystem {
         // get positions
         Vector3f firstPos = Mappers.positionMapper.get(first).position;
         Vector3f scndPos = Mappers.positionMapper.get(scnd).position;
-        // get dimensions
-        Vector3f firstDim = Mappers.dimensionMapper.get(first).dimension;
-        Vector3f scndDim = Mappers.dimensionMapper.get(scnd).dimension;
-        // define bounding boxes
-        Rectangle firstBB = new Rectangle(firstPos.x, firstPos.y, firstDim.x, firstDim.y);
-        Rectangle scndBB = new Rectangle(scndPos.x, scndPos.y, scndDim.x, scndDim.y);
-        // if doesnt overlap, no displacement
-        if (!firstBB.overlaps(scndBB)) return new Vector3f();
-        // otherwise they collide..
         // get the intersection rectangle
-        Rectangle intersection = intersect(firstBB, scndBB);
+        Rectangle intersection = CollisionSystem.getIntersectingRectangle(first, scnd);
+        if (intersection == null) return new Vector3f();
         // displace according to the rectangle
         if (intersection.height <= intersection.width) { // TODO: consider y collision from top
             return new Vector3f(0, intersection.height, 0);
@@ -84,15 +77,20 @@ public class CollisionSystem extends IteratingSystem {
         return new Vector3f(-1 * intersection.width, 0, 0);
     }
 
-
     /**
      * Produces an rectangle representing the intersecting area
      * @param rectangle1 first rectangle
      * @param rectangle2 second rectangle
      * @pre rectangle1.overlaps(rectangle2)
+     * @throws IllegalArgumentException if pre is violated
      * @return the rectangle which is common for rectangle1 and rectangle2
      */
-    static public Rectangle intersect(Rectangle  rectangle1, Rectangle rectangle2 ) {
+    static public Rectangle intersect(Rectangle rectangle1, Rectangle rectangle2 ) throws IllegalArgumentException {
+        if (!rectangle1.overlaps(rectangle2)) {
+            throw new IllegalArgumentException("Attempted to get the intersecting rectangle from two non-intersecting rectangles. \n" +
+                    "Rectangle 1: " + rectangle1.toString() + " \n" +
+                    "Rectangle 2: " + rectangle2.toString());
+        }
         // https://stackoverflow.com/questions/17267221/libgdx-get-intersection-rectangle-from-rectangle-overlaprectangle
         Rectangle intersection = new Rectangle();
         intersection.x = Math.max(rectangle1.x, rectangle2.x);
@@ -102,7 +100,57 @@ public class CollisionSystem extends IteratingSystem {
         return intersection;
     }
 
+
+    /**
+     * Given information about a bounding boxes, determine whether they collide
+     * @param firstPos bottom left of first bb
+     * @param firstDim dimensions of first bb
+     * @param scndPos bottom left of second bb
+     * @param scndDim dimensions of second bb
+     * @return whether bounding boxes collide in XY
+     */
+    static public boolean collide(Vector3f firstPos, Vector3f firstDim,
+                                  Vector3f scndPos, Vector3f scndDim) {
+        // define bounding boxes
+        Rectangle firstBB = bbAsRectangle(firstPos, firstDim);
+        Rectangle scndBB = bbAsRectangle(scndPos, scndDim);
+        // if doesnt overlap, no displacement
+        return firstBB.overlaps(scndBB);
+    }
+
+    /**
+     * Determines whether two collidable entities colide
+     * @return whether first collides with sceond
+     */
+    static public boolean collide(Entity first, Entity second) {
+        // get positions
+        Vector3f firstPos = Mappers.positionMapper.get(first).position;
+        Vector3f scndPos = Mappers.positionMapper.get(second).position;
+        // get dimensions
+        Vector3f firstDim = Mappers.dimensionMapper.get(first).dimension;
+        Vector3f scndDim = Mappers.dimensionMapper.get(second).dimension;
+        return CollisionSystem.collide(firstPos, firstDim, scndPos, scndDim);
+    }
+
+    private static Rectangle getIntersectingRectangle(Entity first, Entity second) {
+        if (!CollisionSystem.collide(first, second)) {
+            return null;
+        }
+        // get positions
+        Vector3f firstPos = Mappers.positionMapper.get(first).position;
+        Vector3f scndPos = Mappers.positionMapper.get(second).position;
+        // get dimensions
+        Vector3f firstDim = Mappers.dimensionMapper.get(first).dimension;
+        Vector3f scndDim = Mappers.dimensionMapper.get(second).dimension;
+        return CollisionSystem.intersect(bbAsRectangle(firstPos, firstDim),
+                bbAsRectangle(scndPos, scndDim));
+    }
+
     private float capDirection (float cur, float max) {
-         return Math.abs(cur) / cur * Math.min(max, Math.abs(cur));
+        return Math.abs(cur) / cur * Math.min(max, Math.abs(cur));
+    }
+
+    private static Rectangle bbAsRectangle(Vector3f botLeft, Vector3f dim) {
+        return new Rectangle(botLeft.x, botLeft.y, dim.x, dim.y);
     }
 }
