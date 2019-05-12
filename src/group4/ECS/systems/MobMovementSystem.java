@@ -37,41 +37,25 @@ public abstract class MobMovementSystem extends IteratingSystem {
         PositionComponent pc = Mappers.positionMapper.get(e);
         MovementComponent mc = Mappers.movementMapper.get(e);
 
-        if (pc.position.x < playerPos.position.x)
+        if (pc.position.x < playerPos.position.x) {
             mc.velocity.x = Math.min(mc.velocityRange.x, mc.velocity.x + mc.acceleration.x);
-        else if (pc.position.x > playerPos.position.x)
+        } else if (pc.position.x > playerPos.position.x) {
             mc.velocity.x = Math.max(-mc.velocityRange.x, mc.velocity.x - mc.acceleration.x);
-        else if (mc.velocity.x != 0) //if entity has same x coordinate as player decrease (absolute value of) velocity.x
+        } else if (mc.velocity.x != 0) { //if entity has same x coordinate as player decrease (absolute value of) velocity.x
             mc.velocity.x -= mc.velocity.x / Math.abs(mc.velocity.x) * mc.acceleration.x;
+        }
     }
 
     protected void processGravity(Entity e, PositionComponent playerPos, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(e);
         MovementComponent mc = Mappers.movementMapper.get(e);
         GravityComponent gc = Mappers.gravityMapper.get(e);
-        DimensionComponent dc = Mappers.dimensionMapper.get(e);
 
         //take gravity into account
         mc.velocity.y -= gc.gravity.y;
 
-        boolean below = false;
-        //all entities (with a position component)
-        ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.collidableFamily);
-        for (int i = 0; i < entities.size(); i++) {
-            if (e != entities.get(i)) {
-                //position component of entity
-                PositionComponent epc = Mappers.positionMapper.get(entities.get(i));
-                DimensionComponent edc = Mappers.dimensionMapper.get(entities.get(i));
-                if (epc.position.y + edc.dimension.y == pc.position.y &&
-                        pc.position.x <= epc.position.x + edc.dimension.x &&
-                        pc.position.x + dc.dimension.x >= epc.position.x) {
-                    below = true;
-                    break;
-                }
-            }
-        }
         // if nobody below continue processing movement
-        if (!below) return;
+        if (!MobMovementSystem.hasBelow(e)) return;
 
         //no downward velocity
         if (mc.velocity.y < 0){
@@ -81,6 +65,29 @@ public abstract class MobMovementSystem extends IteratingSystem {
         if (pc.position.y < playerPos.position.y) {
             mc.velocity.y = Math.min(mc.velocityRange.y, mc.velocity.y + mc.acceleration.y);
         }
+    }
+
+    public static boolean hasBelow(Entity e) {
+        PositionComponent pc = Mappers.positionMapper.get(e);
+        DimensionComponent dc = Mappers.dimensionMapper.get(e);
+
+        //all entities (with a position component)
+        ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.collidableFamily);
+        for (int i = 0; i < entities.size(); i++) {
+
+            if (e != entities.get(i)) {
+                //position component of entity
+                PositionComponent epc = Mappers.positionMapper.get(entities.get(i));
+                DimensionComponent edc = Mappers.dimensionMapper.get(entities.get(i));
+
+                if (epc.position.y + edc.dimension.y == pc.position.y &&
+                        pc.position.x <= epc.position.x + edc.dimension.x &&
+                        pc.position.x + dc.dimension.x >= epc.position.x) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }
