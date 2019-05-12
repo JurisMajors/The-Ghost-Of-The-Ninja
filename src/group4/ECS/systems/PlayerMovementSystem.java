@@ -33,17 +33,26 @@ public class PlayerMovementSystem extends IteratingSystem {
         MovementComponent mc = Mappers.movementMapper.get(e);
         //accelerate on the x coordinate according to keyboard keys
         if (KeyBoard.isKeyDown(GLFW_KEY_D) && !KeyBoard.isKeyDown(GLFW_KEY_A)) {
-
-            mc.velocity.x = Math.min(mc.velocityRange.x,
-                    mc.velocity.x + mc.acceleration.x);
-
+            moveRight(mc);
         } else if (KeyBoard.isKeyDown(GLFW_KEY_A) && !KeyBoard.isKeyDown(GLFW_KEY_D)) {
-
-            mc.velocity.x = Math.max(-mc.velocityRange.x,
-                    mc.velocity.x - mc.acceleration.x);
+            moveLeft(mc);
         } else if (mc.velocity.x != 0) {
-            mc.velocity.x -= mc.velocity.x / Math.abs(mc.velocity.x) * mc.acceleration.x;
+            deAccelerate(mc);
         }
+    }
+
+    private void moveRight(MovementComponent mc) {
+        mc.velocity.x = Math.min(mc.velocityRange.x,
+                mc.velocity.x + mc.acceleration.x);
+    }
+
+    private void moveLeft(MovementComponent mc) {
+        mc.velocity.x = Math.max(-mc.velocityRange.x,
+                mc.velocity.x - mc.acceleration.x);
+    }
+
+    private void deAccelerate(MovementComponent mc) {
+        mc.velocity.x -= mc.velocity.x / Math.abs(mc.velocity.x) * mc.acceleration.x;
     }
 
     protected void processGravity(Entity e, float deltaTime) {
