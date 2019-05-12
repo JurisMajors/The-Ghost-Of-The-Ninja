@@ -10,8 +10,8 @@ public class DebugUtils {
     private DebugUtils(){};
 
     public static void drawLine(Matrix4f viewMatrix, Vector3f a, Vector3f b) {
-        Vector3f offset = viewMatrix.getTranslation();
-        System.err.println(offset);
+        Vector3f offset = viewMatrix.getTranslation().scale(-1.0f);
+//        System.err.println(offset);
         a = a.add(offset);
         b = b.add(offset);
 
@@ -20,6 +20,8 @@ public class DebugUtils {
         glBegin(GL_LINES);
         glVertex2f(a.x, a.y);
         glVertex2f(b.x, b.y);
+//        glVertex2f(-1000.0f, -1000.0f);
+//        glVertex2f(1000.0f, 1000.0f);
         glEnd();
     }
 }

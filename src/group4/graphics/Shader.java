@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL41.*;
 
 public class Shader {
     // Storing all shader resources when preloaded.
-    public static Shader SIMPLE; // TODO: More to be added.
+    public static Shader SIMPLE, DEBUG; // TODO: More to be added.
 
     // Storing the attribute locations for in the shader
     public static final int VERTEX_ATTRIBUTE = 0;
@@ -44,6 +44,7 @@ public class Shader {
      */
     public static void loadAllShaders() {
         SIMPLE = ShaderParser.loadShader("src/group4/res/shaders/simple");
+        DEBUG = ShaderParser.loadShader("src/group4/res/shaders/debug");
     }
 
     /**

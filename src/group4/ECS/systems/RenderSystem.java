@@ -10,6 +10,7 @@ import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
+import group4.graphics.Shader;
 import group4.maths.Matrix4f;
 import group4.utils.DebugUtils;
 
@@ -86,12 +87,13 @@ public class RenderSystem extends EntitySystem {
             gc.triangle.render(); // TODO: Triangle is an arbitrary (and probably bad name) which I think still remains from the first example we had hehe.. => Change :-)
         }
 
+        Shader.DEBUG.bind();
         for (Entity a: entities) {
             PositionComponent pca = Mappers.positionMapper.get(a);
             for (int i = 0; i < entities.size(); i++) {
                 Entity b = entities.get(i);
                 PositionComponent pcb = Mappers.positionMapper.get(b);
-                DebugUtils.drawLine(cc.viewMatrix, pca.position, pcb.position);
+                DebugUtils.drawLine(Matrix4f.translate(pca.position), pca.position, pcb.position);
             }
         }
         glFlush();
