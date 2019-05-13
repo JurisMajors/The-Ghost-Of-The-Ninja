@@ -14,6 +14,8 @@ import group4.graphics.Shader;
 import group4.maths.Matrix4f;
 import group4.utils.DebugUtils;
 
+import static org.lwjgl.opengl.GL41.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL41.glClear;
 import static org.lwjgl.opengl.GL41.glActiveTexture;
 
 /**
@@ -91,13 +93,16 @@ public class RenderSystem extends EntitySystem {
 
         // Start of debug drawing
         if (DEBUG) {
+            glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
             Shader.DEBUG.bind();
+            DebugUtils.drawGrid(2.0f);
+
             for (Entity a: entities) {
                 PositionComponent pca = Mappers.positionMapper.get(a);
-                for (int i = 0; i < entities.size(); i++) {
+                for (int i = 0; i < entities.size(); i++) { // NOTE: Can't access Iterator in a nested fashion for some reason.. Hence the for(i = 0... style
                     Entity b = entities.get(i);
                     PositionComponent pcb = Mappers.positionMapper.get(b);
-                    DebugUtils.drawLine(cc.viewMatrix, pca.position, pcb.position);
+                    DebugUtils.drawBox(pca.position, pcb.position);
                 }
             }
         }
