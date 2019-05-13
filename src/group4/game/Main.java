@@ -2,10 +2,7 @@ package group4.game;
 
 import com.badlogic.ashley.core.Engine;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.CameraSystem;
-import group4.ECS.systems.MovementSystem;
-import group4.ECS.systems.PlayerMovementSystem;
-import group4.ECS.systems.RenderSystem;
+import group4.ECS.systems.*;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.input.KeyBoard;
@@ -103,6 +100,7 @@ public class Main implements Runnable {
         // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
         engine.addSystem(new CameraSystem()); // CameraSystem must be added before RenderSystem
         engine.addSystem(new PlayerMovementSystem()); // TODO: Probably temp and should be changed when the new movement system is ready
+        engine.addSystem(new CollisionSystem());
         engine.addSystem(new RenderSystem());
 
         // Initialize the level
