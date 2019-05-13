@@ -97,14 +97,17 @@ public class RenderSystem extends EntitySystem {
             Shader.DEBUG.bind();
             DebugUtils.drawGrid(2.0f);
 
-            for (Entity a: entities) {
-                PositionComponent pca = Mappers.positionMapper.get(a);
-                for (int i = 0; i < entities.size(); i++) { // NOTE: Can't access Iterator in a nested fashion for some reason.. Hence the for(i = 0... style
-                    Entity b = entities.get(i);
-                    PositionComponent pcb = Mappers.positionMapper.get(b);
-                    DebugUtils.drawBox(pca.position, pcb.position);
-                }
-            }
+            // Temporary example for drawing lines or boxes.
+            // NOTE: Uncomment to see the effect
+//            for (Entity a: entities) { // For all A, for all B...  N^2 loop
+//                PositionComponent pca = Mappers.positionMapper.get(a);
+//                for (int i = 0; i < entities.size(); i++) { // NOTE: Can't access Iterator in a nested fashion for some reason.. Hence the for(i = 0... style
+//                    Entity b = entities.get(i);
+//                    PositionComponent pcb = Mappers.positionMapper.get(b);
+//                    DebugUtils.drawLine(pca.position, pcb.position);
+//                    DebugUtils.drawBox(pca.position, pcb.position);
+//                }
+//            }
         }
     }
 
