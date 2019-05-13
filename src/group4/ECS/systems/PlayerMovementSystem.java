@@ -8,6 +8,7 @@ import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.input.KeyBoard;
+import group4.maths.Vector3f;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -21,33 +22,34 @@ public class PlayerMovementSystem extends IteratingSystem {
     public void processEntity(Entity entity, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(entity);
         MovementComponent mc = Mappers.movementMapper.get(entity);
-
-        processGravity(entity, deltaTime);
+        GravityComponent gc = Mappers.gravityMapper.get(entity);
+        // process movement events
         move(entity, deltaTime);
-
-        //set position of lbb corner of entity after movement
+        // apply gravity
+        doGravity(mc, gc);
+        // move in the specified direction
         pc.position.addi(mc.velocity.scale(deltaTime));
+
     }
 
     protected void move(Entity e, float deltaTime) {
         MovementComponent mc = Mappers.movementMapper.get(e);
-        //accelerate on the x coordinate according to keyboard keys
+        // set velocity in the direction that keyboard asks for
         if (KeyBoard.isKeyDown(GLFW_KEY_D)) {
             moveRight(mc);
         } else if (KeyBoard.isKeyDown(GLFW_KEY_A)) {
             moveLeft(mc);
         } else {
+            // stay still if no keys are pressed
             mc.velocity.x = 0;
         }
-        // jumping
-        if (KeyBoard.isKeyDown(GLFW_KEY_SPACE) && mc.velocity.y == 0) {
+        // jump if space is pressed and if canJump is satisfied
+        if (KeyBoard.isKeyDown(GLFW_KEY_SPACE) && canJump(mc.velocity)) {
             jump(mc);
         }
     }
 
     private void moveRight(MovementComponent mc) {
-        //mc.velocity.x = Math.min(mc.velocityRange.x,
-        //mc.velocity.x + mc.acceleration.x);
         mc.velocity.x = mc.velocityRange.x;
     }
 
@@ -59,23 +61,15 @@ public class PlayerMovementSystem extends IteratingSystem {
         mc.velocity.y = mc.velocityRange.y;
     }
 
-    protected void processGravity(Entity e, float deltaTime) {
-        GravityComponent gc = Mappers.gravityMapper.get(e);
-        MovementComponent mc = Mappers.movementMapper.get(e);
-        //take gravity into account
-        mc.velocity.y -= gc.gravity.y;
+    private boolean canJump(Vector3f velocity) {
+        // velocity has to be close to zero (avoid double jumping)
+        return velocity.y <= 1e-3 && velocity.y >= -1e-3;
+    }
 
-        //if the entity is standing right on top of any other entity
-        if (MobMovementSystem.hasBelow(e)) {
-            //no downward velocity
-            if (mc.velocity.y < 0) {
-                mc.velocity.y = 0;
-            }
-            //accelerate on the y coordinate according to keyboard keys
-            if (KeyBoard.isKeyDown(GLFW_KEY_W) && !KeyBoard.isKeyDown(GLFW_KEY_S)) {
-                mc.velocity.y = Math.min(mc.velocityRange.y, mc.velocity.y + mc.acceleration.y);
-            }
-        }
+    private void doGravity(MovementComponent mc, GravityComponent gc) {
+        mc.velocity.y -= gc.gravity.y;
     }
 
 }
+
+
