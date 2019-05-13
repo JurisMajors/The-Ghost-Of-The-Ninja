@@ -38,7 +38,7 @@ public abstract class RayStateDecoder implements StateDecoderInterface {
     @Override
     public INDArray decode() {
         // get all the entities
-        ImmutableArray<Entity> entities = TheEngine.getInstance().getEntities();
+        ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.collidableFamily);
         // get only the ghost
         Entity ghost = TheEngine.getInstance().getEntitiesFor(Families.ghostFamily).get(0);
 
