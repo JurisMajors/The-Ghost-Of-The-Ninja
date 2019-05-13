@@ -38,12 +38,12 @@ public class RayCastDecoder {
      * @param entities      the entities to determine collisions with
      * @return the produced features from casting rays + ghost features at the start
      */
-    double[] rayFeatures(double[] ghostFeatures, Vector3f start, Entity ghost, ImmutableArray<Entity> entities) {
+    float[] rayFeatures(float[] ghostFeatures, Vector3f start, Entity ghost, ImmutableArray<Entity> entities) {
         Vector3f ghostCenter = ghost.getComponent(PositionComponent.class).position.add(
                 ghost.getComponent(DimensionComponent.class).dimension.scale(0.5f)); // position of the ghost
 
         // define the length of the features array
-        double[] features = new double[ghostFeatures.length + this.nrRays * decoder.nrFeatures()];
+        float[] features = new float[ghostFeatures.length + this.nrRays * decoder.nrFeatures()];
         // copy the ghost features
         for (int i = 0; i < ghostFeatures.length; i++) {
             features[i] = ghostFeatures[i];
@@ -59,7 +59,7 @@ public class RayCastDecoder {
             IntersectionPair intersection = r.cast(entities);
 
             // add the features to the result
-            double[] interFeatures = this.decoder.getFeatures(intersection, ghost);
+            float[] interFeatures = this.decoder.getFeatures(intersection, ghost);
             for (int j = 0; j < interFeatures.length; j++) {
                 features[j + i] = interFeatures[j];
             }
