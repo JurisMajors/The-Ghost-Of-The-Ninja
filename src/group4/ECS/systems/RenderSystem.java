@@ -12,7 +12,6 @@ import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.graphics.RenderLayer.Layer;
 import group4.maths.Matrix4f;
-import it.unimi.dsi.fastutil.Hash;
 
 import java.util.ArrayList;
 import java.util.HashMap;
