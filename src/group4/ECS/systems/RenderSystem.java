@@ -88,15 +88,17 @@ public class RenderSystem extends EntitySystem {
         }
 
         Shader.DEBUG.bind();
+        Shader.DEBUG.setUniformMat4f("pr_matrix", cc.projectionMatrix);
+        Shader.DEBUG.setUniformMat4f("vw_matrix", cc.viewMatrix);
         for (Entity a: entities) {
             PositionComponent pca = Mappers.positionMapper.get(a);
             for (int i = 0; i < entities.size(); i++) {
                 Entity b = entities.get(i);
                 PositionComponent pcb = Mappers.positionMapper.get(b);
-                DebugUtils.drawLine(Matrix4f.translate(pca.position), pca.position, pcb.position);
+                DebugUtils.drawLine(cc.viewMatrix, pca.position, pcb.position);
+//                glFlush();
             }
         }
-        glFlush();
     }
 
     /**
