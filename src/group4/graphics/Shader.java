@@ -4,7 +4,9 @@ import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 import group4.utils.ShaderParser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.lwjgl.opengl.GL41.*;
@@ -12,7 +14,7 @@ import static org.lwjgl.opengl.GL41.*;
 public class Shader {
     // Storing all shader resources when preloaded.
     public static Shader SIMPLE, DEBUG; // TODO: More to be added.
-
+    private static List<Shader> allShaders;
     // Storing the attribute locations for in the shader
     public static final int VERTEX_ATTRIBUTE = 0;
     public static final int TEXCOORD_ATTRIBUTE = 1;
@@ -45,6 +47,13 @@ public class Shader {
     public static void loadAllShaders() {
         SIMPLE = ShaderParser.loadShader("src/group4/res/shaders/simple");
         DEBUG = ShaderParser.loadShader("src/group4/res/shaders/debug");
+        allShaders = new ArrayList<>();
+        allShaders.add(SIMPLE);
+        allShaders.add(DEBUG);
+    }
+
+    public static List<Shader> getAllShaders() {
+        return allShaders;
     }
 
     /**
