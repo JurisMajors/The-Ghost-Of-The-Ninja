@@ -47,11 +47,11 @@ public abstract class RayStateDecoder implements StateDecoderInterface {
         // bottom of the cone of vision
         Vector3f bot = getCastingStart(ghost);
 
-        double[] ghostFeatures = new double[this.ghostFeatureAmount()];
+        float[] ghostFeatures = new float[this.ghostFeatureAmount()];
         // give velocity of the ghost (already normalized)
         ghostFeatures[0] = ghostVel.x;
         ghostFeatures[1] = ghostVel.y;
-        double[] result = this.rayDecoder.rayFeatures(ghostFeatures, bot, ghost, entities);
+        float[] result = this.rayDecoder.rayFeatures(ghostFeatures, bot, ghost, entities);
         return Nd4j.create(result);
     }
 
