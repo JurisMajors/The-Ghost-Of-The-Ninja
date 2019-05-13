@@ -61,7 +61,6 @@ public class Ray {
         if (closestIntersection == null) {
             closestIntersection = this.end;
         }
-        DebugUtils.drawLine(this.startPos, closestIntersection);
         return new IntersectionPair(closestIntersection, intersectedEntity);
     }
 
