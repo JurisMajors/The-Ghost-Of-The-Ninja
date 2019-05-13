@@ -14,9 +14,6 @@ import group4.graphics.Shader;
 import group4.maths.Matrix4f;
 import group4.utils.DebugUtils;
 
-import java.util.ArrayList;
-
-import static org.lwjgl.opengl.GL11.glFlush;
 import static org.lwjgl.opengl.GL41.glActiveTexture;
 
 /**
@@ -24,7 +21,7 @@ import static org.lwjgl.opengl.GL41.glActiveTexture;
  * position as well as a graphics component
  */
 public class RenderSystem extends EntitySystem {
-
+    private boolean DEBUG = true;
     // array of registered entities in the graphicsFamily
     private ImmutableArray<Entity> entities;
 
@@ -65,6 +62,13 @@ public class RenderSystem extends EntitySystem {
         Entity camera = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0); // There should only be one camera currently
         CameraComponent cc = camera.getComponent(CameraComponent.class);
 
+        // Update the projection and view matrices for all shaders once
+        for (Shader shader : Shader.getAllShaders()) {
+            shader.bind();
+            shader.setUniformMat4f("pr_matrix", cc.projectionMatrix);
+            shader.setUniformMat4f("vw_matrix", cc.viewMatrix);
+        }
+
         for (Entity entity : entities) {
             // get mapper for O(1) component retrieval
             PositionComponent pc = Mappers.positionMapper.get(entity);
@@ -74,9 +78,7 @@ public class RenderSystem extends EntitySystem {
             gc.shader.bind();
 
             // Set uniforms
-            gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrix);
             gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers
-            gc.shader.setUniformMat4f("vw_matrix", cc.viewMatrix);
             gc.shader.setUniform1f("tex", gc.texture.getTextureID()); // Specify which texture slot to use
 
             // Bind texture and specify texture slot
@@ -87,16 +89,16 @@ public class RenderSystem extends EntitySystem {
             gc.triangle.render(); // TODO: Triangle is an arbitrary (and probably bad name) which I think still remains from the first example we had hehe.. => Change :-)
         }
 
-        Shader.DEBUG.bind();
-        Shader.DEBUG.setUniformMat4f("pr_matrix", cc.projectionMatrix);
-        Shader.DEBUG.setUniformMat4f("vw_matrix", cc.viewMatrix);
-        for (Entity a: entities) {
-            PositionComponent pca = Mappers.positionMapper.get(a);
-            for (int i = 0; i < entities.size(); i++) {
-                Entity b = entities.get(i);
-                PositionComponent pcb = Mappers.positionMapper.get(b);
-                DebugUtils.drawLine(cc.viewMatrix, pca.position, pcb.position);
-//                glFlush();
+        // Start of debug drawing
+        if (DEBUG) {
+            Shader.DEBUG.bind();
+            for (Entity a: entities) {
+                PositionComponent pca = Mappers.positionMapper.get(a);
+                for (int i = 0; i < entities.size(); i++) {
+                    Entity b = entities.get(i);
+                    PositionComponent pcb = Mappers.positionMapper.get(b);
+                    DebugUtils.drawLine(cc.viewMatrix, pca.position, pcb.position);
+                }
             }
         }
     }
