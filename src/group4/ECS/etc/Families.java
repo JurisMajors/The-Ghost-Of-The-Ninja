@@ -76,8 +76,8 @@ public class Families {
 
     //All entities with which collision is possible
     public static final Family collidableFamily = Family
-            .all(PositionComponent.class, DimensionComponent.class).get();
+            .all(ColliderComponent.class).get();
     //All entities with which collision is possible
     public static final Family collidableMovingFamily = Family
-            .all(PositionComponent.class, MovementComponent.class, DimensionComponent.class).get();
+            .all(ColliderComponent.class, MovementComponent.class).get();
 }

@@ -14,8 +14,8 @@ import group4.maths.Vector3f;
 public class StandardIntersectionDecoder implements IntersectionDecoder {
 
     @Override
-    public double[] getFeatures(IntersectionPair pair, Entity ghost) {
-        double[] features = new double[this.nrFeatures()];
+    public float[] getFeatures(IntersectionPair pair, Entity ghost) {
+        float[] features = new float[this.nrFeatures()];
         // get the position
         Vector3f ghostPos = ghost.getComponent(PositionComponent.class).position;
         features[0] = pair.point.euclidDist(ghostPos);
@@ -23,7 +23,8 @@ public class StandardIntersectionDecoder implements IntersectionDecoder {
         return features;
     }
 
-    private int decodeEntity(Entity e) {
+    private float decodeEntity(Entity e) {
+        if (e == null) return 0.5f;
         if (e.getComponent(MobComponent.class) != null) {
             return 0;
         }
