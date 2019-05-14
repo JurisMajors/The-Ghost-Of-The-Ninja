@@ -22,7 +22,7 @@ public class MovingPlatform extends Platform {
      */
     public MovingPlatform(Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f lbbCornerRange, Vector3f rtfCornerRange, Shader shader, Texture texture, float[] texCoords) {
         // create position, dimension and graphics components and adds to engine
-        super(position, dimension, shader, texture, texCoords);
+        super(position, dimension, shader, texture);
 
         //velocity of platforms could only be equal to velocity or -velocity thus velocityRange=|velocity|
         this.add(new MovementComponent(velocity, velocity.abs()));
