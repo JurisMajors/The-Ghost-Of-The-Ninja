@@ -36,6 +36,7 @@ public class Player extends Entity {
         this.add(new GravityComponent());
         this.add(new GraphicsComponent(shader, texture, dimension));
         this.add(new PlayerComponent());
+        this.add(new ColliderComponent());
     }
 
 }
