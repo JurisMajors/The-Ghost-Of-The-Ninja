@@ -5,6 +5,7 @@ import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.*;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
+import group4.graphics.TileMapping;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
@@ -93,6 +94,7 @@ public class Main implements Runnable {
         // Preload all resources
         Shader.loadAllShaders();
         Texture.loadAllTextures();
+        TileMapping.loadAllTileMappings();
 
         // Initialize the engine
         engine = TheEngine.getInstance();

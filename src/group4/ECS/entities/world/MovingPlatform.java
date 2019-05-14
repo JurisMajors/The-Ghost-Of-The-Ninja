@@ -20,9 +20,9 @@ public class MovingPlatform extends Platform {
      * @param shader         shader for this platform
      * @param texture        texture for this platform
      */
-    public MovingPlatform(Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f lbbCornerRange, Vector3f rtfCornerRange, Shader shader, Texture texture) {
+    public MovingPlatform(Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f lbbCornerRange, Vector3f rtfCornerRange, Shader shader, Texture texture, float[] texCoords) {
         // create position, dimension and graphics components and adds to engine
-        super(position, dimension, shader, texture);
+        super(position, dimension, shader, texture, texCoords);
 
         //velocity of platforms could only be equal to velocity or -velocity thus velocityRange=|velocity|
         this.add(new MovementComponent(velocity, velocity.abs()));

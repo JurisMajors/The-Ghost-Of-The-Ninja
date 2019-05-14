@@ -22,18 +22,18 @@ public class Platform extends Entity {
      * @param shader    shader for this platform
      * @param texture   texture for this platform
      */
-    public Platform(Vector3f position, Vector3f dimension, Shader shader, Texture texture) {
+    public Platform(Vector3f position, Vector3f dimension, Shader shader, Texture texture, float[] texCoords) {
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
         this.add(new PlatformComponent());
 
         // create the graphics component with a vertex array repeating the texture over this platform
-        GraphicsComponent graphicsComponent = createGraphicsComponent(position, dimension, texture, shader);
+        GraphicsComponent graphicsComponent = createGraphicsComponent(position, dimension, texture, shader, texCoords);
 //        GraphicsComponent graphicsComponent = new GraphicsComponent(shader, texture, dimension);
         this.add(graphicsComponent);
     }
 
-    private GraphicsComponent createGraphicsComponent(Vector3f position, Vector3f dimension, Texture texture, Shader shader) {
+    private GraphicsComponent createGraphicsComponent(Vector3f position, Vector3f dimension, Texture texture, Shader shader, float[] texCoords) {
         int texWidth = texture.getWidth();
         int texHeight = texture.getHeight();
 
@@ -105,7 +105,7 @@ public class Platform extends Entity {
         float[] tc = createTextureArray(tcArray);
         byte[] ic = createIndicesArray(indices);
 
-        return new GraphicsComponent(shader, texture, va, ic, tc);
+        return new GraphicsComponent(shader, texture, va, ic, texCoords);
     }
 
     /**
