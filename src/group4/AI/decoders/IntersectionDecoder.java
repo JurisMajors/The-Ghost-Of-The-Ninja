@@ -12,9 +12,9 @@ public interface IntersectionDecoder {
      *
      * @param pair  the intersection pair to get the features from
      * @param ghost the ghost
-     * @return the features as a double array
+     * @return the features as a float array
      */
-    double[] getFeatures(IntersectionPair pair, Entity ghost);
+    float[] getFeatures(IntersectionPair pair, Entity ghost);
 
     /**
      * Number of features per pair this decoder produces
