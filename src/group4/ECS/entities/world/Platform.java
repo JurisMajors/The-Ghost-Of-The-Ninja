@@ -14,6 +14,9 @@ import java.util.ArrayList;
 
 public class Platform extends Entity {
 
+    public Platform(Vector3f position, Shader shader, Texture texture) {
+
+    }
     /**
      * Creates a static platform
      *
