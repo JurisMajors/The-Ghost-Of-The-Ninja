@@ -119,7 +119,7 @@ public class RenderSystem extends EntitySystem {
         if (DEBUG) {
             glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
             Shader.DEBUG.bind();
-            DebugUtils.drawGrid(2.0f);
+            DebugUtils.drawGrid(1.0f);
 
             // Temporary example for drawing lines or boxes.
             // NOTE: Uncomment to see the effect

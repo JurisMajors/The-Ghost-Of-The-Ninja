@@ -32,7 +32,7 @@ public class Main implements Runnable {
     private Level level;
     private Engine engine;
 
-    public static final float SCREEN_WIDTH = 33.0f;
+    public static final float SCREEN_WIDTH = 16.5f;
     public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
 
 
