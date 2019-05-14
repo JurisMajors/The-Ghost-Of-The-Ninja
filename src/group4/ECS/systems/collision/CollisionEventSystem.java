@@ -16,7 +16,8 @@ public class CollisionEventSystem extends IteratingSystem {
 
     /**
      * Here we decide which event handler should handle the collision events for this entity.
-     * @param entity current entity
+     *
+     * @param entity    current entity
      * @param deltaTime
      */
     @Override

@@ -5,7 +5,6 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Rectangle;
 import group4.ECS.components.CollisionComponent;
-import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
@@ -29,6 +28,7 @@ public class CollisionSystem extends IteratingSystem {
     /**
      * Finds all collidable entities that collide with entity e. Stores them in the collision component and
      * lets the next collision system handle them.
+     *
      * @param e entity
      */
     private void detectCollisions(Entity e) {
