@@ -96,6 +96,35 @@ public class GraphicsComponent implements Component {
         this.layer = Layer.MAIN;
     }
 
+    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, float[] texCoords) {
+        // Construct vertex array
+        float[] vertices = new float[]{
+                0, 0, 0,
+                0, dimension.y, 0,
+                dimension.x, dimension.y, 0,
+                dimension.x, 0, 0,
+        };
+
+        // Construct index array (used for triangle mesh)
+        byte[] indices = new byte[]{
+                0, 1, 2,
+                2, 3, 0
+        };
+
+        // Construct texture coords covering the full texture
+        float[] tcs = new float[]{
+                0, 1,
+                0, 0,
+                1, 0,
+                1, 1
+        };
+
+        // set instance variables
+        this.shader = shader;
+        this.texture = texture;
+        this.triangle = new VertexArray(vertices, indices, texCoords);
+        this.layer = Layer.MAIN;
+    }
 //    public static GraphicsComponent createGraphicsComponent(Vector3f position, Vector3f dimension, Texture texture, Shader shader) {
 //        int texWidth = texture.getWidth();
 //        int texHeight = texture.getHeight();

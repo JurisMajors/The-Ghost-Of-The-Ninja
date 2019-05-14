@@ -20,10 +20,10 @@ public class TileMapping {
         float hStep = 1.0f / numTilesX;
         float vStep = 1.0f / numTilesY;
         return new float[] {
+                x * hStep, (y + 1) * vStep,
                 x * hStep, y * vStep,
                 (x + 1) * hStep, y * vStep,
-                (x + 1) * hStep, (y + 1) * vStep,
-                x * hStep, (y + 1) * vStep
+                (x + 1) * hStep, (y + 1) * vStep
         };
     }
 }

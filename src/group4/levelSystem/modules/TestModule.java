@@ -34,7 +34,8 @@ public class TestModule extends Module {
                     new Block(
                             new Vector3f(0.0f, 2.0f + i * 1.0f, 0.0f),
                             Shader.SIMPLE,
-                            Texture.BRICK
+                            Texture.MAIN_TILES,
+                            TileMapping.MAIN.FLOOR1
                     )
             );
         }
@@ -100,8 +101,8 @@ public class TestModule extends Module {
                     new Block(
                             new Vector3f(9.0f + i * 1.0f, 2.0f, 0.0f),
                             Shader.SIMPLE,
-                            Texture.BRICK
-                    )
+                            Texture.MAIN_TILES,
+                            TileMapping.MAIN.FLOOR1                    )
             );
         }
 
@@ -110,8 +111,8 @@ public class TestModule extends Module {
                     new Block(
                             new Vector3f(11.0f + i * 1.0f, 3.0f, 0.0f),
                             Shader.SIMPLE,
-                            Texture.BRICK
-                    )
+                            Texture.MAIN_TILES,
+                            TileMapping.MAIN.FLOOR1                    )
             );
         }
 
@@ -120,8 +121,8 @@ public class TestModule extends Module {
                     new Block(
                             new Vector3f(13.0f + i * 1.0f, 4.0f, 0.0f),
                             Shader.SIMPLE,
-                            Texture.BRICK
-                    )
+                            Texture.MAIN_TILES,
+                            TileMapping.MAIN.FLOOR1                    )
             );
         }
 
@@ -134,8 +135,8 @@ public class TestModule extends Module {
                     new Block(
                             new Vector3f(29.0f + i * 1.0f, 2.0f, 0.0f),
                             Shader.SIMPLE,
-                            Texture.BRICK
-                    )
+                            Texture.MAIN_TILES,
+                            TileMapping.MAIN.FLOOR1                    )
             );
         }
 
@@ -144,8 +145,8 @@ public class TestModule extends Module {
                     new Block(
                             new Vector3f(31.0f + i * 1.0f, 3.0f, 0.0f),
                             Shader.SIMPLE,
-                            Texture.BRICK
-                    )
+                            Texture.MAIN_TILES,
+                            TileMapping.MAIN.FLOOR1                    )
             );
         }
 
