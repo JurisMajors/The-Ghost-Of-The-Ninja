@@ -22,7 +22,7 @@ public class Player extends Entity {
     public Player(Vector3f position) {
 
         // vRange
-        Vector3f velocityRange = new Vector3f(0.2f, 0.25f, 0.0f);
+        Vector3f velocityRange = new Vector3f(0.125f, 0.2f, 0.0f);
         // shader
         Shader shader = Shader.SIMPLE;
         // TODO: proper texture
