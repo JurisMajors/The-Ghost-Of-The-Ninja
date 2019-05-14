@@ -1,5 +1,6 @@
 package group4.levelSystem.modules;
 
+import group4.ECS.entities.Background;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.world.Block;
 import group4.ECS.entities.world.Platform;
@@ -23,11 +24,16 @@ public class TestModule extends Module {
         Camera camera = new Camera();
         this.addEntity(camera); // Adding the camera to the module (which adds it to the engine?)
 
+        Background background = new Background(
+                new Vector3f(0.0f, 0.0f, 0.0f),
+                new Vector3f(35.0f, 12.0f, 0.0f),
+                Shader.SIMPLE,
+                Texture.BACKGROUND);
+        this.addEntity(background);
+
         // TODO: Change to platform entities when these work
         // Construct the test module for training the neural network
 
-        Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
-        Vector3f tempPosition;
         // Add the LHS wall
         for (int i = 0; i < 10; i++) {
             this.addEntity(
@@ -35,7 +41,7 @@ public class TestModule extends Module {
                             new Vector3f(0.0f, 2.0f + i * 1.0f, 0.0f),
                             Shader.SIMPLE,
                             Texture.MAIN_TILES,
-                            TileMapping.MAIN.FLOOR1
+                            TileMapping.MAIN.WALL_LEFT1
                     )
             );
         }
@@ -43,13 +49,25 @@ public class TestModule extends Module {
         // Add floors on which player will stand initially
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 10; j++) {
-                this.addEntity(
-                        new Block(
-                                new Vector3f(j * 1.0f, i * 1.0f, 0.0f),
-                                Shader.SIMPLE,
-                                Texture.BRICK
-                        )
-                );
+                if (i == 1 && j == 0) {
+                    this.addEntity(
+                            new Block(
+                                    new Vector3f(j * 1.0f, i * 1.0f, 0.0f),
+                                    Shader.SIMPLE,
+                                    Texture.MAIN_TILES,
+                                    TileMapping.MAIN.WALL_CORNER_LEFT1
+                            )
+                    );
+                } else {
+                    this.addEntity(
+                            new Block(
+                                    new Vector3f(j * 1.0f, i * 1.0f, 0.0f),
+                                    Shader.SIMPLE,
+                                    Texture.MAIN_TILES,
+                                    TileMapping.MAIN.FLOOR1
+                            )
+                    );
+                }
             }
         }
 

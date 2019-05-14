@@ -96,6 +96,45 @@ public class GraphicsComponent implements Component {
         this.layer = Layer.MAIN;
     }
 
+    /**
+     * Constructs a VertexArray object and stores the shader and texture for rendering.
+     * The vertexArray is created from (0,0,0) till (dimension.x, dimension.y, 0) and is covered fully by the texture.
+     * This means the texture will be stretched or shrunk to fit the dimension.
+     *
+     * @param shader    Shader, the shader to apply during rendering
+     * @param texture   Texture, the image to pass to the shader
+     * @param dimension size of the graphics to be displayed.
+     */
+    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, Layer layer) {
+        // Construct vertex array
+        float[] vertices = new float[]{
+                0, 0, 0,
+                0, dimension.y, 0,
+                dimension.x, dimension.y, 0,
+                dimension.x, 0, 0,
+        };
+
+        // Construct index array (used for triangle mesh)
+        byte[] indices = new byte[]{
+                0, 1, 2,
+                2, 3, 0
+        };
+
+        // Construct texture coords covering the full texture
+        float[] tcs = new float[]{
+                0, 1,
+                0, 0,
+                1, 0,
+                1, 1
+        };
+
+        // set instance variables
+        this.shader = shader;
+        this.texture = texture;
+        this.triangle = new VertexArray(vertices, indices, tcs);
+        this.layer = layer;
+    }
+
     public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, float[] texCoords) {
         // Construct vertex array
         float[] vertices = new float[]{
