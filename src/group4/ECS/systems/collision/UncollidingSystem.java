@@ -154,6 +154,13 @@ public class UncollidingSystem extends IteratingSystem {
     }
 
     private float capDirection(float cur, float max) {
+        if (max < 1e-6 && max > -1e-6) { // close to zero
+            return 0f;
+        }
+        if (Math.abs(cur) < Math.abs(max)) { // no need to modify
+            return cur;
+        }
+        // cap it
         return Math.abs(cur) / cur * Math.min(max, Math.abs(cur));
     }
 
