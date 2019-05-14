@@ -18,13 +18,17 @@ public class Block extends Entity {
         this.add(new DimensionComponent());
 
         this.add(new GraphicsComponent(shader, texture, DimensionComponent.defaultTileDimension));
+        this.add(new ColliderComponent());
+
     }
 
     public Block(Vector3f position, Shader shader, Texture texture, float[] tileMapCoords) {
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent());
         this.add(new GraphicsComponent(shader, texture, DimensionComponent.defaultTileDimension, tileMapCoords));
+        this.add(new ColliderComponent());
     }
+
 
     /**
      * Construct a simple block (flexible texture and shader) in a certain position of certain size
@@ -40,8 +44,8 @@ public class Block extends Entity {
         this.add(new DimensionComponent(dimension));
 
         // create basic graphics component covering the dimension of this block
-        this.add(new ColliderComponent());
         this.add(new GraphicsComponent(shader, texture, dimension));
+        this.add(new ColliderComponent());
     }
 
 }
