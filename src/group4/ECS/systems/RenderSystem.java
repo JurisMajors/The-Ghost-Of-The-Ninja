@@ -74,6 +74,7 @@ public class RenderSystem extends EntitySystem {
         }
 
         GraphicsComponent gc;
+        PositionComponent pc;
         for (Entity entity : entities) {
             gc = Mappers.graphicsMapper.get(entity);
             entityLayers.get(gc.layer).add(entity);
@@ -89,20 +90,20 @@ public class RenderSystem extends EntitySystem {
             shader.setUniformMat4f("pr_matrix", cc.projectionMatrix);
             shader.setUniformMat4f("vw_matrix", cc.viewMatrix);
         }
-        
+
         for (Layer layer : Layer.values()) {
-            System.out.println("Rendering " + layer);
+            glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
             for (Entity entity : entityLayers.get(layer)) {
-                // get mapper for O(1) component retrieval
-                PositionComponent pc = Mappers.positionMapper.get(entity);
+                // Get components via mapper for O(1) component retrieval
+                pc = Mappers.positionMapper.get(entity);
                 gc = Mappers.graphicsMapper.get(entity);
 
                 // Bind shader
                 gc.shader.bind();
 
-            // Set uniforms
-            gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers
-            gc.shader.setUniform1f("tex", gc.texture.getTextureID()); // Specify which texture slot to use
+                // Set uniforms
+                gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers
+                gc.shader.setUniform1f("tex", gc.texture.getTextureID()); // Specify which texture slot to use
 
                 // Bind texture and specify texture slot
                 gc.texture.bind();
