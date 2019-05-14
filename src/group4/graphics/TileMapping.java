@@ -1,12 +1,25 @@
 package group4.graphics;
 
+/**
+ * Creates and stores mappings from 32x32 textures tiles (embedded in larger tilemaps) to
+ * st texture coordinates.
+ *
+ * The general idea is that we can later extend this to import designed level data (e.g. JSON) from Unity.
+ */
 public class TileMapping {
-    public static TileMapping MAIN;
+    public static TileMapping MAIN; // For now only 1. This class would make the game skinnable as well :-)
 
-    public float[] FLOOR1, FLOOR2, FLOOR3;
+    // Example tiles we want to store.
+    // TODO: Determine what tiles we actually need.
+    public float[] FLOOR1, FLOOR2, FLOOR3; // E.g. 3 types of floors.. etc
     public float[] WALL_LEFT1, WALL_LEFT2, WALL_LEFT3;
     public float[] WALL_CORNER_LEFT1, WALL_CORNER_LEFT2, WALL_CORNER_LEFT3;
 
+    /**
+     * Loads all TileMapping objects we need as statics into this holder class.
+     *
+     * For every TileMapping we can set all the tiles we have to specific textureCoordinates.
+     */
     public static void loadAllTileMappings() {
         // MAIN is currently 8 x 3
         MAIN = new TileMapping();

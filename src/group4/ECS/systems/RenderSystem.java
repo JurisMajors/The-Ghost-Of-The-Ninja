@@ -67,7 +67,7 @@ public class RenderSystem extends EntitySystem {
      */
     public void update(float deltaTime) {
         // Match objects to RenderLayers so we can draw layer by layer
-        // TODO: Maybe it's better to use a mapper for this?
+        // TODO: Maybe it's better to use a mapper for this? Though I suspect this to be plenty fast for us, unless we do crazy particles or whatever. -Nico
         Map<Layer, List<Entity>> entityLayers = new HashMap<>();
         for (Layer layer : Layer.values()) {
             entityLayers.put(layer, new ArrayList<>());
