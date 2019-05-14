@@ -1,6 +1,7 @@
 package group4.ECS.entities.world;
 
 import com.badlogic.ashley.core.Entity;
+import group4.ECS.components.ColliderComponent;
 import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.PositionComponent;
@@ -39,6 +40,7 @@ public class Block extends Entity {
         this.add(new DimensionComponent(dimension));
 
         // create basic graphics component covering the dimension of this block
+        this.add(new ColliderComponent());
         this.add(new GraphicsComponent(shader, texture, dimension));
     }
 
