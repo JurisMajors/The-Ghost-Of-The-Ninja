@@ -1,4 +1,4 @@
-package group4.ECS.systems.CollisionHandlers;
+package group4.ECS.systems.collision.CollisionHandlers;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.CollisionComponent;

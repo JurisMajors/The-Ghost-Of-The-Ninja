@@ -1,4 +1,4 @@
-package group4.ECS.systems;
+package group4.ECS.systems.collision;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -17,16 +17,11 @@ public class UncollidingSystem extends IteratingSystem {
 
     public UncollidingSystem() {
         // only process collisions for moving entities that are collidable
-        super(Families.collidableFamily);
+        super(Families.collidableMovingFamily);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        // don't process entities without a collision component
-        if (Mappers.collisionMapper.get(entity) == null) {
-            return;
-        }
-
         PositionComponent pc = Mappers.positionMapper.get(entity);
 
         uncollideEntity(entity, deltaTime, pc.position);

@@ -1,4 +1,4 @@
-package group4.ECS.systems;
+package group4.ECS.systems.collision;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -6,7 +6,7 @@ import group4.ECS.components.CollisionComponent;
 import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
-import group4.ECS.systems.CollisionHandlers.PlayerCollision;
+import group4.ECS.systems.collision.CollisionHandlers.PlayerCollision;
 
 public class CollisionEventSystem extends IteratingSystem {
 
