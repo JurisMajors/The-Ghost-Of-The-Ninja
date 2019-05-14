@@ -110,7 +110,7 @@ public class RenderSystem extends EntitySystem {
                 glActiveTexture(gc.texture.getTextureID());
 
                 // Render!
-                gc.triangle.render(); // TODO: Triangle is an arbitrary (and probably bad name) which I think still remains from the first example we had hehe.. => Change :-)
+                gc.geometry.render(); // TODO: Triangle is an arbitrary (and probably bad name) which I think still remains from the first example we had hehe.. => Change :-)
 
             }
         }

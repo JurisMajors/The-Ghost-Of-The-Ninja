@@ -18,7 +18,7 @@ public class Bullet extends Entity {
             dimension.x, 0, 0,
     };
 
-    // Construct index array (used for triangle mesh)
+    // Construct index array (used for geometry mesh)
     protected byte[] indices = new byte[] {
             0, 1, 2,
             2, 3, 0
