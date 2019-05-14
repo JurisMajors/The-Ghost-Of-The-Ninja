@@ -166,4 +166,13 @@ public class Matrix4f {
         return BufferUtils.getFloatBuffer(elements);
     }
 
+    /**
+     * Returns the translational column from the matrix, assuming the matrix we use it
+     * on defines homogeneous coordinates.
+     *
+     * @return Vector3f, the translation as defined by the transformation matrix.
+     */
+    public Vector3f getTranslation() {
+        return new Vector3f(this.elements[12], this.elements[13], this.elements[14]); // We don't take [15] as we assume it is always 1
+    }
 }
