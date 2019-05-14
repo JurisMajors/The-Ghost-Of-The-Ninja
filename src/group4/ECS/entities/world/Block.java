@@ -13,6 +13,7 @@ import group4.maths.Vector3f;
  * Block entity for demonstration purposes
  */
 public class Block extends Entity {
+    // TODO: This and other tiles can be part of a more general entity, which we haven't thought out yet. Hence I didn't bother extending the comments. -Nico
     public Block(Vector3f position, Shader shader, Texture texture) {
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent());

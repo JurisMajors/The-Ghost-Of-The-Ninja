@@ -14,10 +14,6 @@ public class GraphicsComponent implements Component {
     public Texture texture;
 
     // Layer/depth at which to render the component.
-    //      -1 : background layer   (e.g. background art)
-    //       0 : main layer         (e.g. player, platform, enemies)
-    //       1 : foreground layer   (e.g. foreground art, falling (snow/fire/water) particle effects)
-    //       2 : fx layer           (e.g. post-processing)
     public Layer layer;
 
     /**
@@ -65,7 +61,7 @@ public class GraphicsComponent implements Component {
      * @param dimension size of the graphics to be displayed.
      */
     public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension) {
-       // Construct vertex array
+        // Construct vertex array
         float[] vertices = new float[]{
                 0, 0, 0,
                 0, dimension.y, 0,
@@ -133,6 +129,17 @@ public class GraphicsComponent implements Component {
         this.layer = layer;
     }
 
+    /**
+     * Constructs a VertexArray object and stores the shader and texture for rendering.
+     * The vertexArray is created from (0,0,0) till (dimension.x, dimension.y, 0) and is covered fully by the texture,
+     * though textureCoordinates must be given. This is to work in conjunction with TileMapping, which requires
+     * specific coordinates which the GraphicsComponent can't assume knowledge of.
+     *
+     * @param shader    Shader, the shader to apply during rendering
+     * @param texture   Texture, the image to pass to the shader
+     * @param dimension Vector3f, size of the graphics to be displayed.
+     * @param texCoords Float[], the texture coordinates of a tile within the given tilemap Texture.
+     */
     public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, float[] texCoords) {
         // Construct vertex array
         float[] vertices = new float[]{
@@ -153,5 +160,39 @@ public class GraphicsComponent implements Component {
         this.texture = texture;
         this.geometry = new VertexArray(vertices, indices, texCoords);
         this.layer = Layer.MAIN;
+    }
+
+    /**
+     * Constructs a VertexArray object and stores the shader and texture for rendering.
+     * The vertexArray is created from (0,0,0) till (dimension.x, dimension.y, 0) and is covered fully by the texture,
+     * though textureCoordinates must be given. This is to work in conjunction with TileMapping, which requires
+     * specific coordinates which the GraphicsComponent can't assume knowledge of.
+     *
+     * @param shader    Shader, the shader to apply during rendering
+     * @param texture   Texture, the image to pass to the shader
+     * @param dimension Vector3f, size of the graphics to be displayed.
+     * @param texCoords Float[], the texture coordinates of a tile within the given tilemap Texture.
+     * @param layer     Enum, indicating on which specific layer this component should be drawn
+     */
+    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, float[] texCoords, Layer layer) {
+        // Construct vertex array
+        float[] vertices = new float[]{
+                0, 0, 0,
+                0, dimension.y, 0,
+                dimension.x, dimension.y, 0,
+                dimension.x, 0, 0,
+        };
+
+        // Construct index array (used for geometry mesh)
+        byte[] indices = new byte[]{
+                0, 1, 2,
+                2, 3, 0
+        };
+
+        // set instance variables
+        this.shader = shader;
+        this.texture = texture;
+        this.geometry = new VertexArray(vertices, indices, texCoords);
+        this.layer = layer;
     }
 }

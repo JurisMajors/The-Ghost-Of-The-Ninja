@@ -10,11 +10,12 @@ import group4.graphics.Texture;
 import group4.maths.Vector3f;
 
 /**
- * Block entity for demonstration purposes
+ * Background entity for demonstration purposes
  */
 public class Background extends Entity {
+    // TODO: This and other tiles can be part of a more general entity, which we haven't thought out yet. -Nico
     /**
-     * Construct a simple block (flexible texture and shader) in a certain position of certain size
+     * Construct a simple background rectangle (flexible texture and shader) in a certain position of certain size
      *
      * @param position The position of the block (lower left corner)
      * @param dimension The dimensions of the block
