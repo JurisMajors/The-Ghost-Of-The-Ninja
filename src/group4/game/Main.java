@@ -3,15 +3,16 @@ package group4.game;
 import com.badlogic.ashley.core.Engine;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.*;
+import group4.ECS.systems.collision.CollisionEventSystem;
+import group4.ECS.systems.collision.CollisionSystem;
+import group4.ECS.systems.collision.UncollidingSystem;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
-import group4.levelSystem.levels.SimpleLevel;
 import group4.levelSystem.levels.TestLevel;
-import group4.maths.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
@@ -101,6 +102,8 @@ public class Main implements Runnable {
         engine.addSystem(new CameraSystem()); // CameraSystem must be added before RenderSystem
         engine.addSystem(new PlayerMovementSystem()); // TODO: Probably temp and should be changed when the new movement system is ready
         engine.addSystem(new CollisionSystem());
+        engine.addSystem(new CollisionEventSystem());
+        engine.addSystem(new UncollidingSystem());
         engine.addSystem(new RenderSystem());
 
         // Initialize the level
