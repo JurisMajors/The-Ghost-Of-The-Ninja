@@ -96,7 +96,7 @@ public class RenderSystem extends EntitySystem {
             glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
             Shader.DEBUG.bind();
             DebugUtils.drawGrid(2.0f);
-            DebugUtils.drawSpline();
+//            DebugUtils.drawSpline();
 
             // Temporary example for drawing lines or boxes.
             // NOTE: Uncomment to see the effect

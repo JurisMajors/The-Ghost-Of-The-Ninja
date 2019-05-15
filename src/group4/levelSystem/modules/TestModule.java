@@ -2,7 +2,6 @@ package group4.levelSystem.modules;
 
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.world.Platform;
-import group4.ECS.entities.world.Platform;
 import group4.ECS.entities.world.SplinePlatform;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -35,18 +34,19 @@ public class TestModule extends Module {
         // my little spline test
         tempPosition = new Vector3f(4.0f, 4.0f, 0.0f);
         tempDimension = new Vector3f(2.0f, 1.0f, 0.0f);
+        float thickness = 0.4f;
         Vector3f[] tempPoint = new Vector3f[]{
-                new Vector3f(),
-                new Vector3f(1.0f, 0.0f, 0.0f),
-                new Vector3f(1.0f, 1.0f, 0.0f),
-                new Vector3f(2.0f, 1.0f, 0.0f)
+                new Vector3f().add(new Vector3f(0.0f, thickness * 0.5f, 0.0f)),
+                new Vector3f(2.0f, 0.0f, 0.0f),
+                new Vector3f(2.0f, 2.0f, 0.0f),
+                new Vector3f(4.0f, 2.0f, 0.0f).sub(new Vector3f(0.0f, thickness * 0.5f, 0.0f))
         };
-        for (Vector3f v: tempPoint) {
+        for (Vector3f v : tempPoint) {
 //            v.addi(new Vector3f(4.0f, 4.0f, 0.0f));
         }
 
         MultiSpline mySpline = new MultiSpline(tempPoint);
-        SplinePlatform splinePlatform = new SplinePlatform(tempPosition, tempDimension, mySpline, Shader.SIMPLE, Texture.WHITE);
+        SplinePlatform splinePlatform = new SplinePlatform(tempPosition, tempDimension, mySpline, 0.4f, Shader.SIMPLE, Texture.WHITE);
         this.addEntity(splinePlatform);
 
         // Add floor on which player will stand initially

@@ -6,7 +6,6 @@ import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
 import group4.maths.spline.MultiSpline;
-import group4.utils.DebugUtils;
 
 import java.util.ArrayList;
 
@@ -23,58 +22,75 @@ public class SplinePlatform extends Entity {
      * @param shader    shader for this platform
      * @param texture   texture for this platform
      */
-    public SplinePlatform(Vector3f position, Vector3f dimension, MultiSpline spline, Shader shader, Texture texture) {
+    public SplinePlatform(Vector3f position, Vector3f dimension, MultiSpline spline, float thickness, Shader shader, Texture texture) {
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
         this.add(new PlatformComponent());
         this.add(new ColliderComponent());
 
-        GraphicsComponent gc = createGraphicsComponent(spline, 100, shader, texture);
+        GraphicsComponent gc = createGraphicsComponent(spline, 100, thickness, shader, texture);
         this.add(gc);
     }
 
-    private GraphicsComponent createGraphicsComponent(MultiSpline spline, int numPoints, Shader shader, Texture texture) {
-
-        float dt = 1 / (float) numPoints;
+    /**
+     * Creates the graphics component for a spline platform.
+     * The vertex mesh is places around the spline points, the eventual spline will have the given thickness.
+     * The mesh will extend 0.5 * thickness above the spline points and 0.5 * thickness below the spline points.
+     * NOTE: if you want to align the spline nicely, it is important to make sure that the first controlPoint of your
+     * spline += 0.5 * thickness is at the top or bottom of your dimension component.
+     * The same holds for your last control point.
+     *
+     * @param spline    spline defining the spline points
+     * @param numPoints amount of detail to give to the spline
+     * @param thickness thickness of the spline
+     * @param shader    shader
+     * @param texture   texture
+     * @return graphics component
+     */
+    private GraphicsComponent createGraphicsComponent(MultiSpline spline, int numPoints, float thickness, Shader shader, Texture texture) {
         // temporary arraylists to store the vertex cooridnates, texture coordinates, indices
         ArrayList<Vector3f> vertexArray = new ArrayList<>();
         ArrayList<Vector3f> tcArray = new ArrayList<>();
         ArrayList<Byte> indices = new ArrayList<>();
 
-        Vector3f[] lefts = new Vector3f[numPoints + 1];
-        Vector3f[] rights = new Vector3f[numPoints + 1];
+        // store a list of the top and bottom points (around the spline control points)
+        Vector3f[] tops = new Vector3f[numPoints + 1];
+        Vector3f[] bots = new Vector3f[numPoints + 1];
 
-        // keep track of at which index we are to make sure that the indices align properly
-        byte pointI = 0;
-        byte vertexI = 0;
-
+        // dt determines the step of time
+        float dt = 1 / (float) numPoints;
+        // t is the time with which we go over the spline
         float t = 0.0f;
+        // loop through all controlpoints over the spline
         for (int k = 0; k <= numPoints; k++) {
             Vector3f splinePoint = spline.getPoint(t);
             Vector3f normal = spline.getNormal(t);
 
             // get points on the borders of the spline
-            Vector3f left = splinePoint.sub(normal.scale(0.2f));
-            Vector3f right = splinePoint.add(normal.scale(0.2f));
+            Vector3f top = splinePoint.sub(normal.scale(0.5f * thickness));
+            Vector3f bot = splinePoint.add(normal.scale(0.5f * thickness));
 
-            lefts[k] = left;
-            rights[k] = right;
+            tops[k] = top;
+            bots[k] = bot;
 
-
+            // update time
             t += dt;
         }
 
-        vertexArray.add(lefts[0]);
-        vertexArray.add(rights[0]);
+        // add all tops and bots to the vertex array in order: (top0, bot0, top1, bot1, ...)
+        vertexArray.add(tops[0]);
+        vertexArray.add(bots[0]);
+        // add texture coordinates for all the vertices
         tcArray.add(new Vector3f());
         tcArray.add(new Vector3f());
         for (int k = 0; k < numPoints; k++) {
-            vertexArray.add(lefts[k + 1]);
-            vertexArray.add(rights[k + 1]);
-            // TODO: for now always botleft
+            // add next vertex coordinates and texture coordinates
+            vertexArray.add(tops[k + 1]);
+            vertexArray.add(bots[k + 1]);
             tcArray.add(new Vector3f());
             tcArray.add(new Vector3f());
 
+            // create a square with the previous top and bot and the current top and bot
             // first triangle (CW)
             indices.add((byte) (2 * k)); // first left
             indices.add((byte) (2 * k + 2)); // second left
@@ -91,6 +107,7 @@ public class SplinePlatform extends Entity {
         float[] tc = createTextureArray(tcArray);
         byte[] ic = createIndicesArray(indices);
 
+        // create graphics component
         return new GraphicsComponent(shader, texture, va, ic, tc);
 
     }
