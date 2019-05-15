@@ -2,6 +2,7 @@ package group4.ECS.entities.mobs;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.*;
+import group4.ECS.systems.collision.CollisionHandlers.MobCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
@@ -23,7 +24,7 @@ public class Mob extends Entity {
         this.add(new MovementComponent(velocity, velocityRange, acceleration));
         this.add(new MobComponent());
         this.add(new GraphicsComponent(shader, texture, dimension));
-        this.add(new CollisionComponent());
+        this.add(new CollisionComponent(MobCollision.getInstance()));
     }
 
     /**
