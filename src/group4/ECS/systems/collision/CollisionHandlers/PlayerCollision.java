@@ -8,20 +8,19 @@ import group4.ECS.entities.mobs.Mob;
 import group4.ECS.etc.Mappers;
 
 import java.util.Collection;
+import java.util.Set;
 
 
 /**
  * An example of how we might want to handle collisions per Entity
  */
-public class PlayerCollision {
+public class PlayerCollision extends AbstractCollisionHandler<Player> {
 
-    /**
-     * This function specifies how a player deals with different types of collisions.
-     *
-     * @param player the player
-     * @param others list of entities the player is colliding with
-     */
-    public static void collision(Player player, Collection<Entity> others) {
+    private static AbstractCollisionHandler me = new PlayerCollision();
+
+    @Override
+    public void collision(Player player, CollisionComponent cc) {
+        Set<Entity> others = cc.collisions;
         // loop through all collisions and handle them accordingly
         for (Entity other : others) {
             // example
@@ -31,6 +30,10 @@ public class PlayerCollision {
                 handleBullet(player, (Bullet) other);
             }
         }
+    }
+
+    public static AbstractCollisionHandler getInstance() {
+        return me;
     }
 
     private static void handleMob(Player player, Mob mob) {
