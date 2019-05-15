@@ -67,11 +67,21 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     private void moveRight(MovementComponent mc) {
-        mc.velocity.x = mc.velocityRange.x;
+        if (shouldSprint()) {
+            mc.velocity.x = Math.min(mc.velocityRange.x, mc.velocity.x);
+            mc.velocity.x += mc.acceleration.x;
+        } else {
+            mc.velocity.x = mc.velocityRange.x / 2;
+        }
     }
 
     private void moveLeft(MovementComponent mc) {
-        mc.velocity.x = -1 * mc.velocityRange.x;
+        if (shouldSprint()) {
+            mc.velocity.x = Math.max(-1 * mc.velocityRange.x, mc.velocity.x);
+            mc.velocity.x -= mc.acceleration.x;
+        } else {
+            mc.velocity.x = -1 * mc.velocityRange.x / 2;
+        }
     }
 
     private void jump(MovementComponent mc) {
@@ -85,6 +95,10 @@ public class PlayerMovementSystem extends IteratingSystem {
 
     private void doGravity(MovementComponent mc, GravityComponent gc) {
         mc.velocity.y -= gc.gravity.y;
+    }
+
+    private boolean shouldSprint() {
+        return KeyBoard.isKeyDown(GLFW_KEY_LEFT_SHIFT);
     }
 
     /**
@@ -123,7 +137,6 @@ public class PlayerMovementSystem extends IteratingSystem {
     protected Object getMovementRef(Entity e) {
         return null;
     }
-
 }
 
 

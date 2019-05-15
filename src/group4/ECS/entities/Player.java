@@ -33,7 +33,7 @@ public class Player extends Entity {
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
         // temporary!!, player should initially not move
-        this.add(new MovementComponent(new Vector3f(), velocityRange));
+        this.add(new MovementComponent(new Vector3f(0.01f, 0.0f, 0.0f), velocityRange));
         this.add(new GravityComponent());
         this.add(new GraphicsComponent(shader, texture, dimension));
         this.add(new PlayerComponent());
