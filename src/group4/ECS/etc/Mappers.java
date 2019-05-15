@@ -41,4 +41,7 @@ public class Mappers {
 
     public static final ComponentMapper<RangeComponent> rangeMapper =
             ComponentMapper.getFor(RangeComponent.class);
+
+    public static final ComponentMapper<ShootingComponent> shootingMapper =
+            ComponentMapper.getFor(ShootingComponent.class);
 }

@@ -62,12 +62,30 @@ public class Families {
             .all(MovementComponent.class).exclude(PlatformComponent.class).get();
 
     // all moving mobs except flying mobs
-    public static final Family movingGravityMobFamily = Family
-            .all(GravityComponent.class, MovementComponent.class, MobComponent.class).get();
+    public static final Family walkingMobFamily = Family
+            .all(WalkingMobComponent.class).get();
+
+    public static final Family jumpingWalkingMobFamily = Family
+            .all(JumpingWalkingMobComponent.class).get();
+
+    public static final Family jumpingMobFamily = Family
+            .all(JumpingMobComponent.class).get();
+
+    public static final Family flappingMobFamily = Family
+            .all(FlappingMobComponent.class).get();
+
+    public static final Family flyingMobFamily = Family
+            .all(FlyingMobComponent.class).get();
+
+    public static final Family shootingFamily = Family
+            .all(ShootingComponent.class).get();
+
+    public static final Family bulletFamily = Family
+            .all(BulletComponent.class).get();
 
     // all flying mobs
     public static final Family movingNonGravityMobFamily = Family
-            .all(MovementComponent.class, MobComponent.class).exclude(GravityComponent.class).get();
+            .all(MovementComponent.class, WalkingMobComponent.class).exclude(GravityComponent.class).get();
 
     // player
     public static final Family playerFamily = Family

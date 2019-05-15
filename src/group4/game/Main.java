@@ -1,6 +1,9 @@
 package group4.game;
 
 import com.badlogic.ashley.core.Engine;
+import group4.ECS.components.PositionComponent;
+import group4.ECS.etc.Families;
+import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.*;
 import group4.graphics.Shader;
@@ -9,6 +12,7 @@ import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
+import group4.levelSystem.levels.MobTestLevel;
 import group4.levelSystem.levels.SimpleLevel;
 import group4.levelSystem.levels.TestLevel;
 import group4.maths.Vector3f;
@@ -100,11 +104,18 @@ public class Main implements Runnable {
         // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
         engine.addSystem(new CameraSystem()); // CameraSystem must be added before RenderSystem
         engine.addSystem(new PlayerMovementSystem()); // TODO: Probably temp and should be changed when the new movement system is ready
+        engine.addSystem(new WalkingMobMovementSystem());
+        engine.addSystem(new JumpingWalkingMobMovementSystem());
+        engine.addSystem(new JumpingMobMovementSystem());
+        engine.addSystem(new FlappingMobMovementSystem());
+        engine.addSystem(new FlyingMobMovementSystem());
+        engine.addSystem(new BulletMovementSystem());
+        engine.addSystem(new ShootingSystem());
         engine.addSystem(new CollisionSystem());
         engine.addSystem(new RenderSystem());
 
         // Initialize the level
-        this.level = new TestLevel();
+        this.level = new MobTestLevel();
     }
 
     /**
