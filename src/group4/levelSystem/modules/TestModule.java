@@ -3,11 +3,13 @@ package group4.levelSystem.modules;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.world.Platform;
 import group4.ECS.entities.world.Platform;
+import group4.ECS.entities.world.SplinePlatform;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
 import group4.maths.Vector3f;
+import group4.maths.spline.MultiSpline;
 
 public class TestModule extends Module {
 
@@ -29,6 +31,20 @@ public class TestModule extends Module {
         Vector3f tempDimension = new Vector3f(2.0f, 28.0f, 0.0f);
         Platform LHSWall = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
         this.addEntity(LHSWall);
+
+        // my little spline test
+        tempPosition = new Vector3f(2.0f, 5.0f, 0.0f);
+        tempDimension = new Vector3f(2.0f, 1.0f, 0.0f);
+        Vector3f[] tempPoint = new Vector3f[]{
+                new Vector3f(),
+                new Vector3f(1.0f, 0.0f, 0.0f),
+                new Vector3f(1.0f, 1.0f, 0.0f),
+                new Vector3f(2.0f, 1.0f, 0.0f)
+        };
+
+        MultiSpline mySpline = new MultiSpline(tempPoint);
+        SplinePlatform splinePlatform = new SplinePlatform(tempPosition, tempDimension, mySpline, Shader.SIMPLE, Texture.WHITE);
+        this.addEntity(splinePlatform);
 
         // Add floor on which player will stand initially
         tempPosition = new Vector3f(2.0f, 0.0f, 0.0f);

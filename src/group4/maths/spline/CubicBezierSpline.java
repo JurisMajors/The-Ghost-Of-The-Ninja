@@ -66,7 +66,7 @@ public class CubicBezierSpline extends Spline {
         // do 2D check
         float z = points[0].z;
         for (int i = 0; i < 4; i++) {
-            if (Math.abs(points[i].z - z) < 1e-6) {
+            if (Math.abs(points[i].z - z) >= 1e-6) {
                 throw new IllegalStateException("This spline is not 2D in (x,y) so this method does not work.");
             }
         }
