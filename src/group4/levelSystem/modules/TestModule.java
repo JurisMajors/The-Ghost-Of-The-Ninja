@@ -33,7 +33,7 @@ public class TestModule extends Module {
         this.addEntity(LHSWall);
 
         // my little spline test
-        tempPosition = new Vector3f(2.0f, 5.0f, 0.0f);
+        tempPosition = new Vector3f(4.0f, 4.0f, 0.0f);
         tempDimension = new Vector3f(2.0f, 1.0f, 0.0f);
         Vector3f[] tempPoint = new Vector3f[]{
                 new Vector3f(),
@@ -41,6 +41,9 @@ public class TestModule extends Module {
                 new Vector3f(1.0f, 1.0f, 0.0f),
                 new Vector3f(2.0f, 1.0f, 0.0f)
         };
+        for (Vector3f v: tempPoint) {
+//            v.addi(new Vector3f(4.0f, 4.0f, 0.0f));
+        }
 
         MultiSpline mySpline = new MultiSpline(tempPoint);
         SplinePlatform splinePlatform = new SplinePlatform(tempPosition, tempDimension, mySpline, Shader.SIMPLE, Texture.WHITE);

@@ -29,7 +29,7 @@ public class CubicBezierSpline extends Spline {
         result.addi(this.points[0].scale((float) Math.pow(1 - u, 3))); // P_0 * factor
         result.addi(this.points[1].scale((float) (3 * u * Math.pow(1 - u, 2)))); // P_1 * factor
         result.addi(this.points[2].scale((3 * u * u * (1 - u)))); // P_2 * factor
-        result.addi(this.points[2].scale((3 * u * u * u))); // P_3 * factor
+        result.addi(this.points[3].scale((u * u * u))); // P_3 * factor
 
         return result;
     }
@@ -47,7 +47,7 @@ public class CubicBezierSpline extends Spline {
         result.addi(this.points[0].scale(-3 * u * u + 6 * u - 3)); // P_0 * factor
         result.addi(this.points[1].scale(9 * u * u - 12 * u + 3)); // P_1 * factor
         result.addi(this.points[2].scale(-9 * u * u + 6 * u)); // P_2 * factor
-        result.addi(this.points[2].scale(3 * u * u)); // P_3 * factor
+        result.addi(this.points[3].scale(3 * u * u)); // P_3 * factor
 
         return result;
     }
@@ -74,6 +74,8 @@ public class CubicBezierSpline extends Spline {
         // normal is cross product with tangent and up vector
         Vector3f up = new Vector3f(0.0f, 0.0f, 1.0f);
         Vector3f result = up.cross(getTangent(u));
+        result.z = 0;
+        result.normalizei();
 
         return result;
     }

@@ -115,9 +115,9 @@ public class Vector3f {
      */
     public Vector3f cross(Vector3f other) {
         Vector3f result = new Vector3f();
-        result.x = x * other.y - y * other.x;
-        result.y = y * other.z - z * other.y;
-        result.z = z * other.x - x * other.z;
+        result.x = y * other.z - z * other.y;
+        result.y = z * other.x - x * other.z;
+        result.z = x * other.y - y * other.x;
 
         return result;
     }

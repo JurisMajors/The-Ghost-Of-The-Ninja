@@ -6,6 +6,7 @@ import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
 import group4.maths.spline.MultiSpline;
+import group4.utils.DebugUtils;
 
 import java.util.ArrayList;
 
@@ -53,8 +54,8 @@ public class SplinePlatform extends Entity {
             Vector3f normal = spline.getNormal(t);
 
             // get points on the borders of the spline
-            Vector3f left = splinePoint.sub(normal).normalized().scale(0.5f);
-            Vector3f right = splinePoint.add(normal).normalized().scale(0.5f);
+            Vector3f left = splinePoint.sub(normal.scale(0.2f));
+            Vector3f right = splinePoint.add(normal.scale(0.2f));
 
             lefts[k] = left;
             rights[k] = right;
