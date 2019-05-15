@@ -10,8 +10,8 @@ public class ShootingComponent implements Component {
 
     public ShootingComponent(Vector3f position) {
         this.position = position;
-        this.rate=300;
-        this.wait=300;
+        this.rate=150;
+        this.wait=150;
     }
 
     public ShootingComponent(Vector3f position, int rate) {

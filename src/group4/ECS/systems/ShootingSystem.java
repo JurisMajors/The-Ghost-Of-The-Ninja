@@ -27,6 +27,7 @@ public class ShootingSystem extends IteratingSystem {
         PositionComponent playerPos = Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
         if(sc.wait<sc.rate)sc.wait++;
         else{
+            sc.wait=0;
             TheEngine.getInstance().addEntity(new MobBullet(pc.position.add(sc.position),playerPos.position.sub(pc.position.add(sc.position)).normalized()));
         }
     }
