@@ -23,6 +23,7 @@ public class Mob extends Entity {
         this.add(new MovementComponent(velocity, velocityRange, acceleration));
         this.add(new MobComponent());
         this.add(new GraphicsComponent(shader, texture, dimension));
+        this.add(new CollisionComponent());
     }
 
     /**
