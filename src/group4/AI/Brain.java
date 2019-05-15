@@ -82,11 +82,7 @@ public class Brain {
      * @param input decoded state of the game
      * @return move to make
      */
-    private String feedForward(INDArray input) {
-        // this can be changed that feed forward takes
-        //  a game state as an input and does the decoding here
-        // probably preferable, but no game state class yet
-        //TODO: Use better move encoding
+    private int feedForward(INDArray input) {
         double[] result = nn.output(input).toDoubleVector();
         int argMax = 0;
         // get best move defined by network
@@ -95,15 +91,14 @@ public class Brain {
                 argMax = i;
             }
         }
-        //TODO: translate indice to some move
-        return "";
+        return argMax;
     }
 
     /**
      * Calculates the move the ghost should take
-     * @return the move the ghost should take
+     * @return the move the ghost should take, according to {@link GhostMove} enum
      */
-    public String think() {
+    public int think() {
         return this.feedForward(Evolver.decoder.decode());
     }
 }
