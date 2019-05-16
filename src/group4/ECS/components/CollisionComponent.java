@@ -2,6 +2,7 @@ package group4.ECS.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
+import group4.ECS.systems.collision.CollisionData;
 import group4.ECS.systems.collision.CollisionHandlers.AbstractCollisionHandler;
 
 import java.util.HashSet;
@@ -14,7 +15,7 @@ public class CollisionComponent implements Component {
      * entity is added to this list. When the collision with that entity is process, that entity is removed
      * from this list again.
      */
-    public Set<Entity> collisions;
+    public Set<CollisionData> collisions;
 
     public AbstractCollisionHandler handler;
 

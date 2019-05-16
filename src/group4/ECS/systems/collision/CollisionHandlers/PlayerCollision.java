@@ -6,8 +6,8 @@ import group4.ECS.entities.Player;
 import group4.ECS.entities.items.weapons.Bullet;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.etc.Mappers;
+import group4.ECS.systems.collision.CollisionData;
 
-import java.util.Collection;
 import java.util.Set;
 
 
@@ -20,9 +20,10 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
 
     @Override
     public void collision(Player player, CollisionComponent cc) {
-        Set<Entity> others = cc.collisions;
+        Set<CollisionData> others = cc.collisions;
         // loop through all collisions and handle them accordingly
-        for (Entity other : others) {
+        for (CollisionData cd : others) {
+            Entity other = cd.entity;
             // example
             if (other instanceof Mob) {
                 handleMob(player, (Mob) other);
