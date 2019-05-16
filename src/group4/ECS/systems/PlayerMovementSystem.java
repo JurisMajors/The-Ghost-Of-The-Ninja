@@ -76,7 +76,10 @@ public class PlayerMovementSystem extends IteratingSystem {
     private void moveLeft(MovementComponent mc) {
         moveDirection(-1, mc);
     }
-
+    /**
+    * Moves along the x axis in the specified direction
+    * @param dir positive or negative direction, optionally with a multiplier.
+    */
     private void moveDirection(int dir, MovementComponent mc) {
         if (shouldSprint() && canSprint(mc.velocity)) {
             mc.velocity.x = dir * getSprintingVel(mc);
