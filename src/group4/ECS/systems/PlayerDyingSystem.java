@@ -12,8 +12,15 @@ import group4.maths.Vector3f;
 
 public class PlayerDyingSystem extends AbstractDyingSystem {
 
-    public PlayerDyingSystem() {
+    private boolean autoReset;
+
+    /**
+     * Initialize the PlayerDyingSystem
+     * @param reset Indicate whether the system should automatically reset the module once the player dies
+     */
+    public PlayerDyingSystem(boolean reset) {
         super(Families.playerFamily);
+        this.autoReset = reset;
     }
 
     @Override
@@ -45,7 +52,14 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
             entity.getComponent(StatsComponent.class).health = 0;
         }
 
-        System.out.println("Doei player");
+        // If auto reset is enabled, reset the module to its original state
+        // and reposition the player
+        if (this.autoReset) {
+            ((Player) entity).level.getCurrentModule().reset();
+            ((Player) entity).getComponent(PositionComponent.class).position =
+                    ((Player) entity).level.getCurrentModule().getPlayerInitialPosition();
+        }
+
 
         // Level should take care of removing a player from the engine if that is necessary
         // Return that player should not be removed
