@@ -123,4 +123,12 @@ public abstract class Level {
     public Module getCurrentModule() {
         return this.currentModule;
     }
+
+
+    /**
+     * Get the player of the level
+     */
+    public Player getPlayer() {
+        return this.player;
+    }
 }

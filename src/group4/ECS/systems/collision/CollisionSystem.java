@@ -8,12 +8,11 @@ import group4.ECS.components.CollisionComponent;
 import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.PositionComponent;
 import group4.ECS.components.SplineComponent;
+import group4.ECS.entities.items.weapons.Bullet;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.maths.Vector3f;
-
-import java.util.Map;
 
 /**
  * This applies collision to entities that can move and have a bounding box
@@ -44,9 +43,10 @@ public class CollisionSystem extends IteratingSystem {
         CollisionComponent cc = Mappers.collisionMapper.get(e);
 
         for (Entity other : entities) {
-            if (e.equals(other)) {
-                continue;
-            }
+            // dont process collision with itself
+            if (e.equals(other)) continue;
+            // dont register collisions bullets of bullets
+            if (other instanceof Bullet && e instanceof Bullet) continue;
 
             // get the intersection between this (moving collidable entity) and other (collidable entity)
             Rectangle intersection = getIntersectingRectangle(e, other);
@@ -139,9 +139,14 @@ public class CollisionSystem extends IteratingSystem {
         // get the intersection rectangle
         Rectangle intersection = getIntersectingRectangle(first, scnd);
         if (intersection == null) return new Vector3f();
-        // displace according to the rectangle
-        if (intersection.height <= intersection.width) { // TODO: consider y collision from top
-            return new Vector3f(0, intersection.height, 0);
+        // displace according to the rectangles smallest side
+        if (intersection.height <= intersection.width) {
+            // inversely displace
+            if (firstPos.y > scndPos.y) {
+                return new Vector3f(0, intersection.height, 0);
+            } else {
+                return new Vector3f(0, -1* intersection.height, 0);
+            }
         }
         // move in the correct x direction
         if (firstPos.x > scndPos.x) {

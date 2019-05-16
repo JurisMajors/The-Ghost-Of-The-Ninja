@@ -5,9 +5,9 @@ import group4.ECS.components.*;
 import group4.ECS.systems.collision.CollisionHandlers.PlayerCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
+import group4.levelSystem.Level;
 import group4.maths.Vector3f;
 
-// TODO: This is temporary and can be removed when a better alternative is available
 
 public class Player extends Entity {
 
@@ -17,26 +17,49 @@ public class Player extends Entity {
     protected Vector3f dimension = new Vector3f(1.0f, 1f, 0.0f);
 
     /**
+     * the level that the player is part of
+     */
+    public Level level;
+
+    /**
+     * Acceleration of the player. E.g., when sprinting
+     */
+    protected Vector3f accel = new Vector3f(0.01f, 0.0f, 0.0f);
+
+    /**
+     * The absolute range of velocity the player can get in each direction
+     */
+    protected Vector3f velocityRange = new Vector3f(0.2f, 0.25f, 0.0f);
+
+    /**
+     * The part of velocityRange, that is used for velocity, when not sprinting
+     */
+    public static final float walkingRatio = 3.0f/4.0f;
+
+    /**
      * Creates a player
      *
      * @param position center point of player
+     * @param level the level that the player is part of
      */
-    public Player(Vector3f position) {
+    public Player(Vector3f position, Level level) {
 
-        // vRange
-        Vector3f velocityRange = new Vector3f(0.2f, 0.25f, 0.0f);
         // shader
         Shader shader = Shader.SIMPLE;
         // TODO: proper texture
         Texture texture = Texture.DEBUG;
 
+        // Level
+        this.level = level;
+
         // add needed components
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
         // temporary!!, player should initially not move
-        this.add(new MovementComponent(new Vector3f(), velocityRange));
+        this.add(new MovementComponent(new Vector3f(), velocityRange, accel));
         this.add(new GravityComponent());
         this.add(new GraphicsComponent(shader, texture, dimension));
+        this.add(new HealthComponent(100));
         this.add(new PlayerComponent());
         //TODO: one of these should be redundant and removed
         this.add(new CollisionComponent(PlayerCollision.getInstance()));

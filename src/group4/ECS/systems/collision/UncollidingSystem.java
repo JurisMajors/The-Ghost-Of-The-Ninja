@@ -2,7 +2,6 @@ package group4.ECS.systems.collision;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.math.Rectangle;
 import group4.ECS.components.CollisionComponent;
 import group4.ECS.components.MovementComponent;
 import group4.ECS.components.PositionComponent;
@@ -39,18 +38,15 @@ public class UncollidingSystem extends IteratingSystem {
         MovementComponent mc = Mappers.movementMapper.get(e);
         // get all entities that i collide with
         CollisionComponent cc = Mappers.collisionMapper.get(e);
+
         for (CollisionData cd : cc.collisions) {
             Entity other = cd.entity;
             if (other.equals(e)) continue;
             // get the displacement vector
             Vector3f colDim = cd.displacement;
+            handleVelocity(mc, colDim);
 
-            // if x and y collisions already happened break out
-            mc.velocity.addi(colDim);
-            // cap the velocity (for safety)
-            mc.velocity.x = this.capDirection(mc.velocity.x, mc.velocityRange.x);
-            mc.velocity.y = this.capDirection(mc.velocity.y, mc.velocityRange.y);
-            // move in that direction
+            // displace the position
             curPos.addi(colDim);
         }
 
@@ -58,18 +54,26 @@ public class UncollidingSystem extends IteratingSystem {
         cc.collisions.clear();
     }
 
-
-
-    private float capDirection(float cur, float max) {
-        if (max < 1e-6 && max > -1e-6) { // close to zero
-            return 0f;
+    private void handleVelocity (MovementComponent mc, Vector3f displacement) {
+        if (displacement.y > 0) { // displacement from bottom
+            if (mc.velocity.y <= 0) { // if falling down
+                mc.velocity.y = 0; // set velocity to zero
+            }
+        } else if (displacement.y < 0){  // displacement from top
+            mc.velocity.y += displacement.y; // go down when hit from top
         }
-        if (Math.abs(cur) < Math.abs(max)) { // no need to modify
-            return cur;
+
+        if (displacement.x != 0) {
+            mc.velocity.x = 0;
         }
-        // cap it
-        return Math.abs(cur) / cur * Math.min(max, Math.abs(cur));
+        // cap the velocity (for safety)
+        mc.velocity.capValuesi(mc.velocityRange);
+
     }
+
+
+
+
 
 
 }

@@ -67,6 +67,11 @@ public class TestModule extends Module {
         Platform jump = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
         this.addEntity(jump);
 
+        tempPosition = new Vector3f(13.0f, 4.0f, 0.0f);
+        tempDimension = new Vector3f(2.0f, 2.0f, 0.0f);
+        Platform idk = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
+        this.addEntity(idk);
+
         // Create semi-stair like thing
         tempPosition = new Vector3f(22.0f, 2.0f, 0.0f);
         tempDimension = new Vector3f(5.0f, 2.0f, 0.0f);

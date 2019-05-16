@@ -105,6 +105,7 @@ public class Main implements Runnable {
         engine.addSystem(new CollisionEventSystem());
         engine.addSystem(new UncollidingSystem());
         engine.addSystem(new RenderSystem());
+        engine.addSystem(new PlayerDyingSystem(true));
 
         // Initialize the level
         this.level = new TestLevel();
