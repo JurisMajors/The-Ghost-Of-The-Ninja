@@ -34,10 +34,10 @@ public class SimpleModule extends Module {
             }
 
             Gun gun = new AK47(new Vector3f(2.0f, 2.0f, 0.0f));
-
-            Bullet bullet_0 = new MachineGunBullet(new Vector3f(2.2f, 3.0f, 0.0f));
-            Bullet bullet_1 = new MachineGunBullet(new Vector3f(2.2f, 3.2f, 0.0f));
-            Bullet bullet_2 = new MachineGunBullet(new Vector3f(2.2f, 3.4f, 0.0f));
+            int akDmg = 1;
+            Bullet bullet_0 = new MachineGunBullet(new Vector3f(2.2f, 3.0f, 0.0f), 1);
+            Bullet bullet_1 = new MachineGunBullet(new Vector3f(2.2f, 3.2f, 0.0f), 1);
+            Bullet bullet_2 = new MachineGunBullet(new Vector3f(2.2f, 3.4f, 0.0f), 1);
         }
 
         // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.
