@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.MobComponent;
 import group4.ECS.components.PositionComponent;
 import group4.maths.IntersectionPair;
+import group4.maths.Ray;
 import group4.maths.Vector3f;
 
 /**
@@ -14,11 +15,11 @@ import group4.maths.Vector3f;
 public class StandardIntersectionDecoder implements IntersectionDecoder {
 
     @Override
-    public float[] getFeatures(IntersectionPair pair, Entity ghost) {
+    public float[] getFeatures(Ray r, IntersectionPair pair, Entity ghost) {
         float[] features = new float[this.nrFeatures()];
         // get the position
         Vector3f ghostPos = ghost.getComponent(PositionComponent.class).position;
-        features[0] = pair.point.euclidDist(ghostPos);
+        features[0] = pair.point.euclidDist(ghostPos) / r.end.euclidDist(ghostPos);
         features[1] = this.decodeEntity(pair.entity);
         return features;
     }

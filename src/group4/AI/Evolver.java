@@ -28,25 +28,25 @@ import java.util.Random;
  */
 public class Evolver {
     /** nr of brains per generation **/
-    public final static int populationSize = 20;
+    public final static int populationSize = 50;
     /** How many fittest individuals to keep over generations **/
-    public final static int elitism = (int)(populationSize * 0.1);
+    public final static int elitism = (int)(populationSize * 0.2);
     /** generation count until termination **/
     public final static int genCount = 50;
     /** if max fit known, then terminate on that otherwise leave max val. **/
     public final static int maxFit = Integer.MAX_VALUE;
     /** hidden layer sizes (dont include input/output) **/
-    public final static int[] layerSizes = new int[]{300, 200, 80};
+    public final static int[] layerSizes = new int[]{100, 100};
     /** decoder of gamestates **/
-    public final static StateDecoderInterface decoder = new CircleVisionStateDecoder(80, 30);
+    public final static StateDecoderInterface decoder = new CircleVisionStateDecoder(60, 10);
     /** probability to completely change a weight of nn **/
-    public final static double mutationProbability = 0.05;
+    public final static double mutationProbability = 0.2;
     /** Mutator **/
     private static AbstractBrainMutation mutator = new StandardMutation(new Probability(mutationProbability));
     /** Crossover **/
     private static AbstractBrainCrossover crossover = new StandardCrossover();
     /** TODO: find feasible time limit **/
-    public static double timelimit = 10.00;
+    public static double timelimit = 5.00;
 
     private static void toFile(Brain b, String filePath) throws IOException {
         b.toFile(filePath);

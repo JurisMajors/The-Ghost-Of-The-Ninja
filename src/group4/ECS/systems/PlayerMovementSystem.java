@@ -65,7 +65,6 @@ public class PlayerMovementSystem extends IteratingSystem {
         if (shouldJump(ref) && canJump(mc.velocity)) {
             jump(mc);
         }
-
         mc.velocity.capValuesi(mc.velocityRange);
     }
 

@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.utils.ImmutableArray;
+import group4.ECS.components.GhostComponent;
 import group4.ECS.components.HealthComponent;
 import group4.ECS.components.MovementComponent;
 import group4.ECS.components.PositionComponent;
@@ -14,6 +15,7 @@ import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.GhostDyingSystem;
 import group4.ECS.systems.GhostMovementSystem;
 import group4.ECS.systems.MovementSystem;
+import group4.ECS.systems.RenderSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
 import group4.ECS.systems.collision.UncollidingSystem;
@@ -28,6 +30,7 @@ import group4.levelSystem.levels.TestLevel;
 import group4.maths.Vector3f;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -60,11 +63,6 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         // fetch gamestate, all entities which hold bounding box
         ImmutableArray<Entity> gamestate = engine.getEntitiesFor(Families.gamestateFamily);
 
-        // create the ghost
-        Entity ghost = new Ghost(this.currModule.getPlayerInitialPosition(),
-                this.level,
-                brain);
-        engine.addEntity(ghost);
         Entity p = null;
 
         // add the module entities except the player
@@ -76,6 +74,11 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         }
         this.currModule.removeEntity(p);
         engine.removeEntity(p);
+        // create the ghost
+        Entity ghost = new Ghost(this.currModule.getPlayerInitialPosition(),
+                this.level,
+                brain);
+        engine.addEntity(ghost);
 
         // while we did not exceed the timelimit, play the game
         double initTime = timer.getTime();
@@ -89,7 +92,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
                 break;
             }
         }
-
+        System.out.println(Arrays.toString(ghost.getComponent(GhostComponent.class).moveFreq));
         // create new module
         this.currModule.reset();
         return ghost.getComponent(PositionComponent.class).position.x;
@@ -123,6 +126,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         engine.addSystem(new CollisionEventSystem());
         engine.addSystem(new UncollidingSystem());
         engine.addSystem(new GhostDyingSystem());
+        //engine.addSystem(new RenderSystem());
     }
 
 }
