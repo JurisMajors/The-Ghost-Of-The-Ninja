@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import group4.ECS.components.CollisionComponent;
 import group4.ECS.entities.Player;
+import group4.ECS.entities.world.Exit;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.systems.collision.CollisionHandlers.PlayerCollision;
@@ -11,7 +12,7 @@ import group4.ECS.systems.collision.CollisionHandlers.PlayerCollision;
 public class CollisionEventSystem extends IteratingSystem {
 
     public CollisionEventSystem() {
-        super(Families.collidableMovingFamily);
+        super(Families.collidableFamily);
     }
 
     /**
@@ -27,6 +28,7 @@ public class CollisionEventSystem extends IteratingSystem {
         if (cc.collisions.isEmpty()) {
             return;
         }
+
         // process the collisions with this entity
         cc.handler.collision(entity, cc);
     }

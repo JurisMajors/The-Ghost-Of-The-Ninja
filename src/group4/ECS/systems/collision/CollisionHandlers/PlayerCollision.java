@@ -7,6 +7,7 @@ import group4.ECS.components.HealthComponent;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.items.weapons.Bullet;
 import group4.ECS.entities.mobs.Mob;
+import group4.ECS.entities.world.Exit;
 import group4.ECS.etc.Mappers;
 import group4.ECS.systems.collision.CollisionData;
 

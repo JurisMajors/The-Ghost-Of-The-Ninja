@@ -6,6 +6,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Rectangle;
 import group4.ECS.components.CollisionComponent;
 import group4.ECS.entities.items.weapons.Bullet;
+import group4.ECS.entities.world.Exit;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;

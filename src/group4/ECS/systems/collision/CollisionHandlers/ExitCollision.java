@@ -6,7 +6,7 @@ import group4.ECS.entities.world.Exit;
 public class ExitCollision extends AbstractCollisionHandler<Exit> {
 
     /** Singleton **/
-    private static AbstractCollisionHandler me = new BlockCollision();
+    private static AbstractCollisionHandler me = new ExitCollision();
 
     @Override
     public void collision(Exit e, CollisionComponent cc) {
