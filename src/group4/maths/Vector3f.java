@@ -206,4 +206,20 @@ public class Vector3f {
         return new Vector3f(Math.abs(x), Math.abs(y), Math.abs(z));
     }
 
+    /**
+     * Returns a copy of the vector with the smallest length amongst a and b.
+     * @param a vector
+     * @param b vector
+     * @return copy of smallest vector of a and b
+     */
+    public static Vector3f min(Vector3f a, Vector3f b) {
+        double lenA = a.length();
+        double lenB = b.length();
+        if (lenA <= lenB) {
+            return new Vector3f(a);
+        }
+
+        return new Vector3f(b);
+    }
+
 }

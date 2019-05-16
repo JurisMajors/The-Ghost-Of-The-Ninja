@@ -29,14 +29,14 @@ public class SplinePlatform extends Entity {
         this.add(new PlatformComponent());
         this.add(new CollisionComponent(SplinePlatformCollision.getInstance()));
 
-        SplineComponent sp = createSplineComponent(spline, 100);
+        SplineComponent sp = createSplineComponent(spline, 100, thickness);
         this.add(sp);
 
         GraphicsComponent gc = createGraphicsComponent(sp.points, sp.normals, thickness, shader, texture);
         this.add(gc);
     }
 
-    private SplineComponent createSplineComponent(MultiSpline spline, int numPoints) {
+    private SplineComponent createSplineComponent(MultiSpline spline, int numPoints, float thickness) {
         Vector3f[] points = new Vector3f[numPoints + 1];
         Vector3f[] normals = new Vector3f[numPoints + 1];
         // dt determines the step of time
@@ -52,7 +52,7 @@ public class SplinePlatform extends Entity {
             t += dt;
         }
 
-        return new SplineComponent(points, normals);
+        return new SplineComponent(points, normals, thickness);
     }
 
     /**

@@ -7,9 +7,11 @@ public class SplineComponent implements Component {
 
     public Vector3f[] points;
     public Vector3f[] normals;
+    public float thickness;
 
-    public SplineComponent(Vector3f[] points, Vector3f[] normals) {
+    public SplineComponent(Vector3f[] points, Vector3f[] normals, float thickness) {
         this.points = points;
         this.normals = normals;
+        this.thickness = thickness;
     }
 }

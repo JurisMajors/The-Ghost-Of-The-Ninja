@@ -5,10 +5,15 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Rectangle;
 import group4.ECS.components.CollisionComponent;
+import group4.ECS.components.DimensionComponent;
+import group4.ECS.components.PositionComponent;
+import group4.ECS.components.SplineComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.maths.Vector3f;
+
+import java.util.Map;
 
 /**
  * This applies collision to entities that can move and have a bounding box
@@ -24,6 +29,7 @@ public class CollisionSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         // detect and store all collisions
         detectCollisions(entity);
+        detectSplineCollisions(entity);
     }
 
     /**
@@ -73,23 +79,45 @@ public class CollisionSystem extends IteratingSystem {
         ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.collidableSplineFamily);
         CollisionComponent cc = Mappers.collisionMapper.get(e);
 
+        PositionComponent pc = Mappers.positionMapper.get(e);
+        DimensionComponent dc = Mappers.dimensionMapper.get(e);
+
+        // get all corner points of the bounding box of the entity colliding with a spline
+        Vector3f bl = pc.position;
+        Vector3f br = pc.position.add(new Vector3f(dc.dimension.x, 0.0f, dc.dimension.z));
+        Vector3f tr = pc.position.add(dc.dimension);
+        Vector3f tl = pc.position.add(new Vector3f(0.0f, dc.dimension.y, dc.dimension.z));
+
         for (Entity spline : entities) {
             if (e.equals(spline)) {
                 continue;
             }
+            PositionComponent spc = Mappers.positionMapper.get(spline);
+            SplineComponent sc = Mappers.splineMapper.get(spline);
 
-            
+            // store the smallest vector that goes from a spline point to a boundingbox point
+            Vector3f smallestDisplacement = new Vector3f(1000f, 1000f, 1000f);
 
+            // loop through all spline points
+            for (Vector3f point : sc.points) {
+                Vector3f worldPoint = point.add(spc.position);
+                // compute difference with bounding box point and spline point and store the smallest displacement
+                smallestDisplacement = Vector3f.min(smallestDisplacement, bl.sub(worldPoint));
+                smallestDisplacement = Vector3f.min(smallestDisplacement, br.sub(worldPoint));
+                smallestDisplacement = Vector3f.min(smallestDisplacement, tr.sub(worldPoint));
+                smallestDisplacement = Vector3f.min(smallestDisplacement, tl.sub(worldPoint));
+            }
 
-            // Get displacement vector
-            Vector3f displacement = processCollision(e, other);
+            // if the smallest displacement is smaller than half of the thickness there is a collision
+            if (smallestDisplacement.length() <= sc.normals[0].scale(0.5f * sc.thickness).length()) {
+                CollisionComponent scc = Mappers.collisionMapper.get(spline);
 
-            CollisionComponent occ = Mappers.collisionMapper.get(other);
-            // add the collision to both entities
-            CollisionData c1 = new CollisionData(other, displacement);
-            CollisionData c2 = new CollisionData(e, displacement.scale(-1.0f));
-            cc.collisions.add(c1);
-            occ.collisions.add(c2);
+                // add collision to entity and spline
+                CollisionData c1 = new CollisionData(spline, smallestDisplacement);
+                CollisionData c2 = new CollisionData(e, smallestDisplacement.scale(-1.0f));
+                cc.collisions.add(c1);
+                scc.collisions.add(c2);
+            }
         }
     }
 
