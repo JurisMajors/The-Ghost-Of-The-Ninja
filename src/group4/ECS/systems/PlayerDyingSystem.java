@@ -25,27 +25,34 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
     @Override
     protected boolean shouldDie(Entity entity, float deltaTime) {
         // Check if entity is indeed the player
-        if (Player.class.isInstance(entity)) {
-            // Get the position and dimension components
-            PositionComponent pp = entity.getComponent(PositionComponent.class);
-            DimensionComponent pd = entity.getComponent(DimensionComponent.class);
-
-            // Compute player center
-            Vector3f pc = pp.position.add(pd.dimension.scale(0.5f));
-
-            // Check whether or not the player's center is outside the module grid
-            // We keep a 1 grid-unit boundary which the player's center can legally move out of the grid
-            if (pc.x < -1 || pc.x > Module.width + 1 || pc.y < -1 || pc.y > Module.height + 1) {
-                return true;
-            }
+        if (!Player.class.isInstance(entity)) {
+            throw new IllegalArgumentException("PlayerDyingSystem: received a non-player entity");
         }
 
-        // There is no reason to kill the entity
+        // Get the position and dimension components
+        PositionComponent pp = entity.getComponent(PositionComponent.class);
+        DimensionComponent pd = entity.getComponent(DimensionComponent.class);
+
+        // Compute player center
+        Vector3f pc = pp.position.add(pd.dimension.scale(0.5f));
+
+        // Check whether or not the player's center is outside the module grid
+        // We keep a 1 grid-unit boundary which the player's center can legally move out of the grid
+        if (pc.x < -1 || pc.x > Module.width + 1 || pc.y < -1 || pc.y > Module.height + 1) {
+            return true;
+        }
+
+        // There is no reason to kill the player
         return false;
     }
 
     @Override
     protected boolean die(Entity entity, float deltaTime) {
+        // Check if entity is indeed the player
+        if (!Player.class.isInstance(entity)) {
+            throw new IllegalArgumentException("PlayerDyingSystem: received a non-player entity");
+        }
+
         // Kill the player, i.e. set its health to 0
         if (Player.class.isInstance(entity)) {
             entity.getComponent(HealthComponent.class).health = 0;
