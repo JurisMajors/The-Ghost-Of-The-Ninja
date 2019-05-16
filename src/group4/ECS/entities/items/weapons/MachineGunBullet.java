@@ -10,8 +10,8 @@ public class MachineGunBullet extends Bullet {
     /**
      * @param position of Bullet
      */
-    public MachineGunBullet(Vector3f position) {
-        super(position);
+    public MachineGunBullet(Vector3f position, int dmg) {
+        super(position, dmg);
 
         // bullet texture (16 x 16) & shader (temp simple shader)
         Shader shader = Shader.SIMPLE;
