@@ -27,7 +27,7 @@ public class CollisionEventSystem extends IteratingSystem {
         if (cc.collisions.isEmpty()) {
             return;
         }
-
+        // process the collisions with this entity
         cc.handler.collision(entity, cc);
     }
 }

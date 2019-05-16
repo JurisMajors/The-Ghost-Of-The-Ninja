@@ -5,6 +5,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Rectangle;
 import group4.ECS.components.CollisionComponent;
+import group4.ECS.entities.items.weapons.Bullet;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
@@ -38,9 +39,10 @@ public class CollisionSystem extends IteratingSystem {
         CollisionComponent cc = Mappers.collisionMapper.get(e);
 
         for (Entity other : entities) {
-            if (e.equals(other)) {
-                continue;
-            }
+            // dont process collision with itself
+            if (e.equals(other)) continue;
+            // dont register collisions bullets of bullets
+            if (other instanceof Bullet && e instanceof Bullet) continue;
 
             // get the intersection between this (moving collidable entity) and other (collidable entity)
             Rectangle intersection = getIntersectingRectangle(e, other);

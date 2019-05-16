@@ -2,6 +2,8 @@ package group4.ECS.systems.collision.CollisionHandlers;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.CollisionComponent;
+import group4.ECS.components.DamageComponent;
+import group4.ECS.components.HealthComponent;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.items.weapons.Bullet;
 import group4.ECS.entities.mobs.Mob;
@@ -42,12 +44,14 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
     }
 
     private static void handleBullet(Player player, Bullet bullet) {
-
+        HealthComponent h = player.getComponent(HealthComponent.class);
+        DamageComponent dmg = bullet.getComponent(DamageComponent.class);
+        // take damage
+        h.health -= dmg.damage;
+        // TODO: process knockback
         // after player bullet interaction we dont want to fix their positions (because the bullet might die)
         CollisionComponent pcc = Mappers.collisionMapper.get(player);
-        CollisionComponent bcc = Mappers.collisionMapper.get(bullet);
         pcc.collisions.remove(bullet);
-        bcc.collisions.remove(player);
     }
 
 
