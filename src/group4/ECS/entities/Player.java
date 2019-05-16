@@ -37,6 +37,7 @@ public class Player extends Entity {
         this.add(new MovementComponent(new Vector3f(), velocityRange));
         this.add(new GravityComponent());
         this.add(new GraphicsComponent(shader, texture, dimension));
+        this.add(new HealthComponent(100));
         this.add(new PlayerComponent());
         //TODO: one of these should be redundant and removed
         this.add(new CollisionComponent(PlayerCollision.getInstance()));
