@@ -67,30 +67,34 @@ public class PlayerMovementSystem extends IteratingSystem {
         }
 
         mc.velocity.capValuesi(mc.velocityRange);
-        System.out.println(mc.velocity);
     }
 
     private void moveRight(MovementComponent mc) {
-        if (shouldSprint() && canSprint(mc.velocity)) {
-            mc.velocity.x = getSprintingVel(mc);
-            mc.velocity.x += mc.acceleration.x;
-        } else {
-            mc.velocity.x = mc.velocityRange.x * Player.walkingRatio;
-        }
+        moveDirection(1, mc);
     }
 
     private void moveLeft(MovementComponent mc) {
+        moveDirection(-1, mc);
+    }
+
+    private void moveDirection(int dir, MovementComponent mc) {
         if (shouldSprint() && canSprint(mc.velocity)) {
-            mc.velocity.x = -1 * getSprintingVel(mc);
-            mc.velocity.x -= mc.acceleration.x;
+            mc.velocity.x = dir * getSprintingVel(mc);
+            mc.velocity.x += dir * mc.acceleration.x;
         } else {
-            mc.velocity.x = -1 * mc.velocityRange.x * Player.walkingRatio;
+            // de-accelerate if necessary
+            mc.velocity.x = dir * getWalkingVel(mc);
         }
     }
+
 
     private float getSprintingVel(MovementComponent mc) {
         // provides with the "starting" or "current" sprinting velocity
         return Math.max(mc.velocityRange.x * Player.walkingRatio, Math.abs(mc.velocity.x));
+    }
+
+    private float getWalkingVel (MovementComponent mc) {
+        return Math.max(mc.velocityRange.x * Player.walkingRatio, Math.abs(mc.velocity.x) - mc.acceleration.x);
     }
 
     private void jump(MovementComponent mc) {
