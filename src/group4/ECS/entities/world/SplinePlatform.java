@@ -26,10 +26,31 @@ public class SplinePlatform extends Entity {
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
         this.add(new PlatformComponent());
-        this.add(new ColliderComponent());
 
-        GraphicsComponent gc = createGraphicsComponent(spline, 100, thickness, shader, texture);
+        SplineComponent sp = createSplineComponent(spline, 100);
+        this.add(sp);
+
+        GraphicsComponent gc = createGraphicsComponent(sp.points, sp.normals, thickness, shader, texture);
         this.add(gc);
+    }
+
+    private SplineComponent createSplineComponent(MultiSpline spline, int numPoints) {
+        Vector3f[] points = new Vector3f[numPoints + 1];
+        Vector3f[] normals = new Vector3f[numPoints + 1];
+        // dt determines the step of time
+        float dt = 1 / (float) numPoints;
+        // t is the time with which we go over the spline
+        float t = 0.0f;
+        // loop through all controlpoints over the spline
+        for (int k = 0; k <= numPoints; k++) {
+            points[k] = spline.getPoint(t);
+            normals[k] = spline.getNormal(t);
+
+            // update time
+            t += dt;
+        }
+
+        return new SplineComponent(points, normals);
     }
 
     /**
@@ -40,31 +61,27 @@ public class SplinePlatform extends Entity {
      * spline += 0.5 * thickness is at the top or bottom of your dimension component.
      * The same holds for your last control point.
      *
-     * @param spline    spline defining the spline points
-     * @param numPoints amount of detail to give to the spline
+     * @param points    points of the spline
+     * @param normals   normals of the spline
      * @param thickness thickness of the spline
      * @param shader    shader
      * @param texture   texture
      * @return graphics component
      */
-    private GraphicsComponent createGraphicsComponent(MultiSpline spline, int numPoints, float thickness, Shader shader, Texture texture) {
+    private GraphicsComponent createGraphicsComponent(Vector3f[] points, Vector3f[] normals, float thickness, Shader shader, Texture texture) {
         // temporary arraylists to store the vertex cooridnates, texture coordinates, indices
         ArrayList<Vector3f> vertexArray = new ArrayList<>();
         ArrayList<Vector3f> tcArray = new ArrayList<>();
         ArrayList<Byte> indices = new ArrayList<>();
 
         // store a list of the top and bottom points (around the spline control points)
-        Vector3f[] tops = new Vector3f[numPoints + 1];
-        Vector3f[] bots = new Vector3f[numPoints + 1];
+        Vector3f[] tops = new Vector3f[points.length];
+        Vector3f[] bots = new Vector3f[points.length];
 
-        // dt determines the step of time
-        float dt = 1 / (float) numPoints;
-        // t is the time with which we go over the spline
-        float t = 0.0f;
         // loop through all controlpoints over the spline
-        for (int k = 0; k <= numPoints; k++) {
-            Vector3f splinePoint = spline.getPoint(t);
-            Vector3f normal = spline.getNormal(t);
+        for (int k = 0; k < points.length; k++) {
+            Vector3f splinePoint = points[k];
+            Vector3f normal = normals[k];
 
             // get points on the borders of the spline
             Vector3f top = splinePoint.sub(normal.scale(0.5f * thickness));
@@ -72,9 +89,6 @@ public class SplinePlatform extends Entity {
 
             tops[k] = top;
             bots[k] = bot;
-
-            // update time
-            t += dt;
         }
 
         // add all tops and bots to the vertex array in order: (top0, bot0, top1, bot1, ...)
@@ -83,7 +97,7 @@ public class SplinePlatform extends Entity {
         // add texture coordinates for all the vertices
         tcArray.add(new Vector3f());
         tcArray.add(new Vector3f());
-        for (int k = 0; k < numPoints; k++) {
+        for (int k = 0; k < points.length - 1; k++) {
             // add next vertex coordinates and texture coordinates
             vertexArray.add(tops[k + 1]);
             vertexArray.add(bots[k + 1]);
