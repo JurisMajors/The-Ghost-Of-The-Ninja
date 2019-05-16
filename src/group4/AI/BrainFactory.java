@@ -10,6 +10,7 @@ import java.util.Random;
  */
 public class BrainFactory extends AbstractCandidateFactory<Brain> {
     int[] layerInfo;
+    public static int seed = 1;
     /**
      * Give neural network sizes.
      */
