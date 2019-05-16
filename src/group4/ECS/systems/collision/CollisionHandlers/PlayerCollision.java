@@ -41,12 +41,9 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
     }
 
     private static void handleBullet(Player player, Bullet bullet) {
-
         // after player bullet interaction we dont want to fix their positions (because the bullet might die)
         CollisionComponent pcc = Mappers.collisionMapper.get(player);
-        CollisionComponent bcc = Mappers.collisionMapper.get(bullet);
         pcc.collisions.remove(bullet);
-        bcc.collisions.remove(player);
     }
 
 
