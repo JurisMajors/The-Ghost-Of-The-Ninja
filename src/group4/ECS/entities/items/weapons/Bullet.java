@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.CollisionComponent;
 import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.PositionComponent;
+import group4.ECS.systems.collision.CollisionHandlers.BulletCollision;
 import group4.maths.Vector3f;
 
 public class Bullet extends Entity {
@@ -40,7 +41,7 @@ public class Bullet extends Entity {
         // add needed components
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
-        this.add(new CollisionComponent());
+        this.add(new CollisionComponent(BulletCollision.getInstance()));
     }
 
 }

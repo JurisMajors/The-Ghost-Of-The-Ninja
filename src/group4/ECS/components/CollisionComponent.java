@@ -2,6 +2,7 @@ package group4.ECS.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
+import group4.ECS.systems.collision.CollisionHandlers.AbstractCollisionHandler;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,11 +16,14 @@ public class CollisionComponent implements Component {
      */
     public Set<Entity> collisions;
 
+    public AbstractCollisionHandler handler;
+
     /**
      * CollisionSystem only looks at entities that have this Component
      */
-    public CollisionComponent() {
+    public CollisionComponent(AbstractCollisionHandler handler) {
         collisions = new HashSet<>();
+        this.handler = handler;
     }
 
 }
