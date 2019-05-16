@@ -83,9 +83,14 @@ public class CollisionSystem extends IteratingSystem {
         // get the intersection rectangle
         Rectangle intersection = getIntersectingRectangle(first, scnd);
         if (intersection == null) return new Vector3f();
-        // displace according to the rectangle
-        if (intersection.height <= intersection.width) { // TODO: consider y collision from top
-            return new Vector3f(0, intersection.height, 0);
+        // displace according to the rectangles smallest side
+        if (intersection.height <= intersection.width) {
+            // inversely displace
+            if (firstPos.y > scndPos.y) {
+                return new Vector3f(0, intersection.height, 0);
+            } else {
+                return new Vector3f(0, -1* intersection.height, 0);
+            }
         }
         // move in the correct x direction
         if (firstPos.x > scndPos.x) {
