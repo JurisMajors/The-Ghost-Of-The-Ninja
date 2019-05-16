@@ -5,6 +5,7 @@ import group4.ECS.components.*;
 import group4.ECS.systems.collision.CollisionHandlers.PlayerCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
+import group4.levelSystem.Level;
 import group4.maths.Vector3f;
 
 
@@ -14,6 +15,11 @@ public class Player extends Entity {
      * dimension of player aka bounding box, ghost inherits in order to apply texture
      */
     protected Vector3f dimension = new Vector3f(1.0f, 1f, 0.0f);
+
+    /**
+     * the level that the player is part of
+     */
+    public Level level;
 
     /**
      * Acceleration of the player. E.g., when sprinting
@@ -34,13 +40,17 @@ public class Player extends Entity {
      * Creates a player
      *
      * @param position center point of player
+     * @param level the level that the player is part of
      */
-    public Player(Vector3f position) {
+    public Player(Vector3f position, Level level) {
 
         // shader
         Shader shader = Shader.SIMPLE;
         // TODO: proper texture
         Texture texture = Texture.DEBUG;
+
+        // Level
+        this.level = level;
 
         // add needed components
         this.add(new PositionComponent(position));

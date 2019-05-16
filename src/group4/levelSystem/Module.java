@@ -43,13 +43,29 @@ public abstract class Module {
      * If you want the module to be constructed with some default entities, please override @code{constructLevel()}
      */
     public Module(Level l) {
+        this.setup(l);
+    }
+
+
+    /**
+     * This method is used to set up the module in its initial state or reset the module to its initial state
+     */
+    private final void setup(Level l) {
         if (l == null) throw new IllegalArgumentException("Module: Level cannot be null");
-      
+
         this.level = l;
         this.entities = new ArrayList<>();
         this.constructModule();
         this.screenPosition = this.getStartScreenWindow();
         this.renewProjectionMatrix();
+    }
+
+
+    /**
+     * This method is used to reset the module to its initial state
+     */
+    public void reset() {
+        this.setup(this.level);
     }
 
 

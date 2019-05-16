@@ -5,6 +5,7 @@ import group4.AI.Brain;
 import group4.ECS.components.*;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
+import group4.levelSystem.Level;
 import group4.maths.Vector3f;
 
 /**
@@ -14,10 +15,11 @@ public class Ghost extends Player {
 
     /**
      * @param position center point of Ghost
+     * @param level the level that the Ghost is part of
      * @param brain NN for training purposes
      */
-    public Ghost (Vector3f position, Brain brain) {
-        super(position);
+    public Ghost (Vector3f position, Level level, Brain brain) {
+        super(position, level);
 
         Shader shader = Shader.SIMPLE;
         // TODO: proper texture
