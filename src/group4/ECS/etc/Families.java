@@ -80,4 +80,8 @@ public class Families {
     //All entities with which collision is possible
     public static final Family collidableMovingFamily = Family
             .all(ColliderComponent.class, MovementComponent.class).get();
+
+    //All entities with spline collision
+    public static final Family collidableSplineFamily = Family
+            .all(SplineComponent.class, CollisionComponent.class).get();
 }

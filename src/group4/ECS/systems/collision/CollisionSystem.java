@@ -27,13 +27,13 @@ public class CollisionSystem extends IteratingSystem {
     }
 
     /**
-     * Finds all collidable entities that collide with entity e. Stores them in the collision component and
+     * Finds all non-spline collidable entities that collide with entity e. Stores them in the collision component and
      * lets the next collision system handle them.
      *
      * @param e entity
      */
     private void detectCollisions(Entity e) {
-        // get all collidable entities
+        // get all normal collidable entities
         ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.collidableFamily);
         CollisionComponent cc = Mappers.collisionMapper.get(e);
 
@@ -60,7 +60,37 @@ public class CollisionSystem extends IteratingSystem {
             cc.collisions.add(c1);
             occ.collisions.add(c2);
         }
+    }
 
+    /**
+     * Finds all spline collidable entities that collide with entity e. Stores them in the collision component and
+     * lets the next collision system handle them.
+     *
+     * @param e entity
+     */
+    private void detectSplineCollisions(Entity e) {
+        // get all collidable spline entities
+        ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.collidableSplineFamily);
+        CollisionComponent cc = Mappers.collisionMapper.get(e);
+
+        for (Entity spline : entities) {
+            if (e.equals(spline)) {
+                continue;
+            }
+
+            
+
+
+            // Get displacement vector
+            Vector3f displacement = processCollision(e, other);
+
+            CollisionComponent occ = Mappers.collisionMapper.get(other);
+            // add the collision to both entities
+            CollisionData c1 = new CollisionData(other, displacement);
+            CollisionData c2 = new CollisionData(e, displacement.scale(-1.0f));
+            cc.collisions.add(c1);
+            occ.collisions.add(c2);
+        }
     }
 
     /// BELOW ARE FUNCTIONS TO DEAL WITH AXIS ALIGNED RECTANGLE INTERSECTION
