@@ -34,7 +34,7 @@ public class Brain {
                 .list();
 
         // build the dense layers
-        for (int i = 0; i < layerSizes.length - 1; i++) {
+        for (int i = 0; i < layerSizes.length - 2; i++) {
             lb.layer(new DenseLayer.Builder().nIn(layerSizes[i]).nOut(layerSizes[i + 1])
                     .activation(Activation.RELU)
                     .build());
@@ -48,7 +48,6 @@ public class Brain {
 
         conf.setBackprop(false);
         conf.setPretrain(false);
-
         // apply the configuration
         nn = new MultiLayerNetwork(conf);
         nn.init();
@@ -83,7 +82,9 @@ public class Brain {
      * @return move to make
      */
     private int feedForward(INDArray input) {
-        double[] result = nn.output(input).toDoubleVector();
+        List<INDArray> output = nn.feedForward(input);
+        double[] result = output.get(output.size() - 1).toDoubleVector();
+        // double[] result = nn.feedForward(input).toDoubleVector();
         int argMax = 0;
         // get best move defined by network
         for (int i = 1; i < result.length; i++) {
@@ -99,6 +100,7 @@ public class Brain {
      * @return the move the ghost should take, according to {@link GhostMove} enum
      */
     public int think() {
-        return this.feedForward(Evolver.decoder.decode());
+        INDArray input = Evolver.decoder.decode();
+        return this.feedForward(input);
     }
 }

@@ -1,17 +1,30 @@
 package group4.AI;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.utils.ImmutableArray;
+import group4.ECS.components.HealthComponent;
+import group4.ECS.components.MovementComponent;
+import group4.ECS.components.PositionComponent;
 import group4.ECS.entities.Ghost;
+import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.GhostDyingSystem;
+import group4.ECS.systems.GhostMovementSystem;
 import group4.ECS.systems.MovementSystem;
+import group4.ECS.systems.collision.CollisionEventSystem;
+import group4.ECS.systems.collision.CollisionSystem;
+import group4.ECS.systems.collision.UncollidingSystem;
 import group4.game.Timer;
+import group4.graphics.Shader;
+import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
 import group4.levelSystem.ModuleFactory;
 import group4.levelSystem.levels.SimpleLevel;
+import group4.levelSystem.levels.TestLevel;
 import group4.maths.Vector3f;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 
@@ -28,43 +41,58 @@ public class Evaluator implements FitnessEvaluator<Brain> {
     /** TODO: make timer singleton **/
     private Timer timer;
 
+    /** the level (temporary) **/
+    public Level level;
+
     public Evaluator() {
         // init module
         this.timer = new Timer();
-
         // register systems to engine
         initSystems();
+        level = new TestLevel();
+        this.currModule = this.level.getCurrentModule();
+
     }
 
     @Override
     public double getFitness(Brain brain, List<? extends Brain> list) {
-        // create new module
-        this.currModule = ModuleFactory.createModule(Evolver.level);
-
+        Engine engine = TheEngine.getInstance();
         // fetch gamestate, all entities which hold bounding box
-        ImmutableArray<Entity> gamestate = TheEngine.getInstance().getEntitiesFor(Families.gamestateFamily);
+        ImmutableArray<Entity> gamestate = engine.getEntitiesFor(Families.gamestateFamily);
 
-        // reinit gamestate
-        TheEngine.getInstance().removeAllEntities();
+        // create the ghost
+        Entity ghost = new Ghost(this.currModule.getPlayerInitialPosition(),
+                this.level,
+                brain);
+        engine.addEntity(ghost);
+        Entity p = null;
+
+        // add the module entities except the player
         for (Entity entity : gamestate) {
-            TheEngine.getInstance().addEntity(entity);
+            if (entity instanceof Player) {
+                p = entity;
+                break; // dont add the player
+            }
         }
-
-        // add the ghost
-        // TODO: get spawn position or entrance position of module
-        // TODO: get shaders for ghost
-        // TheEngine.getInstance().addEntity(new Ghost(brain, new Vector3f(), new Vector3f(2.0f, 3.0f, 0.0f)));
+        this.currModule.removeEntity(p);
+        engine.removeEntity(p);
 
         // while we did not exceed the timelimit, play the game
         double initTime = timer.getTime();
-        while (timer.getTime() - initTime <= Evolver.timelimit) {
-            TheEngine.getInstance().update((float) timer.getDeltaTime());
+        while (true) {
+            TheEngine.getInstance().update(1.0f/60.0f);
+            if (ghost.getComponent(HealthComponent.class).health <= 0) {
+                System.out.println("death");
+                break;
+            } else if (timer.getTime() - initTime >= Evolver.timelimit) {
+                System.out.println("timeout");
+                break;
+            }
         }
 
-        // clear engine for robustness
-        TheEngine.getInstance().removeAllEntities();
-
-        return 0;
+        // create new module
+        this.currModule.reset();
+        return ghost.getComponent(PositionComponent.class).position.x;
     }
 
     /**
@@ -72,7 +100,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
      */
     @Override
     public boolean isNatural() {
-        return false;
+        return true;
     }
 
     /**
@@ -85,9 +113,16 @@ public class Evaluator implements FitnessEvaluator<Brain> {
             TheEngine.getInstance().removeSystem(system);
         }
 
-        // TODO: register necessary systems
-        // TODO: centralize all systems and only disable or enable them
-        TheEngine.getInstance().addSystem(new MovementSystem());
+//        Shader.loadAllShaders();
+//        Texture.loadAllTextures();
+
+        Engine engine = TheEngine.getInstance();
+
+        engine.addSystem(new GhostMovementSystem());
+        engine.addSystem(new CollisionSystem());
+        engine.addSystem(new CollisionEventSystem());
+        engine.addSystem(new UncollidingSystem());
+        engine.addSystem(new GhostDyingSystem());
     }
 
 }
