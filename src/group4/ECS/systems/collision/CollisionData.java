@@ -15,6 +15,11 @@ public class CollisionData {
     public Vector3f displacement;
 
     /**
+     * Vector used for spline collision, determines where to put the entity colliding with a spline.
+     */
+    public Vector3f newPos = null;
+
+    /**
      * Creates new CollisionData.
      *
      * @param entity       entity which collides with the owner of this collision data.
@@ -24,6 +29,19 @@ public class CollisionData {
         this.entity = entity;
         this.displacement = displacement;
     }
+
+    /**
+     * Creates new CollisionData especially for splines.
+     *
+     * @param entity       entity which collides with the owner of this collision data.
+     * @param displacement vector that needs to be added to the owners position to prevent the collision.
+     * @param newPos       new position for the entity that should be displaced.
+     */
+    public CollisionData(Entity entity, Vector3f displacement, Vector3f newPos) {
+        this.entity = entity;
+        this.displacement = displacement;
+    }
+
 
     @Override
     public boolean equals(Object o) {

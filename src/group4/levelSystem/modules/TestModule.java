@@ -39,7 +39,11 @@ public class TestModule extends Module {
                 new Vector3f().add(new Vector3f(0.0f, thickness * 0.5f, 0.0f)),
                 new Vector3f(2.0f, 0.0f, 0.0f),
                 new Vector3f(2.0f, 2.0f, 0.0f),
-                new Vector3f(4.0f, 2.0f, 0.0f).sub(new Vector3f(0.0f, thickness * 0.5f, 0.0f))
+                new Vector3f(4.0f, 2.0f, 0.0f).sub(new Vector3f(0.0f, thickness * 0.5f, 0.0f)),
+                new Vector3f(4.0f, 2.0f, 0.0f).sub(new Vector3f(0.0f, thickness * 0.5f, 0.0f)),
+                new Vector3f(6.0f, 2.0f, 0.0f),
+                new Vector3f(6.0f, 0.0f, 0.0f),
+                new Vector3f(8.0f, 0.0f, 0.0f).add(new Vector3f(0.0f, thickness * 0.5f, 0.0f)),
         };
         for (Vector3f v : tempPoint) {
 //            v.addi(new Vector3f(4.0f, 4.0f, 0.0f));

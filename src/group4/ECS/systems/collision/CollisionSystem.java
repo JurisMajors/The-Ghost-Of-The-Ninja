@@ -97,19 +97,40 @@ public class CollisionSystem extends IteratingSystem {
 
             // store the smallest vector that goes from a spline point to a boundingbox point
             Vector3f smallestDisplacement = new Vector3f(1000f, 1000f, 1000f);
+            Vector3f closestPoint = null;
+            Vector3f clostestNormal = null;
 
             // loop through all spline points
-            for (Vector3f point : sc.points) {
+            for (int i = 0; i < sc.points.length; i++) {
+                Vector3f point = sc.points[i];
+                Vector3f normal = sc.normals[i];
+
+                Vector3f oldSmallest = new Vector3f(smallestDisplacement);
                 Vector3f worldPoint = point.add(spc.position);
                 // compute difference with bounding box point and spline point and store the smallest displacement
                 smallestDisplacement = Vector3f.min(smallestDisplacement, bl.sub(worldPoint));
                 smallestDisplacement = Vector3f.min(smallestDisplacement, br.sub(worldPoint));
                 smallestDisplacement = Vector3f.min(smallestDisplacement, tr.sub(worldPoint));
                 smallestDisplacement = Vector3f.min(smallestDisplacement, tl.sub(worldPoint));
+
+                // get closest point to the bounding box
+                if (smallestDisplacement.length() < oldSmallest.length()) {
+                    closestPoint = point;
+                    clostestNormal = normal;
+                }
             }
+
+            // make sure that the normal is facing the right way
+            if (clostestNormal.scale(-1.0f).sub(smallestDisplacement).length() < clostestNormal.sub(smallestDisplacement).length()) {
+                clostestNormal.scalei(-1.0f);
+            }
+
+            // get the position on the spline edge closest to the bb
+            Vector3f newPos = closestPoint.add(clostestNormal);
 
             // if the smallest displacement is smaller than half of the thickness there is a collision
             if (smallestDisplacement.length() <= sc.normals[0].scale(0.5f * sc.thickness).length()) {
+                smallestDisplacement.scalei(smallestDisplacement.sub(sc.normals[0].scale(0.5f * sc.thickness)).length());
                 CollisionComponent scc = Mappers.collisionMapper.get(spline);
 
                 // add collision to entity and spline
@@ -145,7 +166,7 @@ public class CollisionSystem extends IteratingSystem {
             if (firstPos.y > scndPos.y) {
                 return new Vector3f(0, intersection.height, 0);
             } else {
-                return new Vector3f(0, -1* intersection.height, 0);
+                return new Vector3f(0, -1 * intersection.height, 0);
             }
         }
         // move in the correct x direction
