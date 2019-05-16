@@ -1,6 +1,7 @@
 package group4.ECS.systems;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import group4.ECS.components.GravityComponent;
 import group4.ECS.components.MovementComponent;
@@ -12,10 +13,20 @@ import group4.maths.Vector3f;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+/**
+ * THis class is the player movement system implemented in such a way
+ * that it can be extended to other families, in case you want to apply same movement rules/physics
+ * to those entities. (by utilizing the Template Method Pattern)
+ * See {@link GhostMovementSystem} as an example for such an extension
+ */
 public class PlayerMovementSystem extends IteratingSystem {
 
     public PlayerMovementSystem() {
         super(Families.playerFamily);
+    }
+
+    PlayerMovementSystem(Family f) {
+        super(f);
     }
 
     @Override
@@ -32,19 +43,25 @@ public class PlayerMovementSystem extends IteratingSystem {
 
     }
 
-    protected void move(Entity e, float deltaTime) {
+    /**
+     * Adjusts velocity according to the input rules
+     * @param e entity to move
+     * @param deltaTime frame speed
+     */
+    private void move(Entity e, float deltaTime) {
         MovementComponent mc = Mappers.movementMapper.get(e);
+        Object ref = getMovementRef(e);
         // set velocity in the direction that keyboard asks for
-        if (KeyBoard.isKeyDown(GLFW_KEY_D)) {
+        if (shouldRight(ref)) {
             moveRight(mc);
-        } else if (KeyBoard.isKeyDown(GLFW_KEY_A)) {
+        } else if (shouldLeft(ref)) {
             moveLeft(mc);
         } else {
             // stay still if no keys are pressed
             mc.velocity.x = 0;
         }
         // jump if space is pressed and if canJump is satisfied
-        if (KeyBoard.isKeyDown(GLFW_KEY_SPACE) && canJump(mc.velocity)) {
+        if (shouldJump(ref) && canJump(mc.velocity)) {
             jump(mc);
         }
     }
@@ -68,6 +85,43 @@ public class PlayerMovementSystem extends IteratingSystem {
 
     private void doGravity(MovementComponent mc, GravityComponent gc) {
         mc.velocity.y -= gc.gravity.y;
+    }
+
+    /**
+     * Input condition for determining whether to move left
+     * @param ref optionally reference object to use for determining this condition
+     * @return whether to move entity to the left
+     */
+    protected boolean shouldLeft (Object ref) {
+        return KeyBoard.isKeyDown(GLFW_KEY_A);
+    }
+
+    /**
+     * Input condition for determining whether to move right.
+     * @param ref optionally reference object to use for determining this condition
+     * @return whether to move entity to the right
+     */
+    protected boolean shouldRight (Object ref) {
+        return KeyBoard.isKeyDown(GLFW_KEY_D);
+    }
+
+    /**
+     * Input condition for determining whether to jump.
+     * @param ref optionally reference object to use for determining this condition
+     * @return whether to move entity to the right
+     */
+    protected boolean shouldJump (Object ref) {
+        return KeyBoard.isKeyDown(GLFW_KEY_SPACE);
+    }
+
+    /**
+     * Provides a reference object, if one needed for determining
+     * the moving conditions of the entity.
+     * @param e the entity currently processed
+     * @return reference object used to determine how to move
+     */
+    protected Object getMovementRef(Entity e) {
+        return null;
     }
 
 }

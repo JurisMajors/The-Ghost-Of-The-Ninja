@@ -1,12 +1,10 @@
-package group4.ECS.systems;
+package group4.ECS.systems.collision;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
-import group4.ECS.components.MovementComponent;
-import group4.ECS.components.PositionComponent;
+import group4.ECS.components.CollisionComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
@@ -18,53 +16,70 @@ import group4.maths.Vector3f;
 public class CollisionSystem extends IteratingSystem {
 
     public CollisionSystem() {
+        // only process collisions for moving entities that are collidable
         super(Families.collidableMovingFamily);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        PositionComponent pc = Mappers.positionMapper.get(entity);
-
-        uncollideEntity(entity, deltaTime, pc.position);
-
+        // detect and store all collisions
+        detectCollisions(entity);
     }
 
     /**
-     * Processes an entities collision and updates the position according to the collisions
-     * @param e entity to process the collision with
-     * @param deltaTime fps speed
-     * @param curPos the current position
+     * Finds all collidable entities that collide with entity e. Stores them in the collision component and
+     * lets the next collision system handle them.
+     *
+     * @param e entity
      */
-    void uncollideEntity(Entity e, float deltaTime, Vector3f curPos) {
-        MovementComponent mc = Mappers.movementMapper.get(e);
-        // get all entities that i can collide with
+    private void detectCollisions(Entity e) {
+        // get all collidable entities
         ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.collidableFamily);
+        CollisionComponent cc = Mappers.collisionMapper.get(e);
+
         for (Entity other : entities) {
-            if (other == e) continue;
-            // get the displacement vector
-            Vector3f colDim = processCollision(e, other);
-            // if x and y collisions already happened break out
-            mc.velocity.addi(colDim);
-            // cap the velocity (for safety)
-            mc.velocity.x = this.capDirection(mc.velocity.x, mc.velocityRange.x);
-            mc.velocity.y = this.capDirection(mc.velocity.y, mc.velocityRange.y);
-            // move in that direction
-            curPos.addi(colDim);
+            if (e.equals(other)) {
+                continue;
+            }
+
+            // get the intersection between this (moving collidable entity) and other (collidable entity)
+            Rectangle intersection = getIntersectingRectangle(e, other);
+
+            // if there is no intersection, do nothing
+            if (intersection == null) {
+                continue;
+            }
+
+            // Get displacement vector
+            Vector3f displacement = processCollision(e, other);
+
+            CollisionComponent occ = Mappers.collisionMapper.get(other);
+            // add the collision to both entities
+            CollisionData c1 = new CollisionData(other, displacement);
+            CollisionData c2 = new CollisionData(e, displacement.scale(-1.0f));
+            cc.collisions.add(c1);
+            occ.collisions.add(c2);
         }
+
     }
+
+    /// BELOW ARE FUNCTIONS TO DEAL WITH AXIS ALIGNED RECTANGLE INTERSECTION
+    // TODO: maybe move those around a bit since there will also be functions to deal with spline intersection
+
 
     /**
      * Produces a displacement vector for a possibly occuring collision
+     *
      * @param first the entityto possibly move in case of collision
-     * @param scnd the other entity that is not moved
+     * @param scnd  the other entity that is not moved
      * @return
      */
-    Vector3f processCollision(Entity first, Entity scnd) {
+    static Vector3f processCollision(Entity first, Entity scnd) {
         // get positions
         Vector3f firstPos = Mappers.positionMapper.get(first).position;
         Vector3f scndPos = Mappers.positionMapper.get(scnd).position;
         // get the intersection rectangle
-        Rectangle intersection = CollisionSystem.getIntersectingRectangle(first, scnd);
+        Rectangle intersection = getIntersectingRectangle(first, scnd);
         if (intersection == null) return new Vector3f();
         // displace according to the rectangle
         if (intersection.height <= intersection.width) { // TODO: consider y collision from top
@@ -79,13 +94,14 @@ public class CollisionSystem extends IteratingSystem {
 
     /**
      * Produces an rectangle representing the intersecting area
+     *
      * @param rectangle1 first rectangle
      * @param rectangle2 second rectangle
-     * @pre rectangle1.overlaps(rectangle2)
-     * @throws IllegalArgumentException if pre is violated
      * @return the rectangle which is common for rectangle1 and rectangle2
+     * @throws IllegalArgumentException if pre is violated
+     * @pre rectangle1.overlaps(rectangle2)
      */
-    static public Rectangle intersect(Rectangle rectangle1, Rectangle rectangle2 ) throws IllegalArgumentException {
+    static public Rectangle intersect(Rectangle rectangle1, Rectangle rectangle2) throws IllegalArgumentException {
         if (!rectangle1.overlaps(rectangle2)) {
             throw new IllegalArgumentException("Attempted to get the intersecting rectangle from two non-intersecting rectangles. \n" +
                     "Rectangle 1: " + rectangle1.toString() + " \n" +
@@ -103,10 +119,11 @@ public class CollisionSystem extends IteratingSystem {
 
     /**
      * Given information about a bounding boxes, determine whether they collide
+     *
      * @param firstPos bottom left of first bb
      * @param firstDim dimensions of first bb
-     * @param scndPos bottom left of second bb
-     * @param scndDim dimensions of second bb
+     * @param scndPos  bottom left of second bb
+     * @param scndDim  dimensions of second bb
      * @return whether bounding boxes collide in XY
      */
     static public boolean collide(Vector3f firstPos, Vector3f firstDim,
@@ -120,6 +137,7 @@ public class CollisionSystem extends IteratingSystem {
 
     /**
      * Determines whether two collidable entities colide
+     *
      * @return whether first collides with sceond
      */
     static public boolean collide(Entity first, Entity second) {
@@ -129,11 +147,11 @@ public class CollisionSystem extends IteratingSystem {
         // get dimensions
         Vector3f firstDim = Mappers.dimensionMapper.get(first).dimension;
         Vector3f scndDim = Mappers.dimensionMapper.get(second).dimension;
-        return CollisionSystem.collide(firstPos, firstDim, scndPos, scndDim);
+        return collide(firstPos, firstDim, scndPos, scndDim);
     }
 
-    private static Rectangle getIntersectingRectangle(Entity first, Entity second) {
-        if (!CollisionSystem.collide(first, second)) {
+    public static Rectangle getIntersectingRectangle(Entity first, Entity second) {
+        if (!collide(first, second)) {
             return null;
         }
         // get positions
@@ -142,12 +160,8 @@ public class CollisionSystem extends IteratingSystem {
         // get dimensions
         Vector3f firstDim = Mappers.dimensionMapper.get(first).dimension;
         Vector3f scndDim = Mappers.dimensionMapper.get(second).dimension;
-        return CollisionSystem.intersect(bbAsRectangle(firstPos, firstDim),
+        return intersect(bbAsRectangle(firstPos, firstDim),
                 bbAsRectangle(scndPos, scndDim));
-    }
-
-    private float capDirection (float cur, float max) {
-        return Math.abs(cur) / cur * Math.min(max, Math.abs(cur));
     }
 
     private static Rectangle bbAsRectangle(Vector3f botLeft, Vector3f dim) {

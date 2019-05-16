@@ -2,7 +2,7 @@ package group4.ECS.entities;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.*;
-import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.collision.CollisionHandlers.PlayerCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
@@ -11,7 +11,9 @@ import group4.maths.Vector3f;
 
 public class Player extends Entity {
 
-    /** dimension of player aka bounding box, ghost inherits in order to apply texture */
+    /**
+     * dimension of player aka bounding box, ghost inherits in order to apply texture
+     */
     protected Vector3f dimension = new Vector3f(1.0f, 1f, 0.0f);
 
     /**
@@ -36,6 +38,8 @@ public class Player extends Entity {
         this.add(new GravityComponent());
         this.add(new GraphicsComponent(shader, texture, dimension));
         this.add(new PlayerComponent());
+        //TODO: one of these should be redundant and removed
+        this.add(new CollisionComponent(PlayerCollision.getInstance()));
         this.add(new ColliderComponent());
     }
 
