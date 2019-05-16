@@ -1,10 +1,9 @@
 package group4.ECS.systems;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
 import group4.ECS.components.DimensionComponent;
+import group4.ECS.components.HealthComponent;
 import group4.ECS.components.PositionComponent;
-import group4.ECS.components.StatsComponent;
 import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
 import group4.levelSystem.Module;
@@ -49,7 +48,7 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
     protected boolean die(Entity entity, float deltaTime) {
         // Kill the player, i.e. set its health to 0
         if (Player.class.isInstance(entity)) {
-            entity.getComponent(StatsComponent.class).health = 0;
+            entity.getComponent(HealthComponent.class).health = 0;
         }
 
         // If auto reset is enabled, reset the module to its original state

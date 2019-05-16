@@ -20,6 +20,8 @@ public class Player extends Entity {
      * the level that the player is part of
      */
     public Level level;
+
+    /**
      * Acceleration of the player. E.g., when sprinting
      */
     protected Vector3f accel = new Vector3f(0.01f, 0.0f, 0.0f);
@@ -62,7 +64,6 @@ public class Player extends Entity {
         //TODO: one of these should be redundant and removed
         this.add(new CollisionComponent(PlayerCollision.getInstance()));
         this.add(new ColliderComponent());
-        this.add(new StatsComponent(100, 0, 0));
     }
 
 }
