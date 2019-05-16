@@ -40,6 +40,7 @@ public class Player extends Entity {
         //TODO: one of these should be redundant and removed
         this.add(new CollisionComponent());
         this.add(new ColliderComponent());
+        this.add(new StatsComponent(100, 0, 0));
     }
 
 }

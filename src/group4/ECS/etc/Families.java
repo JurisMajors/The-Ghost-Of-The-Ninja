@@ -71,7 +71,7 @@ public class Families {
 
     // player
     public static final Family playerFamily = Family
-            .all(MovementComponent.class, PlayerComponent.class)
+            .all(MovementComponent.class, PlayerComponent.class, StatsComponent.class)
             .exclude(GhostComponent.class).get();
 
     //All entities with which collision is possible

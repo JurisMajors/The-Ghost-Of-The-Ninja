@@ -9,4 +9,15 @@ public class StatsComponent implements Component {
     public int speed = 0;
     // TODO: Weapon, Inventory
 
+    /**
+     * Constructs a stats component with initial values
+     * @param h health value
+     * @param a attack value
+     * @param s speed value
+     */
+    public StatsComponent(int h, int a, int s) {
+        this.health = h;
+        this.attack = a;
+        this.speed = s;
+    }
 }
