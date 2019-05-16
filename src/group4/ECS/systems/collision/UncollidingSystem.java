@@ -46,8 +46,7 @@ public class UncollidingSystem extends IteratingSystem {
             // if x and y collisions already happened break out
             mc.velocity.addi(colDim);
             // cap the velocity (for safety)
-            mc.velocity.x = this.capDirection(mc.velocity.x, mc.velocityRange.x);
-            mc.velocity.y = this.capDirection(mc.velocity.y, mc.velocityRange.y);
+            mc.velocity.capValuesi(mc.velocityRange);
             // move in that direction
             curPos.addi(colDim);
         }
@@ -153,16 +152,6 @@ public class UncollidingSystem extends IteratingSystem {
                 bbAsRectangle(scndPos, scndDim));
     }
 
-    private float capDirection(float cur, float max) {
-        if (max < 1e-6 && max > -1e-6) { // close to zero
-            return 0f;
-        }
-        if (Math.abs(cur) < Math.abs(max)) { // no need to modify
-            return cur;
-        }
-        // cap it
-        return Math.abs(cur) / cur * Math.min(max, Math.abs(cur));
-    }
 
     private static Rectangle bbAsRectangle(Vector3f botLeft, Vector3f dim) {
         return new Rectangle(botLeft.x, botLeft.y, dim.x, dim.y);

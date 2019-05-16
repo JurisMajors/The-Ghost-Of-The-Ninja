@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import group4.ECS.components.GravityComponent;
 import group4.ECS.components.MovementComponent;
 import group4.ECS.components.PositionComponent;
+import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.input.KeyBoard;
@@ -64,24 +65,32 @@ public class PlayerMovementSystem extends IteratingSystem {
         if (shouldJump(ref) && canJump(mc.velocity)) {
             jump(mc);
         }
+
+        mc.velocity.capValuesi(mc.velocityRange);
+        System.out.println(mc.velocity);
     }
 
     private void moveRight(MovementComponent mc) {
-        if (shouldSprint()) {
-            mc.velocity.x = Math.min(mc.velocityRange.x, mc.velocity.x);
+        if (shouldSprint() && canSprint(mc.velocity)) {
+            mc.velocity.x = getSprintingVel(mc);
             mc.velocity.x += mc.acceleration.x;
         } else {
-            mc.velocity.x = mc.velocityRange.x / 2;
+            mc.velocity.x = mc.velocityRange.x * Player.walkingRatio;
         }
     }
 
     private void moveLeft(MovementComponent mc) {
-        if (shouldSprint()) {
-            mc.velocity.x = Math.max(-1 * mc.velocityRange.x, mc.velocity.x);
+        if (shouldSprint() && canSprint(mc.velocity)) {
+            mc.velocity.x = -1 * getSprintingVel(mc);
             mc.velocity.x -= mc.acceleration.x;
         } else {
-            mc.velocity.x = -1 * mc.velocityRange.x / 2;
+            mc.velocity.x = -1 * mc.velocityRange.x * Player.walkingRatio;
         }
+    }
+
+    private float getSprintingVel(MovementComponent mc) {
+        // provides with the "starting" or "current" sprinting velocity
+        return Math.max(mc.velocityRange.x * Player.walkingRatio, Math.abs(mc.velocity.x));
     }
 
     private void jump(MovementComponent mc) {
@@ -93,11 +102,19 @@ public class PlayerMovementSystem extends IteratingSystem {
         return velocity.y <= 1e-3 && velocity.y >= -1e-3;
     }
 
+    private boolean canSprint(Vector3f velocity) {
+        return velocity.y <= 1e-3 && velocity.y >= -1e-3;
+    }
+
+
     private void doGravity(MovementComponent mc, GravityComponent gc) {
         mc.velocity.y -= gc.gravity.y;
     }
 
-    private boolean shouldSprint() {
+    /**
+     * Whether the entity should accelerate when he moves
+     */
+    protected boolean shouldSprint() {
         return KeyBoard.isKeyDown(GLFW_KEY_LEFT_SHIFT);
     }
 

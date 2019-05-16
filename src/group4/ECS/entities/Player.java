@@ -15,6 +15,12 @@ public class Player extends Entity {
      */
     protected Vector3f dimension = new Vector3f(1.0f, 1f, 0.0f);
 
+    protected Vector3f accel = new Vector3f(0.01f, 0.0f, 0.0f);
+
+    protected Vector3f velocityRange = new Vector3f(0.2f, 0.25f, 0.0f);
+
+    public static final float walkingRatio = 3.0f/4.0f;
+
     /**
      * Creates a player
      *
@@ -22,8 +28,6 @@ public class Player extends Entity {
      */
     public Player(Vector3f position) {
 
-        // vRange
-        Vector3f velocityRange = new Vector3f(0.2f, 0.25f, 0.0f);
         // shader
         Shader shader = Shader.SIMPLE;
         // TODO: proper texture
@@ -33,7 +37,7 @@ public class Player extends Entity {
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
         // temporary!!, player should initially not move
-        this.add(new MovementComponent(new Vector3f(0.01f, 0.0f, 0.0f), velocityRange));
+        this.add(new MovementComponent(new Vector3f(), velocityRange, accel));
         this.add(new GravityComponent());
         this.add(new GraphicsComponent(shader, texture, dimension));
         this.add(new PlayerComponent());
