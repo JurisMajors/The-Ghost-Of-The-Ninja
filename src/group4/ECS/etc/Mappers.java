@@ -27,8 +27,8 @@ public class Mappers {
     public static final ComponentMapper<ConsumableComponent> consumableMapper =
             ComponentMapper.getFor(ConsumableComponent.class);
 
-    public static final ComponentMapper<StatsComponent> statsMapper =
-            ComponentMapper.getFor(StatsComponent.class);
+    public static final ComponentMapper<HealthComponent> dieableMapper =
+            ComponentMapper.getFor(HealthComponent.class);
 
     public static final ComponentMapper<AudioComponent> audioMapper =
             ComponentMapper.getFor(AudioComponent.class);

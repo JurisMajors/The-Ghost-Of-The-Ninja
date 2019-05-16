@@ -31,4 +31,9 @@ public class GhostMovementSystem extends PlayerMovementSystem {
     protected boolean shouldJump(Object ref) {
         return GhostMove.JUMP.equals((Integer) ref);
     }
+
+    @Override
+    protected boolean shouldSprint() {
+        return true;
+    }
 }

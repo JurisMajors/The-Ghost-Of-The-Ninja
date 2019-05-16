@@ -27,12 +27,7 @@ public class CollisionEventSystem extends IteratingSystem {
         if (cc.collisions.isEmpty()) {
             return;
         }
-
-        // decide which event handler to use
-        if (entity instanceof Player) {
-            PlayerCollision.collision((Player) entity, cc.collisions);
-        }
-
-
+        // process the collisions with this entity
+        cc.handler.collision(entity, cc);
     }
 }

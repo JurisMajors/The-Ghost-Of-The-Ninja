@@ -206,4 +206,60 @@ public class Vector3f {
         return new Vector3f(Math.abs(x), Math.abs(y), Math.abs(z));
     }
 
+    /**
+     * Allows to cap the values of the vector in-place, given an absolute maximum
+     * @param maxRange vector which contains caps for each dimension
+     * @throws IllegalArgumentException if maxRange.x < 0 || maxRange.y < 0 || maxRange.z < 0
+     */
+    public void capValuesi (Vector3f maxRange) throws IllegalArgumentException {
+        this.x = this.capDirection(this.x, maxRange.x);
+        this.y = this.capDirection(this.y, maxRange.y);
+        this.z = this.capDirection(this.z, maxRange.z);
+    }
+
+    /**
+     * Caps the values of this, but puts them in a new vector
+     * @param maxRange vector which contains caps for each dimension
+     * @return this, but with capped values
+     * @throws IllegalArgumentException if maxRange.x < 0 || maxRange.y < 0 || maxRange.z < 0
+     */
+    public Vector3f capValues (Vector3f maxRange) throws IllegalArgumentException {
+        Vector3f newVec = new Vector3f(this);
+        newVec.capValuesi(maxRange);
+        return newVec;
+    }
+
+    /**
+     * Caps the values of the vector in-place given an abs(maximum)
+     * @param max the maximum for all dimensions
+     * @throws IllegalArgumentException if max < 0
+     */
+    public void capValuesi (float max) throws IllegalArgumentException {
+        this.capValuesi(new Vector3f(max, max, max));
+    }
+
+    /**
+     * Caps the values of this in a new vector given an abs(maximum)
+     * @param max the maximum for all dimensions
+     * @return this, but with capped dimensions with cap being max
+     * @throws IllegalArgumentException if max < 0
+     */
+    public Vector3f capValues (float max) throws IllegalArgumentException {
+        return this.capValues(new Vector3f(max, max, max));
+    }
+
+
+    private float capDirection(float cur, float max) throws IllegalArgumentException {
+        if (max < 0) throw new IllegalArgumentException(this.getClass().getName() + " capDirection(cur,max) received " +
+                "max which is less than zero, must provide absolute value of max");
+        if (max < 1e-6 && max > -1e-6) { // close to zero
+            return 0f;
+        }
+        if (Math.abs(cur) < Math.abs(max)) { // no need to modify
+            return cur;
+        }
+        // cap it
+        return Math.abs(cur) / cur * Math.min(max, Math.abs(cur));
+    }
+
 }

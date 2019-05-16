@@ -2,28 +2,30 @@ package group4.ECS.systems.collision.CollisionHandlers;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.CollisionComponent;
+import group4.ECS.components.DamageComponent;
+import group4.ECS.components.HealthComponent;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.items.weapons.Bullet;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.etc.Mappers;
+import group4.ECS.systems.collision.CollisionData;
 
-import java.util.Collection;
+import java.util.Set;
 
 
 /**
  * An example of how we might want to handle collisions per Entity
  */
-public class PlayerCollision {
+public class PlayerCollision extends AbstractCollisionHandler<Player> {
 
-    /**
-     * This function specifies how a player deals with different types of collisions.
-     *
-     * @param player the player
-     * @param others list of entities the player is colliding with
-     */
-    public static void collision(Player player, Collection<Entity> others) {
+    private static AbstractCollisionHandler me = new PlayerCollision();
+
+    @Override
+    public void collision(Player player, CollisionComponent cc) {
+        Set<CollisionData> others = cc.collisions;
         // loop through all collisions and handle them accordingly
-        for (Entity other : others) {
+        for (CollisionData cd : others) {
+            Entity other = cd.entity;
             // example
             if (other instanceof Mob) {
                 handleMob(player, (Mob) other);
@@ -33,17 +35,23 @@ public class PlayerCollision {
         }
     }
 
+    public static AbstractCollisionHandler getInstance() {
+        return me;
+    }
+
     private static void handleMob(Player player, Mob mob) {
         // this is a placeholder to show how the system would work
     }
 
     private static void handleBullet(Player player, Bullet bullet) {
-
+        HealthComponent h = player.getComponent(HealthComponent.class);
+        DamageComponent dmg = bullet.getComponent(DamageComponent.class);
+        // take damage
+        h.health -= dmg.damage;
+        // TODO: process knockback
         // after player bullet interaction we dont want to fix their positions (because the bullet might die)
         CollisionComponent pcc = Mappers.collisionMapper.get(player);
-        CollisionComponent bcc = Mappers.collisionMapper.get(bullet);
         pcc.collisions.remove(bullet);
-        bcc.collisions.remove(player);
     }
 
 

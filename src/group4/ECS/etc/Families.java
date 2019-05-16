@@ -40,7 +40,7 @@ public class Families {
 
     // all enemies, the player and destructible objects
     public static final Family combatFamily = Family
-            .all(PositionComponent.class, DimensionComponent.class, StatsComponent.class, GraphicsComponent.class).get();
+            .all(PositionComponent.class, DimensionComponent.class, HealthComponent.class, GraphicsComponent.class).get();
 
     public static final Family ghostFamily = Family
             .all(GhostComponent.class).get();

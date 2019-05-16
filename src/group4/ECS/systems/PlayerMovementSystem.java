@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import group4.ECS.components.GravityComponent;
 import group4.ECS.components.MovementComponent;
 import group4.ECS.components.PositionComponent;
+import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.input.KeyBoard;
@@ -64,14 +65,39 @@ public class PlayerMovementSystem extends IteratingSystem {
         if (shouldJump(ref) && canJump(mc.velocity)) {
             jump(mc);
         }
+
+        mc.velocity.capValuesi(mc.velocityRange);
     }
 
     private void moveRight(MovementComponent mc) {
-        mc.velocity.x = mc.velocityRange.x;
+        moveDirection(1, mc);
     }
 
     private void moveLeft(MovementComponent mc) {
-        mc.velocity.x = -1 * mc.velocityRange.x;
+        moveDirection(-1, mc);
+    }
+    /**
+    * Moves along the x axis in the specified direction
+    * @param dir positive or negative direction, optionally with a multiplier.
+    */
+    private void moveDirection(int dir, MovementComponent mc) {
+        if (shouldSprint() && canSprint(mc.velocity)) {
+            mc.velocity.x = dir * getSprintingVel(mc);
+            mc.velocity.x += dir * mc.acceleration.x;
+        } else {
+            // de-accelerate if necessary
+            mc.velocity.x = dir * getWalkingVel(mc);
+        }
+    }
+
+
+    private float getSprintingVel(MovementComponent mc) {
+        // provides with the "starting" or "current" sprinting velocity
+        return Math.max(mc.velocityRange.x * Player.walkingRatio, Math.abs(mc.velocity.x));
+    }
+
+    private float getWalkingVel (MovementComponent mc) {
+        return Math.max(mc.velocityRange.x * Player.walkingRatio, Math.abs(mc.velocity.x) - mc.acceleration.x);
     }
 
     private void jump(MovementComponent mc) {
@@ -83,8 +109,20 @@ public class PlayerMovementSystem extends IteratingSystem {
         return velocity.y <= 1e-3 && velocity.y >= -1e-3;
     }
 
+    private boolean canSprint(Vector3f velocity) {
+        return velocity.y <= 1e-3 && velocity.y >= -1e-3;
+    }
+
+
     private void doGravity(MovementComponent mc, GravityComponent gc) {
         mc.velocity.y -= gc.gravity.y;
+    }
+
+    /**
+     * Whether the entity should accelerate when he moves
+     */
+    protected boolean shouldSprint() {
+        return KeyBoard.isKeyDown(GLFW_KEY_LEFT_SHIFT);
     }
 
     /**
@@ -123,7 +161,6 @@ public class PlayerMovementSystem extends IteratingSystem {
     protected Object getMovementRef(Entity e) {
         return null;
     }
-
 }
 
 
