@@ -42,6 +42,11 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
             return true;
         }
 
+        // If the players health is 0, kill it as well
+        if (entity.getComponent(HealthComponent.class).health == 0) {
+            return true;
+        }
+
         // There is no reason to kill the player
         return false;
     }
@@ -59,11 +64,12 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
         }
 
         // If auto reset is enabled, reset the module to its original state
-        // and reposition the player
+        // and reposition the player, while giving it new health
         if (this.autoReset) {
             ((Player) entity).level.getCurrentModule().reset();
             ((Player) entity).getComponent(PositionComponent.class).position =
                     ((Player) entity).level.getCurrentModule().getPlayerInitialPosition();
+            ((Player) entity).getComponent(HealthComponent.class).health = 100;
         }
 
 
