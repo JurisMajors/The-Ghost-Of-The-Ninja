@@ -23,8 +23,6 @@ import java.util.Random;
 /**
  * Does the process of evolving and outputs the best fitting network.
  *
- * command-line arguments - filePath
- * filePath = directory to store the best model
  */
 public class Evolver {
     /** nr of brains per generation **/
@@ -47,13 +45,14 @@ public class Evolver {
     private static AbstractBrainCrossover crossover = new StandardCrossover();
     /** TODO: find feasible time limit **/
     public static double timelimit = 5.00;
+    /** Model path **/
+    public static final String path = "src/group4/models";
 
     private static void toFile(Brain b, String filePath) throws IOException {
         b.toFile(filePath);
     }
 
     public static void main(String[] args) {
-        String path = "/home/juris/";//args[0];
 
         List<EvolutionaryOperator<Brain>> operators = new LinkedList<>();
         operators.add(mutator);
