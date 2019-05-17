@@ -63,6 +63,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
     @Override
     public double getFitness(Brain brain, List<? extends Brain> list) {
         Engine engine = TheEngine.getInstance();
+        this.currModule.reset();
 
         clearPlayers(engine);
 
@@ -93,7 +94,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         }
         System.out.println(Arrays.toString(ghost.getComponent(GhostComponent.class).moveFreq));
         // create new module
-        this.currModule.reset();
+        this.currModule.unload();
         return ghost.getComponent(PositionComponent.class).position.x;
     }
 
