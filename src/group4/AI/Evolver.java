@@ -1,11 +1,7 @@
 package group4.AI;
 
 import group4.AI.decoders.CircleVisionStateDecoder;
-import group4.AI.decoders.ConeVisionStateDecoder;
 import group4.AI.decoders.StateDecoderInterface;
-import group4.levelSystem.Level;
-import group4.levelSystem.levels.SimpleLevel;
-import group4.levelSystem.levels.TestLevel;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.maths.random.Probability;
 import org.uncommons.watchmaker.framework.*;
@@ -79,7 +75,6 @@ public class Evolver {
     }
 
     public static void aiSht() {
-        String path = "/home/juris/";//args[0];
 
         List<EvolutionaryOperator<Brain>> operators = new LinkedList<>();
         operators.add(mutator);
@@ -112,4 +107,5 @@ public class Evolver {
         // uncomment to save resulting weights
         // Evolver.toFile(result + "BEST", path);
     }
+
 }

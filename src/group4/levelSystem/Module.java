@@ -174,6 +174,7 @@ public abstract class Module {
     }
 
     private void addGhost() throws NullPointerException {
+        if (Main.AI) return;
         if (this.entities == null) {
             throw new NullPointerException("Adding ghost before initialized entities container");
         }
