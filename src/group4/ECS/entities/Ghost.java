@@ -28,7 +28,7 @@ public class Ghost extends Player {
         //this.remove(GravityComponent.class);
 
         //// add needed components
-        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.DEBUG, new Vector3f(1.0f, 1.0f, 0.0f)));
+        //this.add(new GraphicsComponent(Shader.SIMPLE, Texture.DEBUG, new Vector3f(1.0f, 1.0f, 0.0f)));
         this.add(new GhostComponent(brain));
     }
 

@@ -24,6 +24,7 @@ import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
+import group4.levelSystem.levels.NonRenderTestLevel;
 import group4.levelSystem.levels.TestLevel;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 
@@ -54,7 +55,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         this.timer = new Timer();
         // register systems to engine
         initSystems();
-        level = new TestLevel();
+        level = new NonRenderTestLevel();
         this.currModule = this.level.getCurrentModule();
 
     }
@@ -85,9 +86,9 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         // while we did not exceed the timelimit, play the game
         double initTime = timer.getTime();
         while (true) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             TheEngine.getInstance().update(1.0f/60.0f);
-            glfwSwapBuffers(Main.window); // swap the color buffers
+            //glfwSwapBuffers(Main.window); // swap the color buffers
             if (ghost.getComponent(HealthComponent.class).health <= 0) {
                 System.out.println("death");
                 break;
@@ -119,18 +120,18 @@ public class Evaluator implements FitnessEvaluator<Brain> {
             TheEngine.getInstance().removeSystem(system);
         }
 
-        Shader.loadAllShaders();
-        Texture.loadAllTextures();
+//        Shader.loadAllShaders();
+//        Texture.loadAllTextures();
 
         Engine engine = TheEngine.getInstance();
 
-        engine.addSystem(new CameraSystem());
+//        engine.addSystem(new CameraSystem());
         engine.addSystem(new GhostMovementSystem());
         engine.addSystem(new CollisionSystem());
         engine.addSystem(new CollisionEventSystem());
         engine.addSystem(new UncollidingSystem());
         engine.addSystem(new GhostDyingSystem());
-        engine.addSystem(new RenderSystem());
+        //engine.addSystem(new RenderSystem());
     }
 
 }

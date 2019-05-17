@@ -46,7 +46,7 @@ public class Evolver {
     /**
      * hidden layer sizes (dont include input/output)
      **/
-    public final static int[] layerSizes = new int[]{100, 100};
+    public final static int[] layerSizes = new int[]{150};
     /**
      * decoder of gamestates
      **/
@@ -54,7 +54,7 @@ public class Evolver {
     /**
      * probability to completely change a weight of nn
      **/
-    public final static double mutationProbability = 0.2;
+    public final static double mutationProbability = 0.1;
     /**
      * Mutator
      **/
@@ -66,14 +66,14 @@ public class Evolver {
     /**
      * TODO: find feasible time limit
      **/
-    public static double timelimit = 5.00;
+    public static double timelimit = 8.00;
 
     private static void toFile(Brain b, String filePath) throws IOException {
         b.toFile(filePath);
     }
 
     public static void aiSht() {
-        String path = "/home/joris/";//args[0];
+        String path = "/home/juris/";//args[0];
 
         List<EvolutionaryOperator<Brain>> operators = new LinkedList<>();
         operators.add(mutator);
@@ -92,7 +92,7 @@ public class Evolver {
                 fitnessEvaluator, selection, rng);
         engine.setSingleThreaded(true);
 
-        EvolutionLogger logger = new EvolutionLogger(path, 1);
+        EvolutionLogger logger = new EvolutionLogger(path, 2);
 
         // add logger to the engine
         engine.addEvolutionObserver(logger);
