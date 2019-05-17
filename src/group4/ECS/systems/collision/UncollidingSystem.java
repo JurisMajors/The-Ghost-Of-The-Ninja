@@ -45,6 +45,7 @@ public class UncollidingSystem extends IteratingSystem {
             if (cd.newPos != null) {
                 mc.velocity = new Vector3f();
                 pc.position = cd.newPos;
+                continue;
             }
 
 
@@ -63,7 +64,6 @@ public class UncollidingSystem extends IteratingSystem {
     }
 
     private void handleVelocity (MovementComponent mc, Vector3f displacement) {
-        mc.velocity = new Vector3f();
         if (displacement.y > 0) { // displacement from bottom
             if (mc.velocity.y <= 0) { // if falling down
                 mc.velocity.y = 0; // set velocity to zero
