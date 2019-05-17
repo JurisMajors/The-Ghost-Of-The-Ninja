@@ -22,38 +22,58 @@ import java.util.Random;
 
 /**
  * Does the process of evolving and outputs the best fitting network.
- *
+ * <p>
  * command-line arguments - filePath
  * filePath = directory to store the best model
  */
 public class Evolver {
-    /** nr of brains per generation **/
+    /**
+     * nr of brains per generation
+     **/
     public final static int populationSize = 50;
-    /** How many fittest individuals to keep over generations **/
-    public final static int elitism = (int)(populationSize * 0.2);
-    /** generation count until termination **/
+    /**
+     * How many fittest individuals to keep over generations
+     **/
+    public final static int elitism = (int) (populationSize * 0.2);
+    /**
+     * generation count until termination
+     **/
     public final static int genCount = 50;
-    /** if max fit known, then terminate on that otherwise leave max val. **/
+    /**
+     * if max fit known, then terminate on that otherwise leave max val.
+     **/
     public final static int maxFit = Integer.MAX_VALUE;
-    /** hidden layer sizes (dont include input/output) **/
+    /**
+     * hidden layer sizes (dont include input/output)
+     **/
     public final static int[] layerSizes = new int[]{100, 100};
-    /** decoder of gamestates **/
+    /**
+     * decoder of gamestates
+     **/
     public final static StateDecoderInterface decoder = new CircleVisionStateDecoder(60, 10);
-    /** probability to completely change a weight of nn **/
+    /**
+     * probability to completely change a weight of nn
+     **/
     public final static double mutationProbability = 0.2;
-    /** Mutator **/
+    /**
+     * Mutator
+     **/
     private static AbstractBrainMutation mutator = new StandardMutation(new Probability(mutationProbability));
-    /** Crossover **/
+    /**
+     * Crossover
+     **/
     private static AbstractBrainCrossover crossover = new StandardCrossover();
-    /** TODO: find feasible time limit **/
+    /**
+     * TODO: find feasible time limit
+     **/
     public static double timelimit = 5.00;
 
     private static void toFile(Brain b, String filePath) throws IOException {
         b.toFile(filePath);
     }
 
-    public static void main(String[] args) {
-        String path = "/home/juris/";//args[0];
+    public static void aiSht() {
+        String path = "/home/joris/";//args[0];
 
         List<EvolutionaryOperator<Brain>> operators = new LinkedList<>();
         operators.add(mutator);
@@ -72,7 +92,7 @@ public class Evolver {
                 fitnessEvaluator, selection, rng);
         engine.setSingleThreaded(true);
 
-        EvolutionLogger logger = new EvolutionLogger(path, 10);
+        EvolutionLogger logger = new EvolutionLogger(path, 1);
 
         // add logger to the engine
         engine.addEvolutionObserver(logger);
@@ -84,5 +104,9 @@ public class Evolver {
 
         // uncomment to save resulting weights
         // Evolver.toFile(result + "BEST", path);
+    }
+
+    public static void main(String[] args) {
+        aiSht();
     }
 }

@@ -14,10 +14,10 @@ public class Ghost extends Player {
 
     /**
      * @param position center point of Ghost
-     * @param level the level that the Ghost is part of
-     * @param brain NN for training purposes
+     * @param level    the level that the Ghost is part of
+     * @param brain    NN for training purposes
      */
-    public Ghost (Vector3f position, Level level, Brain brain) {
+    public Ghost(Vector3f position, Level level, Brain brain) {
         super(position, level);
 
         //Shader shader = Shader.SIMPLE;
@@ -28,7 +28,7 @@ public class Ghost extends Player {
         //this.remove(GravityComponent.class);
 
         //// add needed components
-        //this.add(new GraphicsComponent(shader, texture, dimension));
+        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.DEBUG, new Vector3f(1.0f, 1.0f, 0.0f)));
         this.add(new GhostComponent(brain));
     }
 

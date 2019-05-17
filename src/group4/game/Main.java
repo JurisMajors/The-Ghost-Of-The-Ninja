@@ -1,8 +1,13 @@
 package group4.game;
 
 import com.badlogic.ashley.core.Engine;
+import group4.AI.Brain;
+import group4.AI.Evolver;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.*;
+import group4.ECS.systems.CameraSystem;
+import group4.ECS.systems.PlayerDyingSystem;
+import group4.ECS.systems.PlayerMovementSystem;
+import group4.ECS.systems.RenderSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
 import group4.ECS.systems.collision.UncollidingSystem;
@@ -15,7 +20,17 @@ import group4.levelSystem.Level;
 import group4.levelSystem.levels.TestLevel;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import org.uncommons.maths.random.MersenneTwisterRNG;
+import org.uncommons.watchmaker.framework.*;
+import org.uncommons.watchmaker.framework.factories.AbstractCandidateFactory;
+import org.uncommons.watchmaker.framework.operators.EvolutionPipeline;
+import org.uncommons.watchmaker.framework.selection.RouletteWheelSelection;
+import org.uncommons.watchmaker.framework.termination.GenerationCount;
+import org.uncommons.watchmaker.framework.termination.TargetFitness;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -26,7 +41,7 @@ public class Main implements Runnable {
     private Thread thread;
 
     private Window win;
-    private long window; // The id of the window
+    public static long window; // The id of the window
 
     private Timer timer;
     private Level level;
@@ -49,7 +64,7 @@ public class Main implements Runnable {
      */
     public void run() {
         init();
-        loop();
+        Evolver.aiSht();
 
         // Cleanup after we exit the game loop
         glfwFreeCallbacks(window); // Free the window callbacks
@@ -92,23 +107,23 @@ public class Main implements Runnable {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         // Preload all resources
-        Shader.loadAllShaders();
-        Texture.loadAllTextures();
+//        Shader.loadAllShaders();
+//        Texture.loadAllTextures();
 
         // Initialize the engine
         engine = TheEngine.getInstance();
 
         // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
-        engine.addSystem(new CameraSystem()); // CameraSystem must be added before RenderSystem
-        engine.addSystem(new PlayerMovementSystem()); // TODO: Probably temp and should be changed when the new movement system is ready
-        engine.addSystem(new CollisionSystem());
-        engine.addSystem(new CollisionEventSystem());
-        engine.addSystem(new UncollidingSystem());
-        engine.addSystem(new RenderSystem());
-        engine.addSystem(new PlayerDyingSystem(true));
+//        engine.addSystem(new CameraSystem()); // CameraSystem must be added before RenderSystem
+//        engine.addSystem(new PlayerMovementSystem()); // TODO: Probably temp and should be changed when the new movement system is ready
+//        engine.addSystem(new CollisionSystem());
+//        engine.addSystem(new CollisionEventSystem());
+//        engine.addSystem(new UncollidingSystem());
+//        engine.addSystem(new RenderSystem());
+//        engine.addSystem(new PlayerDyingSystem(true));
 
         // Initialize the level
-        this.level = new TestLevel();
+//        this.level = new TestLevel();
     }
 
     /**
