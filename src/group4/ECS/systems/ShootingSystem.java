@@ -25,10 +25,11 @@ public class ShootingSystem extends IteratingSystem {
         PositionComponent pc = Mappers.positionMapper.get(entity);
         ShootingComponent sc = Mappers.shootingMapper.get(entity);
         PositionComponent playerPos = Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
-        if(sc.wait<sc.rate)sc.wait++;
-        else{
-            sc.wait=0;
-            TheEngine.getInstance().addEntity(new MobBullet(pc.position.add(sc.position),playerPos.position.sub(pc.position.add(sc.position)).normalized()));
+        if (sc.wait < sc.rate) sc.wait++; //count frames until next shot
+        else { //shoot
+            sc.wait = 0;
+            //create new bullet
+            TheEngine.getInstance().addEntity(new MobBullet(pc.position.add(sc.position), playerPos.position.sub(pc.position.add(sc.position)).normalized()));
         }
     }
 }

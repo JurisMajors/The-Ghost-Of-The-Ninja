@@ -18,7 +18,7 @@ public class BulletMovementSystem extends IteratingSystem {
     public void processEntity(Entity entity, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(entity);
         MovementComponent mc = Mappers.movementMapper.get(entity);
-
+        //bullets have constant velocity
         pc.position.addi(mc.velocity.scale(deltaTime));
     }
 }

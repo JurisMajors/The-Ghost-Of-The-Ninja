@@ -7,12 +7,18 @@ import group4.graphics.Texture;
 import group4.maths.Vector3f;
 
 public class WalkingMob extends Entity {
-    protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f);
+    protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f);//dimension of the mob, aka bounding box
 
+    /**
+     * Creates a walking mob
+     *
+     * @param position left-bottom-back corner of the cuboid representing the mob
+     */
     public WalkingMob(Vector3f position) {
-        Vector3f velocityRange = new Vector3f(0.05f, 0.25f, 0.0f);
-        Shader shader = Shader.SIMPLE;
-        Texture texture = Texture.DEBUG;
+        Vector3f velocityRange = new Vector3f(0.05f, 0.25f, 0.0f);//velocity range
+        Shader shader = Shader.SIMPLE;//shader
+        Texture texture = Texture.DEBUG;//texture
+
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
         this.add(new MovementComponent(new Vector3f(), velocityRange));

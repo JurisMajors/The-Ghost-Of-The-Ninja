@@ -12,6 +12,7 @@ public class WalkingMobMovementSystem extends MobMovementSystem {
     @Override
     protected boolean canJump(Vector3f velocity) {
         super.canJump(velocity);
+        // walking mobs can never jump
         return false;
     }
 }

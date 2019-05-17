@@ -18,12 +18,14 @@ public class JumpingMobMovementSystem extends MobMovementSystem {
     @Override
     protected boolean canMoveLeft(Vector3f velocity) {
         super.canMoveLeft(velocity);
+        // jumping mobs can only move left when in air
         return !(velocity.y <= 1e-3 && velocity.y >= -1e-3);
     }
 
     @Override
     protected boolean canMoveRight(Vector3f velocity) {
         super.canMoveRight(velocity);
+        // jumping mobs can only move right when in air
         return !(velocity.y <= 1e-3 && velocity.y >= -1e-3);
     }
 
@@ -32,7 +34,7 @@ public class JumpingMobMovementSystem extends MobMovementSystem {
         super.move(e, playerPos, deltaTime);
         PositionComponent pc = Mappers.positionMapper.get(e);
         MovementComponent mc = Mappers.movementMapper.get(e);
-        // set velocity in the direction that keyboard asks for
+        // set velocity in the direction towards the player
         if (pc.position.y < playerPos.position.y && canJump(mc.velocity)) {
             jump(mc);
         } else if (pc.position.x < playerPos.position.x && !canMoveRight(mc.velocity) && canJump(mc.velocity)) {
@@ -46,7 +48,6 @@ public class JumpingMobMovementSystem extends MobMovementSystem {
         } else if (pc.position.x > playerPos.position.x && canMoveLeft(mc.velocity)) {
             moveLeft(mc);
         } else {
-            // stay still if no keys are pressed
             mc.velocity.x = 0;
         }
     }

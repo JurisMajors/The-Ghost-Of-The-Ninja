@@ -29,6 +29,7 @@ public abstract class MobMovementSystem extends IteratingSystem {
         GravityComponent gc = Mappers.gravityMapper.get(entity);
         // get the player position
         PositionComponent playerPos = Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
+
         // process movement events
         move(entity, playerPos, deltaTime);
         // apply gravity
@@ -40,16 +41,17 @@ public abstract class MobMovementSystem extends IteratingSystem {
     protected void move(Entity e, PositionComponent playerPos, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(e);
         MovementComponent mc = Mappers.movementMapper.get(e);
-        // set velocity in the direction that keyboard asks for
+
+        // set velocity.x in the direction towards the player
         if (pc.position.x < playerPos.position.x && canMoveRight(mc.velocity)) {
             moveRight(mc);
         } else if (pc.position.x > playerPos.position.x && canMoveLeft(mc.velocity)) {
             moveLeft(mc);
         } else {
-            // stay still if no keys are pressed
             mc.velocity.x = 0;
         }
-        // jump if space is pressed and if canJump is satisfied
+
+        // set velocity.y in the direction towards the player
         if (pc.position.y < playerPos.position.y && canJump(mc.velocity)) {
             jump(mc);
         } else if (pc.position.y > playerPos.position.y && canMoveDown()) {
