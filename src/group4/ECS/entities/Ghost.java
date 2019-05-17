@@ -8,6 +8,8 @@ import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.maths.Vector3f;
 
+import java.io.IOException;
+
 /**
  * The helper Ghost
  */
@@ -33,4 +35,7 @@ public class Ghost extends Player {
         this.add(new GhostComponent(brain));
     }
 
+    public Ghost (Vector3f position, Level level, String brainPath) {
+        this(position, level, new Brain(brainPath));
+    }
 }
