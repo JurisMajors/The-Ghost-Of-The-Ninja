@@ -55,7 +55,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         this.timer = new Timer();
         // register systems to engine
         initSystems();
-        level = new NonRenderTestLevel();
+        level = new TestLevel();
         this.currModule = this.level.getCurrentModule();
 
     }
