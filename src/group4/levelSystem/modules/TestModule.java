@@ -28,7 +28,7 @@ public class TestModule extends Module {
         // Add the LHS wall
         Vector3f tempPosition = new Vector3f();
         Vector3f tempDimension = new Vector3f(2.0f, 28.0f, 0.0f);
-        Platform LHSWall = new Platform(tempPosition, tempDimension);
+        Platform LHSWall = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
         this.addEntity(LHSWall);
 
         // Add floor on which player will stand initially

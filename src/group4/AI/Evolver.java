@@ -46,7 +46,7 @@ public class Evolver {
     /**
      * hidden layer sizes (dont include input/output)
      **/
-    public final static int[] layerSizes = new int[]{150};
+    public final static int[] layerSizes = new int[]{100};
     /**
      * decoder of gamestates
      **/
@@ -67,6 +67,11 @@ public class Evolver {
      * TODO: find feasible time limit
      **/
     public static double timelimit = 8.00;
+
+    /**
+     * whether to render
+     */
+    public static final boolean render = false;
 
     private static void toFile(Brain b, String filePath) throws IOException {
         b.toFile(filePath);

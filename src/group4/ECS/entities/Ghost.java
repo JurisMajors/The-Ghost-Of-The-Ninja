@@ -1,6 +1,7 @@
 package group4.ECS.entities;
 
 import group4.AI.Brain;
+import group4.AI.Evolver;
 import group4.ECS.components.*;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -28,7 +29,7 @@ public class Ghost extends Player {
         //this.remove(GravityComponent.class);
 
         //// add needed components
-        //this.add(new GraphicsComponent(Shader.SIMPLE, Texture.DEBUG, new Vector3f(1.0f, 1.0f, 0.0f)));
+        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.DEBUG, new Vector3f(1.0f, 1.0f, 0.0f)));
         this.add(new GhostComponent(brain));
     }
 

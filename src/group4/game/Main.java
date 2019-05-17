@@ -106,24 +106,9 @@ public class Main implements Runnable {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        // Preload all resources
-//        Shader.loadAllShaders();
-//        Texture.loadAllTextures();
-
         // Initialize the engine
         engine = TheEngine.getInstance();
 
-        // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
-//        engine.addSystem(new CameraSystem()); // CameraSystem must be added before RenderSystem
-//        engine.addSystem(new PlayerMovementSystem()); // TODO: Probably temp and should be changed when the new movement system is ready
-//        engine.addSystem(new CollisionSystem());
-//        engine.addSystem(new CollisionEventSystem());
-//        engine.addSystem(new UncollidingSystem());
-//        engine.addSystem(new RenderSystem());
-//        engine.addSystem(new PlayerDyingSystem(true));
-
-        // Initialize the level
-//        this.level = new TestLevel();
     }
 
     /**
