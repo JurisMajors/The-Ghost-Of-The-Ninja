@@ -63,22 +63,9 @@ public class Evaluator implements FitnessEvaluator<Brain> {
     @Override
     public double getFitness(Brain brain, List<? extends Brain> list) {
         Engine engine = TheEngine.getInstance();
-        // fetch gamestate, all entities which hold bounding box
-        ImmutableArray<Entity> gamestate = engine.getEntitiesFor(Families.gamestateFamily);
 
-        List<Player> players = new ArrayList<>();
+        clearPlayers(engine);
 
-        // add the module entities except the player
-        for (Entity entity : gamestate) {
-            if (entity instanceof Player) {
-                players.add((Player) entity);
-                if (players.size() == 2) break;
-            }
-        }
-        for (Player p : players) {
-            this.currModule.removeEntity(p);
-            engine.removeEntity(p);
-        }
         // create the ghost
         Entity ghost = new Ghost(this.currModule.getPlayerInitialPosition(),
                 this.level,
@@ -141,6 +128,27 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         engine.addSystem(new GhostDyingSystem());
         if (Evolver.render) {
             engine.addSystem(new RenderSystem());
+        }
+    }
+
+    private void clearPlayers(Engine engine) {
+        // fetch gamestate, all entities which hold bounding box
+        ImmutableArray<Entity> player = engine.getEntitiesFor(Families.playerFamily);
+        ImmutableArray<Entity> lastGhost = engine.getEntitiesFor(Families.ghostFamily);
+        List<Player> players = new ArrayList<>();
+
+        // add the module entities except the player
+        for (Entity entity : player) {
+            players.add((Player) entity);
+        }
+
+        for (Entity entity : lastGhost) {
+            players.add((Player) entity);
+        }
+
+        for (Player p : players) {
+            this.currModule.removeEntity(p);
+            engine.removeEntity(p);
         }
     }
 

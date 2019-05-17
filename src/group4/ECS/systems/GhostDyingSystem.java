@@ -6,6 +6,7 @@ import group4.ECS.components.PositionComponent;
 import group4.ECS.entities.Ghost;
 import group4.ECS.components.GhostComponent;
 import group4.ECS.etc.Families;
+import group4.game.Main;
 
 public class GhostDyingSystem extends PlayerDyingSystem {
 
@@ -40,8 +41,11 @@ public class GhostDyingSystem extends PlayerDyingSystem {
     @Override
     protected boolean die(Entity entity, float deltaTime) {
         Ghost g = (Ghost) entity;
-        g.getComponent(PositionComponent.class).position = g.level.getCurrentModule().getPlayerInitialPosition();
-        g.getComponent(HealthComponent.class).health = 0;
+        if (!Main.AI) {
+            g.getComponent(PositionComponent.class).position = g.level.getCurrentModule().getPlayerInitialPosition();
+        } else {
+            g.getComponent(HealthComponent.class).health = 0;
+        }
         return false;
     }
 }

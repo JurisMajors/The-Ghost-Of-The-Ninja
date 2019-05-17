@@ -8,6 +8,7 @@ import group4.ECS.components.CollisionComponent;
 import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.PositionComponent;
 import group4.ECS.components.SplineComponent;
+import group4.ECS.entities.Player;
 import group4.ECS.entities.items.weapons.Bullet;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
@@ -47,6 +48,7 @@ public class CollisionSystem extends IteratingSystem {
             if (e.equals(other)) continue;
             // dont register collisions bullets of bullets
             if (other instanceof Bullet && e instanceof Bullet) continue;
+            if (other instanceof Player && e instanceof Player) continue;
 
             // get the intersection between this (moving collidable entity) and other (collidable entity)
             Rectangle intersection = getIntersectingRectangle(e, other);

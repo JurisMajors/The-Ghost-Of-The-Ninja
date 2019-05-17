@@ -42,9 +42,6 @@ public class Families {
     public static final Family combatFamily = Family
             .all(PositionComponent.class, DimensionComponent.class, HealthComponent.class, GraphicsComponent.class).get();
 
-    public static final Family ghostFamily = Family
-            .all(GhostComponent.class).get();
-
     // all cameras
     public static final Family cameraFamily = Family
             .all(CameraComponent.class).get();
@@ -72,6 +69,9 @@ public class Families {
     // player
     public static final Family playerFamily = Family
             .all(PlayerComponent.class).exclude(GhostComponent.class).get();
+
+    public static final Family ghostFamily = Family
+            .all(GhostComponent.class).get();
 
     //All entities with which collision is possible
     public static final Family collidableFamily = Family

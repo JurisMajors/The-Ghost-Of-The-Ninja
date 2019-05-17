@@ -107,7 +107,7 @@ public class TestModule extends Module {
 
     @Override
     public Vector3f getPlayerInitialPosition() {
-        return new Vector3f(6.0f, 3.0f, 0.0f);
+        return new Vector3f(6.0f, 2.0f, 0.0f);
     }
 }
 

@@ -30,7 +30,7 @@ public class Window {
         // Setting the context and showing
         glfwMakeContextCurrent(window);
         glfwSwapInterval(1); // Enable v-sync
-        if (Evolver.render) {
+        if (!(!Evolver.render && Main.AI)) { // show the window if not training the AI or if Evolver.render is on
             glfwShowWindow(window);
         }
     }
