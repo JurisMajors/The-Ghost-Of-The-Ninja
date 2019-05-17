@@ -1,4 +1,4 @@
-package group4.AI;
+        package group4.AI;
 
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -68,9 +68,13 @@ public class Brain {
         this(Evolver.layerSizes, 1);
     }
 
-    Brain (String filePath) throws IOException {
-        File f = new File(filePath);
-        nn = ModelSerializer.restoreMultiLayerNetwork(f);
+    public Brain (String filePath) {
+        try {
+            File f = new File(filePath);
+            nn = ModelSerializer.restoreMultiLayerNetwork(f);
+        } catch (IOException e) {
+            System.err.println("IOException was thrown with path " + filePath);
+        }
     }
 
     void toFile(String filePath) throws IOException {

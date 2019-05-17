@@ -22,9 +22,7 @@ import java.util.Random;
 
 /**
  * Does the process of evolving and outputs the best fitting network.
- * <p>
- * command-line arguments - filePath
- * filePath = directory to store the best model
+ *
  */
 public class Evolver {
     /**
@@ -63,11 +61,10 @@ public class Evolver {
      * Crossover
      **/
     private static AbstractBrainCrossover crossover = new StandardCrossover();
-    /**
-     * TODO: find feasible time limit
-     **/
-    public static double timelimit = 8.00;
-
+    /** TODO: find feasible time limit **/
+    public static double timelimit = 5.00;
+    /** Model path **/
+    public static final String path = "src/group4/AI/models/";
     /**
      * whether to render
      */
@@ -114,9 +111,5 @@ public class Evolver {
 
         // uncomment to save resulting weights
         // Evolver.toFile(result + "BEST", path);
-    }
-
-    public static void main(String[] args) {
-        aiSht();
     }
 }

@@ -121,13 +121,14 @@ public class Main implements Runnable {
             // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
             engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added before RenderSystem
             engine.addSystem(new PlayerMovementSystem());
+            engine.addSystem(new GhostMovementSystem());
             engine.addSystem(new CollisionSystem());
             engine.addSystem(new CollisionEventSystem());
             engine.addSystem(new UncollidingSystem());
             engine.addSystem(new RenderSystem());
             engine.addSystem(new PlayerDyingSystem(true));
+            engine.addSystem(new GhostDyingSystem(false));
 
-            // Initialize the level
             this.level = new TestLevel();
         }
     }

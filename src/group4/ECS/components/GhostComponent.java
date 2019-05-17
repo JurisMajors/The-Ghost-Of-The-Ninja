@@ -2,6 +2,7 @@ package group4.ECS.components;
 
 import com.badlogic.ashley.core.Component;
 import group4.AI.Brain;
+import group4.AI.GhostMove;
 
 public class GhostComponent implements Component {
 
@@ -10,6 +11,6 @@ public class GhostComponent implements Component {
 
     public GhostComponent(Brain brain) {
         this.brain = brain;
-        moveFreq = new int[] {0, 0, 0};
+        moveFreq = new int[GhostMove.moveAmount()];
     }
 }

@@ -25,7 +25,7 @@ public class BrainFactory extends AbstractCandidateFactory<Brain> {
             layerInfo[i] = sizes[i - 1];
         }
         // output
-        layerInfo[layerInfo.length - 1] = 3;
+        layerInfo[layerInfo.length - 1] = GhostMove.moveAmount();
 
     }
 

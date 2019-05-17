@@ -32,4 +32,7 @@ public class Ghost extends Player {
         this.add(new GhostComponent(brain));
     }
 
+    public Ghost (Vector3f position, Level level, String brainPath) {
+        this(position, level, new Brain(brainPath));
+    }
 }
