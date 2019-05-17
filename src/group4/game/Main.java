@@ -1,7 +1,6 @@
 package group4.game;
 
 import com.badlogic.ashley.core.Engine;
-import group4.AI.Brain;
 import group4.AI.Evolver;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
@@ -18,17 +17,6 @@ import group4.levelSystem.Level;
 import group4.levelSystem.levels.TestLevel;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-import org.uncommons.maths.random.MersenneTwisterRNG;
-import org.uncommons.watchmaker.framework.*;
-import org.uncommons.watchmaker.framework.factories.AbstractCandidateFactory;
-import org.uncommons.watchmaker.framework.operators.EvolutionPipeline;
-import org.uncommons.watchmaker.framework.selection.RouletteWheelSelection;
-import org.uncommons.watchmaker.framework.termination.GenerationCount;
-import org.uncommons.watchmaker.framework.termination.TargetFitness;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -65,7 +53,7 @@ public class Main implements Runnable {
     public void run() {
         init();
         if (AI) {
-            Evolver.aiSht();
+            Evolver.train();
         } else {
             loop();
         }

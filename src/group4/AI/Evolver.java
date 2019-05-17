@@ -74,7 +74,7 @@ public class Evolver {
         b.toFile(filePath);
     }
 
-    public static void aiSht() {
+    public static void train() {
 
         List<EvolutionaryOperator<Brain>> operators = new LinkedList<>();
         operators.add(mutator);
