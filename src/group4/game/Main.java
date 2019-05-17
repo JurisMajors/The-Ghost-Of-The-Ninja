@@ -1,6 +1,8 @@
 package group4.game;
 
 import com.badlogic.ashley.core.Engine;
+import group4.AI.Evolver;
+import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.*;
 import group4.ECS.systems.collision.CollisionEventSystem;
@@ -16,7 +18,6 @@ import group4.levelSystem.levels.TestLevel;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -24,9 +25,11 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Main implements Runnable {
     private Thread thread;
+    /** enable this if you want to run the genetic algorithm, instead of playing urself **/
+    public static boolean AI = true;
 
     private Window win;
-    private long window; // The id of the window
+    public static long window; // The id of the window
 
     private Timer timer;
     private Level level;
@@ -49,7 +52,11 @@ public class Main implements Runnable {
      */
     public void run() {
         init();
-        loop();
+        if (AI) {
+            Evolver.train();
+        } else {
+            loop();
+        }
 
         // Cleanup after we exit the game loop
         glfwFreeCallbacks(window); // Free the window callbacks
@@ -91,26 +98,25 @@ public class Main implements Runnable {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        // Preload all resources
         Shader.loadAllShaders();
         Texture.loadAllTextures();
 
         // Initialize the engine
         engine = TheEngine.getInstance();
+        if (!AI) {
+            // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
+            engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added before RenderSystem
+            engine.addSystem(new PlayerMovementSystem());
+            engine.addSystem(new GhostMovementSystem());
+            engine.addSystem(new CollisionSystem());
+            engine.addSystem(new CollisionEventSystem());
+            engine.addSystem(new UncollidingSystem());
+            engine.addSystem(new RenderSystem());
+            engine.addSystem(new PlayerDyingSystem(true));
+            engine.addSystem(new GhostDyingSystem(false));
 
-        // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
-        engine.addSystem(new CameraSystem()); // CameraSystem must be added before RenderSystem
-        engine.addSystem(new PlayerMovementSystem()); // TODO: Probably temp and should be changed when the new movement system is ready
-        engine.addSystem(new GhostMovementSystem());
-        engine.addSystem(new CollisionSystem());
-        engine.addSystem(new CollisionEventSystem());
-        engine.addSystem(new UncollidingSystem());
-        engine.addSystem(new PlayerDyingSystem(true));
-        engine.addSystem(new GhostDyingSystem(false));
-        engine.addSystem(new RenderSystem());
-
-        // Initialize the level
-        this.level = new TestLevel();
+            this.level = new TestLevel();
+        }
     }
 
     /**

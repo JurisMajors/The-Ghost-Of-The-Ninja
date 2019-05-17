@@ -169,11 +169,13 @@ public abstract class Module {
     /**
      * Get an iterator of the entities that are in this module
      */
-    public Iterator<Entity> getEntities() {
-        return this.entities.iterator();
+    public  Iterable<Entity> getEntities() {
+        return this.entities;
     }
 
     private void addGhost() throws IllegalStateException {
+        if (Main.AI) return;
+
         if (this.entities == null) {
             throw new IllegalStateException("Adding ghost before initialized entities container");
         }

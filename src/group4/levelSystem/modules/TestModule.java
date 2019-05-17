@@ -2,12 +2,13 @@ package group4.levelSystem.modules;
 
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.world.Platform;
-import group4.ECS.entities.world.Platform;
+import group4.ECS.entities.world.SplinePlatform;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
 import group4.maths.Vector3f;
+import group4.maths.spline.MultiSpline;
 
 public class TestModule extends Module {
 
@@ -106,7 +107,7 @@ public class TestModule extends Module {
 
     @Override
     public Vector3f getPlayerInitialPosition() {
-        return new Vector3f(6.0f, 3.0f, 0.0f);
+        return new Vector3f(6.0f, 2.0f, 0.0f);
     }
 }
 

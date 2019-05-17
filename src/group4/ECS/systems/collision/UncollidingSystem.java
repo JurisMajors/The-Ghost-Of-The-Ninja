@@ -36,10 +36,19 @@ public class UncollidingSystem extends IteratingSystem {
      */
     void uncollideEntity(Entity e, float deltaTime, Vector3f curPos) {
         MovementComponent mc = Mappers.movementMapper.get(e);
+        PositionComponent pc = Mappers.positionMapper.get(e);
         // get all entities that i collide with
         CollisionComponent cc = Mappers.collisionMapper.get(e);
 
         for (CollisionData cd : cc.collisions) {
+            // deal with splines
+            if (cd.newPos != null) {
+                mc.velocity = new Vector3f();
+                pc.position = cd.newPos;
+                continue;
+            }
+
+
             Entity other = cd.entity;
             if (other.equals(e)) continue;
             // get the displacement vector
