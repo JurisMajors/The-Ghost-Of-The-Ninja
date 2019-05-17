@@ -11,6 +11,7 @@ public class ExitCollision extends AbstractCollisionHandler<Exit> {
     @Override
     public void collision(Exit e, CollisionComponent cc) {
         System.out.println("Reached exit");
+        cc.collisions.clear();
     }
 
     public static AbstractCollisionHandler getInstance() {
