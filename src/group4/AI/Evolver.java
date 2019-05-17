@@ -46,7 +46,7 @@ public class Evolver {
     /** TODO: find feasible time limit **/
     public static double timelimit = 5.00;
     /** Model path **/
-    public static final String path = "src/group4/models";
+    public static final String path = "src/group4/AI/models/";
 
     private static void toFile(Brain b, String filePath) throws IOException {
         b.toFile(filePath);
