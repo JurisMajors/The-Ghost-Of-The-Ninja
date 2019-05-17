@@ -9,7 +9,7 @@ import group4.maths.Vector3f;
 
 /**
  * Produces two features per intersection pair
- * First- the euclidean distance to the ghost
+ * First- the euclidean distance to the ghost (normalized)
  * Second- the type of entity it intersects with as an integer (0 - mob, 1-otherwise)
  */
 public class StandardIntersectionDecoder implements IntersectionDecoder {
@@ -19,7 +19,9 @@ public class StandardIntersectionDecoder implements IntersectionDecoder {
         float[] features = new float[this.nrFeatures()];
         // get the position
         Vector3f ghostPos = ghost.getComponent(PositionComponent.class).position;
+        // euclidean distance / max distance ray can get, produces a normalized feature
         features[0] = pair.point.euclidDist(ghostPos) / r.end.euclidDist(ghostPos);
+        // somem identifier for entities
         features[1] = this.decodeEntity(pair.entity);
         return features;
     }
