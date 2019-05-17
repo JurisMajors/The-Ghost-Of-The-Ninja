@@ -27,6 +27,7 @@ import group4.levelSystem.Module;
 import group4.levelSystem.levels.TestLevel;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -65,17 +66,19 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         // fetch gamestate, all entities which hold bounding box
         ImmutableArray<Entity> gamestate = engine.getEntitiesFor(Families.gamestateFamily);
 
-        Entity p = null;
+        List<Player> players = new ArrayList<>();
 
         // add the module entities except the player
         for (Entity entity : gamestate) {
             if (entity instanceof Player) {
-                p = entity;
-                break; // dont add the player
+                players.add((Player) entity);
+                if (players.size() == 2) break;
             }
         }
-        this.currModule.removeEntity(p);
-        engine.removeEntity(p);
+        for (Player p : players) {
+            this.currModule.removeEntity(p);
+            engine.removeEntity(p);
+        }
         // create the ghost
         Entity ghost = new Ghost(this.currModule.getPlayerInitialPosition(),
                 this.level,
