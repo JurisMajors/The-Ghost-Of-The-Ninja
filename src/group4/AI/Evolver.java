@@ -71,7 +71,11 @@ public class Evolver {
     /**
      * whether to render
      */
-    public static final boolean render = false;
+    public static final boolean render = true;
+    /**
+     * Currently not supported for GA
+     */
+    public static final boolean multiThreaded = false;
 
     private static void toFile(Brain b, String filePath) throws IOException {
         b.toFile(filePath);
@@ -95,7 +99,8 @@ public class Evolver {
 
         AbstractEvolutionEngine<Brain> engine = new GenerationalEvolutionEngine<>(factory, pipeline,
                 fitnessEvaluator, selection, rng);
-        engine.setSingleThreaded(true);
+
+        engine.setSingleThreaded(!multiThreaded);
 
         EvolutionLogger logger = new EvolutionLogger(path, 2);
 

@@ -53,7 +53,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         // init module
         this.timer = new Timer();
         // register systems to engine
-        initSystems();
+        initSystems(TheEngine.getInstance());
         level = new TestLevel();
         this.currModule = this.level.getCurrentModule();
 
@@ -88,10 +88,11 @@ public class Evaluator implements FitnessEvaluator<Brain> {
             if (Evolver.render) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             }
-            TheEngine.getInstance().update(1.0f/60.0f);
+            TheEngine.getInstance().update(1.0f);
             if (Evolver.render) {
                 glfwSwapBuffers(Main.window); // swap the color buffers
             }
+            // termination conditions
             if (ghost.getComponent(HealthComponent.class).health <= 0) {
                 System.out.println("death");
                 break;
@@ -117,10 +118,10 @@ public class Evaluator implements FitnessEvaluator<Brain> {
     /**
      * registers all necessary systems for running a minimal game for the AI
      */
-    private void initSystems() {
+    private void initSystems(Engine e) {
         // clear all systems for robustness
-        for (EntitySystem system : TheEngine.getInstance().getSystems()) {
-            TheEngine.getInstance().removeSystem(system);
+        for (EntitySystem system : e.getSystems()) {
+            e.removeSystem(system);
         }
 
         Shader.loadAllShaders();
