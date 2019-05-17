@@ -1,10 +1,14 @@
 package group4.levelSystem;
 
+import group4.AI.Brain;
+import group4.AI.Evolver;
+import group4.ECS.entities.Ghost;
 import group4.ECS.etc.TheEngine;
 import group4.game.Main;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 import com.badlogic.ashley.core.Entity;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,12 +41,22 @@ public abstract class Module {
     // Projection matrix for the current module
     private Matrix4f pr_matrix;
 
+    // ghost model
+    private String ghostPath = null;
+
 
     /**
      * Default construct, which constructs an empty module
      * If you want the module to be constructed with some default entities, please override @code{constructLevel()}
      */
     public Module(Level l) {
+        this(l, null);
+    }
+
+    public Module(Level l, String ghostModelName) {
+        if (ghostModelName != null) {
+            this.ghostPath = Evolver.path + ghostModelName;
+        }
         this.setup(l);
     }
 
@@ -52,10 +66,10 @@ public abstract class Module {
      */
     private final void setup(Level l) {
         if (l == null) throw new IllegalArgumentException("Module: Level cannot be null");
-
         this.level = l;
         this.entities = new ArrayList<>();
         this.constructModule();
+        this.addGhost();
         this.screenPosition = this.getStartScreenWindow();
         this.renewProjectionMatrix();
     }
@@ -157,5 +171,17 @@ public abstract class Module {
      */
     public Iterator<Entity> getEntities() {
         return this.entities.iterator();
+    }
+
+    private void addGhost() throws NullPointerException {
+        if (this.entities == null) {
+            throw new NullPointerException("Adding ghost before initialized entities container");
+        }
+        if (this.ghostPath != null) {
+            this.entities.add(new Ghost(this.getPlayerInitialPosition(), this.level,
+                    new Brain(this.ghostPath)));
+        } else {
+            System.err.println("WARNING: Not loading ghost in module");
+        }
     }
 }
