@@ -155,7 +155,7 @@ public abstract class Module {
     /**
      * Get an iterator of the entities that are in this module
      */
-    public Iterator<Entity> getEntities() {
-        return this.entities.iterator();
+    public  Iterable<Entity> getEntities() {
+        return this.entities;
     }
 }

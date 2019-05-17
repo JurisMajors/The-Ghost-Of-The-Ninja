@@ -3,12 +3,14 @@ package group4.ECS.systems;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.CameraComponent;
 import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
+import group4.game.Main;
 import group4.maths.Matrix4f;
 
 
@@ -20,8 +22,11 @@ public class CameraSystem extends EntitySystem {
 
     // array of registered entities in the graphicsFamily
     private ImmutableArray<Entity> entities;
+    private Family family;
 
-    public CameraSystem() {}
+    public CameraSystem(Family f) {
+        this.family = f;
+    }
 
     /**
      * @param priority used for creating a systems pipeline (lowest prio gets executed first)
@@ -50,8 +55,7 @@ public class CameraSystem extends EntitySystem {
     public void update(float deltaTime) {
         // Get the camera and the player (there should be only one of both, currently)
         Entity mainCamera = entities.get(0);
-//        Entity player = TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0);
-        Entity player = TheEngine.getInstance().getEntitiesFor(Families.ghostFamily).get(0);
+        Entity player = TheEngine.getInstance().getEntitiesFor(family).get(0);
 
         // get mapper for O(1) component retrieval
         CameraComponent cc = Mappers.cameraMapper.get(mainCamera);

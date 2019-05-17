@@ -3,6 +3,7 @@ package group4.game;
 import com.badlogic.ashley.core.Engine;
 import group4.AI.Brain;
 import group4.AI.Evolver;
+import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.CameraSystem;
 import group4.ECS.systems.PlayerDyingSystem;
@@ -39,6 +40,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Main implements Runnable {
     private Thread thread;
+    public static boolean AI = false;
 
     private Window win;
     public static long window; // The id of the window
@@ -64,7 +66,11 @@ public class Main implements Runnable {
      */
     public void run() {
         init();
-        Evolver.aiSht();
+        if (AI) {
+            Evolver.aiSht();
+        } else {
+            loop();
+        }
 
         // Cleanup after we exit the game loop
         glfwFreeCallbacks(window); // Free the window callbacks
@@ -106,12 +112,24 @@ public class Main implements Runnable {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        // Initialize the engine
-        engine = TheEngine.getInstance();
-
         Shader.loadAllShaders();
         Texture.loadAllTextures();
 
+        // Initialize the engine
+        engine = TheEngine.getInstance();
+        if (!AI) {
+            // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
+            engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added before RenderSystem
+            engine.addSystem(new PlayerMovementSystem());
+            engine.addSystem(new CollisionSystem());
+            engine.addSystem(new CollisionEventSystem());
+            engine.addSystem(new UncollidingSystem());
+            engine.addSystem(new RenderSystem());
+            engine.addSystem(new PlayerDyingSystem(true));
+
+            // Initialize the level
+            this.level = new TestLevel();
+        }
     }
 
     /**

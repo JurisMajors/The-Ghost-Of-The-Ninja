@@ -129,7 +129,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
 
         Engine engine = TheEngine.getInstance();
         if (Evolver.render) {
-            engine.addSystem(new CameraSystem());
+            engine.addSystem(new CameraSystem(Families.ghostFamily));
         }
         engine.addSystem(new GhostMovementSystem());
         engine.addSystem(new CollisionSystem());
