@@ -1,12 +1,12 @@
 package group4.ECS.entities;
 
-import com.badlogic.ashley.core.Entity;
 import group4.AI.Brain;
 import group4.ECS.components.*;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.maths.Vector3f;
+
 
 /**
  * The helper Ghost
@@ -21,16 +21,18 @@ public class Ghost extends Player {
     public Ghost (Vector3f position, Level level, Brain brain) {
         super(position, level);
 
+
+        //// remove player graphics
+        this.remove(GraphicsComponent.class);
+
+        //// add needed components
         Shader shader = Shader.SIMPLE;
-        // TODO: proper texture
-        Texture texture = Texture.BRICK;
-
-        // remove player graphics
-        this.remove(GravityComponent.class);
-
-        // add needed components
+        Texture texture = Texture.DEBUG;
         this.add(new GraphicsComponent(shader, texture, dimension));
         this.add(new GhostComponent(brain));
     }
 
+    public Ghost (Vector3f position, Level level, String brainPath) {
+        this(position, level, new Brain(brainPath));
+    }
 }

@@ -19,7 +19,7 @@ public class Ray {
     /** direction of the ray **/
     Vector3f dir;
     /** the end of the ray **/
-    Vector3f end;
+    public Vector3f end;
 
     public Ray(Vector3f startingPos, Vector3f dir) {
         this.startPos = startingPos;

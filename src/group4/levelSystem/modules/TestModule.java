@@ -15,6 +15,10 @@ public class TestModule extends Module {
         super(l);
     }
 
+    public TestModule(Level l, String modelName) {
+        super(l, modelName);
+    }
+
     @Override
     protected void constructModule() {
         // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.
@@ -105,3 +109,4 @@ public class TestModule extends Module {
         return new Vector3f(6.0f, 3.0f, 0.0f);
     }
 }
+

@@ -1,6 +1,7 @@
 package group4.ECS.systems;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.HealthComponent;
 import group4.ECS.components.PositionComponent;
@@ -18,7 +19,10 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
      * @param reset Indicate whether the system should automatically reset the module once the player dies
      */
     public PlayerDyingSystem(boolean reset) {
-        super(Families.playerFamily);
+        this(Families.playerFamily, reset);
+    }
+    PlayerDyingSystem(Family f, boolean reset) {
+        super(f);
         this.autoReset = reset;
     }
 
@@ -54,14 +58,11 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
     @Override
     protected boolean die(Entity entity, float deltaTime) {
         // Check if entity is indeed the player
-        if (!Player.class.isInstance(entity)) {
+        if (! (entity instanceof Player)) {
             throw new IllegalArgumentException("PlayerDyingSystem: received a non-player entity");
         }
 
-        // Kill the player, i.e. set its health to 0
-        if (Player.class.isInstance(entity)) {
-            entity.getComponent(HealthComponent.class).health = 0;
-        }
+        entity.getComponent(HealthComponent.class).health = 0;
 
         // If auto reset is enabled, reset the module to its original state
         // and reposition the player, while giving it new health
