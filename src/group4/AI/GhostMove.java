@@ -19,4 +19,8 @@ public enum GhostMove {
         return i.equals(this.move);
     }
 
+    public static int moveAmount() {
+        return 3;
+    }
+
 }
