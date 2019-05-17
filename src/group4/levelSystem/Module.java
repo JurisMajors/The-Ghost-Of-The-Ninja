@@ -173,9 +173,9 @@ public abstract class Module {
         return this.entities.iterator();
     }
 
-    private void addGhost() throws NullPointerException {
+    private void addGhost() throws IllegalStateException {
         if (this.entities == null) {
-            throw new NullPointerException("Adding ghost before initialized entities container");
+            throw new IllegalStateException("Adding ghost before initialized entities container");
         }
         if (this.ghostPath != null) {
             this.entities.add(new Ghost(this.getPlayerInitialPosition(), this.level,
