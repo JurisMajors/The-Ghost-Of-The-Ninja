@@ -1,6 +1,5 @@
 package group4.ECS.entities;
 
-import com.badlogic.ashley.core.Entity;
 import group4.AI.Brain;
 import group4.ECS.components.*;
 import group4.graphics.Shader;
@@ -21,15 +20,15 @@ public class Ghost extends Player {
     public Ghost (Vector3f position, Level level, Brain brain) {
         super(position, level);
 
-        Shader shader = Shader.SIMPLE;
-        // TODO: proper texture
-        Texture texture = Texture.BRICK;
+        //Shader shader = Shader.SIMPLE;
+        //// TODO: proper texture
+        //Texture texture = Texture.BRICK;
 
-        // remove player graphics
-        this.remove(GravityComponent.class);
+        //// remove player graphics
+        //this.remove(GravityComponent.class);
 
-        // add needed components
-        this.add(new GraphicsComponent(shader, texture, dimension));
+        //// add needed components
+        //this.add(new GraphicsComponent(shader, texture, dimension));
         this.add(new GhostComponent(brain));
     }
 

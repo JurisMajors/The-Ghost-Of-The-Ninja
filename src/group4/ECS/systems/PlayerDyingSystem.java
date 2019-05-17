@@ -1,6 +1,7 @@
 package group4.ECS.systems;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.HealthComponent;
 import group4.ECS.components.PositionComponent;
@@ -18,7 +19,10 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
      * @param reset Indicate whether the system should automatically reset the module once the player dies
      */
     public PlayerDyingSystem(boolean reset) {
-        super(Families.playerFamily);
+        this(Families.playerFamily, reset);
+    }
+    PlayerDyingSystem(Family f, boolean reset) {
+        super(f);
         this.autoReset = reset;
     }
 

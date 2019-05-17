@@ -2,6 +2,7 @@ package group4.AI.decoders;
 
 import com.badlogic.ashley.core.Entity;
 import group4.maths.IntersectionPair;
+import group4.maths.Ray;
 
 /**
  * Interface providing features of an {@link IntersectionPair}
@@ -14,7 +15,7 @@ public interface IntersectionDecoder {
      * @param ghost the ghost
      * @return the features as a float array
      */
-    float[] getFeatures(IntersectionPair pair, Entity ghost);
+    float[] getFeatures(Ray r, IntersectionPair pair, Entity ghost);
 
     /**
      * Number of features per pair this decoder produces
