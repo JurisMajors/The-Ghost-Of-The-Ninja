@@ -58,14 +58,11 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
     @Override
     protected boolean die(Entity entity, float deltaTime) {
         // Check if entity is indeed the player
-        if (!Player.class.isInstance(entity)) {
+        if (! (entity instanceof Player)) {
             throw new IllegalArgumentException("PlayerDyingSystem: received a non-player entity");
         }
 
-        // Kill the player, i.e. set its health to 0
-        if (Player.class.isInstance(entity)) {
-            entity.getComponent(HealthComponent.class).health = 0;
-        }
+        entity.getComponent(HealthComponent.class).health = 0;
 
         // If auto reset is enabled, reset the module to its original state
         // and reposition the player, while giving it new health
