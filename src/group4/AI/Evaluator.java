@@ -63,6 +63,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
     @Override
     public double getFitness(Brain brain, List<? extends Brain> list) {
         Engine engine = TheEngine.getInstance();
+        // reset all the entities of the module (and add them to engine)
         this.currModule.reset();
 
         clearPlayers(engine);
@@ -79,7 +80,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
             if (Evolver.render) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             }
-            TheEngine.getInstance().update(1.0f);
+            engine.update(1.0f);
             if (Evolver.render) {
                 glfwSwapBuffers(Main.window); // swap the color buffers
             }
@@ -93,8 +94,10 @@ public class Evaluator implements FitnessEvaluator<Brain> {
             }
         }
         System.out.println(Arrays.toString(ghost.getComponent(GhostComponent.class).moveFreq));
-        // create new module
+
+        // unload the entities from the engine and delete them from the module reference
         this.currModule.unload();
+        // return the x coordinate of the ghost, as the fitness
         return ghost.getComponent(PositionComponent.class).position.x;
     }
 
