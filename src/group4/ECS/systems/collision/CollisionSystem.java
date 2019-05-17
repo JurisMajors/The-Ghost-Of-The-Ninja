@@ -85,7 +85,6 @@ public class CollisionSystem extends IteratingSystem {
         DimensionComponent dc = Mappers.dimensionMapper.get(e);
 
         // get all corner points of the bounding box of the entity colliding with a spline
-//        Vector3f ct = pc.position.add(dc.dimension.scale(0.5f));
         Vector3f bl = pc.position;
         Vector3f br = pc.position.add(new Vector3f(dc.dimension.x, 0.0f, dc.dimension.z));
         Vector3f tr = pc.position.add(dc.dimension);
@@ -115,7 +114,6 @@ public class CollisionSystem extends IteratingSystem {
                 smallestDisplacement = Vector3f.min(smallestDisplacement, br.sub(worldPoint));
                 smallestDisplacement = Vector3f.min(smallestDisplacement, tr.sub(worldPoint));
                 smallestDisplacement = Vector3f.min(smallestDisplacement, tl.sub(worldPoint));
-//                smallestDisplacement = Vector3f.min(smallestDisplacement, ct.sub(worldPoint));
 
                 // get closest point to the bounding box
                 if (smallestDisplacement.length() < oldSmallest.length()) {
@@ -133,14 +131,13 @@ public class CollisionSystem extends IteratingSystem {
             Vector3f newPos = closestPoint.add(clostestNormal);
 
             // if the smallest displacement is smaller than half of the thickness there is a collision
-            // TODO: FIX HACK AT END OF IF STATEMENT VERY DANGAROUS
             if (smallestDisplacement.length() <= sc.normals[0].scale(0.5f * sc.thickness).length()) {
                 smallestDisplacement.scalei(smallestDisplacement.sub(sc.normals[0].scale(0.5f * sc.thickness)).length());
                 CollisionComponent scc = Mappers.collisionMapper.get(spline);
 
                 // add collision to entity and spline
-                CollisionData c1 = new CollisionData(spline, smallestDisplacement, newPos);
-                CollisionData c2 = new CollisionData(e, smallestDisplacement.scale(-1.0f), newPos);
+                CollisionData c1 = new CollisionData(spline, smallestDisplacement);
+                CollisionData c2 = new CollisionData(e, smallestDisplacement.scale(-1.0f));
                 cc.collisions.add(c1);
                 scc.collisions.add(c2);
             }
