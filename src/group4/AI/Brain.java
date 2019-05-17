@@ -13,6 +13,7 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,26 +30,26 @@ public class Brain {
         // TODO: FINALIZE NETWORK ARCHITECTURE
 
         NeuralNetConfiguration.ListBuilder lb = new NeuralNetConfiguration.Builder()
-                .seed(seed)
                 .weightInit(WeightInit.XAVIER)
                 .list();
 
         // build the dense layers
-        for (int i = 0; i < layerSizes.length - 1; i++) {
+        for (int i = 0; i < layerSizes.length - 2; i++) {
             lb.layer(new DenseLayer.Builder().nIn(layerSizes[i]).nOut(layerSizes[i + 1])
                     .activation(Activation.RELU)
+                    .weightInit(WeightInit.XAVIER)
                     .build());
 
         }
         // finalize the configuration by adding the output layer
         MultiLayerConfiguration conf = lb.layer(new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                 .activation(Activation.SOFTMAX)
+                .weightInit(WeightInit.XAVIER)
                 .nIn(layerSizes[layerSizes.length - 2]).nOut(layerSizes[layerSizes.length - 1]).build())
                 .build();
 
         conf.setBackprop(false);
         conf.setPretrain(false);
-
         // apply the configuration
         nn = new MultiLayerNetwork(conf);
         nn.init();
@@ -87,11 +88,12 @@ public class Brain {
      * @return move to make
      */
     private int feedForward(INDArray input) {
-        double[] result = nn.output(input).toDoubleVector();
+        List<INDArray> output = nn.feedForward(input);
+        double[] result = output.get(output.size() - 1).toDoubleVector();
         int argMax = 0;
         // get best move defined by network
         for (int i = 1; i < result.length; i++) {
-            if (result[i] > argMax) {
+            if (result[i] > result[argMax]) {
                 argMax = i;
             }
         }
@@ -103,6 +105,7 @@ public class Brain {
      * @return the move the ghost should take, according to {@link GhostMove} enum
      */
     public int think() {
-        return this.feedForward(Evolver.decoder.decode());
+        INDArray input = Evolver.decoder.decode();
+        return this.feedForward(input);
     }
 }

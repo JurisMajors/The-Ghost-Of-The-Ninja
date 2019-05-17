@@ -34,8 +34,9 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
      */
     @Override
     public void populationUpdate(PopulationData<? extends Brain> data) {
-        System.out.printf("Current generation: %d \n Mean Fitness: %f \n Best Fitness: %f",
-                data.getGenerationNumber(), data.getMeanFitness(), data.getBestCandidateFitness());
+        System.out.printf("Current generation: %d \n Mean Fitness: %f \n Best Fitness: %f \n STD fitness : %f",
+                data.getGenerationNumber(), data.getMeanFitness(),
+                data.getBestCandidateFitness(), data.getFitnessStandardDeviation());
 
         // save best candidate every number of generations
         if (this.filePath != null &&

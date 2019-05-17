@@ -24,7 +24,9 @@ public class GhostMovementSystem extends PlayerMovementSystem {
     @Override
     protected Object getMovementRef(Entity e) {
         GhostComponent ghostComp = e.getComponent(GhostComponent.class);
-        return ghostComp.brain.think();
+        Integer move = ghostComp.brain.think();
+        ghostComp.moveFreq[move]++;
+        return move;
     }
 
     @Override
