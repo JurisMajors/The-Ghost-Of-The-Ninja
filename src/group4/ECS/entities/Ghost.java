@@ -7,7 +7,6 @@ import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.maths.Vector3f;
 
-import java.io.IOException;
 
 /**
  * The helper Ghost
@@ -22,15 +21,14 @@ public class Ghost extends Player {
     public Ghost (Vector3f position, Level level, Brain brain) {
         super(position, level);
 
-        //Shader shader = Shader.SIMPLE;
-        //// TODO: proper texture
-        //Texture texture = Texture.BRICK;
 
         //// remove player graphics
-        //this.remove(GravityComponent.class);
+        this.remove(GraphicsComponent.class);
 
         //// add needed components
-        //this.add(new GraphicsComponent(shader, texture, dimension));
+        Shader shader = Shader.SIMPLE;
+        Texture texture = Texture.DEBUG;
+        this.add(new GraphicsComponent(shader, texture, dimension));
         this.add(new GhostComponent(brain));
     }
 
