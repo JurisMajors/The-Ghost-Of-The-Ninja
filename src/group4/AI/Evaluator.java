@@ -60,6 +60,8 @@ public class Evaluator implements FitnessEvaluator<Brain> {
     @Override
     public double getFitness(Brain brain, List<? extends Brain> list) {
         Engine engine = TheEngine.getInstance();
+        // reset all the entities of the module (and add them to engine)
+        this.currModule.reset();
         // fetch gamestate, all entities which hold bounding box
         ImmutableArray<Entity> gamestate = engine.getEntitiesFor(Families.gamestateFamily);
 
@@ -93,8 +95,9 @@ public class Evaluator implements FitnessEvaluator<Brain> {
             }
         }
         System.out.println(Arrays.toString(ghost.getComponent(GhostComponent.class).moveFreq));
-        // create new module
-        this.currModule.reset();
+        // unload the entities from the engine and delete them from the module reference
+        this.currModule.unload();
+        // return the x coordinate of the ghost, as the fitness
         return ghost.getComponent(PositionComponent.class).position.x;
     }
 
