@@ -1,5 +1,6 @@
 package group4.game;
 
+import group4.AI.Evolver;
 import org.lwjgl.glfw.GLFWVidMode;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -29,7 +30,9 @@ public class Window {
         // Setting the context and showing
         glfwMakeContextCurrent(window);
         glfwSwapInterval(1); // Enable v-sync
-        glfwShowWindow(window);
+        if (Evolver.render) {
+            glfwShowWindow(window);
+        }
     }
 
     public long getWindowId() {

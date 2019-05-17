@@ -109,6 +109,9 @@ public class Main implements Runnable {
         // Initialize the engine
         engine = TheEngine.getInstance();
 
+        Shader.loadAllShaders();
+        Texture.loadAllTextures();
+
     }
 
     /**
