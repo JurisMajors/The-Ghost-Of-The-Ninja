@@ -17,6 +17,9 @@ public class DebugUtils {
     private static float lineWidth = 2.0f;
     private static Vector3f color = new Vector3f(1.0f, 0.0f, 0.0f); // RED
 
+    // For warning the user once at the first frame.
+    private static boolean WARNING_DRAWCIRCLE = false;
+
     // nobody should create an object of this class
     private DebugUtils() {
     }
@@ -80,20 +83,48 @@ public class DebugUtils {
      * @param segments Integer, how many segments to use to form the circle
      */
     public static void drawCircle(Vector3f center, float radius, int segments) {
+        if (!WARNING_DRAWCIRCLE && segments > 50) {
+            System.err.println("[ drawCircle ] Warning! A high number of segments can negatively impact performance when drawing many circles.");
+            WARNING_DRAWCIRCLE = true; // Set the flag that we have warned the user of this.
+        }
         double step = 360.0f / segments;
         double angle = 0.0;
         List<Vector3f> points = new ArrayList<>();
         for (int i = 0; i < segments; i++) {
             points.add(
                     new Vector3f(
-                            (float) Math.asin(angle) * radius + center.x,
-                            (float) Math.acos(angle) * radius + center.y,
+                            (float) Math.cos(Math.toRadians(angle)) * radius + center.x,
+                            (float) Math.sin(Math.toRadians(angle)) * radius + center.y,
                             center.z
                     )
             );
             angle += step;
         }
-        
+
+        drawLineStrip(points, true);
+    }
+
+    /**
+     *
+     * @param points
+     * @param closed
+     */
+    public static void drawLineStrip(List<Vector3f> points, boolean closed) {
+        glLineWidth(lineWidth);
+        glColor3f(color.x, color.y, color.z);
+        glBegin(GL_LINE_STRIP);
+
+        // Draw all points
+        for (Vector3f point : points) {
+            glVertex2f(point.x, point.y);
+        }
+
+        // Optionally attach the last vertex to the first using an additional line
+        if (closed) {
+            glVertex2f(points.get(0).x, points.get(0).y);
+        }
+
+        glEnd();
     }
 
     public static void drawSpline() {
