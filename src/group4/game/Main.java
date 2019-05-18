@@ -105,15 +105,18 @@ public class Main implements Runnable {
         engine = TheEngine.getInstance();
         if (!AI) {
             // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
-            engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added before RenderSystem
+            // Systems which change the gamestate
             engine.addSystem(new PlayerMovementSystem());
             engine.addSystem(new GhostMovementSystem());
             engine.addSystem(new CollisionSystem());
             engine.addSystem(new CollisionEventSystem());
             engine.addSystem(new UncollidingSystem());
-            engine.addSystem(new RenderSystem());
             engine.addSystem(new PlayerDyingSystem(true));
             engine.addSystem(new GhostDyingSystem(false));
+
+            // Systems which are essentially observers of the changed gamestate
+            engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem
+            engine.addSystem(new RenderSystem());
 
             this.level = new TestLevel();
         }
