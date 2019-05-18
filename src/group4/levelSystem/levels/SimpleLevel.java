@@ -24,4 +24,10 @@ public class SimpleLevel extends Level {
         return new Player(new Vector3f(), this);
     }
 
+    @Override
+    protected void configExits() {
+        // This level's modules don't have exits
+        return;
+    }
+
 }

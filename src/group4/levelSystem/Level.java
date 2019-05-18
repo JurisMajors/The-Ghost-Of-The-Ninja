@@ -45,6 +45,8 @@ public abstract class Level {
         this.switchModule(this.rootModule);                 // Switch the current module to the root module
                                                             // Also takes care of positioning the player entity etc.
 
+        this.configExits();                                 // Configure the exits
+
         this.checkSanity();                                 // Check that the level was created appropriately
     }
 
@@ -93,6 +95,12 @@ public abstract class Level {
      * This method should return the player object to be used in the level
      */
     protected abstract Player createPlayer();
+
+
+    /**
+     * This method should set an exit action for each exit of each module
+     */
+    protected abstract void configExits();
 
 
     /**

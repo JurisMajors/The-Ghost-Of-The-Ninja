@@ -5,6 +5,7 @@ import group4.game.Main;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 import com.badlogic.ashley.core.Entity;
+import group4.ECS.entities.world.Exit;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -157,5 +158,21 @@ public abstract class Module {
      */
     public Iterator<Entity> getEntities() {
         return this.entities.iterator();
+    }
+
+
+    /**
+     * Get all exits of this module
+     */
+    public List<Exit> getExits() {
+        List<Exit> exits = new ArrayList<>();
+
+        for (Entity e : this.entities) {
+            if (e instanceof Exit) {
+                exits.add((Exit) e);
+            }
+        }
+
+        return exits;
     }
 }
