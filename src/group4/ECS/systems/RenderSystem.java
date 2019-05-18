@@ -17,6 +17,7 @@ import group4.utils.DebugUtils;
 
 import static org.lwjgl.opengl.GL41.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL41.glClear;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,18 +68,7 @@ public class RenderSystem extends EntitySystem {
      */
     public void update(float deltaTime) {
         // Match objects to RenderLayers so we can draw layer by layer
-        // TODO: Maybe it's better to use a mapper for this? Though I suspect this to be plenty fast for us, unless we do crazy particles or whatever. -Nico
-        Map<Layer, List<Entity>> entityLayers = new HashMap<>();
-        for (Layer layer : Layer.values()) {
-            entityLayers.put(layer, new ArrayList<>());
-        }
-
-        GraphicsComponent gc;
-        PositionComponent pc;
-        for (Entity entity : entities) {
-            gc = Mappers.graphicsMapper.get(entity);
-            entityLayers.get(gc.layer).add(entity);
-        }
+        Map<Layer, List<Entity>> entityLayers = sortEntitiesByLayer();
 
         // Get the camera and its main component from the engine
         Entity camera = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0); // There should only be one camera currently
@@ -91,6 +81,8 @@ public class RenderSystem extends EntitySystem {
             shader.setUniformMat4f("vw_matrix", cc.viewMatrix);
         }
 
+        PositionComponent pc;
+        GraphicsComponent gc;
         for (Layer layer : Layer.values()) {
             glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
             for (Entity entity : entityLayers.get(layer)) {
@@ -111,7 +103,6 @@ public class RenderSystem extends EntitySystem {
 
                 // Render!
                 gc.geometry.render();
-
             }
         }
 
@@ -148,6 +139,27 @@ public class RenderSystem extends EntitySystem {
      * @param processing in {true, false}
      */
     public void setProcessing(boolean processing) {
+    }
+
+    /**
+     * Constructs a Map which stores all entities in the engine sorted to the layer
+     * indicated in their respective GraphicsComponent.
+     *
+     * @return Map<Layer, List < Entity>>, the entities sorted by layer
+     */
+    private Map<Layer, List<Entity>> sortEntitiesByLayer() {
+        // Construct an empty hashmap and create a key for each layer
+        Map<Layer, List<Entity>> entityLayers = new HashMap<>();
+        for (Layer layer : Layer.values()) {
+            entityLayers.put(layer, new ArrayList<>());
+        }
+
+        GraphicsComponent gc;
+        for (Entity entity : entities) {
+            gc = Mappers.graphicsMapper.get(entity); // Fetch the GraphicsComponent
+            entityLayers.get(gc.layer).add(entity); // Use layer as key for adding to the map
+        }
+        return entityLayers;
     }
 
 }
