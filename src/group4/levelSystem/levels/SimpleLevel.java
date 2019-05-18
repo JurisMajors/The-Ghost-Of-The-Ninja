@@ -9,7 +9,7 @@ public class SimpleLevel extends Level {
 
     @Override
     protected Module createRoot() {
-        return new Module(this, "../src/group4/levelSystem/modules/TiledModules/test.json", null);
+        return new Module(this, "./src/group4/levelSystem/modules/TiledModules/simpleModule.json", null);
     }
 
     @Override

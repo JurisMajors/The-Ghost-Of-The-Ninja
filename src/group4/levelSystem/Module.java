@@ -4,20 +4,20 @@ import group4.AI.Brain;
 import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
+import group4.ECS.entities.world.Platform;
 import group4.ECS.etc.TheEngine;
 import group4.game.Main;
-import group4.maths.Matrix4f;
+import group4.graphics.Shader;
+import group4.graphics.Texture;
 import group4.maths.Vector3f;
 import com.badlogic.ashley.core.Entity;
-import org.apache.commons.lang3.ObjectUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -56,10 +56,11 @@ public class Module {
         this(l, TiledLevelLocation,null);
     }
 
-    public Module(Level l, String TiledLevelLocation, String ghostModelName) {
+    public Module(Level l, String TiledModuleLocation, String ghostModelName) {
         if (ghostModelName != null) {
             this.ghostPath = Evolver.path + ghostModelName;
         }
+        this.loadTiledObject(TiledModuleLocation);
         this.setup(l);
     }
 
@@ -74,7 +75,6 @@ public class Module {
 
             // Construct the JSON object containing the tiled module information
             this.tiledData = new JSONObject(new JSONTokener(fileReader));
-
         } catch (FileNotFoundException e) {
             throw new IllegalArgumentException("Module: could not find the tiled module JSON file");
         }
@@ -109,6 +109,59 @@ public class Module {
         // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.
         Camera camera = new Camera();
         this.addEntity(camera); // Adding the camera to the module (which adds it to the engine?)
+
+        // First, we set the height and width of the module
+        this.height = this.tiledData.getInt("height");
+        this.width = this.tiledData.getInt("width");
+
+        // Now, we get all tile layers from the JSON object
+        JSONArray layers = this.tiledData.getJSONArray("layers");
+
+        // Now, we loop over the layers
+        for (int i = 0; i < layers.length(); i++) {
+            JSONObject layer = layers.getJSONObject(i);
+
+            // Check that they layer is visible, if so, add its entities to the module
+            if (layer.getBoolean("visible")) {
+                // Get height and width of layer
+                int layerHeight = layer.getInt("height");
+                int layerWidth = layer.getInt("width");
+
+                // Loop over the data grid
+                JSONArray data = layer.getJSONArray("data");
+                for (int tile = 0; tile < data.length(); tile++) {
+                    // Get the grid position of the tile
+                    int tileGridY = layerHeight - 1 - (int) Math.floor(tile / layerWidth);
+                    int tileGridX = tile % layerWidth;
+
+                    System.out.println("" + tileGridX + " " + tileGridY);
+
+                    // Get the type of the tile
+                    switch(data.getInt(tile)) {
+
+                        case 1:
+                            // If the tile type is 1, we need to add a platform
+                            this.addPlatform(tileGridX, tileGridY);
+                            break;
+
+                        case 2:
+                            // If the tile type is 2, we need to set the players initial position
+                            this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
+                            break;
+
+                        case 3:
+                            // If the tile type is 3, we need to add an exit
+                            this.addExit(tileGridX, tileGridY);
+
+                        default:
+                            // By default, the tile is just empty
+                            break;
+                    }
+                }
+
+            }
+
+        }
     }
 
 
@@ -116,7 +169,7 @@ public class Module {
      * Return the initial position of the player in the module
      */
     public Vector3f getPlayerInitialPosition() {
-        return new Vector3f();
+        return this.initialPlayerPos;
     }
 
 
@@ -197,5 +250,30 @@ public class Module {
      */
     public int getHeight() {
         return this.height;
+    }
+
+
+    /**
+     * Adds a platform entity to the module
+     * @param x the x position of the platform in the module grid
+     * @param y the y position of the platform in the module grid
+     */
+    private void addPlatform(int x, int y) {
+        Vector3f tempPosition = new Vector3f(x, y, 0.0f);
+        Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
+        Platform p = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
+        this.addEntity(p);
+    }
+
+    /**
+     * Adds a exit entity to the module
+     * @param x the x position of the exit in the module grid
+     * @param y the y position of the exit in the module grid
+     */
+    private void addExit(int x, int y) {
+        Vector3f tempPosition = new Vector3f(x, y, 0.0f);
+        Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
+        Platform e = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.EXIT); // TODO: Change to Exit entity when that is available
+        this.addEntity(e);
     }
 }
