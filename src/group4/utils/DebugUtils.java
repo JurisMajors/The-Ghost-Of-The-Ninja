@@ -46,14 +46,19 @@ public class DebugUtils {
      * @param topRight   Vector3f, second corner of the bbox to draw
      */
     public static void drawBox(Vector3f bottomLeft, Vector3f topRight) {
-        glLineWidth(lineWidth);
-        glColor3f(color.x, color.y, color.z);
-        glBegin(GL_LINE_STRIP);
-        glVertex2f(bottomLeft.x, bottomLeft.y);
-        glVertex2f(topRight.x, bottomLeft.y);
-        glVertex2f(topRight.x, topRight.y);
-        glVertex2f(bottomLeft.x, topRight.y);
-        glEnd();
+        // Obtain the other two corners.
+        Vector3f bottomRight = new Vector3f(topRight.x, bottomLeft.y, 0.0f);
+        Vector3f topLeft = new Vector3f(bottomLeft.x, topRight.y, 0.0f);
+
+        // Store the box
+        List<Vector3f> box = new ArrayList<>();
+        box.add(bottomLeft);
+        box.add(bottomRight);
+        box.add(topRight);
+        box.add(topLeft);
+
+        // Draw!
+        drawLineStrip(box, false);
     }
 
     /**
@@ -105,9 +110,11 @@ public class DebugUtils {
     }
 
     /**
+     * Given a list containing N points in space, draws line segments between consecutive points. Optionally it will
+     * draw a line between point 0 and point N to close the linestrip.
      *
-     * @param points
-     * @param closed
+     * @param points List<Vector3f>, the points to use (in given order) for the linestrip
+     * @param closed Boolean, whether or not to connect point 0 and N with a line.
      */
     public static void drawLineStrip(List<Vector3f> points, boolean closed) {
         glLineWidth(lineWidth);
