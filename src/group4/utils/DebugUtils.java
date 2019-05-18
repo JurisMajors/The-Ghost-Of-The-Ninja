@@ -8,6 +8,9 @@ import group4.maths.spline.CubicBezierSpline;
 import group4.maths.spline.MultiSpline;
 import group4.maths.spline.Spline;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.lwjgl.opengl.GL11.*;
 
 public class DebugUtils {
@@ -66,6 +69,31 @@ public class DebugUtils {
             drawLine(new Vector3f(-1000.0f, cellSize * i, 0.0f),
                     new Vector3f(1000.0f, cellSize * i, 0.0f));
         }
+    }
+
+    /**
+     * Draws a circle at the given center position with the specified radius. The circle will be approximated with line
+     * segments. Many segments => smooth circle.
+     *
+     * @param center   Vector3f, the center position of the circle
+     * @param radius   Float, the radius of the circle
+     * @param segments Integer, how many segments to use to form the circle
+     */
+    public static void drawCircle(Vector3f center, float radius, int segments) {
+        double step = 360.0f / segments;
+        double angle = 0.0;
+        List<Vector3f> points = new ArrayList<>();
+        for (int i = 0; i < segments; i++) {
+            points.add(
+                    new Vector3f(
+                            (float) Math.asin(angle) * radius + center.x,
+                            (float) Math.acos(angle) * radius + center.y,
+                            center.z
+                    )
+            );
+            angle += step;
+        }
+        
     }
 
     public static void drawSpline() {
