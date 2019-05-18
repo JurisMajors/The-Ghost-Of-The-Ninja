@@ -26,7 +26,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class Main implements Runnable {
     private Thread thread;
     /** enable this if you want to run the genetic algorithm, instead of playing urself **/
-    public static boolean AI = true;
+    public static boolean AI = false;
 
     private Window win;
     public static long window; // The id of the window
@@ -146,7 +146,7 @@ public class Main implements Runnable {
             // update our FPS counter if a second has passed since
             // we last recorded
             if (lastFpsTime >= (long) 1e9) {
-                System.out.println("(FPS: " + fps + ")");
+                win.setWindowTitle("(FPS: " + fps + ")");
                 lastFpsTime = 0;
                 fps = 0;
             }

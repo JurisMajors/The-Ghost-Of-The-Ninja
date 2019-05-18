@@ -8,11 +8,17 @@ import group4.maths.spline.CubicBezierSpline;
 import group4.maths.spline.MultiSpline;
 import group4.maths.spline.Spline;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.lwjgl.opengl.GL11.*;
 
 public class DebugUtils {
     private static float lineWidth = 2.0f;
     private static Vector3f color = new Vector3f(1.0f, 0.0f, 0.0f); // RED
+
+    // For warning the user once at the first frame.
+    private static boolean WARNING_DRAWCIRCLE = false;
 
     // nobody should create an object of this class
     private DebugUtils() {
@@ -40,14 +46,19 @@ public class DebugUtils {
      * @param topRight   Vector3f, second corner of the bbox to draw
      */
     public static void drawBox(Vector3f bottomLeft, Vector3f topRight) {
-        glLineWidth(lineWidth);
-        glColor3f(color.x, color.y, color.z);
-        glBegin(GL_LINE_STRIP);
-        glVertex2f(bottomLeft.x, bottomLeft.y);
-        glVertex2f(topRight.x, bottomLeft.y);
-        glVertex2f(topRight.x, topRight.y);
-        glVertex2f(bottomLeft.x, topRight.y);
-        glEnd();
+        // Obtain the other two corners.
+        Vector3f bottomRight = new Vector3f(topRight.x, bottomLeft.y, 0.0f);
+        Vector3f topLeft = new Vector3f(bottomLeft.x, topRight.y, 0.0f);
+
+        // Store the box
+        List<Vector3f> box = new ArrayList<>();
+        box.add(bottomLeft);
+        box.add(bottomRight);
+        box.add(topRight);
+        box.add(topLeft);
+
+        // Draw!
+        drawLineStrip(box, false);
     }
 
     /**
@@ -66,6 +77,61 @@ public class DebugUtils {
             drawLine(new Vector3f(-1000.0f, cellSize * i, 0.0f),
                     new Vector3f(1000.0f, cellSize * i, 0.0f));
         }
+    }
+
+    /**
+     * Draws a circle at the given center position with the specified radius. The circle will be approximated with line
+     * segments. Many segments => smooth circle.
+     *
+     * @param center   Vector3f, the center position of the circle
+     * @param radius   Float, the radius of the circle
+     * @param segments Integer, how many segments to use to form the circle
+     */
+    public static void drawCircle(Vector3f center, float radius, int segments) {
+        if (!WARNING_DRAWCIRCLE && segments > 50) {
+            System.err.println("[ drawCircle ] Warning! A high number of segments can negatively impact performance when drawing many circles.");
+            WARNING_DRAWCIRCLE = true; // Set the flag that we have warned the user of this.
+        }
+        double step = 360.0f / segments;
+        double angle = 0.0;
+        List<Vector3f> points = new ArrayList<>();
+        for (int i = 0; i < segments; i++) {
+            points.add(
+                    new Vector3f(
+                            (float) Math.cos(Math.toRadians(angle)) * radius + center.x,
+                            (float) Math.sin(Math.toRadians(angle)) * radius + center.y,
+                            center.z
+                    )
+            );
+            angle += step;
+        }
+
+        drawLineStrip(points, true);
+    }
+
+    /**
+     * Given a list containing N points in space, draws line segments between consecutive points. Optionally it will
+     * draw a line between point 0 and point N to close the linestrip.
+     *
+     * @param points List<Vector3f>, the points to use (in given order) for the linestrip
+     * @param closed Boolean, whether or not to connect point 0 and N with a line.
+     */
+    public static void drawLineStrip(List<Vector3f> points, boolean closed) {
+        glLineWidth(lineWidth);
+        glColor3f(color.x, color.y, color.z);
+        glBegin(GL_LINE_STRIP);
+
+        // Draw all points
+        for (Vector3f point : points) {
+            glVertex2f(point.x, point.y);
+        }
+
+        // Optionally attach the last vertex to the first using an additional line
+        if (closed) {
+            glVertex2f(points.get(0).x, points.get(0).y);
+        }
+
+        glEnd();
     }
 
     public static void drawSpline() {

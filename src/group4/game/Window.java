@@ -56,4 +56,12 @@ public class Window {
         height = h;
     }
 
+    /**
+     * Updates the title of the window with the given string.
+     * @param title String, the new title of the window.
+     */
+    public void setWindowTitle(String title) {
+        glfwSetWindowTitle(this.window, title);
+    }
+
 }

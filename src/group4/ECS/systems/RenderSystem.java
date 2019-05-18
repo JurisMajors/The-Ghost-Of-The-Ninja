@@ -107,6 +107,7 @@ public class RenderSystem extends EntitySystem {
 //                    PositionComponent pcb = Mappers.positionMapper.get(b);
 //                    DebugUtils.drawLine(pca.position, pcb.position);
 //                    DebugUtils.drawBox(pca.position, pcb.position);
+//                    DebugUtils.drawCircle(pca.position, 2.0f, 50);
 //                }
 //            }
         }
