@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.MovementComponent;
 import group4.ECS.etc.Families;
+import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.maths.Vector3f;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -38,20 +39,20 @@ public abstract class RayStateDecoder implements StateDecoderInterface {
     @Override
     public INDArray decode() {
         // get all the entities
-        ImmutableArray<Entity> entities = TheEngine.getInstance().getEntities();
+        ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.collidableFamily);
         // get only the ghost
         Entity ghost = TheEngine.getInstance().getEntitiesFor(Families.ghostFamily).get(0);
 
         // normalized velocity of the ghost
-        Vector3f ghostVel = ghost.getComponent(MovementComponent.class).velocity.normalized();
+        MovementComponent mc = Mappers.movementMapper.get(ghost);
         // bottom of the cone of vision
         Vector3f bot = getCastingStart(ghost);
 
-        double[] ghostFeatures = new double[this.ghostFeatureAmount()];
+        float[] ghostFeatures = new float[this.ghostFeatureAmount()];
         // give velocity of the ghost (already normalized)
-        ghostFeatures[0] = ghostVel.x;
-        ghostFeatures[1] = ghostVel.y;
-        double[] result = this.rayDecoder.rayFeatures(ghostFeatures, bot, ghost, entities);
+        ghostFeatures[0] = mc.velocity.x / mc.velocityRange.x;
+        ghostFeatures[1] = mc.velocity.y / mc.velocityRange.y;
+        float[] result = this.rayDecoder.rayFeatures(ghostFeatures, bot, ghost, entities);
         return Nd4j.create(result);
     }
 

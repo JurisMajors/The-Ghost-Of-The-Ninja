@@ -1,6 +1,12 @@
 package group4.utils;
 
+import group4.ECS.entities.world.SplinePlatform;
+import group4.graphics.Shader;
+import group4.graphics.Texture;
 import group4.maths.Vector3f;
+import group4.maths.spline.CubicBezierSpline;
+import group4.maths.spline.MultiSpline;
+import group4.maths.spline.Spline;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -9,7 +15,8 @@ public class DebugUtils {
     private static Vector3f color = new Vector3f(1.0f, 0.0f, 0.0f); // RED
 
     // nobody should create an object of this class
-    private DebugUtils() {}
+    private DebugUtils() {
+    }
 
     /**
      * Given two vector positions, draws a red line between them using old style OpenGL.
@@ -30,7 +37,7 @@ public class DebugUtils {
      * Given two opposite corner positions, draws a red lined bbox between them using old style OpenGL.
      *
      * @param bottomLeft Vector3f, first corner of the bbox to draw
-     * @param topRight Vector3f, second corner of the bbox to draw
+     * @param topRight   Vector3f, second corner of the bbox to draw
      */
     public static void drawBox(Vector3f bottomLeft, Vector3f topRight) {
         glLineWidth(lineWidth);
@@ -59,5 +66,40 @@ public class DebugUtils {
             drawLine(new Vector3f(-1000.0f, cellSize * i, 0.0f),
                     new Vector3f(1000.0f, cellSize * i, 0.0f));
         }
+    }
+
+    public static void drawSpline() {
+        // my little spline test
+        Vector3f[] tempPoint = new Vector3f[]{
+                new Vector3f(),
+                new Vector3f(1.0f, 0.0f, 0.0f),
+                new Vector3f(1.0f, 1.0f, 0.0f),
+                new Vector3f(2.0f, 1.0f, 0.0f)
+        };
+        for (Vector3f v : tempPoint) {
+            v.addi(new Vector3f(5.0f, 5.0f, 0.0f));
+        }
+
+        MultiSpline mySpline = new MultiSpline(tempPoint);
+
+        int detail = 100;
+        float dt = 1 / (float) detail;
+        float t = 0.0f;
+
+        Vector3f[] points = new Vector3f[detail + 1];
+        Vector3f[] normals = new Vector3f[detail + 1];
+        for (int i = 0; i <= detail; i++) {
+            points[i] = mySpline.getPoint(t);
+            normals[i] = mySpline.getNormal(t);
+            t += dt;
+        }
+        for (int i = 1; i <= detail; i++) {
+            drawLine(points[i - 1], points[i]);
+        }
+        for (int i = 0; i <= detail; i++) {
+            drawLine(points[i], points[i].add(normals[i]));
+        }
+
+
     }
 }

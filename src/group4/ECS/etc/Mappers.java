@@ -1,7 +1,9 @@
 package group4.ECS.etc;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
 import group4.ECS.components.*;
+import group4.maths.spline.Spline;
 
 /**
  * Mappers retrieve components from entities in O(1) time
@@ -27,8 +29,8 @@ public class Mappers {
     public static final ComponentMapper<ConsumableComponent> consumableMapper =
             ComponentMapper.getFor(ConsumableComponent.class);
 
-    public static final ComponentMapper<StatsComponent> statsMapper =
-            ComponentMapper.getFor(StatsComponent.class);
+    public static final ComponentMapper<HealthComponent> dieableMapper =
+            ComponentMapper.getFor(HealthComponent.class);
 
     public static final ComponentMapper<AudioComponent> audioMapper =
             ComponentMapper.getFor(AudioComponent.class);
@@ -41,4 +43,10 @@ public class Mappers {
 
     public static final ComponentMapper<RangeComponent> rangeMapper =
             ComponentMapper.getFor(RangeComponent.class);
+
+    public static final ComponentMapper<CollisionComponent> collisionMapper =
+            ComponentMapper.getFor(CollisionComponent.class);
+
+    public static final ComponentMapper<SplineComponent> splineMapper =
+            ComponentMapper.getFor(SplineComponent.class);
 }

@@ -7,7 +7,9 @@ import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.PlayerComponent;
 import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.Mappers;
+import group4.utils.DebugUtils;
 
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +19,7 @@ public class Ray {
     /** direction of the ray **/
     Vector3f dir;
     /** the end of the ray **/
-    Vector3f end;
+    public Vector3f end;
 
     public Ray(Vector3f startingPos, Vector3f dir) {
         this.startPos = startingPos;
@@ -56,7 +58,9 @@ public class Ray {
                 }
             }
         }
-
+        if (closestIntersection == null) {
+            closestIntersection = this.end;
+        }
         return new IntersectionPair(closestIntersection, intersectedEntity);
     }
 
@@ -80,44 +84,49 @@ public class Ray {
         Vector3f botRight = new Vector3f(botLeft.x + dim.x, botLeft.y, botLeft.z);
 
         // define lines of the bounding box
-        List<List<Vector3f>> lines = new ArrayList<>();
+        List<Line2D.Float> lines = new ArrayList<>();
         lines.add(createLine(topLeft, topRight));
         lines.add(createLine(topLeft, botLeft));
         lines.add(createLine(botLeft, botRight));
         lines.add(createLine(botRight, topRight));
         // this can be extended for more dimensions if necessary...
-
+        Line2D.Float rayAsLine = createLine(this.startPos, this.end);
         // check for intersections on each line
-        for (List<Vector3f> line : lines) {
-            Vector3f inter = this.lineIntersection(line.get(0), line.get(1));
-            if (inter == null) continue;
+        for (Line2D line : lines) {
+            // if line segments dont intersect, skip
+            if (!line.intersectsLine(rayAsLine)) continue;
+            // otherwise calculate the intersection between the "infinite lines"
+            Vector3f inter = this.lineIntersection(new Vector3f((float) line.getX1(), (float) line.getY1(),0 ),
+                                                    new Vector3f((float) line.getX2(), (float) line.getY2(), 0));
+            if (inter == null) {
+                continue;
+            }
             intersections.add(inter);
         }
 
         return intersections;
     }
 
-    private List<Vector3f> createLine(Vector3f a, Vector3f b) {
-        List<Vector3f> points = new ArrayList<>();
-        points.add(a);
-        points.add(b);
-        return points;
+    private Line2D.Float createLine(Vector3f a, Vector3f b) {
+        return new Line2D.Float(a.x, a.y,
+                b.x, b.y);
     }
 
     private Vector3f lineIntersection(Vector3f a, Vector3f b) {
+        // assumes infinite lines
         // https://gamedev.stackexchange.com/questions/111100/intersection-of-a-line-and-a-rectangle
         float A1 = this.end.y - this.startPos.y;
-        float B1 = this.end.x - this.startPos.x;
+        float B1 = this.startPos.x - this.end.x;
 
         float A2 = a.y - b.y;
-        float B2 = a.x - b.x;
+        float B2 = b.x - a.x;
 
         float delta = A1 * B2 - A2 * B1;
         if (delta < 1e-6 && delta > -1 * 1e-6) {
             return null;
         }
 
-        float C2 = A2 * a.x + B2 * a.y;
+        float C2 = A2 * b.x + B2 * b.y;
         float C1 = A1 * this.startPos.x + B1 * this.startPos.y;
 
         float invdelta = 1/delta;

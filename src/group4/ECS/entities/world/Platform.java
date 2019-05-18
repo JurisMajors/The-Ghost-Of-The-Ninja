@@ -2,7 +2,7 @@ package group4.ECS.entities.world;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.*;
-import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.collision.CollisionHandlers.PlatformCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
@@ -23,15 +23,18 @@ public class Platform extends Entity {
      * @param texture   texture for this platform
      */
     public Platform(Vector3f position, Vector3f dimension, Shader shader, Texture texture) {
-        this.add(new PositionComponent(position));
-        this.add(new DimensionComponent(dimension));
-        this.add(new PlatformComponent());
-        this.add(new ColliderComponent());
-
+        this(position, dimension);
         // create the graphics component with a vertex array repeating the texture over this platform
         GraphicsComponent graphicsComponent = createGraphicsComponent(position, dimension, texture, shader);
 //        GraphicsComponent graphicsComponent = new GraphicsComponent(shader, texture, dimension);
         this.add(graphicsComponent);
+    }
+
+    public Platform(Vector3f position, Vector3f dimension) {
+        this.add(new PositionComponent(position));
+        this.add(new DimensionComponent(dimension));
+        this.add(new PlatformComponent());
+        this.add(new CollisionComponent(PlatformCollision.getInstance()));
     }
 
     private GraphicsComponent createGraphicsComponent(Vector3f position, Vector3f dimension, Texture texture, Shader shader) {

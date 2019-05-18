@@ -17,6 +17,8 @@ public class Texture {
     public static Texture AK47;
     public static Texture MG_BULLET;
     public static Texture EXIT;  // TODO: More to be added.
+    public static Texture BLACK;
+    public static Texture WHITE;
     public static Texture MAIN_TILES;
     public static Texture BACKGROUND;
 
@@ -41,6 +43,8 @@ public class Texture {
         EXIT = new Texture("src/group4/res/textures/exit.jpg");
         MAIN_TILES = new Texture("src/group4/res/textures/maintiles.png");
         BACKGROUND = new Texture("src/group4/res/textures/cave.jpg");
+        BLACK = new Texture("src/group4/res/textures/black.png");
+        WHITE = new Texture("src/group4/res/textures/white.png");
     }
 
     /**

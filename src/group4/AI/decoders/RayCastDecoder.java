@@ -2,6 +2,7 @@ package group4.AI.decoders;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
+import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.PositionComponent;
 import group4.maths.IntersectionPair;
 import group4.maths.Ray;
@@ -37,10 +38,12 @@ public class RayCastDecoder {
      * @param entities      the entities to determine collisions with
      * @return the produced features from casting rays + ghost features at the start
      */
-    double[] rayFeatures(double[] ghostFeatures, Vector3f start, Entity ghost, ImmutableArray<Entity> entities) {
-        Vector3f ghostPos = ghost.getComponent(PositionComponent.class).position; // position of the ghost
+    float[] rayFeatures(float[] ghostFeatures, Vector3f start, Entity ghost, ImmutableArray<Entity> entities) {
+        Vector3f ghostCenter = ghost.getComponent(PositionComponent.class).position.add(
+                ghost.getComponent(DimensionComponent.class).dimension.scale(0.5f)); // position of the ghost
+
         // define the length of the features array
-        double[] features = new double[ghostFeatures.length + this.nrRays * decoder.nrFeatures()];
+        float[] features = new float[ghostFeatures.length + this.nrRays * decoder.nrFeatures()];
         // copy the ghost features
         for (int i = 0; i < ghostFeatures.length; i++) {
             features[i] = ghostFeatures[i];
@@ -48,19 +51,18 @@ public class RayCastDecoder {
         // increments of the angle for the rays
         float deltaTheta = this.angleRange / this.nrRays;
 
-        for (int i = ghostFeatures.length; i < features.length ; i++) {
+        for (int i = ghostFeatures.length; i < this.nrRays ; i+=2) {
             // create ray with appropriate direction
             // by rotating upwards from the start ray
-            Ray r = new Ray(ghostPos, start.rotateXY((i - ghostFeatures.length) * deltaTheta));
+            Ray r = new Ray(ghostCenter, start.rotateXY((i - ghostFeatures.length) * deltaTheta));
             // cast it
             IntersectionPair intersection = r.cast(entities);
 
             // add the features to the result
-            double[] interFeatures = this.decoder.getFeatures(intersection, ghost);
+            float[] interFeatures = this.decoder.getFeatures(r, intersection, ghost);
             for (int j = 0; j < interFeatures.length; j++) {
                 features[j + i] = interFeatures[j];
             }
-
         }
         return features;
     }
