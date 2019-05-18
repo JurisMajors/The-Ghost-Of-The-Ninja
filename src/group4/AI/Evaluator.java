@@ -24,7 +24,7 @@ import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
-import group4.levelSystem.levels.TestLevel;
+import group4.levelSystem.levels.SimpleLevel;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         this.timer = new Timer();
         // register systems to engine
         initSystems(TheEngine.getInstance());
-        level = new TestLevel();
+        level = new SimpleLevel();
         this.currModule = this.level.getCurrentModule();
 
     }

@@ -2,6 +2,7 @@ package group4.levelSystem;
 
 import group4.AI.Brain;
 import group4.AI.Evolver;
+import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
 import group4.ECS.etc.TheEngine;
 import group4.game.Main;
@@ -9,7 +10,12 @@ import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 import com.badlogic.ashley.core.Entity;
 import org.apache.commons.lang3.ObjectUtils;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -20,12 +26,12 @@ import java.util.List;
  *      entities may overlap multiple cells of the grid
  * A module can have entries and exits that can link to other modules in a levelSystem (links defined on levelSystem basis)
  */
-public abstract class Module {
+public class Module {
 
     // Define the size of the module grid
     // All modules should be of the same size to keep things simple
-    public static final int height = 64;
-    public static final int width = 64;
+    private int height;
+    private int width;
 
     // Keep track of the level that this module instance is part of
     private Level level;
@@ -33,32 +39,47 @@ public abstract class Module {
     // List that keeps track of all the entities in the module
     private List<Entity> entities;
 
-    // Keep track of the part of the module that is currently in screen-view
-    // We will do this by keeping the bottom left corner in a variable and the visible region will be between
-    // that point and the point (bottomleft.x + Main.SCREEN_WIDTH, bottomleft.y + Main.SCREEN_HEIGHT)
-    private Vector3f screenPosition;
-
-    // Projection matrix for the current module
-    private Matrix4f pr_matrix;
-
     // ghost model
     private String ghostPath = null;
 
+    // Keeps track of the initial player position
+    private Vector3f initialPlayerPos;
+
+    // JSON Object containing the tiled data
+    JSONObject tiledData;
+
 
     /**
-     * Default construct, which constructs an empty module
-     * If you want the module to be constructed with some default entities, please override @code{constructLevel()}
+     * Default construct, which constructs a module based on a Tiled .tmx file
      */
-    public Module(Level l) {
-        this(l, null);
+    public Module(Level l, String TiledLevelLocation) {
+        this(l, TiledLevelLocation,null);
     }
 
-    public Module(Level l, String ghostModelName) {
+    public Module(Level l, String TiledLevelLocation, String ghostModelName) {
         if (ghostModelName != null) {
             this.ghostPath = Evolver.path + ghostModelName;
         }
         this.setup(l);
     }
+
+
+    /**
+     * This method is used to create a JSON object containing the tiled module information
+     */
+    private void loadTiledObject(String fileLocation) {
+        // Try to read the tiled json file
+        try {
+            FileReader fileReader = new FileReader(fileLocation);
+
+            // Construct the JSON object containing the tiled module information
+            this.tiledData = new JSONObject(new JSONTokener(fileReader));
+
+        } catch (FileNotFoundException e) {
+            throw new IllegalArgumentException("Module: could not find the tiled module JSON file");
+        }
+    }
+
 
 
     /**
@@ -70,8 +91,6 @@ public abstract class Module {
         this.entities = new ArrayList<>();
         this.constructModule();
         this.addGhost();
-        this.screenPosition = this.getStartScreenWindow();
-        this.renewProjectionMatrix();
     }
 
 
@@ -86,19 +105,19 @@ public abstract class Module {
     /**
      * Populates @code{this.entities} with default entities for the module
      */
-    protected abstract void constructModule();
-
-
-    /**
-     * Return the initial position of the screen window
-     */
-    protected abstract Vector3f getStartScreenWindow();
+    protected void constructModule() {
+        // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.
+        Camera camera = new Camera();
+        this.addEntity(camera); // Adding the camera to the module (which adds it to the engine?)
+    }
 
 
     /**
      * Return the initial position of the player in the module
      */
-    public abstract Vector3f getPlayerInitialPosition();
+    public Vector3f getPlayerInitialPosition() {
+        return new Vector3f();
+    }
 
 
     /**
@@ -118,33 +137,6 @@ public abstract class Module {
         for (Entity e : this.entities) {
             TheEngine.getInstance().removeEntity(e);
         }
-    }
-
-
-    /**
-     * Sets screen window to new position, also updates the projection matrix
-     * @param newPos the new bottom-left position of the screen window for the module
-     */
-    public void updateScreenWindow(Vector3f newPos) {
-        this.screenPosition = newPos;
-        this.renewProjectionMatrix();
-    }
-
-
-    /**
-     * Update the projection matrix based on the current screen window
-     */
-    private void renewProjectionMatrix() {
-        this.pr_matrix = Matrix4f.orthographic(this.screenPosition.x, this.screenPosition.x + Main.SCREEN_WIDTH,
-                this.screenPosition.y, this.screenPosition.y + Main.SCREEN_HEIGHT, -1.0f, 1.0f);
-    }
-
-
-    /**
-     * Get the current projection matrix based on the current screen window
-     */
-    public Matrix4f getProjectionMatrix() {
-        return this.pr_matrix;
     }
 
 
@@ -173,6 +165,10 @@ public abstract class Module {
         return this.entities;
     }
 
+
+    /**
+     * Add a ghost to the current module
+     */
     private void addGhost() throws IllegalStateException {
         if (Main.AI) return;
 
@@ -185,5 +181,21 @@ public abstract class Module {
         } else {
             System.err.println("WARNING: Not loading ghost in module");
         }
+    }
+
+
+    /**
+     * Get the width of the module grid
+     */
+    public int getWidth() {
+        return this.width;
+    }
+
+
+    /**
+     * Get the height of the module grid
+     */
+    public int getHeight() {
+        return this.height;
     }
 }
