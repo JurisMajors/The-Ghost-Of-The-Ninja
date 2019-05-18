@@ -20,7 +20,7 @@ public class MovingPlatform extends Platform {
      * @param shader         shader for this platform
      * @param texture        texture for this platform
      */
-    public MovingPlatform(Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f lbbCornerRange, Vector3f rtfCornerRange, Shader shader, Texture texture, float[] texCoords) {
+    public MovingPlatform(Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f lbbCornerRange, Vector3f rtfCornerRange, Shader shader, Texture texture) {
         // create position, dimension and graphics components and adds to engine
         super(position, dimension, shader, texture);
 

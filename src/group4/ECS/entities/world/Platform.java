@@ -11,9 +11,6 @@ import java.util.ArrayList;
 
 public class Platform extends Entity {
 
-    public Platform(Vector3f position, Shader shader, Texture texture) {
-
-    }
     /**
      * Creates a static platform
      *
@@ -26,7 +23,6 @@ public class Platform extends Entity {
         this(position, dimension);
         // create the graphics component with a vertex array repeating the texture over this platform
         GraphicsComponent graphicsComponent = createGraphicsComponent(position, dimension, texture, shader);
-//        GraphicsComponent graphicsComponent = new GraphicsComponent(shader, texture, dimension);
         this.add(graphicsComponent);
     }
 
