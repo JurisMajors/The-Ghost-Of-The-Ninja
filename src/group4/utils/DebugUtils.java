@@ -1,13 +1,7 @@
 package group4.utils;
 
-import com.twelvemonkeys.util.convert.TypeMismathException;
-import group4.ECS.entities.world.SplinePlatform;
-import group4.graphics.Shader;
-import group4.graphics.Texture;
 import group4.maths.Vector3f;
-import group4.maths.spline.CubicBezierSpline;
 import group4.maths.spline.MultiSpline;
-import group4.maths.spline.Spline;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,15 +13,27 @@ import static org.lwjgl.opengl.GL11.*;
 public class DebugUtils {
     private static float lineWidth = 2.0f;
     private static Vector3f color = new Vector3f(1.0f, 0.0f, 0.0f); // RED
-    private static Map<String, ArrayList<ArrayList<Float>>> queue = resetQueue();
+    private static Map<String, ArrayList<ArrayList<Float>>> queue;
     private static String[] queueTypes = {"line", "linestrip", "box", "circle"};
+
     // For warning the user once at the first frame.
     private static boolean WARNING_DRAWCIRCLE = false;
+
+    // Static block to be able to correctly call the function. Has to do with correct class initialization etc.
+    static {
+        queue = resetQueue();
+    }
 
     // nobody should create an object of this class
     private DebugUtils() {
     }
 
+    /**
+     * Given two vector positions, draws a red line between them using old style OpenGL.
+     *
+     * @param a Vector3f, starting point of the line segment to draw
+     * @param b Vector3f, ending point of the line segment to draw
+     */
     public static void drawLine(Vector3f a, Vector3f b) {
         queue.get("line").add(
                 new ArrayList<Float>() {{
@@ -41,12 +47,6 @@ public class DebugUtils {
         );
     }
 
-    /**
-     * Given two vector positions, draws a red line between them using old style OpenGL.
-     *
-     * @param a Vector3f, starting point of the line segment to draw
-     * @param b Vector3f, ending point of the line segment to draw
-     */
     private static void _drawLine(Vector3f a, Vector3f b) {
         glLineWidth(lineWidth);
         glColor3f(color.x, color.y, color.z);
@@ -56,25 +56,25 @@ public class DebugUtils {
         glEnd();
     }
 
-    public static void drawBox(Vector3f a, Vector3f b) {
-        queue.get("box").add(
-                new ArrayList<Float>() {{
-                    add(a.x);
-                    add(a.y);
-                    add(a.z);
-                    add(b.x);
-                    add(b.y);
-                    add(b.z);
-                }}
-        );
-    }
-
     /**
      * Given two opposite corner positions, draws a red lined bbox between them using old style OpenGL.
      *
      * @param bottomLeft Vector3f, first corner of the bbox to draw
      * @param topRight   Vector3f, second corner of the bbox to draw
      */
+    public static void drawBox(Vector3f bottomLeft, Vector3f topRight) {
+        queue.get("box").add(
+                new ArrayList<Float>() {{
+                    add(bottomLeft.x);
+                    add(bottomLeft.y);
+                    add(bottomLeft.z);
+                    add(topRight.x);
+                    add(topRight.y);
+                    add(topRight.z);
+                }}
+        );
+    }
+
     public static void _drawBox(Vector3f bottomLeft, Vector3f topRight) {
         // Obtain the other two corners.
         Vector3f bottomRight = new Vector3f(topRight.x, bottomLeft.y, 0.0f);
@@ -109,6 +109,14 @@ public class DebugUtils {
         }
     }
 
+    /**
+     * Draws a circle at the given center position with the specified radius. The circle will be approximated with line
+     * segments. Many segments => smooth circle.
+     *
+     * @param center   Vector3f, the center position of the circle
+     * @param radius   Float, the radius of the circle
+     * @param segments Integer, how many segments to use to form the circle
+     */
     public static void drawCircle(Vector3f center, float radius, int segments) {
         queue.get("circle").add(
                 new ArrayList<Float>() {{
@@ -121,14 +129,6 @@ public class DebugUtils {
         );
     }
 
-    /**
-     * Draws a circle at the given center position with the specified radius. The circle will be approximated with line
-     * segments. Many segments => smooth circle.
-     *
-     * @param center   Vector3f, the center position of the circle
-     * @param radius   Float, the radius of the circle
-     * @param segments Integer, how many segments to use to form the circle
-     */
     private static void _drawCircle(Vector3f center, float radius, int segments) {
         if (!WARNING_DRAWCIRCLE && segments > 50) {
             System.err.println("[ drawCircle ] Warning! A high number of segments can negatively impact performance when drawing many circles.");
@@ -151,6 +151,13 @@ public class DebugUtils {
         drawLineStrip(points, true);
     }
 
+    /**
+     * Given a list containing N points in space, draws line segments between consecutive points. Optionally it will
+     * draw a line between point 0 and point N to close the linestrip.
+     *
+     * @param points List<Vector3f>, the points to use (in given order) for the linestrip
+     * @param closed Boolean, whether or not to connect point 0 and N with a line.
+     */
     public static void drawLineStrip(List<Vector3f> points, boolean closed) {
         ArrayList<Float> data = new ArrayList<>();
 
@@ -163,13 +170,6 @@ public class DebugUtils {
         data.add(closed ? 1.0f : 0.0f);
     }
 
-    /**
-     * Given a list containing N points in space, draws line segments between consecutive points. Optionally it will
-     * draw a line between point 0 and point N to close the linestrip.
-     *
-     * @param points List<Vector3f>, the points to use (in given order) for the linestrip
-     * @param closed Boolean, whether or not to connect point 0 and N with a line.
-     */
     private static void _drawLineStrip(List<Vector3f> points, boolean closed) {
         glLineWidth(lineWidth);
         glColor3f(color.x, color.y, color.z);
@@ -268,15 +268,16 @@ public class DebugUtils {
                 }
             }
         }
+        queue = resetQueue();
     }
 
     private static Map<String, ArrayList<ArrayList<Float>>> resetQueue() {
-        Map<String, ArrayList<ArrayList<Float>>> queue = new HashMap<>();
+        Map<String, ArrayList<ArrayList<Float>>> newQueue = new HashMap<>();
 
         for (String queueType : queueTypes) {
-            queue.put(queueType, new ArrayList<ArrayList<Float>>());
+            newQueue.put(queueType, new ArrayList<ArrayList<Float>>());
         }
 
-        return queue;
+        return newQueue;
     }
 }
