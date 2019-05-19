@@ -1,24 +1,28 @@
 package group4.utils;
 
-import group4.ECS.entities.world.SplinePlatform;
-import group4.graphics.Shader;
-import group4.graphics.Texture;
 import group4.maths.Vector3f;
-import group4.maths.spline.CubicBezierSpline;
 import group4.maths.spline.MultiSpline;
-import group4.maths.spline.Spline;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
 
 public class DebugUtils {
     private static float lineWidth = 2.0f;
     private static Vector3f color = new Vector3f(1.0f, 0.0f, 0.0f); // RED
+    private static Map<String, ArrayList<ArrayList<Float>>> queue;
+    private static String[] queueTypes = {"line", "linestrip", "box", "circle"};
 
     // For warning the user once at the first frame.
     private static boolean WARNING_DRAWCIRCLE = false;
+
+    // Static block to be able to correctly call the function. Has to do with correct class initialization etc.
+    static {
+        queue = resetQueue();
+    }
 
     // nobody should create an object of this class
     private DebugUtils() {
@@ -31,6 +35,19 @@ public class DebugUtils {
      * @param b Vector3f, ending point of the line segment to draw
      */
     public static void drawLine(Vector3f a, Vector3f b) {
+        queue.get("line").add(
+                new ArrayList<Float>() {{
+                    add(a.x);
+                    add(a.y);
+                    add(a.z);
+                    add(b.x);
+                    add(b.y);
+                    add(b.z);
+                }}
+        );
+    }
+
+    private static void _drawLine(Vector3f a, Vector3f b) {
         glLineWidth(lineWidth);
         glColor3f(color.x, color.y, color.z);
         glBegin(GL_LINES);
@@ -46,6 +63,19 @@ public class DebugUtils {
      * @param topRight   Vector3f, second corner of the bbox to draw
      */
     public static void drawBox(Vector3f bottomLeft, Vector3f topRight) {
+        queue.get("box").add(
+                new ArrayList<Float>() {{
+                    add(bottomLeft.x);
+                    add(bottomLeft.y);
+                    add(bottomLeft.z);
+                    add(topRight.x);
+                    add(topRight.y);
+                    add(topRight.z);
+                }}
+        );
+    }
+
+    public static void _drawBox(Vector3f bottomLeft, Vector3f topRight) {
         // Obtain the other two corners.
         Vector3f bottomRight = new Vector3f(topRight.x, bottomLeft.y, 0.0f);
         Vector3f topLeft = new Vector3f(bottomLeft.x, topRight.y, 0.0f);
@@ -58,7 +88,7 @@ public class DebugUtils {
         box.add(topLeft);
 
         // Draw!
-        drawLineStrip(box, false);
+        _drawLineStrip(box, true);
     }
 
     /**
@@ -88,6 +118,18 @@ public class DebugUtils {
      * @param segments Integer, how many segments to use to form the circle
      */
     public static void drawCircle(Vector3f center, float radius, int segments) {
+        queue.get("circle").add(
+                new ArrayList<Float>() {{
+                    add(center.x);
+                    add(center.y);
+                    add(center.z);
+                    add(radius);
+                    add((float) segments);
+                }}
+        );
+    }
+
+    private static void _drawCircle(Vector3f center, float radius, int segments) {
         if (!WARNING_DRAWCIRCLE && segments > 50) {
             System.err.println("[ drawCircle ] Warning! A high number of segments can negatively impact performance when drawing many circles.");
             WARNING_DRAWCIRCLE = true; // Set the flag that we have warned the user of this.
@@ -106,7 +148,7 @@ public class DebugUtils {
             angle += step;
         }
 
-        drawLineStrip(points, true);
+        _drawLineStrip(points, true);
     }
 
     /**
@@ -117,6 +159,19 @@ public class DebugUtils {
      * @param closed Boolean, whether or not to connect point 0 and N with a line.
      */
     public static void drawLineStrip(List<Vector3f> points, boolean closed) {
+        ArrayList<Float> data = new ArrayList<>();
+
+        for (Vector3f point : points) {
+            data.add(point.x);
+            data.add(point.y);
+            data.add(point.z);
+        }
+
+        data.add(closed ? 1.0f : 0.0f);
+        queue.get("linestrip").add(data);
+    }
+
+    private static void _drawLineStrip(List<Vector3f> points, boolean closed) {
         glLineWidth(lineWidth);
         glColor3f(color.x, color.y, color.z);
         glBegin(GL_LINE_STRIP);
@@ -167,5 +222,63 @@ public class DebugUtils {
         }
 
 
+    }
+
+    /**
+     * Draws all commands in the queue and resets the queue again.
+     */
+    public static void flush() {
+        for (String queueType : queueTypes) {
+            for (ArrayList<Float> data : queue.get(queueType)) {
+                switch (queueType) {
+                    case "line":
+                        _drawLine(
+                                new Vector3f(data.get(0), data.get(1), data.get(2)),
+                                new Vector3f(data.get(3), data.get(4), data.get(5))
+                        );
+                        break;
+                    case "linestrip":
+                        ArrayList<Vector3f> points = new ArrayList<>();
+                        // Note: data.size() should always be of size (1 mod 3)
+                        for (int i = 0; i < data.size(); i += 3) {
+                            points.add(
+                                    new Vector3f(data.get(i * 3), data.get(i * 3 + 1), data.get(i * 3 + 2))
+                            );
+                        }
+                        _drawLineStrip(
+                                points,
+                                data.get(4) > 0.99
+                        );
+
+                        break;
+                    case "box":
+                        _drawBox(
+                                new Vector3f(data.get(0), data.get(1), data.get(2)),
+                                new Vector3f(data.get(3), data.get(4), data.get(5))
+                        );
+                        break;
+                    case "circle":
+                        _drawCircle(
+                                new Vector3f(data.get(0), data.get(1), data.get(2)),
+                                data.get(3),
+                                Math.round(data.get(4))
+                        );
+                        break;
+                    default:
+                        continue;
+                }
+            }
+        }
+        queue = resetQueue();
+    }
+
+    private static Map<String, ArrayList<ArrayList<Float>>> resetQueue() {
+        Map<String, ArrayList<ArrayList<Float>>> newQueue = new HashMap<>();
+
+        for (String queueType : queueTypes) {
+            newQueue.put(queueType, new ArrayList<ArrayList<Float>>());
+        }
+
+        return newQueue;
     }
 }
