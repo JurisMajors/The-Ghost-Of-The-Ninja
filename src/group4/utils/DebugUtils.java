@@ -168,6 +168,7 @@ public class DebugUtils {
         }
 
         data.add(closed ? 1.0f : 0.0f);
+        queue.get("linestrip").add(data);
     }
 
     private static void _drawLineStrip(List<Vector3f> points, boolean closed) {
