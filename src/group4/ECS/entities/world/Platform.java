@@ -23,7 +23,6 @@ public class Platform extends Entity {
         this(position, dimension);
         // create the graphics component with a vertex array repeating the texture over this platform
         GraphicsComponent graphicsComponent = createGraphicsComponent(position, dimension, texture, shader);
-//        GraphicsComponent graphicsComponent = new GraphicsComponent(shader, texture, dimension);
         this.add(graphicsComponent);
     }
 
@@ -31,9 +30,7 @@ public class Platform extends Entity {
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
         this.add(new PlatformComponent());
-        //TODO: one of these should be redundant and removed
         this.add(new CollisionComponent(PlatformCollision.getInstance()));
-        this.add(new ColliderComponent());
     }
 
     private GraphicsComponent createGraphicsComponent(Vector3f position, Vector3f dimension, Texture texture, Shader shader) {
