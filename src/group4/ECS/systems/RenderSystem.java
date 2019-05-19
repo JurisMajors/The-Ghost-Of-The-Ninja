@@ -124,6 +124,8 @@ public class RenderSystem extends EntitySystem {
 //                    DebugUtils.drawCircle(pca.position, 2.0f, 50);
 //                }
 //            }
+
+            DebugUtils.flush();
         }
     }
 
