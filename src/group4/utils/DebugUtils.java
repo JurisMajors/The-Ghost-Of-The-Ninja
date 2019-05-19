@@ -88,7 +88,7 @@ public class DebugUtils {
         box.add(topLeft);
 
         // Draw!
-        drawLineStrip(box, false);
+        _drawLineStrip(box, true);
     }
 
     /**
@@ -148,7 +148,7 @@ public class DebugUtils {
             angle += step;
         }
 
-        drawLineStrip(points, true);
+        _drawLineStrip(points, true);
     }
 
     /**
