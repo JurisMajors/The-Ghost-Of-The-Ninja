@@ -88,25 +88,33 @@ public class CollisionSystem extends IteratingSystem {
         Vector3f tr = pc.position.add(dc.dimension);
         Vector3f tl = pc.position.add(new Vector3f(0.0f, dc.dimension.y, dc.dimension.z));
 
+        // loop through all collidable splines
         for (Entity spline : entities) {
+            // don't do collision with the same object
             if (e.equals(spline)) {
                 continue;
             }
+
             PositionComponent spc = Mappers.positionMapper.get(spline);
             SplineComponent sc = Mappers.splineMapper.get(spline);
 
-            // store the smallest vector that goes from a spline point to a boundingbox point
+            // store the smallest vector that goes from a spline point to one of the points in the bounding box
             Vector3f smallestDisplacement = new Vector3f(1000f, 1000f, 1000f);
+
+            // store the point on the spline that is closest to the closest bounding box point
             Vector3f closestPoint = null;
             Vector3f clostestNormal = null;
 
             // loop through all spline points
             for (int i = 0; i < sc.points.length; i++) {
+                // get local spline position and its normal
                 Vector3f point = sc.points[i];
                 Vector3f normal = sc.normals[i];
 
                 Vector3f oldSmallest = new Vector3f(smallestDisplacement);
+                // change the spline coords to world space
                 Vector3f worldPoint = point.add(spc.position);
+
                 // compute difference with bounding box point and spline point and store the smallest displacement
                 smallestDisplacement = Vector3f.min(smallestDisplacement, bl.sub(worldPoint));
                 smallestDisplacement = Vector3f.min(smallestDisplacement, br.sub(worldPoint));
@@ -125,7 +133,8 @@ public class CollisionSystem extends IteratingSystem {
                 clostestNormal.scalei(-1.0f);
             }
 
-            // get the position on the spline edge closest to the bb
+            // TODO: do I use the new position here or do I use the displayement vector?
+            // get the position on the spline edge closest to the bounding box
             Vector3f newPos = closestPoint.add(clostestNormal);
 
             // if the smallest displacement is smaller than half of the thickness there is a collision
