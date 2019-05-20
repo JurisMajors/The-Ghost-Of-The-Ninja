@@ -5,38 +5,30 @@ import group4.ECS.components.*;
 import group4.ECS.systems.collision.CollisionHandlers.MobCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
+import group4.levelSystem.Level;
 import group4.maths.Vector3f;
 
 public class Mob extends Entity {
-
+    //dimension of the mob, aka bounding box
+    protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f);//dimension of the mob, aka bounding box
+    public Level level;
     /**
-     * Creates a basic mob with a given position, dimension, velocity, velocityRange, acceleration.
+     * Creates a mob
      *
-     * @param position      left-bottom-back corner of the cuboid representing the mob
-     * @param dimension     such that the right-top-front corner of the cuboid representing the mob is position+dimension
-     * @param velocity      velocity vector of mob
-     * @param velocityRange restricting the velocity: -velocityRange.x<=velocity.x<=velocityRange.x and -velocityRange.y<=velocity.y<=velocityRange.y
-     * @param acceleration  acceleration vector of mob
+     * @param position left-bottom-back corner of the cuboid representing the mob
      */
-    public Mob(Vector3f position, Vector3f dimension, Vector3f velocity, Vector3f velocityRange, Vector3f acceleration, Shader shader, Texture texture) {
+    public Mob(Vector3f position, Level l) {
+        Vector3f velocityRange = new Vector3f(0.05f, 0.25f, 0.0f);//velocity range
+        Shader shader = Shader.SIMPLE;//shader
+        Texture texture = Texture.DEBUG;//texture
+        this.level = l;
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
-        this.add(new MovementComponent(velocity, velocityRange, acceleration));
-        this.add(new MobComponent());
+        this.add(new MovementComponent(new Vector3f(), velocityRange));
+        this.add(new GravityComponent());
         this.add(new GraphicsComponent(shader, texture, dimension));
         this.add(new CollisionComponent(MobCollision.getInstance()));
+        this.add(new HealthComponent(100));
+        this.add(new MobComponent());
     }
-
-    /**
-     * Creates most basic mob, with a given position and dimension.
-     * Initial velocity, velocityRange and acceleration is set to 0.
-     *
-     * @param position  left-bottom-back corner of the cuboid representing the mob
-     * @param dimension such that the right-top-front corner of the cuboid representing the mob is position+dimension
-     */
-    public Mob(Vector3f position, Vector3f dimension, Shader shader, Texture texture) {
-        // call other constructor with velocity, velocityRange, acceleration = 0
-        this(position, dimension, new Vector3f(), new Vector3f(), new Vector3f(), shader, texture);
-    }
-
 }

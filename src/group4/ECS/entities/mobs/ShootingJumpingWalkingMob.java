@@ -7,15 +7,15 @@ import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.maths.Vector3f;
 
-public class WalkingMob extends Mob {
-
+public class ShootingJumpingWalkingMob extends Mob {
     /**
-     * Creates a walking mob
+     * Creates a shooting jumping&walking mob
      *
      * @param position left-bottom-back corner of the cuboid representing the mob
      */
-    public WalkingMob(Vector3f position, Level l) {
+    public ShootingJumpingWalkingMob(Vector3f position, Level l) {
         super(position, l);
-        this.add(new WalkingMobComponent());
+        this.add(new ShootingComponent(new Vector3f(0.5f, 2.0f, 0.0f), 150));
+        this.add(new JumpingWalkingMobComponent());
     }
 }

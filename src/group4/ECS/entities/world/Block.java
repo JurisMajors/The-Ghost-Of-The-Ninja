@@ -3,7 +3,6 @@ package group4.ECS.entities.world;
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.*;
 import group4.ECS.systems.collision.CollisionHandlers.BlockCollision;
-import group4.ECS.components.ColliderComponent;
 import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.PositionComponent;

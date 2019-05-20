@@ -1,6 +1,9 @@
 package group4.game;
 
 import com.badlogic.ashley.core.Engine;
+import group4.ECS.components.PositionComponent;
+import group4.ECS.etc.Families;
+import group4.ECS.etc.Mappers;
 import group4.AI.Evolver;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
@@ -15,6 +18,7 @@ import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
+import group4.levelSystem.levels.MobTestLevel;
 import group4.levelSystem.levels.SimpleLevel;
 import group4.levelSystem.levels.TestLevel;
 import group4.levelSystem.levels.TiledLevel;
@@ -112,18 +116,27 @@ public class Main implements Runnable {
             // Systems which change the gamestate
             engine.addSystem(new PlayerMovementSystem());
             engine.addSystem(new GhostMovementSystem());
+            engine.addSystem(new WalkingMobMovementSystem());
+            engine.addSystem(new JumpingWalkingMobMovementSystem());
+            engine.addSystem(new JumpingMobMovementSystem());
+            engine.addSystem(new FlappingMobMovementSystem());
+            engine.addSystem(new FlyingMobMovementSystem());
+            engine.addSystem(new BulletMovementSystem());
+            engine.addSystem(new ShootingSystem());
             engine.addSystem(new CollisionSystem());
             engine.addSystem(new CollisionEventSystem());
             engine.addSystem(new UncollidingSystem());
             engine.addSystem(new PlayerDyingSystem(true));
             engine.addSystem(new GhostDyingSystem(false));
+            engine.addSystem(new MobDyingSystem());
 
             // Systems which are essentially observers of the changed gamestate
             engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem
             engine.addSystem(new RenderSystem());
+            this.level = new MobTestLevel();
 
-            this.level = new TestLevel();
         }
+        // Initialize the level
     }
 
     /**

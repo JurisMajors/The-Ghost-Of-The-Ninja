@@ -1,7 +1,7 @@
 package group4.AI.decoders;
 
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.components.MobComponent;
+import group4.ECS.components.WalkingMobComponent;
 import group4.ECS.components.PositionComponent;
 import group4.maths.IntersectionPair;
 import group4.maths.Ray;
@@ -28,7 +28,7 @@ public class StandardIntersectionDecoder implements IntersectionDecoder {
 
     private float decodeEntity(Entity e) {
         if (e == null) return 0.5f;
-        if (e.getComponent(MobComponent.class) != null) {
+        if (e.getComponent(WalkingMobComponent.class) != null) {
             return 0;
         }
         return 1;
