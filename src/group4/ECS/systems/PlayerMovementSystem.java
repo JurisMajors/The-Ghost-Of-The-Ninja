@@ -40,7 +40,7 @@ public class PlayerMovementSystem extends IteratingSystem {
         // apply gravity
         doGravity(mc, gc);
         // move in the specified direction
-        pc.position.addi(mc.velocity.scale(deltaTime));
+        pc.position.addi(mc.velocity);
     }
 
     /**
