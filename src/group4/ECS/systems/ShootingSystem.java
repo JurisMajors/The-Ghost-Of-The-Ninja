@@ -1,18 +1,13 @@
 package group4.ECS.systems;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import group4.ECS.components.MovementComponent;
 import group4.ECS.components.PositionComponent;
 import group4.ECS.components.ShootingComponent;
-import group4.ECS.entities.items.weapons.Bullet;
-import group4.ECS.entities.mobs.FlyingMob;
-import group4.ECS.entities.mobs.MobBullet;
+import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
-import group4.maths.Vector3f;
 
 public class ShootingSystem extends IteratingSystem {
 
@@ -29,7 +24,7 @@ public class ShootingSystem extends IteratingSystem {
         else { //shoot
             sc.wait = 0;
             //create new bullet
-            TheEngine.getInstance().addEntity(new MobBullet(pc.position.add(sc.position), playerPos.position.sub(pc.position.add(sc.position)).normalized()));
+            TheEngine.getInstance().addEntity(new Bullet(pc.position.add(sc.position), playerPos.position.sub(pc.position.add(sc.position)).normalized()));
         }
     }
 }
