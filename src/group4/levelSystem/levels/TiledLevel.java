@@ -5,7 +5,7 @@ import group4.levelSystem.Level;
 import group4.levelSystem.Module;
 import group4.maths.Vector3f;
 
-public class SimpleLevel extends Level {
+public class TiledLevel extends Level {
 
     @Override
     protected Module createRoot() {

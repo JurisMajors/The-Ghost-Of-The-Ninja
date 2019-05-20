@@ -134,8 +134,6 @@ public class Module {
                     int tileGridY = layerHeight - 1 - (int) Math.floor(tile / layerWidth);
                     int tileGridX = tile % layerWidth;
 
-                    System.out.println("" + tileGridX + " " + tileGridY);
-
                     // Get the type of the tile
                     switch(data.getInt(tile)) {
 
