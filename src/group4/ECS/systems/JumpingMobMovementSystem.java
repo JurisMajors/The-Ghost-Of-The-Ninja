@@ -1,6 +1,7 @@
 package group4.ECS.systems;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import group4.ECS.components.GravityComponent;
 import group4.ECS.components.MovementComponent;
 import group4.ECS.components.PositionComponent;
@@ -13,6 +14,9 @@ public class JumpingMobMovementSystem extends MobMovementSystem {
 
     public JumpingMobMovementSystem() {
         super(Families.jumpingMobFamily);
+    }
+    public JumpingMobMovementSystem(Family family) {
+        super(family);
     }
 
     @Override
