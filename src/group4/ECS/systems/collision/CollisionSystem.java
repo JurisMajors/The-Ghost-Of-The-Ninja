@@ -159,21 +159,38 @@ public class CollisionSystem extends IteratingSystem {
      * @return
      */
     static Vector3f processCollision(Entity first, Entity scnd) {
-        // get positions
-        Vector3f firstPos = Mappers.positionMapper.get(first).position;
-        Vector3f scndPos = Mappers.positionMapper.get(scnd).position;
-        // get the intersection rectangle
         Rectangle intersection = getIntersectingRectangle(first, scnd);
         if (intersection == null) return new Vector3f();
-        // displace according to the rectangles smallest side
+        // resolve the collision with the smallest displacement
         if (intersection.height <= intersection.width) {
-            // inversely displace
-            if (firstPos.y > scndPos.y) {
-                return new Vector3f(0, intersection.height, 0);
-            } else {
-                return new Vector3f(0, -1 * intersection.height, 0);
-            }
+            return resolveYCollision(first, scnd, intersection);
+
         }
+        return resolveXCollision(first, scnd, intersection);
+    }
+
+    private static Vector3f resolveYCollision(Entity first, Entity scnd, Rectangle intersection) {
+        Vector3f firstPos = Mappers.positionMapper.get(first).position;
+        Vector3f scndPos = Mappers.positionMapper.get(scnd).position;
+        Vector3f firstDim = Mappers.dimensionMapper.get(first).dimension;
+        Vector3f scndDim = Mappers.dimensionMapper.get(scnd).dimension;
+        Vector3f firstCntr = firstPos.add(firstDim.scale(0.5f));
+
+        // if the first is not on or below the second, then no displacement
+        if (!(firstCntr.x >= scndPos.x && firstCntr.x <= scndPos.x + scndDim.x)) {
+            return new Vector3f();
+        }
+        // otherwise displace in the inverse direction
+        if (firstPos.y > scndPos.y) { // first is on top
+            return new Vector3f(0, intersection.height, 0);
+        } else { // on bottom
+            return new Vector3f(0, -1 * intersection.height, 0);
+        }
+    }
+
+    private static Vector3f resolveXCollision(Entity first, Entity scnd, Rectangle intersection) {
+        Vector3f firstPos = Mappers.positionMapper.get(first).position;
+        Vector3f scndPos = Mappers.positionMapper.get(scnd).position;
         // move in the correct x direction
         if (firstPos.x > scndPos.x) {
             return new Vector3f(intersection.width, 0, 0);

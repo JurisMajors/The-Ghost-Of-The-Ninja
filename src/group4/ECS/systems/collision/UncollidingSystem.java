@@ -3,11 +3,16 @@ package group4.ECS.systems.collision;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import group4.ECS.components.CollisionComponent;
+import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.MovementComponent;
 import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.maths.Vector3f;
+import group4.utils.DebugUtils;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * This applies collision to entities that can move and have a bounding box
@@ -22,6 +27,8 @@ public class UncollidingSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(entity);
+        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
+        DebugUtils.drawBox(pc.position, pc.position.add(dc.dimension));
 
         uncollideEntity(entity, deltaTime, pc.position);
 
@@ -39,7 +46,7 @@ public class UncollidingSystem extends IteratingSystem {
         PositionComponent pc = Mappers.positionMapper.get(e);
         // get all entities that i collide with
         CollisionComponent cc = Mappers.collisionMapper.get(e);
-
+        int resolved = 0; // keep track of resolved collisions
         for (CollisionData cd : cc.collisions) {
             // deal with splines
             if (cd.newPos != null) {
@@ -48,15 +55,23 @@ public class UncollidingSystem extends IteratingSystem {
                 continue;
             }
 
-
             Entity other = cd.entity;
             if (other.equals(e)) continue;
             // get the displacement vector
-            Vector3f colDim = cd.displacement;
+            Vector3f colDim;
+
+            if (resolved != 0) { // if resolved more than one
+                // recalculate the collision (since position has changed)
+                colDim = CollisionSystem.processCollision(e, other);
+            } else {
+                colDim = cd.displacement;
+            }
+
             handleVelocity(mc, colDim);
 
-            // displace the position
+            // displace the positions
             curPos.addi(colDim);
+            resolved ++;
         }
 
         // remove all collisions after fixing them all
