@@ -15,10 +15,6 @@ import group4.maths.spline.MultiSpline;
 
 public class TestModule extends Module {
 
-    public TestModule(Level l) {
-        super(l);
-    }
-
     public TestModule(Level l, String modelName) {
         super(l, modelName);
     }
@@ -38,6 +34,10 @@ public class TestModule extends Module {
 
         // TODO: Change to platform entities when these work
         // Construct the test module for training the neural network
+
+        // First, we set the height and width of the module
+        this.height = 64;
+        this.width = 64;
 
         // Add the LHS wall
         for (int i = 0; i < 10; i++) {
@@ -185,11 +185,6 @@ public class TestModule extends Module {
                 );       // TODO: Change to exit entity, but first need to know how collision detection is going to work to detect if player overlaps an exit, before I create an exit entity
             }
         }
-    }
-
-    @Override
-    protected Vector3f getStartScreenWindow() {
-        return new Vector3f();
     }
 
     @Override

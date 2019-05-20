@@ -3,19 +3,17 @@ package group4.levelSystem.levels;
 import group4.ECS.entities.Player;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
-import group4.levelSystem.modules.SimpleModule;
 import group4.maths.Vector3f;
 
-public class SimpleLevel extends Level {
+public class TiledLevel extends Level {
 
     @Override
     protected Module createRoot() {
-        return new SimpleModule(this, null);
+        return new Module(this, "./src/group4/levelSystem/modules/TiledModules/simpleModule.json", "test-59");
     }
 
     @Override
     protected void createAdditionalModules() {
-        // For now I'll not add additional modules to this level
         return;
     }
 

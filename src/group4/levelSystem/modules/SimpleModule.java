@@ -15,8 +15,8 @@ import group4.levelSystem.Module;
 
 public class SimpleModule extends Module {
 
-    public SimpleModule(Level l) {
-        super(l);
+    public SimpleModule(Level l, String modelName) {
+        super(l, modelName);
     }
 
     @Override
@@ -43,11 +43,6 @@ public class SimpleModule extends Module {
         // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.
         Camera camera = new Camera();
         this.addEntity(camera); // Adding the camera to the module (which adds it to the engine?)
-    }
-
-    @Override
-    protected Vector3f getStartScreenWindow() {
-        return new Vector3f();
     }
 
     @Override

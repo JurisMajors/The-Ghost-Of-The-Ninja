@@ -26,7 +26,7 @@ public class PlayerMovementSystem extends IteratingSystem {
         super(Families.playerFamily);
     }
 
-    PlayerMovementSystem(Family f) {
+    public PlayerMovementSystem(Family f) {
         super(f);
     }
 
