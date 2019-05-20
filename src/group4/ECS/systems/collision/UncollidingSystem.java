@@ -58,19 +58,18 @@ public class UncollidingSystem extends IteratingSystem {
             Entity other = cd.entity;
             if (other.equals(e)) continue;
             // get the displacement vector
-            Vector3f colDim;
+            Vector3f trueDisplacement;
 
             if (resolved != 0) { // if resolved more than one
                 // recalculate the collision (since position has changed)
-                colDim = CollisionSystem.processCollision(e, other);
+                trueDisplacement = CollisionSystem.processCollision(e, other);
             } else {
-                colDim = cd.displacement;
+                trueDisplacement = cd.displacement;
             }
 
-            handleVelocity(mc, colDim);
-
+            handleVelocity(mc, trueDisplacement);
             // displace the positions
-            curPos.addi(colDim);
+            curPos.addi(trueDisplacement);
             resolved ++;
         }
 
@@ -84,7 +83,7 @@ public class UncollidingSystem extends IteratingSystem {
                 mc.velocity.y = 0; // set velocity to zero
             }
         } else if (displacement.y < 0){  // displacement from top
-            mc.velocity.y += displacement.y; // go down when hit from top
+            mc.velocity.y *= -0.3; // go down when hit from top
         }
 
         if (displacement.x != 0) {
