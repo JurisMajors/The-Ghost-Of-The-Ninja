@@ -15,6 +15,7 @@ import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
+import group4.levelSystem.levels.SimpleLevel;
 import group4.levelSystem.levels.TestLevel;
 import group4.levelSystem.levels.TiledLevel;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -121,7 +122,7 @@ public class Main implements Runnable {
             engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem
             engine.addSystem(new RenderSystem());
 
-            this.level = new TiledLevel();
+            this.level = new TestLevel();
         }
     }
 
