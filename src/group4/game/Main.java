@@ -10,6 +10,7 @@ import group4.ECS.systems.collision.CollisionSystem;
 import group4.ECS.systems.collision.UncollidingSystem;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
+import group4.graphics.TileMapping;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
@@ -36,7 +37,7 @@ public class Main implements Runnable {
     private Level level;
     private Engine engine;
 
-    public static final float SCREEN_WIDTH = 20.0f;
+    public static final float SCREEN_WIDTH = 16.5f;
     public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
 
 
@@ -101,22 +102,26 @@ public class Main implements Runnable {
 
         Shader.loadAllShaders();
         Texture.loadAllTextures();
+        TileMapping.loadAllTileMappings();
 
         // Initialize the engine
         engine = TheEngine.getInstance();
         if (!AI) {
             // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
-            engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added before RenderSystem
+            // Systems which change the gamestate
             engine.addSystem(new PlayerMovementSystem());
             engine.addSystem(new GhostMovementSystem());
             engine.addSystem(new CollisionSystem());
             engine.addSystem(new CollisionEventSystem());
             engine.addSystem(new UncollidingSystem());
-            engine.addSystem(new RenderSystem());
             engine.addSystem(new PlayerDyingSystem(true));
             engine.addSystem(new GhostDyingSystem(false));
 
-            this.level = new TiledLevel();
+            // Systems which are essentially observers of the changed gamestate
+            engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem
+            engine.addSystem(new RenderSystem());
+
+            this.level = new TestLevel();
         }
     }
 
@@ -147,7 +152,7 @@ public class Main implements Runnable {
             // update our FPS counter if a second has passed since
             // we last recorded
             if (lastFpsTime >= (long) 1e9) {
-                System.out.println("(FPS: " + fps + ")");
+                win.setWindowTitle("(FPS: " + fps + ")");
                 lastFpsTime = 0;
                 fps = 0;
             }

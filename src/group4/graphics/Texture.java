@@ -19,6 +19,8 @@ public class Texture {
     public static Texture EXIT;  // TODO: More to be added.
     public static Texture BLACK;
     public static Texture WHITE;
+    public static Texture MAIN_TILES;
+    public static Texture BACKGROUND;
 
     // width and height of the texture
     private int width, height;
@@ -39,6 +41,8 @@ public class Texture {
         AK47 = new Texture("src/group4/res/textures/weapons/AK47.png");
         MG_BULLET = new Texture("src/group4/res/textures/weapons/Bullet.png");
         EXIT = new Texture("src/group4/res/textures/exit.jpg");
+        MAIN_TILES = new Texture("src/group4/res/textures/maintiles.png");
+        BACKGROUND = new Texture("src/group4/res/textures/cave.jpg");
         BLACK = new Texture("src/group4/res/textures/black.png");
         WHITE = new Texture("src/group4/res/textures/white.png");
     }

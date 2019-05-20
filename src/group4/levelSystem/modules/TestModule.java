@@ -1,10 +1,13 @@
 package group4.levelSystem.modules;
 
+import group4.ECS.entities.Background;
 import group4.ECS.entities.Camera;
+import group4.ECS.entities.world.Block;
 import group4.ECS.entities.world.Platform;
 import group4.ECS.entities.world.SplinePlatform;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
+import group4.graphics.TileMapping;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
 import group4.maths.Vector3f;
@@ -22,6 +25,13 @@ public class TestModule extends Module {
         Camera camera = new Camera();
         this.addEntity(camera); // Adding the camera to the module (which adds it to the engine?)
 
+        Background background = new Background(
+                new Vector3f(0.0f, 0.0f, 0.0f),
+                new Vector3f(35.0f, 12.0f, 0.0f),
+                Shader.SIMPLE,
+                Texture.BACKGROUND);
+        this.addEntity(background);
+
         // TODO: Change to platform entities when these work
         // Construct the test module for training the neural network
 
@@ -30,79 +40,156 @@ public class TestModule extends Module {
         this.width = 64;
 
         // Add the LHS wall
-        Vector3f tempPosition = new Vector3f();
-        Vector3f tempDimension = new Vector3f(2.0f, 28.0f, 0.0f);
-        Platform LHSWall = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
-        this.addEntity(LHSWall);
+        for (int i = 0; i < 10; i++) {
+            this.addEntity(
+                    new Block(
+                            new Vector3f(0.0f, 2.0f + i * 1.0f, 0.0f),
+                            Shader.SIMPLE,
+                            Texture.MAIN_TILES,
+                            TileMapping.MAIN.WALL_LEFT1
+                    )
+            );
+        }
 
-        // Add floor on which player will stand initially
-        tempPosition = new Vector3f(2.0f, 0.0f, 0.0f);
-        tempDimension = new Vector3f(20.0f, 2.0f, 0.0f);
-        Platform initFloor = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
-        this.addEntity(initFloor);
+        // Add floors on which player will stand initially
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 10; j++) {
+                if (i == 1 && j == 0) {
+                    this.addEntity(
+                            new Block(
+                                    new Vector3f(j * 1.0f, i * 1.0f, 0.0f),
+                                    Shader.SIMPLE,
+                                    Texture.MAIN_TILES,
+                                    TileMapping.MAIN.WALL_CORNER_LEFT1
+                            )
+                    );
+                } else {
+                    this.addEntity(
+                            new Block(
+                                    new Vector3f(j * 1.0f, i * 1.0f, 0.0f),
+                                    Shader.SIMPLE,
+                                    Texture.MAIN_TILES,
+                                    TileMapping.MAIN.FLOOR1
+                            )
+                    );
+                }
+            }
+        }
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 4; j++) {
+                this.addEntity(
+                        new Block(
+                                new Vector3f(19.0f + j * 1.0f, i * 1.0f, 0.0f),
+                                Shader.SIMPLE,
+                                Texture.BRICK
+                        )
+                );
+            }
+        }
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 5; j++) {
+                this.addEntity(
+                        new Block(
+                                new Vector3f(25.0f + j * 1.0f, i * 1.0f, 0.0f),
+                                Shader.SIMPLE,
+                                Texture.BRICK
+                        )
+                );
+            }
+        }
+
 
         // Add some blocks to potentially confuse the player on initial floor
-        tempPosition = new Vector3f(2.0f, 2.0f, 0.0f);
-        tempDimension = new Vector3f(2.0f, 2.0f, 0.0f);
-        Platform confusion = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
-        this.addEntity(confusion);
+        this.addEntity(
+                new Block(
+                        new Vector3f(1.0f, 2.0f, 0.0f),
+                        Shader.SIMPLE,
+                        Texture.BRICK
+                )
+        );
 
-        // Add a block for the player to jump over
-        tempPosition = new Vector3f(9.0f, 2.0f, 0.0f);
-        tempDimension = new Vector3f(2.0f, 2.0f, 0.0f);
-        Platform jump = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
-        this.addEntity(jump);
-
-        tempPosition = new Vector3f(13.0f, 4.0f, 0.0f);
-        tempDimension = new Vector3f(2.0f, 2.0f, 0.0f);
-        Platform idk = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
-        this.addEntity(idk);
+        this.addEntity(
+                new Block(
+                        new Vector3f(5.0f, 2.0f, 0.0f),
+                        Shader.SIMPLE,
+                        Texture.BRICK
+                )
+        );
 
         // Create semi-stair like thing
-        tempPosition = new Vector3f(22.0f, 2.0f, 0.0f);
-        tempDimension = new Vector3f(5.0f, 2.0f, 0.0f);
-        Platform stairlike = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
-        this.addEntity(stairlike);
+        for (int i = 0; i < 3; i++) {
+            this.addEntity(
+                    new Block(
+                            new Vector3f(9.0f + i * 1.0f, 2.0f, 0.0f),
+                            Shader.SIMPLE,
+                            Texture.MAIN_TILES,
+                            TileMapping.MAIN.FLOOR1                    )
+            );
+        }
 
-        tempPosition = new Vector3f(27.0f, 4.0f, 0.0f);
-        tempDimension = new Vector3f(8.0f, 2.0f, 0.0f);
-        stairlike = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
-        this.addEntity(stairlike);
+        for (int i = 0; i < 3; i++) {
+            this.addEntity(
+                    new Block(
+                            new Vector3f(11.0f + i * 1.0f, 3.0f, 0.0f),
+                            Shader.SIMPLE,
+                            Texture.MAIN_TILES,
+                            TileMapping.MAIN.FLOOR1                    )
+            );
+        }
 
-        tempPosition = new Vector3f(35.0f, 6.0f, 0.0f);
-        tempDimension = new Vector3f(5.0f, 2.0f, 0.0f);
-        stairlike = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
-        this.addEntity(stairlike);
+        for (int i = 0; i < 3; i++) {
+            this.addEntity(
+                    new Block(
+                            new Vector3f(13.0f + i * 1.0f, 4.0f, 0.0f),
+                            Shader.SIMPLE,
+                            Texture.MAIN_TILES,
+                            TileMapping.MAIN.FLOOR1                    )
+            );
+        }
 
-        // Create floor to jump on to
-        tempPosition = new Vector3f(44.0f, 0.0f, 0.0f);
-        tempDimension = new Vector3f(8.0f, 2.0f, 0.0f);
-        Platform jumpFloor = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
-        this.addEntity(jumpFloor);
 
-        // Create a hole to jump over
-        tempPosition = new Vector3f(54.0f, 0.0f, 0.0f);
-        tempDimension = new Vector3f(6.0f, 2.0f, 0.0f);
-        Platform afterHole = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
-        this.addEntity(afterHole);
+
 
         // Create height increase to module end exit
-        tempPosition = new Vector3f(60.0f, 2.0f, 0.0f);
-        tempDimension = new Vector3f(4.0f, 2.0f, 0.0f);
-        Platform exitStairs = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
-        this.addEntity(exitStairs);
+        for (int i = 0; i < 3; i++) {
+            this.addEntity(
+                    new Block(
+                            new Vector3f(29.0f + i * 1.0f, 2.0f, 0.0f),
+                            Shader.SIMPLE,
+                            Texture.MAIN_TILES,
+                            TileMapping.MAIN.FLOOR1                    )
+            );
+        }
+
+        for (int i = 0; i < 4; i++) {
+            this.addEntity(
+                    new Block(
+                            new Vector3f(31.0f + i * 1.0f, 3.0f, 0.0f),
+                            Shader.SIMPLE,
+                            Texture.MAIN_TILES,
+                            TileMapping.MAIN.FLOOR1                    )
+            );
+        }
 
         // Create the exit
-        Vector3f exitPosition = new Vector3f(62.0f, 4.0f, 0.0f);
-        Vector3f exitDimension = new Vector3f(2.0f, 2.0f, 0.0f);
-        Platform exit = new Platform(exitPosition, exitDimension, Shader.SIMPLE, Texture.EXIT);
-        this.addEntity(exit);
-        // TODO: Change to exit entity, but first need to know how collision detection is going to work to detect if player overlaps an exit, before I create an exit entity
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                this.addEntity(
+                        new Block(
+                                new Vector3f(33.0f + i * 1.0f, 4.0f + j * 1.0f, 0.0f),
+                                Shader.SIMPLE,
+                                Texture.EXIT
+                        )
+                );       // TODO: Change to exit entity, but first need to know how collision detection is going to work to detect if player overlaps an exit, before I create an exit entity
+            }
+        }
     }
 
     @Override
     public Vector3f getPlayerInitialPosition() {
-        return new Vector3f(6.0f, 2.0f, 0.0f);
+        return new Vector3f(6.0f, 4.0f, 0.0f);
     }
 }
 
