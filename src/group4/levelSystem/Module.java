@@ -175,7 +175,7 @@ public class Module {
      * Return the initial position of the player in the module
      */
     public Vector3f getPlayerInitialPosition() {
-        return this.initialPlayerPos;
+        return new Vector3f(this.initialPlayerPos);
     }
 
 

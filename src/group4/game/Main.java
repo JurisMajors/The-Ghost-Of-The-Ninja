@@ -121,7 +121,7 @@ public class Main implements Runnable {
             engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem
             engine.addSystem(new RenderSystem());
 
-            this.level = new TestLevel();
+            this.level = new TiledLevel();
         }
     }
 
