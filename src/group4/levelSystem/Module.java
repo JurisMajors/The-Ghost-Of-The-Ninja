@@ -30,8 +30,8 @@ public class Module {
 
     // Define the size of the module grid
     // All modules should be of the same size to keep things simple
-    private int height;
-    private int width;
+    protected int height;
+    protected int width;
 
     // Keep track of the level that this module instance is part of
     private Level level;
@@ -52,15 +52,23 @@ public class Module {
     /**
      * Default construct, which constructs a module based on a Tiled .tmx file
      */
-    public Module(Level l, String TiledLevelLocation) {
-        this(l, TiledLevelLocation,null);
-    }
 
     public Module(Level l, String TiledModuleLocation, String ghostModelName) {
         if (ghostModelName != null) {
             this.ghostPath = Evolver.path + ghostModelName;
         }
         this.loadTiledObject(TiledModuleLocation);
+        this.setup(l);
+    }
+
+
+    /**
+     * Constructor to work with non-tiled modules
+     */
+    public Module(Level l, String ghostModelName) {
+        if (ghostModelName != null) {
+            this.ghostPath = Evolver.path + ghostModelName;
+        }
         this.setup(l);
     }
 
