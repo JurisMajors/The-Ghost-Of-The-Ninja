@@ -64,7 +64,7 @@ public class Evolver {
     /**
      * whether to render
      */
-    public static final boolean render = true;
+    public static final boolean render = false;
     /**
      * Currently not supported for GA
      */
