@@ -116,7 +116,7 @@ public class Main implements Runnable {
             engine.addSystem(new PlayerDyingSystem(true));
             engine.addSystem(new GhostDyingSystem(false));
 
-            this.level = new TestLevel();
+            this.level = new TiledLevel();
         }
     }
 

@@ -9,7 +9,7 @@ public class TiledLevel extends Level {
 
     @Override
     protected Module createRoot() {
-        return new Module(this, "./src/group4/levelSystem/modules/TiledModules/simpleModule.json", null);
+        return new Module(this, "./src/group4/levelSystem/modules/TiledModules/simpleModule.json", "test-59");
     }
 
     @Override
