@@ -1,13 +1,23 @@
 package group4.levelSystem;
 
+import group4.AI.Brain;
+import group4.AI.Evolver;
+import group4.ECS.entities.Camera;
+import group4.ECS.entities.Ghost;
+import group4.ECS.entities.world.Platform;
 import group4.ECS.etc.TheEngine;
 import group4.game.Main;
-import group4.maths.Matrix4f;
+import group4.graphics.Shader;
+import group4.graphics.Texture;
 import group4.maths.Vector3f;
 import com.badlogic.ashley.core.Entity;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -16,12 +26,12 @@ import java.util.List;
  *      entities may overlap multiple cells of the grid
  * A module can have entries and exits that can link to other modules in a levelSystem (links defined on levelSystem basis)
  */
-public abstract class Module {
+public class Module {
 
     // Define the size of the module grid
     // All modules should be of the same size to keep things simple
-    public static final int height = 64;
-    public static final int width = 64;
+    protected int height;
+    protected int width;
 
     // Keep track of the level that this module instance is part of
     private Level level;
@@ -29,46 +39,144 @@ public abstract class Module {
     // List that keeps track of all the entities in the module
     private List<Entity> entities;
 
-    // Keep track of the part of the module that is currently in screen-view
-    // We will do this by keeping the bottom left corner in a variable and the visible region will be between
-    // that point and the point (bottomleft.x + Main.SCREEN_WIDTH, bottomleft.y + Main.SCREEN_HEIGHT)
-    private Vector3f screenPosition;
+    // ghost model
+    private String ghostPath = null;
 
-    // Projection matrix for the current module
-    private Matrix4f pr_matrix;
+    // Keeps track of the initial player position
+    private Vector3f initialPlayerPos;
+
+    // JSON Object containing the tiled data
+    JSONObject tiledData;
 
 
     /**
-     * Default construct, which constructs an empty module
-     * If you want the module to be constructed with some default entities, please override @code{constructLevel()}
+     * Default construct, which constructs a module based on a Tiled .tmx file
      */
-    public Module(Level l) {
+
+    public Module(Level l, String TiledModuleLocation, String ghostModelName) {
+        if (ghostModelName != null) {
+            this.ghostPath = Evolver.path + ghostModelName;
+        }
+        this.loadTiledObject(TiledModuleLocation);
+        this.setup(l);
+    }
+
+
+    /**
+     * Constructor to work with non-tiled modules
+     */
+    public Module(Level l, String ghostModelName) {
+        if (ghostModelName != null) {
+            this.ghostPath = Evolver.path + ghostModelName;
+        }
+        this.setup(l);
+    }
+
+
+    /**
+     * This method is used to create a JSON object containing the tiled module information
+     */
+    private void loadTiledObject(String fileLocation) {
+        // Try to read the tiled json file
+        try {
+            FileReader fileReader = new FileReader(fileLocation);
+
+            // Construct the JSON object containing the tiled module information
+            this.tiledData = new JSONObject(new JSONTokener(fileReader));
+        } catch (FileNotFoundException e) {
+            throw new IllegalArgumentException("Module: could not find the tiled module JSON file");
+        }
+    }
+
+
+
+    /**
+     * This method is used to set up the module in its initial state or reset the module to its initial state
+     */
+    private final void setup(Level l) {
         if (l == null) throw new IllegalArgumentException("Module: Level cannot be null");
-      
         this.level = l;
         this.entities = new ArrayList<>();
         this.constructModule();
-        this.screenPosition = this.getStartScreenWindow();
-        this.renewProjectionMatrix();
+        this.addGhost();
+    }
+
+
+    /**
+     * This method is used to reset the module to its initial state
+     */
+    public void reset() {
+        this.setup(this.level);
     }
 
 
     /**
      * Populates @code{this.entities} with default entities for the module
      */
-    protected abstract void constructModule();
+    protected void constructModule() {
+        // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.
+        Camera camera = new Camera();
+        this.addEntity(camera); // Adding the camera to the module (which adds it to the engine?)
 
+        // First, we set the height and width of the module
+        this.height = this.tiledData.getInt("height");
+        this.width = this.tiledData.getInt("width");
 
-    /**
-     * Return the initial position of the screen window
-     */
-    protected abstract Vector3f getStartScreenWindow();
+        // Now, we get all tile layers from the JSON object
+        JSONArray layers = this.tiledData.getJSONArray("layers");
+
+        // Now, we loop over the layers
+        for (int i = 0; i < layers.length(); i++) {
+            JSONObject layer = layers.getJSONObject(i);
+
+            // Check that they layer is visible, if so, add its entities to the module
+            if (layer.getBoolean("visible")) {
+                // Get height and width of layer
+                int layerHeight = layer.getInt("height");
+                int layerWidth = layer.getInt("width");
+
+                // Loop over the data grid
+                JSONArray data = layer.getJSONArray("data");
+                for (int tile = 0; tile < data.length(); tile++) {
+                    // Get the grid position of the tile
+                    int tileGridY = layerHeight - 1 - (int) Math.floor(tile / layerWidth);
+                    int tileGridX = tile % layerWidth;
+
+                    // Get the type of the tile
+                    switch(data.getInt(tile)) {
+
+                        case 1:
+                            // If the tile type is 1, we need to add a platform
+                            this.addPlatform(tileGridX, tileGridY);
+                            break;
+
+                        case 2:
+                            // If the tile type is 2, we need to set the players initial position
+                            this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
+                            break;
+
+                        case 3:
+                            // If the tile type is 3, we need to add an exit
+                            this.addExit(tileGridX, tileGridY);
+
+                        default:
+                            // By default, the tile is just empty
+                            break;
+                    }
+                }
+
+            }
+
+        }
+    }
 
 
     /**
      * Return the initial position of the player in the module
      */
-    public abstract Vector3f getPlayerInitialPosition();
+    public Vector3f getPlayerInitialPosition() {
+        return new Vector3f(this.initialPlayerPos);
+    }
 
 
     /**
@@ -88,33 +196,6 @@ public abstract class Module {
         for (Entity e : this.entities) {
             TheEngine.getInstance().removeEntity(e);
         }
-    }
-
-
-    /**
-     * Sets screen window to new position, also updates the projection matrix
-     * @param newPos the new bottom-left position of the screen window for the module
-     */
-    public void updateScreenWindow(Vector3f newPos) {
-        this.screenPosition = newPos;
-        this.renewProjectionMatrix();
-    }
-
-
-    /**
-     * Update the projection matrix based on the current screen window
-     */
-    private void renewProjectionMatrix() {
-        this.pr_matrix = Matrix4f.orthographic(this.screenPosition.x, this.screenPosition.x + Main.SCREEN_WIDTH,
-                this.screenPosition.y, this.screenPosition.y + Main.SCREEN_HEIGHT, -1.0f, 1.0f);
-    }
-
-
-    /**
-     * Get the current projection matrix based on the current screen window
-     */
-    public Matrix4f getProjectionMatrix() {
-        return this.pr_matrix;
     }
 
 
@@ -139,7 +220,66 @@ public abstract class Module {
     /**
      * Get an iterator of the entities that are in this module
      */
-    public Iterator<Entity> getEntities() {
-        return this.entities.iterator();
+    public  Iterable<Entity> getEntities() {
+        return this.entities;
+    }
+
+
+    /**
+     * Add a ghost to the current module
+     */
+    private void addGhost() throws IllegalStateException {
+        if (Main.AI) return;
+
+        if (this.entities == null) {
+            throw new IllegalStateException("Adding ghost before initialized entities container");
+        }
+        if (this.ghostPath != null) {
+            this.entities.add(new Ghost(this.getPlayerInitialPosition(), this.level,
+                    new Brain(this.ghostPath)));
+        } else {
+            System.err.println("WARNING: Not loading ghost in module");
+        }
+    }
+
+
+    /**
+     * Get the width of the module grid
+     */
+    public int getWidth() {
+        return this.width;
+    }
+
+
+    /**
+     * Get the height of the module grid
+     */
+    public int getHeight() {
+        return this.height;
+    }
+
+
+    /**
+     * Adds a platform entity to the module
+     * @param x the x position of the platform in the module grid
+     * @param y the y position of the platform in the module grid
+     */
+    private void addPlatform(int x, int y) {
+        Vector3f tempPosition = new Vector3f(x, y, 0.0f);
+        Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
+        Platform p = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
+        this.addEntity(p);
+    }
+
+    /**
+     * Adds a exit entity to the module
+     * @param x the x position of the exit in the module grid
+     * @param y the y position of the exit in the module grid
+     */
+    private void addExit(int x, int y) {
+        Vector3f tempPosition = new Vector3f(x, y, 0.0f);
+        Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
+        Platform e = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.EXIT); // TODO: Change to Exit entity when that is available
+        this.addEntity(e);
     }
 }
