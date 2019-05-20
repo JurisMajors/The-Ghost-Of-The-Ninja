@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.*;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
+import group4.levelSystem.Level;
 import group4.maths.Vector3f;
 
 public class FlappingMob extends Mob {
@@ -13,8 +14,8 @@ public class FlappingMob extends Mob {
      *
      * @param position left-bottom-back corner of the cuboid representing the mob
      */
-    public FlappingMob(Vector3f position) {
-        super(position);
+    public FlappingMob(Vector3f position, Level l) {
+        super(position, l);
         this.add(new FlappingMobComponent());
     }
 }

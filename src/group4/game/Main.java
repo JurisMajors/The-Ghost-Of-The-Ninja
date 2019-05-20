@@ -128,15 +128,15 @@ public class Main implements Runnable {
             engine.addSystem(new UncollidingSystem());
             engine.addSystem(new PlayerDyingSystem(true));
             engine.addSystem(new GhostDyingSystem(false));
+            engine.addSystem(new MobDyingSystem());
 
             // Systems which are essentially observers of the changed gamestate
             engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem
             engine.addSystem(new RenderSystem());
+            this.level = new MobTestLevel();
 
-            this.level = new TestLevel();
         }
         // Initialize the level
-        this.level = new MobTestLevel();
     }
 
     /**

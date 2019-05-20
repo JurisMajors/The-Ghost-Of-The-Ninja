@@ -6,6 +6,7 @@ import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.HealthComponent;
 import group4.ECS.components.PositionComponent;
 import group4.ECS.entities.Player;
+import group4.ECS.entities.mobs.Mob;
 import group4.ECS.etc.Families;
 import group4.levelSystem.Module;
 import group4.maths.Vector3f;
@@ -28,27 +29,23 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
 
     @Override
     protected boolean shouldDie(Entity entity, float deltaTime) {
-        // Check if entity is indeed the player
-        if (!Player.class.isInstance(entity)) {
-            throw new IllegalArgumentException("PlayerDyingSystem: received a non-player entity");
-        }
-
         // Get the position and dimension components
         PositionComponent pp = entity.getComponent(PositionComponent.class);
         DimensionComponent pd = entity.getComponent(DimensionComponent.class);
 
         // Compute player center
         Vector3f pc = pp.position.add(pd.dimension.scale(0.5f));
-
+        Module curModule = entity instanceof Player ? ((Player)entity).level.getCurrentModule()
+                : ((Mob) entity).level.getCurrentModule();
         // Check whether or not the player's center is outside the module grid
         // We keep a 1 grid-unit boundary which the player's center can legally move out of the grid
-        if (pc.x < -1 || pc.x > ((Player)entity).level.getCurrentModule().getWidth() + 1 ||
-                pc.y < -1 || pc.y > ((Player)entity).level.getCurrentModule().getHeight() + 1) {
+        if (pc.x < -1 || pc.x > curModule.getWidth() + 1 ||
+                pc.y < -1 || pc.y > curModule.getHeight() + 1) {
             return true;
         }
 
         // If the players health is 0, kill it as well
-        if (entity.getComponent(HealthComponent.class).health == 0) {
+        if (entity.getComponent(HealthComponent.class).health <= 0) {
             return true;
         }
 
@@ -58,11 +55,6 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
 
     @Override
     protected boolean die(Entity entity, float deltaTime) {
-        // Check if entity is indeed the player
-        if (! (entity instanceof Player)) {
-            throw new IllegalArgumentException("PlayerDyingSystem: received a non-player entity");
-        }
-
         entity.getComponent(HealthComponent.class).health = 0;
 
         // If auto reset is enabled, reset the module to its original state

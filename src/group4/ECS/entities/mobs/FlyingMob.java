@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.*;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
+import group4.levelSystem.Level;
 import group4.maths.Vector3f;
 
 public class FlyingMob extends Mob {
@@ -13,8 +14,8 @@ public class FlyingMob extends Mob {
      *
      * @param position left-bottom-back corner of the cuboid representing the mob
      */
-    public FlyingMob(Vector3f position) {
-        super(position);
+    public FlyingMob(Vector3f position, Level l) {
+        super(position, l);
         this.add(new FlyingMobComponent());
     }
 }

@@ -1,12 +1,8 @@
 package group4.levelSystem.modules;
 
-import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.entities.items.weapons.AK47;
-import group4.ECS.entities.items.weapons.Bullet;
 import group4.ECS.entities.items.weapons.Gun;
-import group4.ECS.entities.items.weapons.MachineGunBullet;
 import group4.ECS.entities.Camera;
-import group4.ECS.entities.Player;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;

@@ -9,7 +9,7 @@ import group4.ECS.components.DimensionComponent;
 import group4.ECS.components.PositionComponent;
 import group4.ECS.components.SplineComponent;
 import group4.ECS.entities.Player;
-import group4.ECS.entities.items.weapons.Bullet;
+import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;

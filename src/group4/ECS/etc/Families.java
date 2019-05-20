@@ -58,6 +58,9 @@ public class Families {
     public static final Family movingNonPlatformFamily = Family
             .all(MovementComponent.class).exclude(PlatformComponent.class).get();
 
+    public static final Family mobFamily = Family
+            .all(MobComponent.class).get();
+
     // all walking mobs
     public static final Family walkingMobFamily = Family
             .all(WalkingMobComponent.class).get();

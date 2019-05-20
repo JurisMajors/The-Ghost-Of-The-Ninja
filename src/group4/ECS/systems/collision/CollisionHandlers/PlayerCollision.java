@@ -5,7 +5,7 @@ import group4.ECS.components.CollisionComponent;
 import group4.ECS.components.DamageComponent;
 import group4.ECS.components.HealthComponent;
 import group4.ECS.entities.Player;
-import group4.ECS.entities.items.weapons.Bullet;
+import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.etc.Mappers;
 import group4.ECS.systems.collision.CollisionData;
