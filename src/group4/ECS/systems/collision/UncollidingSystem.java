@@ -9,10 +9,6 @@ import group4.ECS.components.PositionComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.maths.Vector3f;
-import group4.utils.DebugUtils;
-
-import java.util.ArrayList;
-import java.util.Comparator;
 
 /**
  * This applies collision to entities that can move and have a bounding box
@@ -27,8 +23,6 @@ public class UncollidingSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(entity);
-        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
-        DebugUtils.drawBox(pc.position, pc.position.add(dc.dimension));
 
         uncollideEntity(entity, deltaTime, pc.position);
 
