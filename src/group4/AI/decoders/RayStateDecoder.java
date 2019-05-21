@@ -2,7 +2,7 @@ package group4.AI.decoders;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
-import group4.ECS.components.MovementComponent;
+import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;

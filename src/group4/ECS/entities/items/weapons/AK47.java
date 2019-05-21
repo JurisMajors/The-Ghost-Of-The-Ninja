@@ -1,7 +1,7 @@
 package group4.ECS.entities.items.weapons;
 
 import group4.ECS.components.GraphicsComponent;
-import group4.ECS.components.WeaponComponent;
+import group4.ECS.components.stats.WeaponComponent;
 import group4.ECS.etc.EntityConst;
 import group4.graphics.Shader;
 import group4.graphics.Texture;

@@ -3,16 +3,12 @@ package group4.levelSystem.modules;
 import group4.ECS.entities.Background;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.world.Block;
-import group4.ECS.entities.world.Platform;
-import group4.ECS.entities.world.SplinePlatform;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
 import group4.maths.Vector3f;
-import group4.ECS.entities.world.Exit;
-import group4.maths.spline.MultiSpline;
 
 public class TestModule extends Module {
 

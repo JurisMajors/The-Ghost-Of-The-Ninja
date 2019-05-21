@@ -1,5 +1,6 @@
 package group4.levelSystem;
 
+import com.badlogic.ashley.core.Entity;
 import group4.AI.Brain;
 import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
@@ -10,8 +11,6 @@ import group4.game.Main;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
-import com.badlogic.ashley.core.Entity;
-import group4.ECS.entities.world.Exit;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;

@@ -1,14 +1,14 @@
 package group4.levelSystem.modules;
 
+import group4.ECS.entities.Camera;
 import group4.ECS.entities.items.weapons.AK47;
 import group4.ECS.entities.items.weapons.Gun;
-import group4.ECS.entities.Camera;
+import group4.ECS.entities.world.Block;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
-import group4.maths.Vector3f;
-import group4.ECS.entities.world.Block;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
+import group4.maths.Vector3f;
 
 public class SimpleModule extends Module {
 
