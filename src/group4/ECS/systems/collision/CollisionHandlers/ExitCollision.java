@@ -1,7 +1,9 @@
 package group4.ECS.systems.collision.CollisionHandlers;
 
 import group4.ECS.components.CollisionComponent;
+import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.entities.world.Exit;
+import group4.ECS.etc.TheEngine;
 
 public class ExitCollision extends AbstractCollisionHandler<Exit> {
 
@@ -10,11 +12,14 @@ public class ExitCollision extends AbstractCollisionHandler<Exit> {
 
     @Override
     public void collision(Exit e, CollisionComponent cc) {
-        e.module.getLevel().handleExit(e);
-        cc.collisions.clear();
+        if (!cc.collisions.isEmpty()) {
+            // remove the exit collision, it will be handled from the player side
+            cc.collisions.clear();
+        }
     }
 
     public static AbstractCollisionHandler getInstance() {
         return me;
     }
+
 }

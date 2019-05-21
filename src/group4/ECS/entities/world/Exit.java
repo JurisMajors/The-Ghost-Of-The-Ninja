@@ -23,7 +23,6 @@ public class Exit extends Entity {
         this.add(new PositionComponent(p));
         this.add(new DimensionComponent(d));
         this.add(new GraphicsComponent(Shader.SIMPLE, Texture.EXIT, d));
-        // TODO: one of these should be redundant and removed
         this.add(new CollisionComponent(ExitCollision.getInstance()));
 
         // Set the module this exit belongs to

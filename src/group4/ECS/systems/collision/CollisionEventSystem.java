@@ -12,7 +12,7 @@ import group4.ECS.systems.collision.CollisionHandlers.PlayerCollision;
 public class CollisionEventSystem extends IteratingSystem {
 
     public CollisionEventSystem() {
-        super(Families.collidableFamily);
+        super(Families.collidableMovingFamily);
     }
 
     /**
