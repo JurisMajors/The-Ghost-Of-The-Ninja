@@ -63,6 +63,7 @@ public class SplinePathComponent implements Component {
             } else {
                 targetDirection = backwardDirection;
             }
+            // TODO: check this out
             targetDirection = forwardDirection;
         } else { // otherwise, just move towards the spline
             targetDirection = closestPoint.sub(entityPosition).normalized();
