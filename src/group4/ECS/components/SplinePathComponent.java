@@ -44,6 +44,7 @@ public class SplinePathComponent implements Component {
         int offset = 5;
 
         Vector3f closestPoint = getClosestSplinePoint(entityPosition, entityDimension);
+        System.out.println(closestPoint);
         float distance = entityPosition.sub(closestPoint).length();
 
         // if the entity is almost on the spline, follow the spline path
@@ -63,10 +64,21 @@ public class SplinePathComponent implements Component {
             } else {
                 targetDirection = backwardDirection;
             }
-            // TODO: check this out
-            targetDirection = forwardDirection;
         } else { // otherwise, just move towards the spline
             targetDirection = closestPoint.sub(entityPosition).normalized();
+        }
+
+        // TODO: find a way to not share around the targetDirection too much
+
+        // TODO: this approach doesn't work well enough
+        if (Math.abs(targetDirection.y) < 0.1f) {
+            targetDirection.y = 0;
+        }
+
+        // TODO: this approach also doesn't work well enough
+        float EPS = 0.000001f;
+        if (targetDirection.sub(entityVelocity.normalized()).length() < EPS) {
+            targetDirection = new Vector3f(entityVelocity);
         }
 
         return targetDirection;
