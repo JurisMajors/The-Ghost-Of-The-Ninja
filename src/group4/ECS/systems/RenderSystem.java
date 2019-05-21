@@ -11,11 +11,18 @@ import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.graphics.Shader;
+import group4.graphics.RenderLayer.Layer;
 import group4.maths.Matrix4f;
 import group4.utils.DebugUtils;
 
 import static org.lwjgl.opengl.GL41.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL41.glClear;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.lwjgl.opengl.GL41.glActiveTexture;
 
 /**
@@ -60,6 +67,9 @@ public class RenderSystem extends EntitySystem {
      * @param deltaTime time between last and current update
      */
     public void update(float deltaTime) {
+        // Match objects to RenderLayers so we can draw layer by layer
+        Map<Layer, List<Entity>> entityLayers = sortEntitiesByLayer();
+
         // Get the camera and its main component from the engine
         Entity camera = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0); // There should only be one camera currently
         CameraComponent cc = camera.getComponent(CameraComponent.class);
@@ -71,31 +81,36 @@ public class RenderSystem extends EntitySystem {
             shader.setUniformMat4f("vw_matrix", cc.viewMatrix);
         }
 
-        for (Entity entity : entities) {
-            // get mapper for O(1) component retrieval
-            PositionComponent pc = Mappers.positionMapper.get(entity);
-            GraphicsComponent gc = Mappers.graphicsMapper.get(entity);
+        PositionComponent pc;
+        GraphicsComponent gc;
+        for (Layer layer : Layer.values()) {
+            glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
+            for (Entity entity : entityLayers.get(layer)) {
+                // Get components via mapper for O(1) component retrieval
+                pc = Mappers.positionMapper.get(entity);
+                gc = Mappers.graphicsMapper.get(entity);
 
-            // Bind shader
-            gc.shader.bind();
+                // Bind shader
+                gc.shader.bind();
 
-            // Set uniforms
-            gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers
-            gc.shader.setUniform1f("tex", gc.texture.getTextureID()); // Specify which texture slot to use
+                // Set uniforms
+                gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers
+                gc.shader.setUniform1f("tex", gc.texture.getTextureID()); // Specify which texture slot to use
 
-            // Bind texture and specify texture slot
-            gc.texture.bind();
-            glActiveTexture(gc.texture.getTextureID());
+                // Bind texture and specify texture slot
+                gc.texture.bind();
+                glActiveTexture(gc.texture.getTextureID());
 
-            // Render!
-            gc.triangle.render(); // TODO: Triangle is an arbitrary (and probably bad name) which I think still remains from the first example we had hehe.. => Change :-)
+                // Render!
+                gc.geometry.render();
+            }
         }
 
         // Start of debug drawing
         if (DEBUG) {
             glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
             Shader.DEBUG.bind();
-            DebugUtils.drawGrid(2.0f);
+            DebugUtils.drawGrid(1.0f);
 
             // Temporary example for drawing lines or boxes.
             // NOTE: Uncomment to see the effect
@@ -106,8 +121,11 @@ public class RenderSystem extends EntitySystem {
 //                    PositionComponent pcb = Mappers.positionMapper.get(b);
 //                    DebugUtils.drawLine(pca.position, pcb.position);
 //                    DebugUtils.drawBox(pca.position, pcb.position);
+//                    DebugUtils.drawCircle(pca.position, 2.0f, 50);
 //                }
 //            }
+
+            DebugUtils.flush();
         }
     }
 
@@ -124,6 +142,27 @@ public class RenderSystem extends EntitySystem {
      * @param processing in {true, false}
      */
     public void setProcessing(boolean processing) {
+    }
+
+    /**
+     * Constructs a Map which stores all entities in the engine sorted to the layer
+     * indicated in their respective GraphicsComponent.
+     *
+     * @return Map<Layer, List < Entity>>, the entities sorted by layer
+     */
+    private Map<Layer, List<Entity>> sortEntitiesByLayer() {
+        // Construct an empty hashmap and create a key for each layer
+        Map<Layer, List<Entity>> entityLayers = new HashMap<>();
+        for (Layer layer : Layer.values()) {
+            entityLayers.put(layer, new ArrayList<>());
+        }
+
+        GraphicsComponent gc;
+        for (Entity entity : entities) {
+            gc = Mappers.graphicsMapper.get(entity); // Fetch the GraphicsComponent
+            entityLayers.get(gc.layer).add(entity); // Use layer as key for adding to the map
+        }
+        return entityLayers;
     }
 
 }

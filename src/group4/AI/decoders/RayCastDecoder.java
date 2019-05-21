@@ -59,7 +59,7 @@ public class RayCastDecoder {
             IntersectionPair intersection = r.cast(entities);
 
             // add the features to the result
-            float[] interFeatures = this.decoder.getFeatures(intersection, ghost);
+            float[] interFeatures = this.decoder.getFeatures(r, intersection, ghost);
             for (int j = 0; j < interFeatures.length; j++) {
                 features[j + i] = interFeatures[j];
             }

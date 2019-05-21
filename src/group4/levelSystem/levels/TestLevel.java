@@ -11,7 +11,7 @@ public class TestLevel extends Level {
 
     @Override
     protected Module createRoot() {
-        return new TestModule(this);
+        return new TestModule(this, "best-40");
     }
 
     @Override

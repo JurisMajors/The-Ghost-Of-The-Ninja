@@ -26,7 +26,7 @@ public class PlayerMovementSystem extends IteratingSystem {
         super(Families.playerFamily);
     }
 
-    PlayerMovementSystem(Family f) {
+    public PlayerMovementSystem(Family f) {
         super(f);
     }
 
@@ -40,8 +40,7 @@ public class PlayerMovementSystem extends IteratingSystem {
         // apply gravity
         doGravity(mc, gc);
         // move in the specified direction
-        pc.position.addi(mc.velocity.scale(deltaTime));
-
+        pc.position.addi(mc.velocity);
     }
 
     /**
@@ -65,7 +64,6 @@ public class PlayerMovementSystem extends IteratingSystem {
         if (shouldJump(ref) && canJump(mc.velocity)) {
             jump(mc);
         }
-
         mc.velocity.capValuesi(mc.velocityRange);
     }
 

@@ -10,11 +10,12 @@ public class SimpleLevel extends Level {
 
     @Override
     protected Module createRoot() {
-        return new SimpleModule(this);
+        return new SimpleModule(this, null);
     }
 
     @Override
     protected void createAdditionalModules() {
+        // For now I'll not add additional modules to this level
         return;
     }
 

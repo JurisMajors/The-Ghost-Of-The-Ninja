@@ -5,8 +5,12 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Rectangle;
 import group4.ECS.components.CollisionComponent;
-import group4.ECS.entities.items.weapons.Bullet;
 import group4.ECS.entities.world.Exit;
+import group4.ECS.components.DimensionComponent;
+import group4.ECS.components.PositionComponent;
+import group4.ECS.components.SplineComponent;
+import group4.ECS.entities.Player;
+import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
@@ -26,16 +30,17 @@ public class CollisionSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         // detect and store all collisions
         detectCollisions(entity);
+        detectSplineCollisions(entity);
     }
 
     /**
-     * Finds all collidable entities that collide with entity e. Stores them in the collision component and
+     * Finds all non-spline collidable entities that collide with entity e. Stores them in the collision component and
      * lets the next collision system handle them.
      *
      * @param e entity
      */
     private void detectCollisions(Entity e) {
-        // get all collidable entities
+        // get all normal collidable entities
         ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.collidableFamily);
         CollisionComponent cc = Mappers.collisionMapper.get(e);
 
@@ -44,6 +49,7 @@ public class CollisionSystem extends IteratingSystem {
             if (e.equals(other)) continue;
             // dont register collisions bullets of bullets
             if (other instanceof Bullet && e instanceof Bullet) continue;
+            if (other instanceof Player && e instanceof Player) continue;
 
             // get the intersection between this (moving collidable entity) and other (collidable entity)
             Rectangle intersection = getIntersectingRectangle(e, other);
@@ -63,7 +69,83 @@ public class CollisionSystem extends IteratingSystem {
             cc.collisions.add(c1);
             occ.collisions.add(c2);
         }
+    }
 
+    /**
+     * Finds all spline collidable entities that collide with entity e. Stores them in the collision component and
+     * lets the next collision system handle them.
+     *
+     * @param e entity
+     */
+    private void detectSplineCollisions(Entity e) {
+        // get all collidable spline entities
+        ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.collidableSplineFamily);
+        CollisionComponent cc = Mappers.collisionMapper.get(e);
+
+        PositionComponent pc = Mappers.positionMapper.get(e);
+        DimensionComponent dc = Mappers.dimensionMapper.get(e);
+
+        // get all corner points of the bounding box of the entity colliding with a spline
+//        Vector3f ct = pc.position.add(dc.dimension.scale(0.5f));
+        Vector3f bl = pc.position;
+        Vector3f br = pc.position.add(new Vector3f(dc.dimension.x, 0.0f, dc.dimension.z));
+        Vector3f tr = pc.position.add(dc.dimension);
+        Vector3f tl = pc.position.add(new Vector3f(0.0f, dc.dimension.y, dc.dimension.z));
+
+        for (Entity spline : entities) {
+            if (e.equals(spline)) {
+                continue;
+            }
+            PositionComponent spc = Mappers.positionMapper.get(spline);
+            SplineComponent sc = Mappers.splineMapper.get(spline);
+
+            // store the smallest vector that goes from a spline point to a boundingbox point
+            Vector3f smallestDisplacement = new Vector3f(1000f, 1000f, 1000f);
+            Vector3f closestPoint = null;
+            Vector3f clostestNormal = null;
+
+            // loop through all spline points
+            for (int i = 0; i < sc.points.length; i++) {
+                Vector3f point = sc.points[i];
+                Vector3f normal = sc.normals[i];
+
+                Vector3f oldSmallest = new Vector3f(smallestDisplacement);
+                Vector3f worldPoint = point.add(spc.position);
+                // compute difference with bounding box point and spline point and store the smallest displacement
+                smallestDisplacement = Vector3f.min(smallestDisplacement, bl.sub(worldPoint));
+                smallestDisplacement = Vector3f.min(smallestDisplacement, br.sub(worldPoint));
+                smallestDisplacement = Vector3f.min(smallestDisplacement, tr.sub(worldPoint));
+                smallestDisplacement = Vector3f.min(smallestDisplacement, tl.sub(worldPoint));
+//                smallestDisplacement = Vector3f.min(smallestDisplacement, ct.sub(worldPoint));
+
+                // get closest point to the bounding box
+                if (smallestDisplacement.length() < oldSmallest.length()) {
+                    closestPoint = point;
+                    clostestNormal = normal;
+                }
+            }
+
+            // make sure that the normal is facing the right way
+            if (clostestNormal.scale(-1.0f).sub(smallestDisplacement).length() < clostestNormal.sub(smallestDisplacement).length()) {
+                clostestNormal.scalei(-1.0f);
+            }
+
+            // get the position on the spline edge closest to the bb
+            Vector3f newPos = closestPoint.add(clostestNormal);
+
+            // if the smallest displacement is smaller than half of the thickness there is a collision
+            // TODO: FIX HACK AT END OF IF STATEMENT VERY DANGAROUS
+            if (smallestDisplacement.length() <= sc.normals[0].scale(0.5f * sc.thickness).length()) {
+                smallestDisplacement.scalei(smallestDisplacement.sub(sc.normals[0].scale(0.5f * sc.thickness)).length());
+                CollisionComponent scc = Mappers.collisionMapper.get(spline);
+
+                // add collision to entity and spline
+                CollisionData c1 = new CollisionData(spline, smallestDisplacement, newPos);
+                CollisionData c2 = new CollisionData(e, smallestDisplacement.scale(-1.0f), newPos);
+                cc.collisions.add(c1);
+                scc.collisions.add(c2);
+            }
+        }
     }
 
     /// BELOW ARE FUNCTIONS TO DEAL WITH AXIS ALIGNED RECTANGLE INTERSECTION
@@ -78,21 +160,38 @@ public class CollisionSystem extends IteratingSystem {
      * @return
      */
     static Vector3f processCollision(Entity first, Entity scnd) {
-        // get positions
-        Vector3f firstPos = Mappers.positionMapper.get(first).position;
-        Vector3f scndPos = Mappers.positionMapper.get(scnd).position;
-        // get the intersection rectangle
         Rectangle intersection = getIntersectingRectangle(first, scnd);
         if (intersection == null) return new Vector3f();
-        // displace according to the rectangles smallest side
+        // resolve the collision with the smallest displacement
         if (intersection.height <= intersection.width) {
-            // inversely displace
-            if (firstPos.y > scndPos.y) {
-                return new Vector3f(0, intersection.height, 0);
-            } else {
-                return new Vector3f(0, -1* intersection.height, 0);
-            }
+            return resolveYCollision(first, scnd, intersection);
+
         }
+        return resolveXCollision(first, scnd, intersection);
+    }
+
+    private static Vector3f resolveYCollision(Entity first, Entity scnd, Rectangle intersection) {
+        Vector3f firstPos = Mappers.positionMapper.get(first).position;
+        Vector3f scndPos = Mappers.positionMapper.get(scnd).position;
+        Vector3f firstDim = Mappers.dimensionMapper.get(first).dimension;
+        Vector3f scndDim = Mappers.dimensionMapper.get(scnd).dimension;
+        Vector3f firstCntr = firstPos.add(firstDim.scale(0.5f));
+
+        // if the first is not on or below the second, then no displacement
+        if (!(firstCntr.x >= scndPos.x && firstCntr.x <= scndPos.x + scndDim.x)) {
+            return new Vector3f();
+        }
+        // otherwise displace in the inverse direction
+        if (firstPos.y > scndPos.y) { // first is on top
+            return new Vector3f(0, intersection.height, 0);
+        } else { // on bottom
+            return new Vector3f(0, -1 * intersection.height, 0);
+        }
+    }
+
+    private static Vector3f resolveXCollision(Entity first, Entity scnd, Rectangle intersection) {
+        Vector3f firstPos = Mappers.positionMapper.get(first).position;
+        Vector3f scndPos = Mappers.positionMapper.get(scnd).position;
         // move in the correct x direction
         if (firstPos.x > scndPos.x) {
             return new Vector3f(intersection.width, 0, 0);
