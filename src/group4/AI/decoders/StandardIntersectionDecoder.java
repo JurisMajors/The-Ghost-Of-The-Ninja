@@ -1,8 +1,8 @@
 package group4.AI.decoders;
 
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.components.WalkingMobComponent;
-import group4.ECS.components.PositionComponent;
+import group4.ECS.components.identities.WalkingMobComponent;
+import group4.ECS.components.physics.PositionComponent;
 import group4.maths.IntersectionPair;
 import group4.maths.Ray;
 import group4.maths.Vector3f;

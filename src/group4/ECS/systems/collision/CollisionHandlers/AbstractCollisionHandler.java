@@ -1,7 +1,7 @@
 package group4.ECS.systems.collision.CollisionHandlers;
 
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.components.CollisionComponent;
+import group4.ECS.components.physics.CollisionComponent;
 
 /**
  * This is an abstract class for resolving collisions of entities

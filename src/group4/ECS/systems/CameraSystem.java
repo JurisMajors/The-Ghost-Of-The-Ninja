@@ -5,12 +5,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import group4.ECS.components.CameraComponent;
-import group4.ECS.components.PositionComponent;
+import group4.ECS.components.identities.CameraComponent;
+import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
-import group4.game.Main;
 import group4.maths.Matrix4f;
 
 

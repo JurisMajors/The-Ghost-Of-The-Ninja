@@ -2,7 +2,6 @@ package group4.AI;
 
 import org.uncommons.watchmaker.framework.factories.AbstractCandidateFactory;
 
-import java.util.Arrays;
 import java.util.Random;
 
 /**

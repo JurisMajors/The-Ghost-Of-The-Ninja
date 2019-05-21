@@ -1,6 +1,6 @@
 package group4.levelSystem;
 
-import group4.ECS.components.PositionComponent;
+import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.entities.Player;
 import group4.ECS.etc.TheEngine;
 
