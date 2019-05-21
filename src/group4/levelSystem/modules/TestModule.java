@@ -3,6 +3,7 @@ package group4.levelSystem.modules;
 import group4.ECS.entities.Background;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.world.Block;
+import group4.ECS.entities.world.Exit;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;

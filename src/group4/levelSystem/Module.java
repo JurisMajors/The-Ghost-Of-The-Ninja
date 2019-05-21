@@ -5,6 +5,7 @@ import group4.AI.Brain;
 import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
+import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
 import group4.ECS.etc.TheEngine;
 import group4.game.Main;
