@@ -1,5 +1,6 @@
 package group4.levelSystem.levels;
 
+import group4.ECS.components.ExitActionComponent;
 import group4.ECS.entities.Player;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
@@ -17,7 +18,7 @@ public class TestLevel extends Level {
     @Override
     protected void createAdditionalModules() {
         // Add the SimpleModule as well
-        this.addModule(new SimpleModule(this));
+        this.addModule(new SimpleModule(this, null));
     }
 
     @Override
@@ -28,6 +29,7 @@ public class TestLevel extends Level {
 
     @Override
     protected void configExits() {
+        // Configure the only exit of the level: the exit of the test module
 
     }
 

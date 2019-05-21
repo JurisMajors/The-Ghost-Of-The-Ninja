@@ -280,7 +280,7 @@ public class Module {
     private void addExit(int x, int y) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
         Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
-        Platform e = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.EXIT); // TODO: Change to Exit entity when that is available
+        Exit e = new Exit(tempPosition, tempDimension, this);
         this.addEntity(e);
     }
 

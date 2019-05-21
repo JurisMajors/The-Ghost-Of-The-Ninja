@@ -2,6 +2,7 @@ package group4.levelSystem;
 
 import group4.ECS.components.PositionComponent;
 import group4.ECS.entities.Player;
+import group4.ECS.entities.world.Exit;
 import group4.ECS.etc.TheEngine;
 
 import java.util.ArrayList;
@@ -67,6 +68,13 @@ public abstract class Level {
 
         if (this.player == null)
             throw new IllegalStateException("Level: the player entity cannot be null");
+
+        for (Module m : this.modules) {
+            for (Exit e : m.getExits()) {
+                if (!e.exitActionSet())
+                    throw new IllegalStateException("Level: not all exits in the level where configured");
+            }
+        }
     }
 
 
