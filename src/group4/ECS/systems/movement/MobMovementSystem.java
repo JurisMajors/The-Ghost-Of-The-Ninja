@@ -49,16 +49,36 @@ public abstract class MobMovementSystem extends IteratingSystem {
         move(entity, playerPos, deltaTime);
         // apply gravity
         doGravity(mc, gc);
-        // move in the specified direction
+
         pc.position.addi(mc.velocity.scale(deltaTime));
+        /*
+        This comment is a failed attempt to smooth out the movement of a flying mob trying to follow a spline
+        // store the new and old distance to the target (playerPos)
+        float curDist = pc.position.sub(playerPos.position).length();
+        float newDist = pc.position.add(mc.velocity.scale(deltaTime)).sub(playerPos.position).length();
+        // make sure to not overshoot to the target
+        if (newDist > curDist - 1e-2) {
+            // move on top of the target
+            pc.position = new Vector3f(playerPos.position);
+            // reset the velocity
+            mc.velocity = new Vector3f();
+        } else {
+            // move in the specified direction
+            pc.position.addi(mc.velocity.scale(deltaTime));
+        }
+         */
     }
 
     protected void move(Entity e, PositionComponent playerPos, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(e);
         MovementComponent mc = Mappers.movementMapper.get(e);
+        float EPS = 0.5f;
 
         // set velocity.x in the direction towards the player
-        if (pc.position.x < playerPos.position.x && canMoveRight(mc.velocity)) {
+        if (Math.abs(pc.position.x - playerPos.position.x) < EPS) {
+            // precision safety
+            mc.velocity.x = 0;
+        } else if (pc.position.x < playerPos.position.x && canMoveRight(mc.velocity)) {
             moveRight(mc);
         } else if (pc.position.x > playerPos.position.x && canMoveLeft(mc.velocity)) {
             moveLeft(mc);
@@ -67,11 +87,15 @@ public abstract class MobMovementSystem extends IteratingSystem {
         }
 
         // set velocity.y in the direction towards the player
-        if (pc.position.y < playerPos.position.y && canJump(mc.velocity)) {
+        if (Math.abs(pc.position.y - playerPos.position.y) < EPS) {
+            mc.velocity.y = 0;
+        } else if (pc.position.y < playerPos.position.y && canJump(mc.velocity)) {
             jump(mc);
         } else if (pc.position.y > playerPos.position.y && canMoveDown()) {
             moveDown(mc);
-        } else if (canJump(mc.velocity) && canMoveDown()) mc.velocity.y = 0;
+        } else if (canJump(mc.velocity) && canMoveDown()) {
+            mc.velocity.y = 0;
+        }
 
     }
 
