@@ -113,9 +113,11 @@ public class RenderSystem extends EntitySystem {
 //            DebugUtils.drawGrid(1.0f);
 
             for (Entity e: entities) {
+                // draw spline paths during debug
                 if (Mappers.splinePathMapper.get(e) != null) {
                     DebugUtils.drawSpline(Mappers.splinePathMapper.get(e).points);
                 }
+                // draw the velocity of all mobs
                 if (e instanceof Mob) {
                     pc = Mappers.positionMapper.get(e);
                     MovementComponent mc = Mappers.movementMapper.get(e);
