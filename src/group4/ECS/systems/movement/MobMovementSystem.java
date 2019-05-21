@@ -3,6 +3,8 @@ package group4.ECS.systems.movement;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import group4.ECS.components.SplinePathComponent;
+import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
@@ -20,10 +22,28 @@ public abstract class MobMovementSystem extends IteratingSystem {
     @Override
     public void processEntity(Entity entity, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(entity);
+        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
         MovementComponent mc = Mappers.movementMapper.get(entity);
         GravityComponent gc = Mappers.gravityMapper.get(entity);
-        // get the player position
-        PositionComponent playerPos = getTargetPositionComponent();
+
+        PositionComponent playerPos;
+
+        // splines mobs have a different target than normal mobs
+        if (isSplineMob(entity)) {
+            SplinePathComponent spc = Mappers.splinePathMapper.get(entity);
+            // get the direction and position to move towards
+            Vector3f targetDirection = spc.targetDirection(pc.position, dc.dimension, mc.velocity);
+            Vector3f targetPos = pc.position.add(targetDirection);
+
+            // the target position is currently stored in playerPos, this name should probably change
+            playerPos = new PositionComponent(targetPos);
+
+
+            // TODO: follow the player if the player is in sight
+        } else {
+            // get the player position
+            playerPos = getTargetPositionComponent();
+        }
 
         // process movement events
         move(entity, playerPos, deltaTime);
@@ -57,6 +77,7 @@ public abstract class MobMovementSystem extends IteratingSystem {
 
     /**
      * Returns the position component containing the position that this mob should move towards.
+     *
      * @return position component
      */
     protected PositionComponent getTargetPositionComponent() {
@@ -98,5 +119,10 @@ public abstract class MobMovementSystem extends IteratingSystem {
 
     protected void doGravity(MovementComponent mc, GravityComponent gc) {
         mc.velocity.y -= gc.gravity.y;
+    }
+
+    protected final boolean isSplineMob(Entity e) {
+        SplinePathComponent spc = Mappers.splinePathMapper.get(e);
+        return spc != null;
     }
 }
