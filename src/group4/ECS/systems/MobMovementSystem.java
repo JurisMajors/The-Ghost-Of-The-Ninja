@@ -28,7 +28,7 @@ public abstract class MobMovementSystem extends IteratingSystem {
         MovementComponent mc = Mappers.movementMapper.get(entity);
         GravityComponent gc = Mappers.gravityMapper.get(entity);
         // get the player position
-        PositionComponent playerPos = Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
+        PositionComponent playerPos = getTargetPositionComponent();
 
         // process movement events
         move(entity, playerPos, deltaTime);
@@ -58,6 +58,14 @@ public abstract class MobMovementSystem extends IteratingSystem {
             moveDown(mc);
         } else if (canJump(mc.velocity) && canMoveDown()) mc.velocity.y = 0;
 
+    }
+
+    /**
+     * Returns the position component containing the position that this mob should move towards.
+     * @return position component
+     */
+    protected PositionComponent getTargetPositionComponent() {
+        return Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
     }
 
     protected void moveRight(MovementComponent mc) {
