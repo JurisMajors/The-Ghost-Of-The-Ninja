@@ -7,6 +7,7 @@ import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.entities.mobs.Mob;
+import group4.ECS.entities.world.Exit;
 import group4.ECS.etc.Mappers;
 import group4.ECS.systems.collision.CollisionData;
 
@@ -31,6 +32,8 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
                 handleMob(player, (Mob) other);
             } else if (other instanceof Bullet) {
                 handleBullet(player, (Bullet) other);
+            } else if (other instanceof Exit) {
+                handleExit(player, (Exit) other);
             }
         }
     }
@@ -52,6 +55,13 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
         // after player bullet interaction we dont want to fix their positions (because the bullet might die)
         CollisionComponent pcc = Mappers.collisionMapper.get(player);
         pcc.collisions.remove(bullet);
+    }
+
+    private static void handleExit(Player player, Exit exit) {
+        exit.module.getLevel().handleExit(exit);
+        // after player exit interaction we dont want to fix their positions (we are just going to execute the exit action)
+        CollisionComponent pcc = Mappers.collisionMapper.get(player);
+        pcc.collisions.remove(exit);
     }
 
 

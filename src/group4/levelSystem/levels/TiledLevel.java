@@ -9,7 +9,7 @@ public class TiledLevel extends Level {
 
     @Override
     protected Module createRoot() {
-        return new Module(this, "./src/group4/levelSystem/modules/TiledModules/simpleModule.json", "test-59");
+        return new Module(this, "./src/group4/levelSystem/modules/TiledModules/simpleModule.json", null);
     }
 
     @Override
@@ -21,6 +21,12 @@ public class TiledLevel extends Level {
     protected Player createPlayer() {
         // We don't care about the player position, as that will be initialized on level switching
         return new Player(new Vector3f(), this);
+    }
+
+    @Override
+    protected void configExits() {
+        // We do not need to configure exits, as the simpleModule (tiled version) does not contain exits
+        return;
     }
 
 }

@@ -5,6 +5,7 @@ import group4.AI.Brain;
 import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
+import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
 import group4.ECS.etc.TheEngine;
 import group4.game.Main;
@@ -279,7 +280,31 @@ public class Module {
     private void addExit(int x, int y) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
         Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
-        Platform e = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.EXIT); // TODO: Change to Exit entity when that is available
+        Exit e = new Exit(tempPosition, tempDimension, this);
         this.addEntity(e);
+    }
+
+
+    /**
+     * Get all exits of this module
+     */
+    public List<Exit> getExits() {
+        List<Exit> exits = new ArrayList<>();
+
+        for (Entity e : this.entities) {
+            if (e instanceof Exit) {
+                exits.add((Exit) e);
+            }
+        }
+
+        return exits;
+    }
+
+
+    /**
+     * Get the level that this module is part of
+     */
+    public Level getLevel() {
+        return this.level;
     }
 }
