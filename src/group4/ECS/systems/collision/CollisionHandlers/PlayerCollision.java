@@ -1,9 +1,9 @@
 package group4.ECS.systems.collision.CollisionHandlers;
 
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.components.CollisionComponent;
-import group4.ECS.components.DamageComponent;
-import group4.ECS.components.HealthComponent;
+import group4.ECS.components.physics.CollisionComponent;
+import group4.ECS.components.stats.DamageComponent;
+import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.entities.mobs.Mob;

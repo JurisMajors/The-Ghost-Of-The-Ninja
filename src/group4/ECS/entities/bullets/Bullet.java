@@ -1,7 +1,12 @@
 package group4.ECS.entities.bullets;
 
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.components.*;
+import group4.ECS.components.GraphicsComponent;
+import group4.ECS.components.identities.BulletComponent;
+import group4.ECS.components.physics.CollisionComponent;
+import group4.ECS.components.physics.DimensionComponent;
+import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.systems.collision.CollisionHandlers.BulletCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;

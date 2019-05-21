@@ -1,16 +1,19 @@
 package group4.game;
 
 import com.badlogic.ashley.core.Engine;
-import group4.ECS.components.PositionComponent;
-import group4.ECS.etc.Families;
-import group4.ECS.etc.Mappers;
 import group4.AI.Evolver;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.*;
+import group4.ECS.systems.CameraSystem;
+import group4.ECS.systems.RenderSystem;
+import group4.ECS.systems.ShootingSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
 import group4.ECS.systems.collision.UncollidingSystem;
+import group4.ECS.systems.death.GhostDyingSystem;
+import group4.ECS.systems.death.MobDyingSystem;
+import group4.ECS.systems.death.PlayerDyingSystem;
+import group4.ECS.systems.movement.*;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;
@@ -19,9 +22,6 @@ import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
 import group4.levelSystem.levels.MobTestLevel;
-import group4.levelSystem.levels.SimpleLevel;
-import group4.levelSystem.levels.TestLevel;
-import group4.levelSystem.levels.TiledLevel;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 

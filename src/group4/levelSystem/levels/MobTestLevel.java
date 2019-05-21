@@ -1,7 +1,7 @@
 package group4.levelSystem.levels;
 
 import group4.ECS.entities.Player;
-import group4.ECS.entities.mobs.*;
+import group4.ECS.entities.mobs.ShootingJumpingWalkingMob;
 import group4.ECS.etc.TheEngine;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
