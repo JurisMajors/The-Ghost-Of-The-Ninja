@@ -25,6 +25,7 @@ public class TiledLevel extends Level {
 
     @Override
     protected void configExits() {
+        // We do not need to configure exits, as the simpleModule (tiled version) does not contain exits
         return;
     }
 

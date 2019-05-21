@@ -10,7 +10,7 @@ public class ExitCollision extends AbstractCollisionHandler<Exit> {
 
     @Override
     public void collision(Exit e, CollisionComponent cc) {
-        System.out.println("Reached exit");
+        e.module.getLevel().handleExit(e);
         cc.collisions.clear();
     }
 

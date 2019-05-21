@@ -299,4 +299,12 @@ public class Module {
 
         return exits;
     }
+
+
+    /**
+     * Get the level that this module is part of
+     */
+    public Level getLevel() {
+        return this.level;
+    }
 }
