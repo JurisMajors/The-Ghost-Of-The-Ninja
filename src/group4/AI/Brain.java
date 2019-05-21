@@ -1,20 +1,19 @@
         package group4.AI;
 
-import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
-import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.layers.DenseLayer;
-import org.deeplearning4j.nn.conf.layers.OutputLayer;
-import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
-import org.deeplearning4j.nn.weights.WeightInit;
-import org.deeplearning4j.util.ModelSerializer;
-import org.nd4j.linalg.activations.Activation;
-import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.lossfunctions.LossFunctions;
+        import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
+        import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+        import org.deeplearning4j.nn.conf.layers.DenseLayer;
+        import org.deeplearning4j.nn.conf.layers.OutputLayer;
+        import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+        import org.deeplearning4j.nn.weights.WeightInit;
+        import org.deeplearning4j.util.ModelSerializer;
+        import org.nd4j.linalg.activations.Activation;
+        import org.nd4j.linalg.api.ndarray.INDArray;
+        import org.nd4j.linalg.lossfunctions.LossFunctions;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+        import java.io.File;
+        import java.io.IOException;
+        import java.util.List;
 
 /**
  * Contains the neural network which acts as the "ghost" brain.

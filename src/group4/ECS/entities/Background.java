@@ -1,8 +1,8 @@
 package group4.ECS.entities;
 
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.GraphicsComponent;
+import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.graphics.RenderLayer.Layer;
 import group4.graphics.Shader;

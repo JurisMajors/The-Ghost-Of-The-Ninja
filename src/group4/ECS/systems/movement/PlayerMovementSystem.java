@@ -4,12 +4,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import group4.ECS.components.physics.GravityComponent;
-import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
-import group4.ECS.systems.movement.GhostMovementSystem;
 import group4.input.KeyBoard;
 import group4.maths.Vector3f;
 

@@ -1,7 +1,7 @@
 package group4.ECS.entities.mobs;
 
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.components.*;
+import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.identities.MobComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;

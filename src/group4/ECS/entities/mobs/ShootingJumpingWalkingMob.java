@@ -1,6 +1,6 @@
 package group4.ECS.entities.mobs;
 
-import group4.ECS.components.*;
+import group4.ECS.components.ShootingComponent;
 import group4.ECS.components.identities.JumpingWalkingMobComponent;
 import group4.levelSystem.Level;
 import group4.maths.Vector3f;

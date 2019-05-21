@@ -1,12 +1,11 @@
 package group4.graphics;
 
+import group4.utils.BufferUtils;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
-import group4.utils.BufferUtils;
 
 import static org.lwjgl.opengl.GL11.*;
 

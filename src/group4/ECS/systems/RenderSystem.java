@@ -4,26 +4,23 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.utils.ImmutableArray;
-import group4.ECS.components.identities.CameraComponent;
 import group4.ECS.components.GraphicsComponent;
+import group4.ECS.components.identities.CameraComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
-import group4.graphics.Shader;
 import group4.graphics.RenderLayer.Layer;
+import group4.graphics.Shader;
 import group4.maths.Matrix4f;
 import group4.utils.DebugUtils;
-
-import static org.lwjgl.opengl.GL41.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL41.glClear;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.lwjgl.opengl.GL41.glActiveTexture;
+import static org.lwjgl.opengl.GL41.*;
 
 /**
  * This system renders all entities which are in the graphicsFamily, thus having a

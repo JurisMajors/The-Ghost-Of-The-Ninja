@@ -1,7 +1,10 @@
 package group4.ECS.etc;
 
 import com.badlogic.ashley.core.Family;
-import group4.ECS.components.*;
+import group4.ECS.components.AudioComponent;
+import group4.ECS.components.GraphicsComponent;
+import group4.ECS.components.ShootingComponent;
+import group4.ECS.components.SplineComponent;
 import group4.ECS.components.identities.*;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;

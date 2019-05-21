@@ -1,7 +1,6 @@
 package group4.ECS.components.physics;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.ashley.core.Entity;
 import group4.ECS.systems.collision.CollisionData;
 import group4.ECS.systems.collision.CollisionHandlers.AbstractCollisionHandler;
 

@@ -3,8 +3,8 @@ package group4.maths;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.identities.GhostComponent;
-import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.identities.PlayerComponent;
+import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.etc.Mappers;
 

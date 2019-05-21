@@ -1,12 +1,11 @@
 package group4.ECS.systems.death;
 
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.components.stats.HealthComponent;
-import group4.ECS.components.physics.PositionComponent;
-import group4.ECS.entities.Ghost;
 import group4.ECS.components.identities.GhostComponent;
+import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.HealthComponent;
+import group4.ECS.entities.Ghost;
 import group4.ECS.etc.Families;
-import group4.ECS.systems.death.PlayerDyingSystem;
 import group4.game.Main;
 
 public class GhostDyingSystem extends PlayerDyingSystem {
