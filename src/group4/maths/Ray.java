@@ -2,12 +2,11 @@ package group4.maths;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
-import group4.ECS.components.GhostComponent;
-import group4.ECS.components.DimensionComponent;
-import group4.ECS.components.PlayerComponent;
-import group4.ECS.components.PositionComponent;
+import group4.ECS.components.identities.GhostComponent;
+import group4.ECS.components.physics.DimensionComponent;
+import group4.ECS.components.identities.PlayerComponent;
+import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.etc.Mappers;
-import group4.utils.DebugUtils;
 
 import java.awt.geom.Line2D;
 import java.util.ArrayList;

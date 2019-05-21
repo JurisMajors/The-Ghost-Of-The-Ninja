@@ -2,10 +2,9 @@ package group4.ECS.systems.collision;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
-import group4.ECS.components.CollisionComponent;
-import group4.ECS.components.DimensionComponent;
-import group4.ECS.components.MovementComponent;
-import group4.ECS.components.PositionComponent;
+import group4.ECS.components.physics.CollisionComponent;
+import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.maths.Vector3f;

@@ -2,6 +2,10 @@ package group4.ECS.entities.world;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.*;
+import group4.ECS.components.identities.PlatformComponent;
+import group4.ECS.components.physics.CollisionComponent;
+import group4.ECS.components.physics.DimensionComponent;
+import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.systems.collision.CollisionHandlers.PlatformCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;

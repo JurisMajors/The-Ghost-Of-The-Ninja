@@ -1,9 +1,12 @@
 package group4.ECS.etc;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
 import group4.ECS.components.*;
-import group4.maths.spline.Spline;
+import group4.ECS.components.identities.CameraComponent;
+import group4.ECS.components.identities.ConsumableComponent;
+import group4.ECS.components.physics.*;
+import group4.ECS.components.stats.HealthComponent;
+import group4.ECS.components.stats.MovementComponent;
 
 /**
  * Mappers retrieve components from entities in O(1) time

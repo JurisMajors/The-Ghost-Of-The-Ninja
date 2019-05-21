@@ -2,6 +2,7 @@ package group4.ECS.entities;
 
 import group4.AI.Brain;
 import group4.ECS.components.*;
+import group4.ECS.components.identities.GhostComponent;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;

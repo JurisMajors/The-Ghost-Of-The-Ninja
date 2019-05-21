@@ -2,7 +2,7 @@ package group4.ECS.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
-import group4.ECS.components.PositionComponent;
+import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.ShootingComponent;
 import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.etc.Families;
