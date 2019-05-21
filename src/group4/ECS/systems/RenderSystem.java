@@ -7,6 +7,9 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.identities.CameraComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.entities.mobs.FlappingMob;
+import group4.ECS.entities.mobs.Mob;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
@@ -107,7 +110,18 @@ public class RenderSystem extends EntitySystem {
         if (DEBUG) {
             glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
             Shader.DEBUG.bind();
-            DebugUtils.drawGrid(1.0f);
+//            DebugUtils.drawGrid(1.0f);
+
+            for (Entity e: entities) {
+                if (Mappers.splinePathMapper.get(e) != null) {
+                    DebugUtils.drawSpline(Mappers.splinePathMapper.get(e).points);
+                }
+                if (e instanceof Mob) {
+                    pc = Mappers.positionMapper.get(e);
+                    MovementComponent mc = Mappers.movementMapper.get(e);
+                    DebugUtils.drawLine(pc.position, pc.position.add(mc.velocity));
+                }
+            }
 
             // Temporary example for drawing lines or boxes.
             // NOTE: Uncomment to see the effect
