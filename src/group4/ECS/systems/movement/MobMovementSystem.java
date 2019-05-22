@@ -1,15 +1,26 @@
 package group4.ECS.systems.movement;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import group4.ECS.components.identities.MobComponent;
+import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.RenderSystem;
+import group4.maths.IntersectionPair;
+import group4.maths.Ray;
 import group4.maths.Vector3f;
+import group4.utils.DebugUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class MobMovementSystem extends IteratingSystem {
 
@@ -21,9 +32,16 @@ public abstract class MobMovementSystem extends IteratingSystem {
     public void processEntity(Entity entity, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(entity);
         MovementComponent mc = Mappers.movementMapper.get(entity);
+        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
         GravityComponent gc = Mappers.gravityMapper.get(entity);
-        // get the player position
-        PositionComponent playerPos = Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
+
+        PositionComponent playerPos;
+        if (canSeePlayer(360, 36, pc, dc, mc)) {
+            // get the player position
+            playerPos = Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
+        } else {
+            playerPos = new PositionComponent(pc.position);
+        }
 
         // process movement events
         move(entity, playerPos, deltaTime);
@@ -90,5 +108,39 @@ public abstract class MobMovementSystem extends IteratingSystem {
 
     protected void doGravity(MovementComponent mc, GravityComponent gc) {
         mc.velocity.y -= gc.gravity.y;
+    }
+
+    protected boolean canSeePlayer(float angleRange, int nrRays, PositionComponent pc, DimensionComponent dc, MovementComponent mc) {
+        List<Class<? extends Component>> seeThrough = new ArrayList<>();
+        seeThrough.add(MobComponent.class);
+
+        Vector3f dir = new Vector3f(mc.velocity);
+        Vector3f center = pc.position.add(dc.dimension.scale(0.5f));
+        // no velocity means hes looking to the right
+        if (Math.abs(dir.length()) < 1e04) {
+            dir = new Vector3f(1, 0, 0);
+        }
+
+        float deltaTheta = angleRange / (float) nrRays;
+        dir = dir.rotateXY(-1f * (angleRange / 2.0f));
+
+        for (int i = 0; i < nrRays; i++) {
+            Ray ray = new Ray(center, dir, seeThrough);
+            IntersectionPair ip = ray.cast(TheEngine.getInstance().getEntities());
+
+            // if this ray reaches the player
+            if (ip.entity instanceof Player) {
+                return true;
+            }
+
+            if (ip.point != null) {
+                DebugUtils.drawLine(center, ip.point);
+            }
+
+            // rotate the next ray
+            dir = dir.rotateXY(deltaTheta);
+        }
+
+        return false;
     }
 }
