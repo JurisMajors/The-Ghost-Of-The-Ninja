@@ -2,16 +2,24 @@ package group4.levelSystem.levels;
 
 import group4.ECS.entities.Player;
 import group4.ECS.entities.world.Exit;
+import group4.game.Main;
 import group4.levelSystem.ExitAction;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
 import group4.maths.Vector3f;
 
+/**
+ * This is a level class which is designed for Ghost training purposes.
+ * It is designed so that it only contains one module with no exit callbacks.
+ */
 public class AILevel extends Level {
     private String modulePath;
 
     AILevel (String path) {
         super();
+        if (!Main.AI) {
+            System.err.println("WARNING: AI LEVEL INITIALIZED FOR NON-TRAINING PURPOSES");
+        }
         this.modulePath = path;
     }
 
