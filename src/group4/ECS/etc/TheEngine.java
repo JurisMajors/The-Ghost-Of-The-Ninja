@@ -9,13 +9,17 @@ import java.util.HashMap;
  */
 public class TheEngine {
 
+    /** ThreadID -> Engine Instance **/
     private static HashMap<Long, Engine> threadEngines = new HashMap<>();
 
     public static Engine getInstance() {
-        long ID = Thread.currentThread().getId();
+        long ID = Thread.currentThread().getId(); // get the id of the thread that this was called from
+        // if it hasnt been called on that thread before
         if (!threadEngines.containsKey(ID)) {
+            // create a new engine for that thread
             threadEngines.put(ID, new Engine());
         }
+        // give the engine of the thread to the process
         return threadEngines.get(ID);
     }
 }
