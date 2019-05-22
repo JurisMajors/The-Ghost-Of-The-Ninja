@@ -116,4 +116,7 @@ public class Families {
     //All entities with spline collision
     public static final Family collidableSplineFamily = Family
             .all(SplineComponent.class, CollisionComponent.class).get();
+
+    public static final Family allCollidableFamily = Family
+            .all(CollisionComponent.class).get();
 }

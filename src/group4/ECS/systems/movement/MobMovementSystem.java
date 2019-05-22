@@ -1,17 +1,27 @@
 package group4.ECS.systems.movement;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import group4.ECS.components.SplinePathComponent;
+import group4.ECS.components.identities.MobComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.entities.Ghost;
+import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
+import group4.maths.IntersectionPair;
+import group4.maths.Ray;
 import group4.maths.Vector3f;
+import group4.utils.DebugUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class MobMovementSystem extends IteratingSystem {
 
@@ -27,9 +37,12 @@ public abstract class MobMovementSystem extends IteratingSystem {
         GravityComponent gc = Mappers.gravityMapper.get(entity);
 
         PositionComponent playerPos;
-
-        // splines mobs have a different target than normal mobs
-        if (isSplineMob(entity)) {
+        // send rays and check if the mob can see the player
+        if (canSeePlayer(360, 36, pc, dc, mc)) {
+            // get the player position
+            playerPos = Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
+        } else if (isSplineMob(entity)) {
+            // splines mobs have a different target than normal mobs
             SplinePathComponent spc = Mappers.splinePathMapper.get(entity);
             // get the direction and position to move towards
             Vector3f targetDirection = targetDirection(spc.points, pc.position, dc.dimension, mc.velocity);
@@ -37,12 +50,8 @@ public abstract class MobMovementSystem extends IteratingSystem {
 
             // the target position is currently stored in playerPos, this name should probably change
             playerPos = new PositionComponent(targetPos);
-
-
-            // TODO: follow the player if the player is in sight
         } else {
-            // get the player position
-            playerPos = getTargetPositionComponent();
+            playerPos = new PositionComponent(pc.position);
         }
 
         // process movement events
@@ -144,6 +153,42 @@ public abstract class MobMovementSystem extends IteratingSystem {
 
     protected void doGravity(MovementComponent mc, GravityComponent gc) {
         mc.velocity.y -= gc.gravity.y;
+    }
+
+    protected boolean canSeePlayer(float angleRange, int nrRays, PositionComponent pc, DimensionComponent dc, MovementComponent mc) {
+        List<Class<? extends Component>> seeThrough = new ArrayList<>();
+        seeThrough.add(MobComponent.class);
+
+        // look in the direction the mob is moving
+        Vector3f dir = new Vector3f(mc.velocity);
+        // center of the mob
+        Vector3f center = pc.position.add(dc.dimension.scale(0.5f));
+
+        // no velocity means hes looking to the top
+        if (Math.abs(dir.length()) < 1e04) {
+            dir = new Vector3f(0, 1, 0);
+        }
+
+        float deltaTheta = angleRange / (float) nrRays;
+        // start at the bottom of the range
+        dir = dir.rotateXY(-1f * (angleRange / 2.0f));
+
+        for (int i = 0; i < nrRays; i++) {
+            Ray ray = new Ray(center, dir, seeThrough, 2f);
+            IntersectionPair ip = ray.cast(TheEngine.getInstance().getEntitiesFor(Families.allCollidableFamily));
+
+            // if this ray reaches the player
+            if (ip.entity instanceof Player && !(ip.entity instanceof Ghost)) {
+                return true;
+            }
+
+            DebugUtils.drawLine(center, ip.point);
+
+            // rotate the next ray
+            dir = dir.rotateXY(deltaTheta);
+        }
+
+        return false;
     }
 
     protected final boolean isSplineMob(Entity e) {
