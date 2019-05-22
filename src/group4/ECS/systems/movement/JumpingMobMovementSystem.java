@@ -32,22 +32,22 @@ public class JumpingMobMovementSystem extends MobMovementSystem {
     }
 
     @Override
-    protected void move(Entity e, PositionComponent playerPos, float deltaTime) {
-        super.move(e, playerPos, deltaTime);
+    protected void move(Entity e, Vector3f targetPosition, float deltaTime) {
+        super.move(e, targetPosition, deltaTime);
         PositionComponent pc = Mappers.positionMapper.get(e);
         MovementComponent mc = Mappers.movementMapper.get(e);
         // set velocity in the direction towards the player
-        if (pc.position.y < playerPos.position.y && canJump(mc.velocity)) {
+        if (pc.position.y < targetPosition.y && canJump(mc.velocity)) {
             jump(mc);
-        } else if (pc.position.x < playerPos.position.x && !canMoveRight(mc.velocity) && canJump(mc.velocity)) {
+        } else if (pc.position.x < targetPosition.x && !canMoveRight(mc.velocity) && canJump(mc.velocity)) {
             jump(mc);
             moveRight(mc);
-        } else if (pc.position.x < playerPos.position.x && canMoveRight(mc.velocity)) {
+        } else if (pc.position.x < targetPosition.x && canMoveRight(mc.velocity)) {
             moveRight(mc);
-        } else if (pc.position.x > playerPos.position.x && !canMoveLeft(mc.velocity) && canJump(mc.velocity)) {
+        } else if (pc.position.x > targetPosition.x && !canMoveLeft(mc.velocity) && canJump(mc.velocity)) {
             jump(mc);
             moveLeft(mc);
-        } else if (pc.position.x > playerPos.position.x && canMoveLeft(mc.velocity)) {
+        } else if (pc.position.x > targetPosition.x && canMoveLeft(mc.velocity)) {
             moveLeft(mc);
         } else {
             mc.velocity.x = 0;

@@ -36,12 +36,14 @@ public abstract class MobMovementSystem extends IteratingSystem {
         MovementComponent mc = Mappers.movementMapper.get(entity);
         GravityComponent gc = Mappers.gravityMapper.get(entity);
 
-        PositionComponent playerPos;
+        // the position that this entity wants to move towards
+        Vector3f targetPosition;
         // send rays and check if the mob can see the player
         if (canSeePlayer(360, 36, pc, dc, mc)) {
-            // get the player position
-            playerPos = Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
+            // set target to the player position
+            targetPosition = getPlayerPosition();
 
+            // make sure that were not following a spline anymore
             if (isSplineMob(entity)) {
                 SplinePathComponent spc = Mappers.splinePathMapper.get(entity);
                 spc.onSpline = false;
@@ -51,59 +53,55 @@ public abstract class MobMovementSystem extends IteratingSystem {
             SplinePathComponent spc = Mappers.splinePathMapper.get(entity);
 
             if (spc.isOnSpline()) {
+                // do movement using the spline path system
                 spc.updateU(deltaTime);
                 pc.position = spc.getPoint();
-                playerPos = new PositionComponent(pc.position);
+                targetPosition = pc.position;
             } else {
-                playerPos = new PositionComponent(spc.points[0]);
+                // move towards the starting point of the spline
+                targetPosition = spc.points[0];
+
+                // check if we arrived at the spline
                 if (closeToStart(pc, spc)) {
                     spc.onSpline = true;
                 }
             }
-
-            /*
-            // get the direction and position to move towards
-            Vector3f targetDirection = targetDirection(spc.points, pc.position, dc.dimension, mc.velocity);
-            Vector3f targetPos = pc.position.add(targetDirection);
-
-            // the target position is currently stored in playerPos, this name should probably change
-            playerPos = new PositionComponent(targetPos);
-             */
         } else {
-            playerPos = new PositionComponent(pc.position);
+            // don't move
+            targetPosition = pc.position;
         }
 
         // process movement events
-        move(entity, playerPos, deltaTime);
+        move(entity, targetPosition, deltaTime);
         // apply gravity
         doGravity(mc, gc);
 
         pc.position.addi(mc.velocity.scale(deltaTime));
     }
 
-    protected void move(Entity e, PositionComponent playerPos, float deltaTime) {
+    protected void move(Entity e, Vector3f targetPosition, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(e);
         MovementComponent mc = Mappers.movementMapper.get(e);
 
         // set velocity.x in the direction towards the player
-        if (Math.abs(pc.position.x - playerPos.position.x) <= Math.abs(mc.velocity.x)) {
+        if (Math.abs(pc.position.x - targetPosition.x) <= Math.abs(mc.velocity.x)) {
             // if close enough, don't overshoot
-            mc.velocity.x = playerPos.position.x - pc.position.x;
-        } else if (pc.position.x < playerPos.position.x && canMoveRight(mc.velocity)) {
+            mc.velocity.x = targetPosition.x - pc.position.x;
+        } else if (pc.position.x < targetPosition.x && canMoveRight(mc.velocity)) {
             moveRight(mc);
-        } else if (pc.position.x > playerPos.position.x && canMoveLeft(mc.velocity)) {
+        } else if (pc.position.x > targetPosition.x && canMoveLeft(mc.velocity)) {
             moveLeft(mc);
         } else {
             mc.velocity.x = 0;
         }
 
         // set velocity.y in the direction towards the player
-        if (Math.abs(pc.position.y - playerPos.position.y) < Math.abs(mc.velocity.y)) {
+        if (Math.abs(pc.position.y - targetPosition.y) < Math.abs(mc.velocity.y)) {
             // if close enough, don't overshoot
-            mc.velocity.y = playerPos.position.y - pc.position.y;
-        } else if (pc.position.y < playerPos.position.y && canJump(mc.velocity)) {
+            mc.velocity.y = targetPosition.y - pc.position.y;
+        } else if (pc.position.y < targetPosition.y && canJump(mc.velocity)) {
             jump(mc);
-        } else if (pc.position.y > playerPos.position.y && canMoveDown()) {
+        } else if (pc.position.y > targetPosition.y && canMoveDown()) {
             moveDown(mc);
         } else if (canJump(mc.velocity) && canMoveDown()) {
             mc.velocity.y = 0;
@@ -148,7 +146,11 @@ public abstract class MobMovementSystem extends IteratingSystem {
         mc.velocity.y -= gc.gravity.y;
     }
 
-    protected boolean canSeePlayer(float angleRange, int nrRays, PositionComponent pc, DimensionComponent dc, MovementComponent mc) {
+    private Vector3f getPlayerPosition() {
+        return Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0)).position;
+    }
+
+    private boolean canSeePlayer(float angleRange, int nrRays, PositionComponent pc, DimensionComponent dc, MovementComponent mc) {
         List<Class<? extends Component>> seeThrough = new ArrayList<>();
         seeThrough.add(MobComponent.class);
 
@@ -233,23 +235,6 @@ public abstract class MobMovementSystem extends IteratingSystem {
         } else { // otherwise, just move towards the spline
             targetDirection = closestPoint.sub(entityPosition).normalized();
         }
-
-        // TODO: find a way to not shake around the targetDirection too much
-
-        // TODO: this approach doesn't work well enough
-        /*
-        if (Math.abs(targetDirection.y) < 0.1f) {
-            targetDirection.y = 0;
-        }
-         */
-
-        // TODO: this approach also doesn't work well enough
-        /*
-        float EPS = 0.000001f;
-        if (targetDirection.sub(entityVelocity.normalized()).length() < EPS) {
-            targetDirection = new Vector3f(entityVelocity);
-        }
-         */
 
         return targetDirection;
     }
