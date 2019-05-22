@@ -15,7 +15,7 @@ import group4.maths.Vector3f;
 public class AILevel extends Level {
     private String modulePath;
 
-    AILevel (String path) {
+    public AILevel (String path) {
         super();
         if (!Main.AI) {
             System.err.println("WARNING: AI LEVEL INITIALIZED FOR NON-TRAINING PURPOSES");

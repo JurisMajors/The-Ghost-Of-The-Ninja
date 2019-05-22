@@ -24,7 +24,7 @@ import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
-import group4.levelSystem.levels.TestLevel;
+import group4.levelSystem.levels.AILevel;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         Engine engine = TheEngine.getInstance();
         initSystems(engine);
 
-        Level level = new TestLevel();
+        Level level = new AILevel(Evolver.modulePath);
         Module currModule = level.getCurrentModule();
 
         clearPlayers(engine, currModule);
