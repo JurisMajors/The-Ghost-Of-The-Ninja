@@ -199,45 +199,6 @@ public abstract class MobMovementSystem extends IteratingSystem {
         return dist < 0.1;
     }
 
-    /**
-     * Gets the direction for a given entity to move towards if it wants to move towards the spline.
-     *
-     * @param points          spline approximation points
-     * @param entityPosition  bl position of the entity
-     * @param entityDimension dimension of the entity
-     * @param entityVelocity  velocity of the entity
-     * @return
-     */
-    public Vector3f targetDirection(Vector3f[] points, Vector3f entityPosition, Vector3f entityDimension, Vector3f entityVelocity) {
-        Vector3f targetDirection = null;
-        int offset = 5;
-
-        Vector3f closestPoint = getClosestSplinePoint(points, entityPosition, entityDimension);
-        float distance = entityPosition.sub(closestPoint).length();
-
-        // if the entity is almost on the spline, follow the spline path
-        if (distance < 0.5f) {
-            // get the next and previous point on the spline
-            int index = getClosestSplinePointIndex(points, entityPosition, entityDimension);
-            Vector3f nextPoint = points[(index + offset) % points.length];
-            Vector3f prevPoint = points[(index - offset + points.length) % points.length];
-
-            // get the corresponding directions
-            Vector3f forwardDirection = nextPoint.sub(entityPosition).normalized();
-            Vector3f backwardDirection = prevPoint.sub(entityPosition).normalized();
-
-            // set the target direction the direction that is closest to the current velocity
-            if (entityVelocity.sub(forwardDirection).length() < entityVelocity.sub(backwardDirection).length()) {
-                targetDirection = forwardDirection;
-            } else {
-                targetDirection = backwardDirection;
-            }
-        } else { // otherwise, just move towards the spline
-            targetDirection = closestPoint.sub(entityPosition).normalized();
-        }
-
-        return targetDirection;
-    }
 
     /**
      * Gets a copy of the closest spline point to the center of the given entity.
