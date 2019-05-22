@@ -35,4 +35,10 @@ public class MobTestLevel extends Level {
         return new Player(new Vector3f(), this);
     }
 
+    @Override
+    protected void configExits() {
+        // The MobTestLevel uses the SimpleModule, which doesn't have exits, so we do not need to configure them
+        return;
+    }
+
 }

@@ -39,8 +39,8 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
                 : ((Mob) entity).level.getCurrentModule();
         // Check whether or not the player's center is outside the module grid
         // We keep a 1 grid-unit boundary which the player's center can legally move out of the grid
-        if (pc.x < -1 || pc.x > curModule.getWidth() + 1 ||
-                pc.y < -1 || pc.y > curModule.getHeight() + 1) {
+        if (pc.x < -5 || pc.x > curModule.getWidth() + 5 ||
+                pc.y < -5 || pc.y > curModule.getHeight() + 5) {
             return true;
         }
 

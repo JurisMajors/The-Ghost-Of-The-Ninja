@@ -4,6 +4,7 @@ import group4.ECS.entities.Background;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.world.Block;
 import group4.ECS.entities.world.SplinePlatform;
+import group4.ECS.entities.world.Exit;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;
@@ -171,20 +172,7 @@ public class TestModule extends Module {
                             TileMapping.MAIN.FLOOR1                    )
             );
         }
-
-        // Create the exit
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                this.addEntity(
-                        new Block(
-                                new Vector3f(33.0f + i * 1.0f, 4.0f + j * 1.0f, 0.0f),
-                                Shader.SIMPLE,
-                                Texture.EXIT
-                        )
-                );       // TODO: Change to exit entity, but first need to know how collision detection is going to work to detect if player overlaps an exit, before I create an exit entity
-            }
-        }
-
+      
         // my little spline test
         /*
         Vector3f tempPosition = new Vector3f(4.0f, 4.0f, 0.0f);
@@ -207,6 +195,15 @@ public class TestModule extends Module {
         SplinePlatform splinePlatform = new SplinePlatform(tempPosition, tempDimension, mySpline, 0.4f, Shader.SIMPLE, Texture.WHITE);
         this.addEntity(splinePlatform);
          */
+
+        // Create the exit
+        this.addEntity(
+                new Exit(
+                        new Vector3f(33.0f, 4.0f, 0.0f),
+                        new Vector3f(2.0f, 2.0f, 0.0f),
+                        this
+                )
+        );
     }
 
     @Override
