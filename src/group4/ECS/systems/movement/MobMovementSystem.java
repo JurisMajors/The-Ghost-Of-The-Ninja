@@ -138,10 +138,7 @@ public abstract class MobMovementSystem extends IteratingSystem {
                 return true;
             }
 
-            // debug drawing the vision
-            if (ip.point != null) {
-                DebugUtils.drawLine(center, ip.point);
-            }
+            DebugUtils.drawLine(center, ip.point);
 
             // rotate the next ray
             dir = dir.rotateXY(deltaTheta);
