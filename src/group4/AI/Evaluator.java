@@ -42,13 +42,13 @@ import static org.lwjgl.opengl.GL11.glClear;
 public class Evaluator implements FitnessEvaluator<Brain> {
 
     /** current Module to train AI on **/
-    private Module currModule;
+    //private Module currModule;
 
     /** TODO: make timer singleton **/
     private Timer timer;
 
     /** the level (temporary) **/
-    public Level level;
+    //public Level level;
 
     public Evaluator() {
         // init module
@@ -57,8 +57,6 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         // initSystems(TheEngine.getInstance());
         Shader.loadAllShaders();
         Texture.loadAllTextures();
-        level = new TestLevel();
-        this.currModule = this.level.getCurrentModule();
 
     }
 
@@ -66,14 +64,15 @@ public class Evaluator implements FitnessEvaluator<Brain> {
     public double getFitness(Brain brain, List<? extends Brain> list) {
         Engine engine = TheEngine.getInstance();
         initSystems(engine);
-        // reset all the entities of the module (and add them to engine)
-        this.currModule.reset();
 
-        clearPlayers(engine);
+        Level level = new TestLevel();
+        Module currModule = level.getCurrentModule();
+
+        clearPlayers(engine, currModule);
 
         // create the ghost
-        Entity ghost = new Ghost(this.currModule.getPlayerInitialPosition(),
-                this.level,
+        Entity ghost = new Ghost(currModule.getPlayerInitialPosition(),
+                level,
                 brain);
         engine.addEntity(ghost);
 
@@ -97,9 +96,8 @@ public class Evaluator implements FitnessEvaluator<Brain> {
             }
         }
         System.out.println(Arrays.toString(ghost.getComponent(GhostComponent.class).moveFreq));
-
         // unload the entities from the engine and delete them from the module reference
-        this.currModule.unload();
+        currModule.unload();
         // return the x coordinate of the ghost, as the fitness
         return ghost.getComponent(PositionComponent.class).position.x;
     }
@@ -136,7 +134,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         }
     }
 
-    private void clearPlayers(Engine engine) {
+    private void clearPlayers(Engine engine, Module cur) {
         // fetch gamestate, all entities which hold bounding box
         ImmutableArray<Entity> player = engine.getEntitiesFor(Families.playerFamily);
         ImmutableArray<Entity> lastGhost = engine.getEntitiesFor(Families.ghostFamily);
@@ -152,7 +150,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         }
 
         for (Player p : players) {
-            this.currModule.removeEntity(p);
+            cur.removeEntity(p);
             engine.removeEntity(p);
         }
     }

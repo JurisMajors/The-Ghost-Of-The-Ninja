@@ -24,7 +24,7 @@ public class Evolver {
     /**
      * nr of brains per generation
      **/
-    public final static int populationSize = 500;
+    public final static int populationSize = 50;
     /**
      * How many fittest individuals to keep over generations
      **/
