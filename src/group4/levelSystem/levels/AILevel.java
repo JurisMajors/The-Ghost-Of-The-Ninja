@@ -1,5 +1,6 @@
 package group4.levelSystem.levels;
 
+import group4.AI.Evolver;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.world.Exit;
 import group4.game.Main;
@@ -13,16 +14,7 @@ import group4.maths.Vector3f;
  * It is designed so that it only contains one module with no exit callbacks.
  */
 public class AILevel extends Level {
-    private String modulePath;
-
-    public AILevel (String path) {
-        super();
-        if (!Main.AI) {
-            System.err.println("WARNING: AI LEVEL INITIALIZED FOR NON-TRAINING PURPOSES");
-        }
-        this.modulePath = path;
-    }
-
+    private final static String modulePath = Evolver.modulePath;
     @Override
     protected Module createRoot() {
         if (modulePath == null) throw new IllegalStateException("Module Path is not set for AI level");

@@ -64,8 +64,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
     public double getFitness(Brain brain, List<? extends Brain> list) {
         Engine engine = TheEngine.getInstance();
         initSystems(engine);
-
-        Level level = new AILevel(Evolver.modulePath);
+        Level level = new AILevel();
         Module currModule = level.getCurrentModule();
 
         clearPlayers(engine, currModule);
