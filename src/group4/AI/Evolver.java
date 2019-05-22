@@ -24,7 +24,7 @@ public class Evolver {
     /**
      * nr of brains per generation
      **/
-    public final static int populationSize = 50;
+    public final static int populationSize = 500;
     /**
      * How many fittest individuals to keep over generations
      **/
@@ -40,7 +40,7 @@ public class Evolver {
     /**
      * hidden layer sizes (dont include input/output)
      **/
-    public final static int[] layerSizes = new int[]{100};
+    public final static int[] layerSizes = new int[]{10};
     /**
      * decoder of gamestates
      **/
@@ -68,7 +68,7 @@ public class Evolver {
     /**
      * Currently not supported for GA
      */
-    public static final boolean multiThreaded = false;
+    public static final boolean multiThreaded = true;
 
     private static void toFile(Brain b, String filePath) throws IOException {
         b.toFile(filePath);

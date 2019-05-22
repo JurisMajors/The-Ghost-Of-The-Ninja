@@ -54,7 +54,9 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         // init module
         this.timer = new Timer();
         // register systems to engine
-        initSystems(TheEngine.getInstance());
+        // initSystems(TheEngine.getInstance());
+        Shader.loadAllShaders();
+        Texture.loadAllTextures();
         level = new TestLevel();
         this.currModule = this.level.getCurrentModule();
 
@@ -63,6 +65,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
     @Override
     public double getFitness(Brain brain, List<? extends Brain> list) {
         Engine engine = TheEngine.getInstance();
+        initSystems(engine);
         // reset all the entities of the module (and add them to engine)
         this.currModule.reset();
 
@@ -118,8 +121,6 @@ public class Evaluator implements FitnessEvaluator<Brain> {
             e.removeSystem(system);
         }
 
-        Shader.loadAllShaders();
-        Texture.loadAllTextures();
 
         Engine engine = TheEngine.getInstance();
         if (Evolver.render) {
