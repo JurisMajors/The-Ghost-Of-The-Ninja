@@ -4,12 +4,14 @@ import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.components.stats.HealthComponent;
+import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.etc.Mappers;
 import group4.ECS.systems.collision.CollisionData;
+import group4.game.Main;
 
 import java.util.Set;
 
@@ -59,6 +61,9 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
 
     private static void handleExit(Player player, Exit exit) {
         exit.module.getLevel().handleExit(exit);
+        if (Main.AI && player instanceof Ghost) { // kill ghost if has reached exit
+            player.getComponent(HealthComponent.class).health = 0;
+        }
         // after player exit interaction we dont want to fix their positions (we are just going to execute the exit action)
         CollisionComponent pcc = Mappers.collisionMapper.get(player);
         pcc.collisions.remove(exit);
