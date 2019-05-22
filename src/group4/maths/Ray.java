@@ -31,11 +31,11 @@ public class Ray {
      */
     private List<Class<? extends Component>> ignorableComponents;
 
-    public Ray(Vector3f startingPos, Vector3f dir, List<Class<? extends Component>> ignorableComponents) {
+    public Ray(Vector3f startingPos, Vector3f dir, List<Class<? extends Component>> ignorableComponents, float length) {
         this.startPos = startingPos;
         this.dir = dir;
         // TODO have smarter scaling to end point
-        this.end = this.startPos.add(this.dir.normalized().scale(10000));
+        this.end = this.startPos.add(this.dir.normalized().scale(length));
         this.ignorableComponents = ignorableComponents;
     }
 
@@ -68,7 +68,9 @@ public class Ray {
             // ignore entities that contain an ignoreable component
             for (Class<? extends Component> component: this.ignorableComponents) {
                 // skip this entity
-                if (e.getComponent(component) != null) continue entity_loop;
+                if (e.getComponent(component) != null) {
+                    continue entity_loop;
+                }
             }
 
             List<Vector3f> intersections = this.intersects(e); // get intersection points

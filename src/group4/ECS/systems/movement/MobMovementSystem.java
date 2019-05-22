@@ -9,11 +9,11 @@ import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.RenderSystem;
 import group4.maths.IntersectionPair;
 import group4.maths.Ray;
 import group4.maths.Vector3f;
@@ -36,6 +36,7 @@ public abstract class MobMovementSystem extends IteratingSystem {
         GravityComponent gc = Mappers.gravityMapper.get(entity);
 
         PositionComponent playerPos;
+        // send rays and check if the mob can see the player
         if (canSeePlayer(360, 36, pc, dc, mc)) {
             // get the player position
             playerPos = Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
@@ -114,25 +115,30 @@ public abstract class MobMovementSystem extends IteratingSystem {
         List<Class<? extends Component>> seeThrough = new ArrayList<>();
         seeThrough.add(MobComponent.class);
 
+        // look in the direction the mob is moving
         Vector3f dir = new Vector3f(mc.velocity);
+        // center of the mob
         Vector3f center = pc.position.add(dc.dimension.scale(0.5f));
-        // no velocity means hes looking to the right
+
+        // no velocity means hes looking to the top
         if (Math.abs(dir.length()) < 1e04) {
-            dir = new Vector3f(1, 0, 0);
+            dir = new Vector3f(0, 1, 0);
         }
 
         float deltaTheta = angleRange / (float) nrRays;
+        // start at the bottom of the range
         dir = dir.rotateXY(-1f * (angleRange / 2.0f));
 
         for (int i = 0; i < nrRays; i++) {
-            Ray ray = new Ray(center, dir, seeThrough);
-            IntersectionPair ip = ray.cast(TheEngine.getInstance().getEntities());
+            Ray ray = new Ray(center, dir, seeThrough, 2f);
+            IntersectionPair ip = ray.cast(TheEngine.getInstance().getEntitiesFor(Families.allCollidableFamily));
 
             // if this ray reaches the player
-            if (ip.entity instanceof Player) {
+            if (ip.entity instanceof Player && !(ip.entity instanceof Ghost)) {
                 return true;
             }
 
+            // debug drawing the vision
             if (ip.point != null) {
                 DebugUtils.drawLine(center, ip.point);
             }
