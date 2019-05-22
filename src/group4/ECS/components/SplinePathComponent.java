@@ -6,10 +6,23 @@ import group4.maths.spline.MultiSpline;
 
 public class SplinePathComponent implements Component {
 
-    //    private MultiSpline spline;
+    private MultiSpline spline;
     private Vector3f dimension;
     private Vector3f position;
     private float visionRange;
+
+    /**
+     * True if the entity that holds this component is currently on this spline
+     */
+    public boolean onSpline;
+    /**
+     * The variable u of the entity on this spline, only meaningful if onSpline is true
+     */
+    public float u;
+    /**
+     * The entity will make a round trip over this spline every speed seconds
+     */
+    public float speed;
 
     public Vector3f[] points;
 
@@ -23,10 +36,11 @@ public class SplinePathComponent implements Component {
      * @param detail      The amount of points that should approximate the spline.
      */
     public SplinePathComponent(MultiSpline spline, Vector3f position, Vector3f dimension, float visionRange, int detail) {
-//        this.spline = spline;
+        this.spline = spline;
         this.position = position;
         this.dimension = dimension;
         this.visionRange = visionRange;
+        this.speed = 500f;
         createSplinePoints(spline, position, detail);
     }
 
@@ -54,5 +68,30 @@ public class SplinePathComponent implements Component {
         }
     }
 
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
+
+    public void leaveSpline() {
+        onSpline = false;
+    }
+
+    public void startSpline() {
+        onSpline = true;
+        u = 0f;
+    }
+
+    public boolean isOnSpline() {
+        return onSpline;
+    }
+
+    public Vector3f getPoint() {
+        return spline.getPoint(u).add(position);
+    }
+
+    public void updateU(float deltaTime) {
+        u += (deltaTime / speed);
+        if (u > 1f) u--;
+    }
 
 }

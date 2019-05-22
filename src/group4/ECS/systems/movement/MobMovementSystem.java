@@ -41,15 +41,34 @@ public abstract class MobMovementSystem extends IteratingSystem {
         if (canSeePlayer(360, 36, pc, dc, mc)) {
             // get the player position
             playerPos = Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
+
+            if (isSplineMob(entity)) {
+                SplinePathComponent spc = Mappers.splinePathMapper.get(entity);
+                spc.onSpline = false;
+            }
         } else if (isSplineMob(entity)) {
             // splines mobs have a different target than normal mobs
             SplinePathComponent spc = Mappers.splinePathMapper.get(entity);
+
+            if (spc.isOnSpline()) {
+                spc.updateU(deltaTime);
+                pc.position = spc.getPoint();
+                playerPos = new PositionComponent(pc.position);
+            } else {
+                playerPos = new PositionComponent(spc.points[0]);
+                if (closeToStart(pc, spc)) {
+                    spc.onSpline = true;
+                }
+            }
+
+            /*
             // get the direction and position to move towards
             Vector3f targetDirection = targetDirection(spc.points, pc.position, dc.dimension, mc.velocity);
             Vector3f targetPos = pc.position.add(targetDirection);
 
             // the target position is currently stored in playerPos, this name should probably change
             playerPos = new PositionComponent(targetPos);
+             */
         } else {
             playerPos = new PositionComponent(pc.position);
         }
@@ -60,28 +79,11 @@ public abstract class MobMovementSystem extends IteratingSystem {
         doGravity(mc, gc);
 
         pc.position.addi(mc.velocity.scale(deltaTime));
-        /*
-        This comment is a failed attempt to smooth out the movement of a flying mob trying to follow a spline
-        // store the new and old distance to the target (playerPos)
-        float curDist = pc.position.sub(playerPos.position).length();
-        float newDist = pc.position.add(mc.velocity.scale(deltaTime)).sub(playerPos.position).length();
-        // make sure to not overshoot to the target
-        if (newDist > curDist - 1e-2) {
-            // move on top of the target
-            pc.position = new Vector3f(playerPos.position);
-            // reset the velocity
-            mc.velocity = new Vector3f();
-        } else {
-            // move in the specified direction
-            pc.position.addi(mc.velocity.scale(deltaTime));
-        }
-         */
     }
 
     protected void move(Entity e, PositionComponent playerPos, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(e);
         MovementComponent mc = Mappers.movementMapper.get(e);
-        float EPS = 0.05f;
 
         // set velocity.x in the direction towards the player
         if (Math.abs(pc.position.x - playerPos.position.x) <= Math.abs(mc.velocity.x)) {
@@ -107,15 +109,6 @@ public abstract class MobMovementSystem extends IteratingSystem {
             mc.velocity.y = 0;
         }
 
-    }
-
-    /**
-     * Returns the position component containing the position that this mob should move towards.
-     *
-     * @return position component
-     */
-    protected PositionComponent getTargetPositionComponent() {
-        return Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
     }
 
     protected void moveRight(MovementComponent mc) {
@@ -199,6 +192,11 @@ public abstract class MobMovementSystem extends IteratingSystem {
 
     /// BELOW ARE FUNCTIONS THAT DEAL WITH GUIDING A MOB ALONG A SPLINE
 
+    private boolean closeToStart(PositionComponent pc, SplinePathComponent spc) {
+        float dist = pc.position.sub(spc.points[0]).length();
+        return dist < 0.1;
+    }
+
     /**
      * Gets the direction for a given entity to move towards if it wants to move towards the spline.
      *
@@ -213,15 +211,14 @@ public abstract class MobMovementSystem extends IteratingSystem {
         int offset = 5;
 
         Vector3f closestPoint = getClosestSplinePoint(points, entityPosition, entityDimension);
-        System.out.println(closestPoint);
         float distance = entityPosition.sub(closestPoint).length();
 
         // if the entity is almost on the spline, follow the spline path
         if (distance < 0.5f) {
             // get the next and previous point on the spline
             int index = getClosestSplinePointIndex(points, entityPosition, entityDimension);
-            Vector3f nextPoint = points[(index + 5) % points.length];
-            Vector3f prevPoint = points[(index - 5 + points.length) % points.length];
+            Vector3f nextPoint = points[(index + offset) % points.length];
+            Vector3f prevPoint = points[(index - offset + points.length) % points.length];
 
             // get the corresponding directions
             Vector3f forwardDirection = nextPoint.sub(entityPosition).normalized();
@@ -237,18 +234,22 @@ public abstract class MobMovementSystem extends IteratingSystem {
             targetDirection = closestPoint.sub(entityPosition).normalized();
         }
 
-        // TODO: find a way to not share around the targetDirection too much
+        // TODO: find a way to not shake around the targetDirection too much
 
         // TODO: this approach doesn't work well enough
+        /*
         if (Math.abs(targetDirection.y) < 0.1f) {
             targetDirection.y = 0;
         }
+         */
 
         // TODO: this approach also doesn't work well enough
+        /*
         float EPS = 0.000001f;
         if (targetDirection.sub(entityVelocity.normalized()).length() < EPS) {
             targetDirection = new Vector3f(entityVelocity);
         }
+         */
 
         return targetDirection;
     }
