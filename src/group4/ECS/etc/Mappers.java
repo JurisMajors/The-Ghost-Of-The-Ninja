@@ -55,4 +55,7 @@ public class Mappers {
 
     public static final ComponentMapper<SplineComponent> splineMapper =
             ComponentMapper.getFor(SplineComponent.class);
+
+    public static final ComponentMapper<SplinePathComponent> splinePathMapper =
+            ComponentMapper.getFor(SplinePathComponent.class);
 }

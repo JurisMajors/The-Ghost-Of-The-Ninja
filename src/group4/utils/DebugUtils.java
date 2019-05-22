@@ -189,6 +189,12 @@ public class DebugUtils {
         glEnd();
     }
 
+    public static void drawSpline(Vector3f[] points) {
+        for (int i = 1; i < points.length; i++) {
+            drawLine(points[i - 1], points[i]);
+        }
+    }
+
     public static void drawSpline() {
         // my little spline test
         Vector3f[] tempPoint = new Vector3f[]{
