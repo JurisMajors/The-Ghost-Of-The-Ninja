@@ -1,5 +1,6 @@
 package group4.ECS.entities.mobs;
 
+import group4.ECS.components.SplinePathComponent;
 import group4.ECS.components.identities.FlyingMobComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.etc.Mappers;
@@ -31,6 +32,6 @@ public class FlyingMob extends Mob {
         MultiSpline spline = new MultiSpline(splinePoints);
 
         // uncomment this and put a flying mob in the level to see spline pathing in action
-//        this.add(new SplinePathComponent(spline, new Vector3f(3, 3, 0), new Vector3f(3, 2, 0), 0, 100));
+        this.add(new SplinePathComponent(spline, new Vector3f(3, 3, 0), new Vector3f(3, 2, 0), 0, 100));
     }
 }

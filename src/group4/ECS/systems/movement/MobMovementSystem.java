@@ -72,12 +72,12 @@ public abstract class MobMovementSystem extends IteratingSystem {
     protected void move(Entity e, PositionComponent playerPos, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(e);
         MovementComponent mc = Mappers.movementMapper.get(e);
-        float EPS = 0.5f;
+        float EPS = 0.05f;
 
         // set velocity.x in the direction towards the player
-        if (Math.abs(pc.position.x - playerPos.position.x) < EPS) {
-            // precision safety
-            mc.velocity.x = 0;
+        if (Math.abs(pc.position.x - playerPos.position.x) <= Math.abs(mc.velocity.x)) {
+            // if close enough, don't overshoot
+            mc.velocity.x = playerPos.position.x - pc.position.x;
         } else if (pc.position.x < playerPos.position.x && canMoveRight(mc.velocity)) {
             moveRight(mc);
         } else if (pc.position.x > playerPos.position.x && canMoveLeft(mc.velocity)) {
@@ -87,8 +87,9 @@ public abstract class MobMovementSystem extends IteratingSystem {
         }
 
         // set velocity.y in the direction towards the player
-        if (Math.abs(pc.position.y - playerPos.position.y) < EPS) {
-            mc.velocity.y = 0;
+        if (Math.abs(pc.position.y - playerPos.position.y) < Math.abs(mc.velocity.y)) {
+            // if close enough, don't overshoot
+            mc.velocity.y = playerPos.position.y - pc.position.y;
         } else if (pc.position.y < playerPos.position.y && canJump(mc.velocity)) {
             jump(mc);
         } else if (pc.position.y > playerPos.position.y && canMoveDown()) {
