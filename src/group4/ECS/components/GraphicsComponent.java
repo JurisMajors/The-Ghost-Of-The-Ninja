@@ -29,7 +29,7 @@ public class GraphicsComponent implements Component {
      * @param tcs      Float[], a uv/st-coordinate for every vertex.
      */
     public GraphicsComponent(Shader shader, Texture texture, float[] vertices, byte[] indices, float[] tcs) {
-        if (!(!Main.AI || Evolver.render)) return;
+        if (!Main.SHOULD_OPENGL) return;
         this.shader = shader;
         this.texture = texture;
         this.geometry = new VertexArray(vertices, indices, tcs);
@@ -48,7 +48,7 @@ public class GraphicsComponent implements Component {
      * @param layer    Integer, specifying the layer depth at which the component should be rendered.
      */
     public GraphicsComponent(Shader shader, Texture texture, float[] vertices, byte[] indices, float[] tcs, Layer layer) {
-        if (!(!Main.AI || Evolver.render)) return;
+        if (!Main.SHOULD_OPENGL) return;
         this.shader = shader;
         this.texture = texture;
         this.geometry = new VertexArray(vertices, indices, tcs);
@@ -65,7 +65,7 @@ public class GraphicsComponent implements Component {
      * @param dimension size of the graphics to be displayed.
      */
     public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension) {
-        if (!(!Main.AI || Evolver.render)) return;
+        if (!Main.SHOULD_OPENGL) return;
         // Construct vertex array
         float[] vertices = new float[]{
                 0, 0, 0,
@@ -105,7 +105,7 @@ public class GraphicsComponent implements Component {
      * @param dimension size of the graphics to be displayed.
      */
     public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, Layer layer) {
-        if (!(!Main.AI || Evolver.render)) return;
+        if (!Main.SHOULD_OPENGL) return;
         // Construct vertex array
         float[] vertices = new float[]{
                 0, 0, 0,
@@ -147,7 +147,7 @@ public class GraphicsComponent implements Component {
      * @param texCoords Float[], the texture coordinates of a tile within the given tilemap Texture.
      */
     public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, float[] texCoords) {
-        if (!(!Main.AI || Evolver.render)) return;
+        if (!Main.SHOULD_OPENGL) return;
         // Construct vertex array
         float[] vertices = new float[]{
                 0, 0, 0,
@@ -182,7 +182,7 @@ public class GraphicsComponent implements Component {
      * @param layer     Enum, indicating on which specific layer this component should be drawn
      */
     public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, float[] texCoords, Layer layer) {
-        if (!Main.AI || Evolver.render) return;
+        if (!Main.SHOULD_OPENGL) return;
         // Construct vertex array
         float[] vertices = new float[]{
                 0, 0, 0,
