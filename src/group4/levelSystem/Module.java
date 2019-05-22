@@ -157,6 +157,7 @@ public class Module {
                             break;
 
                         case 3:
+                            System.out.println("exit");
                             // If the tile type is 3, we need to add an exit
                             this.addExit(tileGridX, tileGridY);
 

@@ -35,7 +35,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class Main implements Runnable {
     private Thread thread;
     /** enable this if you want to run the genetic algorithm, instead of playing urself **/
-    public static boolean AI = false;
+    public static boolean AI = true;
 
     private Window win;
     public static long window; // The id of the window

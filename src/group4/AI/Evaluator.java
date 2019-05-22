@@ -9,6 +9,7 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
+import group4.ECS.entities.world.Exit;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.CameraSystem;
@@ -25,6 +26,7 @@ import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
 import group4.levelSystem.levels.AILevel;
+import group4.maths.Vector3f;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 
 import java.util.ArrayList;
@@ -69,11 +71,15 @@ public class Evaluator implements FitnessEvaluator<Brain> {
 
         clearPlayers(engine, currModule);
 
+        Vector3f startingPos = currModule.getPlayerInitialPosition();
+
         // create the ghost
-        Entity ghost = new Ghost(currModule.getPlayerInitialPosition(),
+        Entity ghost = new Ghost(
+                startingPos,
                 level,
                 brain);
         engine.addEntity(ghost);
+
 
         // while we did not exceed the timelimit, play the game
         double initTime = timer.getTime();
@@ -96,9 +102,28 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         }
         System.out.println(Arrays.toString(ghost.getComponent(GhostComponent.class).moveFreq));
         // unload the entities from the engine and delete them from the module reference
+        Vector3f closestExit = null;
+        Vector3f ghostPos = ghost.getComponent(PositionComponent.class).position;
+        // get closest exit
+        for (Exit exit : currModule.getExits()) {
+            Vector3f exitPos = exit.getComponent(PositionComponent.class).position;
+            float toExit = ghostPos.euclidDist(exitPos);
+
+            if (closestExit == null) {
+                closestExit = exitPos;
+                continue;
+            }
+            float toClosest = ghostPos.euclidDist(closestExit);
+            if (toExit < toClosest) {
+                closestExit = exitPos;
+            }
+
+        }
+        // fitness = if no exits exist, simply take x coordinate, otherwise the distance traveled in the direction of closest exit
+        float fitness = closestExit == null ? ghostPos.x :
+                startingPos.euclidDist(closestExit) - ghostPos.euclidDist(closestExit);
         currModule.unload();
-        // return the x coordinate of the ghost, as the fitness
-        return ghost.getComponent(PositionComponent.class).position.x;
+        return fitness;
     }
 
     /**
@@ -117,7 +142,6 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         for (EntitySystem system : e.getSystems()) {
             e.removeSystem(system);
         }
-
 
         Engine engine = TheEngine.getInstance();
         if (Evolver.render) {
