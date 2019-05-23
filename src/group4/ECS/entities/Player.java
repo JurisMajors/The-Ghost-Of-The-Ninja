@@ -21,7 +21,7 @@ public class Player extends Entity {
     /**
      * dimension of player aka bounding box, ghost inherits in order to apply texture
      */
-    protected Vector3f dimension = new Vector3f(1.0f, 1f, 0.0f);
+    protected Vector3f dimension = new Vector3f(1.0f, 1.5f, 0.0f);
 
     /**
      * the level that the player is part of

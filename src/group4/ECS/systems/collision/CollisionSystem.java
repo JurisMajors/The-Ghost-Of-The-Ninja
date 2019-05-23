@@ -8,8 +8,10 @@ import group4.ECS.components.SplineComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
+import group4.ECS.entities.mobs.Mob;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
@@ -39,15 +41,20 @@ public class CollisionSystem extends IteratingSystem {
      * @param e entity
      */
     private void detectCollisions(Entity e) {
+        ImmutableArray<Entity> entities;
+        if (e instanceof Bullet) {
+            entities = TheEngine.getInstance().getEntitiesFor(Families.allCollidableFamily);
+        } else {
+            entities = TheEngine.getInstance().getEntitiesFor(Families.collidableFamily);
+        }
         // get all normal collidable entities
-        ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.collidableFamily);
         CollisionComponent cc = Mappers.collisionMapper.get(e);
-
         for (Entity other : entities) {
             // dont process collision with itself
             if (e.equals(other)) continue;
             // dont register collisions bullets of bullets
             if (other instanceof Bullet && e instanceof Bullet) continue;
+            if (e instanceof Bullet && (other instanceof Ghost || other instanceof Mob)) continue;
             if (other instanceof Player && e instanceof Player) continue;
 
             // get the intersection between this (moving collidable entity) and other (collidable entity)

@@ -13,6 +13,8 @@ import group4.ECS.etc.Mappers;
 import group4.ECS.systems.collision.CollisionData;
 import group4.game.Main;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 
@@ -26,6 +28,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
     @Override
     public void collision(Player player, CollisionComponent cc) {
         Set<CollisionData> others = cc.collisions;
+        List<CollisionData> removables = new ArrayList<>();
         // loop through all collisions and handle them accordingly
         for (CollisionData cd : others) {
             Entity other = cd.entity;
@@ -34,9 +37,16 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
                 handleMob(player, (Mob) other);
             } else if (other instanceof Bullet) {
                 handleBullet(player, (Bullet) other);
+                // after player bullet interaction we dont want to fix their positions (because the bullet might die)
+                removables.add(cd);
             } else if (other instanceof Exit) {
                 handleExit(player, (Exit) other);
+                // after player exit interaction we dont want to fix their positions (we are just going to execute the exit action)
+                removables.add(cd);
             }
+        }
+        for (CollisionData data : removables) {
+            others.remove(data);
         }
     }
 
@@ -54,19 +64,15 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
         // take damage
         h.health -= dmg.damage;
         // TODO: process knockback
-        // after player bullet interaction we dont want to fix their positions (because the bullet might die)
-        CollisionComponent pcc = Mappers.collisionMapper.get(player);
-        pcc.collisions.remove(bullet);
     }
 
     private static void handleExit(Player player, Exit exit) {
-        exit.module.getLevel().handleExit(exit);
         if (Main.AI && player instanceof Ghost) { // kill ghost if has reached exit
             player.getComponent(HealthComponent.class).health = 0;
+        } else if (player instanceof  Ghost) {
+            return;
         }
-        // after player exit interaction we dont want to fix their positions (we are just going to execute the exit action)
-        CollisionComponent pcc = Mappers.collisionMapper.get(player);
-        pcc.collisions.remove(exit);
+        exit.module.getLevel().handleExit(exit);
     }
 
 
