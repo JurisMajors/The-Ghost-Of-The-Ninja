@@ -39,4 +39,61 @@ public class Text {
         g.drawString(String.valueOf(c), 0, metrics.getAscent());
         return image;
     }
+
+    /**
+     * Gets the width of the specified text.
+     *
+     * @param text String, the text to get the height of.
+     * @return Integer, width of the line of text in pixels.
+     */
+    public int getWidth(String text) {
+        int width = 0;
+        int lineWidth = 0;
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            if (c == '\n') {
+                /* Line end, set width to maximum from line width and stored
+                 * width */
+                width = max(width, lineWidth);
+                lineWidth = 0;
+                continue;
+            }
+            if (c == '\r') {
+                /* Carriage return, just skip it */
+                continue;
+            }
+            Glyph glyph = this.atlas.get(c);
+            lineWidth += glyph.width;
+        }
+        width = max(width, lineWidth);
+        return width;
+    }
+
+    /**
+     * Gets the height of the specified text.
+     *
+     * @param text String, the text to get the height of.
+     * @return Integer, height of the line of text in pixels.
+     */
+    public int getHeight(String text) {
+        int height = 0;
+        int lineHeight = 0;
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            if (c == '\n') {
+                /* Line end, add line height to stored height */
+                height += lineHeight;
+                lineHeight = 0;
+                continue;
+            }
+            if (c == '\r') {
+                /* Carriage return, just skip it */
+                continue;
+            }
+            Glyph g = this.atlas.get(c);
+            lineHeight = Math.max(lineHeight, g.height);
+        }
+        height += lineHeight;
+        return height;
+    }
 }
