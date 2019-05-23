@@ -118,11 +118,14 @@ public class Main implements Runnable {
             // Systems which change the gamestate
             engine.addSystem(new PlayerMovementSystem());
             engine.addSystem(new GhostMovementSystem());
-            engine.addSystem(new WalkingMobMovementSystem());
-            engine.addSystem(new JumpingWalkingMobMovementSystem());
-            engine.addSystem(new JumpingMobMovementSystem());
-            engine.addSystem(new FlappingMobMovementSystem());
-            engine.addSystem(new FlyingMobMovementSystem());
+
+            engine.addSystem(new MobMovementSystem());
+//            engine.addSystem(new WalkingMobMovementSystem());
+//            engine.addSystem(new JumpingWalkingMobMovementSystem());
+//            engine.addSystem(new JumpingMobMovementSystem());
+//            engine.addSystem(new FlappingMobMovementSystem());
+//            engine.addSystem(new FlyingMobMovementSystem());
+
             engine.addSystem(new BulletMovementSystem());
             engine.addSystem(new ShootingSystem());
             engine.addSystem(new CollisionSystem());
@@ -135,7 +138,7 @@ public class Main implements Runnable {
             // Systems which are essentially observers of the changed gamestate
             engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem
             engine.addSystem(new RenderSystem());
-            this.level = new TiledLevel();
+            this.level = new MobTestLevel();
 
         }
         // Initialize the level

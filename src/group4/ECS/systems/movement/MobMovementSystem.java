@@ -23,60 +23,63 @@ import group4.utils.DebugUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MobMovementSystem extends IteratingSystem {
+public class MobMovementSystem extends IteratingSystem {
 
-    public MobMovementSystem(Family family) {
-        super(family);
+    public MobMovementSystem() {
+        super(Families.mobFamily);
     }
 
     @Override
     public void processEntity(Entity entity, float deltaTime) {
-        PositionComponent pc = Mappers.positionMapper.get(entity);
-        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
-        MovementComponent mc = Mappers.movementMapper.get(entity);
-        GravityComponent gc = Mappers.gravityMapper.get(entity);
+        MobComponent mobComponent = Mappers.mobMapper.get(entity);
 
-        // the position that this entity wants to move towards
-        Vector3f targetPosition;
-        // send rays and check if the mob can see the player
-        if (canSeePlayer(360, 36, pc, dc, mc)) {
-            // set target to the player position
-            targetPosition = getPlayerPosition();
-
-            // make sure that were not following a spline anymore
-            if (isSplineMob(entity)) {
-                SplinePathComponent spc = Mappers.splinePathMapper.get(entity);
-                spc.onSpline = false;
-            }
-        } else if (isSplineMob(entity)) {
-            // splines mobs have a different target than normal mobs
-            SplinePathComponent spc = Mappers.splinePathMapper.get(entity);
-
-            if (spc.isOnSpline()) {
-                // do movement using the spline path system
-                spc.updateU(deltaTime);
-                pc.position = spc.getPoint();
-                targetPosition = pc.position;
-            } else {
-                // move towards the starting point of the spline
-                targetPosition = spc.points[0];
-
-                // check if we arrived at the spline
-                if (closeToStart(pc, spc)) {
-                    spc.onSpline = true;
-                }
-            }
-        } else {
-            // don't move
-            targetPosition = pc.position;
-        }
-
-        // process movement events
-        move(entity, targetPosition, deltaTime);
-        // apply gravity
-        doGravity(mc, gc);
-
-        pc.position.addi(mc.velocity.scale(deltaTime));
+        mobComponent.handler.handleMovement(entity, deltaTime);
+//        PositionComponent pc = Mappers.positionMapper.get(entity);
+//        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
+//        MovementComponent mc = Mappers.movementMapper.get(entity);
+//        GravityComponent gc = Mappers.gravityMapper.get(entity);
+//
+//        // the position that this entity wants to move towards
+//        Vector3f targetPosition;
+//        // send rays and check if the mob can see the player
+//        if (canSeePlayer(360, 36, pc, dc, mc)) {
+//            // set target to the player position
+//            targetPosition = getPlayerPosition();
+//
+//            // make sure that were not following a spline anymore
+//            if (isSplineMob(entity)) {
+//                SplinePathComponent spc = Mappers.splinePathMapper.get(entity);
+//                spc.onSpline = false;
+//            }
+//        } else if (isSplineMob(entity)) {
+//            // splines mobs have a different target than normal mobs
+//            SplinePathComponent spc = Mappers.splinePathMapper.get(entity);
+//
+//            if (spc.isOnSpline()) {
+//                // do movement using the spline path system
+//                spc.updateU(deltaTime);
+//                pc.position = spc.getPoint();
+//                targetPosition = pc.position;
+//            } else {
+//                // move towards the starting point of the spline
+//                targetPosition = spc.points[0];
+//
+//                // check if we arrived at the spline
+//                if (closeToStart(pc, spc)) {
+//                    spc.onSpline = true;
+//                }
+//            }
+//        } else {
+//            // don't move
+//            targetPosition = pc.position;
+//        }
+//
+//        // process movement events
+//        move(entity, targetPosition, deltaTime);
+//        // apply gravity
+//        doGravity(mc, gc);
+//
+//        pc.position.addi(mc.velocity.scale(deltaTime));
     }
 
     protected void move(Entity e, Vector3f targetPosition, float deltaTime) {

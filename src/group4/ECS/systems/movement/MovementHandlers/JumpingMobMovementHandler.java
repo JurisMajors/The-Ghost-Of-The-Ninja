@@ -1,21 +1,18 @@
-package group4.ECS.systems.movement;
+package group4.ECS.systems.movement.MovementHandlers;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
-import group4.ECS.etc.Families;
+import group4.ECS.entities.mobs.JumpingMob;
 import group4.ECS.etc.Mappers;
 import group4.maths.Vector3f;
 
-public class JumpingMobMovementSystem extends MobMovementSystem {
+public class JumpingMobMovementHandler extends AbstractMovementHandler<JumpingMob> {
 
-    public JumpingMobMovementSystem() {
-        super();
-    }
-    public JumpingMobMovementSystem(Family family) {
-        super();
-    }
+    /**
+     * Singleton
+     **/
+    private static AbstractMovementHandler me = new JumpingMobMovementHandler();
 
     @Override
     protected boolean canMoveLeft(Vector3f velocity) {
@@ -52,5 +49,9 @@ public class JumpingMobMovementSystem extends MobMovementSystem {
         } else {
             mc.velocity.x = 0;
         }
+    }
+
+    public static AbstractMovementHandler getInstance() {
+        return me;
     }
 }

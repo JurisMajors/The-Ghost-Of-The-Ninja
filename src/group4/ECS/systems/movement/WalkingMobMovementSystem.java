@@ -6,7 +6,7 @@ import group4.maths.Vector3f;
 public class WalkingMobMovementSystem extends MobMovementSystem {
 
     public WalkingMobMovementSystem() {
-        super(Families.walkingMobFamily);
+        super();
     }
 
     @Override
