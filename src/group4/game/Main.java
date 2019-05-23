@@ -1,21 +1,34 @@
 package group4.game;
 
 import com.badlogic.ashley.core.Engine;
+import group4.AI.Evolver;
+import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.CameraSystem;
-import group4.ECS.systems.MovementSystem;
 import group4.ECS.systems.RenderSystem;
+import group4.ECS.systems.ShootingSystem;
+import group4.ECS.systems.collision.CollisionEventSystem;
+import group4.ECS.systems.collision.CollisionSystem;
+import group4.ECS.systems.collision.UncollidingSystem;
+import group4.ECS.systems.death.GhostDyingSystem;
+import group4.ECS.systems.death.MobDyingSystem;
+import group4.ECS.systems.death.PlayerDyingSystem;
+import group4.ECS.systems.movement.BulletMovementSystem;
+import group4.ECS.systems.movement.GhostMovementSystem;
+import group4.ECS.systems.movement.MobMovementSystem;
+import group4.ECS.systems.movement.PlayerMovementSystem;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
+import group4.graphics.TileMapping;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
-import group4.levelSystem.levels.SimpleLevel;
-import group4.maths.Vector3f;
+import group4.levelSystem.levels.MobTestLevel;
+import group4.levelSystem.levels.TestLevel;
+import group4.levelSystem.levels.TiledLevel;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -24,15 +37,23 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Main implements Runnable {
     private Thread thread;
+    /**
+     * enable this if you want to run the genetic algorithm, instead of playing urself
+     **/
+    public static final boolean AI = false;
+    /**
+     * whether should do calls to OPENGL
+     **/
+    public static final boolean SHOULD_OPENGL = !Main.AI || Evolver.render;
 
     private Window win;
-    private long window; // The id of the window
+    public static long window; // The id of the window
 
     private Timer timer;
-    private Engine engine;
     private Level level;
+    private Engine engine;
 
-    public static final float SCREEN_WIDTH = 20.0f;
+    public static final float SCREEN_WIDTH = 16.5f;
     public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
 
 
@@ -49,7 +70,11 @@ public class Main implements Runnable {
      */
     public void run() {
         init();
-        loop();
+        if (AI) {
+            Evolver.train();
+        } else {
+            loop();
+        }
 
         // Cleanup after we exit the game loop
         glfwFreeCallbacks(window); // Free the window callbacks
@@ -91,45 +116,75 @@ public class Main implements Runnable {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        // Preload all resources
         Shader.loadAllShaders();
         Texture.loadAllTextures();
+        TileMapping.loadAllTileMappings();
 
         // Initialize the engine
         engine = TheEngine.getInstance();
+        if (!AI) {
+            // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
+            // Systems which change the gamestate
+            engine.addSystem(new PlayerMovementSystem());
+            engine.addSystem(new GhostMovementSystem());
 
-        // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
-        engine.addSystem(new CameraSystem()); // CameraSystem must be added before RenderSystem
-        engine.addSystem(new MovementSystem()); // TODO: Probably temp and should be changed when the new movement system is ready
-        engine.addSystem(new RenderSystem());
+            engine.addSystem(new MobMovementSystem());
 
+            engine.addSystem(new ShootingSystem());
+            engine.addSystem(new BulletMovementSystem());
+            engine.addSystem(new CollisionSystem());
+            engine.addSystem(new CollisionEventSystem());
+            engine.addSystem(new UncollidingSystem());
+            engine.addSystem(new PlayerDyingSystem(true));
+            engine.addSystem(new GhostDyingSystem(false));
+            engine.addSystem(new MobDyingSystem());
+
+            // Systems which are essentially observers of the changed gamestate
+            engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem
+            engine.addSystem(new RenderSystem());
+            this.level = new TestLevel();
+
+        }
         // Initialize the level
-        this.level = new SimpleLevel();
     }
 
     /**
      * The main game loop where we update the GameState and render (if required).
      */
     private void loop() {
-        timer = new Timer();
-        boolean render = true;
-
+        long lastLoopTime = System.nanoTime();
+        final int targetFps = 60;
+        final long optimalTime = (long) 1e9 / targetFps;
+        double lastFpsTime = 0.0;
+        int fps = 0;
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
-            while (timer.getDeltaTime() >= timer.getFrameTime()) {
-                timer.nextFrame();
-                render = true;
+            // work out how long its been since the last update, this
+            // will be used to calculate how far the entities should
+            // move this loop
+            long now = System.nanoTime();
+            long updateLength = now - lastLoopTime;
+            lastLoopTime = now;
+            double delta = updateLength / ((double) optimalTime);
+
+            // update the frame counter
+            lastFpsTime += updateLength;
+            fps++;
+
+            // update our FPS counter if a second has passed since
+            // we last recorded
+            if (lastFpsTime >= (long) 1e9) {
+                win.setWindowTitle("(FPS: " + fps + ")");
+                lastFpsTime = 0;
+                fps = 0;
             }
 
-            if (render) {
-                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-                TheEngine.getInstance().update((float) timer.getDeltaTime()); // Update the gamestate
+            TheEngine.getInstance().update((float) delta); // Update the gamestate
 
-                glfwSwapBuffers(window); // swap the color buffers
-                render = false;
-            }
+            glfwSwapBuffers(window); // swap the color buffers
 
             // Poll for window events. The key callback above will only be
             // invoked during this call.
@@ -138,6 +193,16 @@ public class Main implements Runnable {
             // check if the user wants to exit the game
             if (KeyBoard.isKeyDown(GLFW_KEY_ESCAPE)) {
                 glfwSetWindowShouldClose(window, true);
+            }
+            // we want each frame to take 10 milliseconds, to do this
+            // we've recorded when we started the frame. We add 10 milliseconds
+            // to this and then factor in the current time to give
+            // us our final value to wait for
+            // remember this is in ms, whereas our lastLoopTime etc. vars are in ns.
+            try {
+                Thread.sleep((lastLoopTime - System.nanoTime() + optimalTime) / (long) 1e6);
+            } catch (Exception e) {
+                continue;
             }
         }
     }

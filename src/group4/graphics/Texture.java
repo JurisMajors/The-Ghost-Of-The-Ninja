@@ -1,18 +1,25 @@
 package group4.graphics;
 
+import group4.utils.BufferUtils;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
-import group4.utils.BufferUtils;
 
 import static org.lwjgl.opengl.GL11.*;
 
 public class Texture {
     // Storing all texture resources when preloaded.
     public static Texture DEBUG; // TODO: More to be added.
+    public static Texture BRICK;
+    public static Texture AK47;
+    public static Texture MG_BULLET;
+    public static Texture EXIT;  // TODO: More to be added.
+    public static Texture BLACK;
+    public static Texture WHITE;
+    public static Texture MAIN_TILES;
+    public static Texture BACKGROUND;
 
     // width and height of the texture
     private int width, height;
@@ -29,6 +36,14 @@ public class Texture {
      */
     public static void loadAllTextures() {
         DEBUG = new Texture("src/group4/res/textures/debug.jpeg");
+        BRICK = new Texture("src/group4/res/textures/brick.png");
+        AK47 = new Texture("src/group4/res/textures/weapons/AK47.png");
+        MG_BULLET = new Texture("src/group4/res/textures/weapons/Bullet.png");
+        EXIT = new Texture("src/group4/res/textures/exit.jpg");
+        MAIN_TILES = new Texture("src/group4/res/textures/maintiles.png");
+        BACKGROUND = new Texture("src/group4/res/textures/cave.jpg");
+        BLACK = new Texture("src/group4/res/textures/black.png");
+        WHITE = new Texture("src/group4/res/textures/white.png");
     }
 
     /**
@@ -103,6 +118,10 @@ public class Texture {
 
     public int getHeight() {
         return height;
+    }
+
+    public int getTextureID() {
+        return texture;
     }
 
 }

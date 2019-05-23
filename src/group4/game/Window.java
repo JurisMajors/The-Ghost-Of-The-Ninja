@@ -1,9 +1,10 @@
 package group4.game;
 
+import group4.AI.Evolver;
 import org.lwjgl.glfw.GLFWVidMode;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
     private long window;
@@ -29,7 +30,9 @@ public class Window {
         // Setting the context and showing
         glfwMakeContextCurrent(window);
         glfwSwapInterval(1); // Enable v-sync
-        glfwShowWindow(window);
+        if (!(!Evolver.render && Main.AI)) { // show the window if not training the AI or if Evolver.render is on
+            glfwShowWindow(window);
+        }
     }
 
     public long getWindowId() {
@@ -52,4 +55,13 @@ public class Window {
         width = w;
         height = h;
     }
+
+    /**
+     * Updates the title of the window with the given string.
+     * @param title String, the new title of the window.
+     */
+    public void setWindowTitle(String title) {
+        glfwSetWindowTitle(this.window, title);
+    }
+
 }

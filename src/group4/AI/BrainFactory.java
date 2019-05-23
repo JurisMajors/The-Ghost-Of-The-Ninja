@@ -9,14 +9,13 @@ import java.util.Random;
  */
 public class BrainFactory extends AbstractCandidateFactory<Brain> {
     int[] layerInfo;
-    NNGameStateInterface decoder;
+    public static int seed = 1;
     /**
      * Give neural network sizes.
      */
-    BrainFactory(int[] sizes, NNGameStateInterface decoder) {
+    BrainFactory(int[] sizes) {
         layerInfo = new int[sizes.length + 2]; // input and output extra
-        this.decoder = decoder;
-        int input = this.decoder.getInputSize();
+        int input = Evolver.decoder.getInputSize();
 
         // input layer
         layerInfo[0] =  input;
@@ -25,14 +24,13 @@ public class BrainFactory extends AbstractCandidateFactory<Brain> {
             layerInfo[i] = sizes[i - 1];
         }
         // output
-        layerInfo[layerInfo.length - 1] = 4;
+        layerInfo[layerInfo.length - 1] = GhostMove.moveAmount();
 
     }
 
     @Override
     public Brain generateRandomCandidate(Random random) {
         Brain b = new Brain(layerInfo, random.nextInt());
-        b.setDecoder(decoder);
         return b;
     }
 }

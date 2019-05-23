@@ -21,8 +21,6 @@ import java.util.List;
 public class Brain {
     /** the network that does the calculations **/
     MultiLayerNetwork nn;
-    /** gamestate decoder to translate to a double array **/
-    NNGameStateInterface decoder;
 
     /**
      * Given information about the layers, initialize a MLP
@@ -31,26 +29,26 @@ public class Brain {
         // TODO: FINALIZE NETWORK ARCHITECTURE
 
         NeuralNetConfiguration.ListBuilder lb = new NeuralNetConfiguration.Builder()
-                .seed(seed)
                 .weightInit(WeightInit.XAVIER)
                 .list();
 
         // build the dense layers
-        for (int i = 0; i < layerSizes.length - 1; i++) {
+        for (int i = 0; i < layerSizes.length - 2; i++) {
             lb.layer(new DenseLayer.Builder().nIn(layerSizes[i]).nOut(layerSizes[i + 1])
                     .activation(Activation.RELU)
+                    .weightInit(WeightInit.XAVIER)
                     .build());
 
         }
         // finalize the configuration by adding the output layer
         MultiLayerConfiguration conf = lb.layer(new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                 .activation(Activation.SOFTMAX)
+                .weightInit(WeightInit.XAVIER)
                 .nIn(layerSizes[layerSizes.length - 2]).nOut(layerSizes[layerSizes.length - 1]).build())
                 .build();
 
         conf.setBackprop(false);
         conf.setPretrain(false);
-
         // apply the configuration
         nn = new MultiLayerNetwork(conf);
         nn.init();
@@ -63,25 +61,23 @@ public class Brain {
     Brain (Brain b) {
          // clone the network
         this.nn = b.nn.clone();
-        // pass on the level decoder too
-        this.decoder = b.decoder;
     }
 
     Brain () {
         this(Evolver.layerSizes, 1);
     }
 
-    Brain (String filePath) throws IOException {
-        File f = new File(filePath);
-        nn = ModelSerializer.restoreMultiLayerNetwork(f);
+    public Brain (String filePath) {
+        try {
+            File f = new File(filePath);
+            nn = ModelSerializer.restoreMultiLayerNetwork(f);
+        } catch (IOException e) {
+            System.err.println("IOException was thrown with path " + filePath);
+        }
     }
 
     void toFile(String filePath) throws IOException {
         ModelSerializer.writeModel(this.nn, filePath, false);
-    }
-
-    void setDecoder(NNGameStateInterface dec) {
-        this.decoder = dec;
     }
 
     /**
@@ -90,13 +86,25 @@ public class Brain {
      * @param input decoded state of the game
      * @return move to make
      */
-    public String feedForward(INDArray input) {
-        // this can be changed that feed forward takes
-        //  a game state as an input and does the decoding here
-        // probably preferable, but no game state class yet
-        //TODO: Use better move encoding
-        List<INDArray> result = nn.feedForward(input);
-        //TODO: Translate resulting array to a move
-        return "";
+    private int feedForward(INDArray input) {
+        List<INDArray> output = nn.feedForward(input);
+        double[] result = output.get(output.size() - 1).toDoubleVector();
+        int argMax = 0;
+        // get best move defined by network
+        for (int i = 1; i < result.length; i++) {
+            if (result[i] > result[argMax]) {
+                argMax = i;
+            }
+        }
+        return argMax;
+    }
+
+    /**
+     * Calculates the move the ghost should take
+     * @return the move the ghost should take, according to {@link GhostMove} enum
+     */
+    public int think() {
+        INDArray input = Evolver.decoder.decode();
+        return this.feedForward(input);
     }
 }

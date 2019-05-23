@@ -25,6 +25,17 @@ public class Vector3f {
     }
 
     /**
+     * Creates a copy of another vector
+     *
+     * @param toCopy the vector to copy
+     */
+    public Vector3f(Vector3f toCopy) {
+        this.x = toCopy.x;
+        this.y = toCopy.y;
+        this.z = toCopy.z;
+    }
+
+    /**
      * Adds this vector to another vector and results the result.
      *
      * @param other vector
@@ -105,9 +116,9 @@ public class Vector3f {
      */
     public Vector3f cross(Vector3f other) {
         Vector3f result = new Vector3f();
-        result.x = x * other.y - y * other.x;
-        result.y = y * other.z - z * other.y;
-        result.z = z * other.x - x * other.z;
+        result.x = y * other.z - z * other.y;
+        result.y = z * other.x - x * other.z;
+        result.z = x * other.y - y * other.x;
 
         return result;
     }
@@ -146,6 +157,46 @@ public class Vector3f {
         this.z /= len;
     }
 
+    /**
+     * Calculates the euclidean distance between two vectors
+     *
+     * @param other the other vector to calculate the distance to
+     * @return euclid distance between this and other
+     */
+    public float euclidDist(Vector3f other) {
+        Vector3f diff = this.sub(other);
+        return (float) Math.sqrt(diff.dot(diff));
+    }
+
+    /**
+     * Rotates the vector in place according to the angle in the XY place
+     *
+     * @param angle the angle in degrees to rotate over in the XY plane
+     */
+    public void rotateXYi(float angle) {
+        float[] newCoords = this.getRotatedXY(angle);
+        this.x = newCoords[0];
+        this.y = newCoords[1];
+    }
+
+    /**
+     * Rotates the vector according to the angle in the XY place
+     *
+     * @param angle the angle in degrees to rotate over in the XY plane
+     * @return this, but rotated over the angle
+     */
+    public Vector3f rotateXY(float angle) {
+        float[] newCoords = this.getRotatedXY(angle);
+        return new Vector3f(newCoords[0], newCoords[1], this.z);
+    }
+
+    private float[] getRotatedXY(float angle) {
+        angle = (float) Math.toRadians(angle);
+        float newX = (float) (this.x * Math.cos(angle) - this.y * Math.sin(angle));
+        float newY = (float) (this.x * Math.sin(angle) + this.y * Math.cos(angle));
+        return new float[]{newX, newY};
+    }
+
     @Override
     public String toString() {
         return String.format("{%f, %f, %f}", this.x, this.y, this.z);
@@ -153,10 +204,88 @@ public class Vector3f {
 
     /**
      * Returns a vector with absolute value for x,y,z
+     *
      * @return vector
      */
     public Vector3f abs() {
         return new Vector3f(Math.abs(x), Math.abs(y), Math.abs(z));
+    }
+
+    /**
+     * Returns a copy of the vector with the smallest length amongst a and b.
+     *
+     * @param a vector
+     * @param b vector
+     * @return copy of smallest vector of a and b
+     */
+    public static Vector3f min(Vector3f a, Vector3f b) {
+        double lenA = a.length();
+        double lenB = b.length();
+        if (lenA <= lenB) {
+            return new Vector3f(a);
+        }
+
+        return new Vector3f(b);
+    }
+
+    /**
+     * Allows to cap the values of the vector in-place, given an absolute maximum
+     *
+     * @param maxRange vector which contains caps for each dimension
+     * @throws IllegalArgumentException if maxRange.x < 0 || maxRange.y < 0 || maxRange.z < 0
+     */
+    public void capValuesi(Vector3f maxRange) throws IllegalArgumentException {
+        this.x = this.capDirection(this.x, maxRange.x);
+        this.y = this.capDirection(this.y, maxRange.y);
+        this.z = this.capDirection(this.z, maxRange.z);
+    }
+
+    /**
+     * Caps the values of this, but puts them in a new vector
+     *
+     * @param maxRange vector which contains caps for each dimension
+     * @return this, but with capped values
+     * @throws IllegalArgumentException if maxRange.x < 0 || maxRange.y < 0 || maxRange.z < 0
+     */
+    public Vector3f capValues(Vector3f maxRange) throws IllegalArgumentException {
+        Vector3f newVec = new Vector3f(this);
+        newVec.capValuesi(maxRange);
+        return newVec;
+    }
+
+    /**
+     * Caps the values of the vector in-place given an abs(maximum)
+     *
+     * @param max the maximum for all dimensions
+     * @throws IllegalArgumentException if max < 0
+     */
+    public void capValuesi(float max) throws IllegalArgumentException {
+        this.capValuesi(new Vector3f(max, max, max));
+    }
+
+    /**
+     * Caps the values of this in a new vector given an abs(maximum)
+     *
+     * @param max the maximum for all dimensions
+     * @return this, but with capped dimensions with cap being max
+     * @throws IllegalArgumentException if max < 0
+     */
+    public Vector3f capValues(float max) throws IllegalArgumentException {
+        return this.capValues(new Vector3f(max, max, max));
+    }
+
+
+    private float capDirection(float cur, float max) throws IllegalArgumentException {
+        if (max < 0) throw new IllegalArgumentException(this.getClass().getName() + " capDirection(cur,max) received " +
+                "max which is less than zero, must provide absolute value of max");
+        if (max < 1e-6 && max > -1e-6) { // close to zero
+            return 0f;
+        }
+        if (Math.abs(cur) < Math.abs(max)) { // no need to modify
+            return cur;
+        }
+        // cap it
+        return Math.abs(cur) / cur * Math.min(max, Math.abs(cur));
     }
 
 }

@@ -1,6 +1,12 @@
 package group4.levelSystem;
 
+import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.entities.Player;
+import group4.ECS.entities.world.Exit;
+import group4.ECS.etc.TheEngine;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -19,22 +25,35 @@ public abstract class Level {
     // Keep track of the module currently on screen
     private Module currentModule;
 
+    // Keep track of the level-wide player entity
+    private Player player;
+
+    // Keep track of ExitActions that are registered per Exit
+    private HashMap<Exit, ExitAction> exitActions;
 
     /**
      * Initializes the level using factory & template method
      * Override @code{createRoot} and @code{createAdditionalModules} to specify the modules to be used for the level
      */
     public Level() {
-        this.modules = new ArrayList<>();
+        this.modules = new ArrayList<>();                   // Initialize the modules list
 
-        this.rootModule = this.createRoot();
-        this.modules.add(this.rootModule);
+        this.rootModule = this.createRoot();                // Create and add the root module
+        this.addModule(this.rootModule);
 
-        this.createAdditionalModules();
+        this.createAdditionalModules();                     // Create and add the additional modules
 
-        this.currentModule = this.rootModule;
+        this.player = this.createPlayer();                  // Create the level wide player instance
+        TheEngine.getInstance().addEntity(this.player);     // Register the level wide player instance to the engine
 
-        this.checkSanity();
+        this.switchModule(this.rootModule);                 // Switch the current module to the root module
+                                                            // Also takes care of positioning the player entity etc.
+
+        this.exitActions = new HashMap<>();                 // Initialize the exit action list
+
+        this.configExits();                                 // Configure the exits
+
+        this.checkSanity();                                 // Check that the level was created appropriately
     }
 
 
@@ -51,6 +70,16 @@ public abstract class Level {
 
         if (this.currentModule == null)
             throw new IllegalStateException("Level: the current module cannot be null");
+
+        if (this.player == null)
+            throw new IllegalStateException("Level: the player entity cannot be null");
+
+        for (Module m : this.modules) {
+            for (Exit e : m.getExits()) {
+                if (!this.exitActions.containsKey(e))
+                    throw new IllegalStateException("Level: not all exits in the level where configured");
+            }
+        }
     }
 
 
@@ -67,12 +96,45 @@ public abstract class Level {
 
 
     /**
+     * This method adds a module to this level
+     * @param m The module to add to this level
+     */
+    protected final void addModule(Module m) {
+        this.modules.add(m);
+    }
+
+
+    /**
+     * This method should return the player object to be used in the level
+     */
+    protected abstract Player createPlayer();
+
+
+    /**
+     * This method should set an exit action for each exit of each module
+     */
+    protected abstract void configExits();
+
+
+    /**
      * Switches the level to the next module
      */
-    protected final void switchModule(Module m) {
+    public final void switchModule(Module m) {
         if (!this.modules.contains(m)) throw new IllegalArgumentException("Level: you cannot switch to a module that is not part of the Level");
 
+        // Unload the old module (if there is an old module)
+        if (this.currentModule != null) {
+            this.currentModule.unload();
+        }
+
+        // Switch the current module to the next module
         this.currentModule = m;
+
+        // Update the player's position to the initial position in the new module
+        this.player.getComponent(PositionComponent.class).position = this.currentModule.getPlayerInitialPosition();
+
+        // Load the new module
+        this.currentModule.load();
     }
 
 
@@ -81,5 +143,46 @@ public abstract class Level {
      */
     public Module getCurrentModule() {
         return this.currentModule;
+    }
+
+
+    /**
+     * Get the player of the level
+     */
+    public Player getPlayer() {
+        return this.player;
+    }
+
+
+    /**
+     * Set the exit action for a certain exit
+     * @param e The exit
+     * @param a The exit action
+     */
+    public void setExitAction(Exit e, ExitAction a) {
+        this.exitActions.put(e, a);
+    }
+
+
+    /**
+     * Get the reference to the i^th module of the level
+     */
+    public Module getModuleReference(int i) {
+        if (i >= this.modules.size())
+            throw new IllegalArgumentException("Level: the module you requested does not exist");
+
+        return this.modules.get(i);
+    }
+
+
+    /**
+     * Let the level react to an exit being reached
+     * @param e The exit that was reached
+     */
+    public void handleExit(Exit e) {
+        if (!this.exitActions.containsKey(e))
+            throw new IllegalArgumentException("Level: no exit action is defined for this exit");
+
+        this.exitActions.get(e).exit();
     }
 }
