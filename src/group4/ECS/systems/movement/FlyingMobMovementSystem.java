@@ -13,22 +13,18 @@ public class FlyingMobMovementSystem extends MobMovementSystem {
 
     @Override
     protected boolean canJump(Vector3f velocity) {
-        super.canJump(velocity);
         // flying mobs can always jump
         return true;
     }
 
     @Override
     protected boolean canMoveDown() {
-        super.canMoveDown();
         // flying mobs can always move down
         return true;
     }
 
     @Override
     protected void doGravity(MovementComponent mc, GravityComponent gc) {
-        super.doGravity(mc, gc);
         // flying mobs are not affected by gravity
-        return;
     }
 }

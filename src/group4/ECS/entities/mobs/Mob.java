@@ -27,7 +27,7 @@ public class Mob extends Entity {
     public Mob(Vector3f position, Level l) {
         Vector3f velocityRange = new Vector3f(0.05f, 0.25f, 0.0f);//velocity range
         Shader shader = Shader.SIMPLE;//shader
-        Texture texture = Texture.DEBUG;//texture
+        Texture texture = Texture.EXIT;//texture
         this.level = l;
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));

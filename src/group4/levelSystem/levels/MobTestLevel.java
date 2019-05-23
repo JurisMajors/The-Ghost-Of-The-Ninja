@@ -1,7 +1,7 @@
 package group4.levelSystem.levels;
 
 import group4.ECS.entities.Player;
-import group4.ECS.entities.mobs.ShootingJumpingWalkingMob;
+import group4.ECS.entities.mobs.*;
 import group4.ECS.etc.TheEngine;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
@@ -24,7 +24,12 @@ public class MobTestLevel extends Level {
     @Override
     protected Player createPlayer() {
         //temporary add mob to the level here
-        TheEngine.getInstance().addEntity(new ShootingJumpingWalkingMob(new Vector3f(15.0f, 10.0f, 0.0f), this));
+//        TheEngine.getInstance().addEntity(new ShootingJumpingWalkingMob(new Vector3f(15.0f, 10.0f, 0.0f), this));
+//        TheEngine.getInstance().addEntity(new FlappingMob(new Vector3f(15.0f, 10.0f, 0.0f), this));
+//        TheEngine.getInstance().addEntity(new JumpingMob(new Vector3f(15.0f, 10.0f, 0.0f), this));
+//        TheEngine.getInstance().addEntity(new JumpingWalkingMob(new Vector3f(15.0f, 10.0f, 0.0f), this));
+//        TheEngine.getInstance().addEntity(new WalkingMob(new Vector3f(15.0f, 10.0f, 0.0f), this));
+        TheEngine.getInstance().addEntity(new FlyingMob(new Vector3f(15.0f, 10.0f, 0.0f), this));
 
         // We don't care about the player position, as that will be initialized on level switching
         return new Player(new Vector3f(), this);

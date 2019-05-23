@@ -1,5 +1,6 @@
 package group4.maths;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.identities.GhostComponent;
@@ -13,35 +14,64 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Ray {
-    /** starting position of the ray **/
+    /**
+     * starting position of the ray
+     **/
     Vector3f startPos;
-    /** direction of the ray **/
+    /**
+     * direction of the ray
+     **/
     Vector3f dir;
-    /** the end of the ray **/
+    /**
+     * the end of the ray
+     **/
     public Vector3f end;
+    /**
+     * If an entity contains a component in this list, let the rays go through it
+     */
+    private List<Class<? extends Component>> ignorableComponents;
 
-    public Ray(Vector3f startingPos, Vector3f dir) {
+    public Ray(Vector3f startingPos, Vector3f dir, List<Class<? extends Component>> ignorableComponents, float length) {
         this.startPos = startingPos;
         this.dir = dir;
         // TODO have smarter scaling to end point
-        this.end = this.startPos.add(this.dir.normalized().scale(10000));
+        this.end = this.startPos.add(this.dir.normalized().scale(length));
+        this.ignorableComponents = ignorableComponents;
     }
+
+    public Ray(Vector3f startingPos, Vector3f dir) {
+        List<Class<? extends Component>> defaultList = new ArrayList<>();
+        defaultList.add(GhostComponent.class);
+        defaultList.add(PlayerComponent.class);
+
+        this.startPos = startingPos;
+        this.dir = dir;
+        this.end = this.startPos.add(this.dir.normalized().scale(10000));
+        this.ignorableComponents = defaultList;
+    }
+
 
     /**
      * Cast the ray to the given entities
+     *
      * @param entities the entities that the ray might intersect
      * @return position at first intersection of a bounding box
      */
     public IntersectionPair cast(ImmutableArray<Entity> entities) {
         Vector3f closestIntersection = null; // current closest intersection of the ray
-        Entity intersectedEntity = null; // entity twhose bounding box is intersected
+        Entity intersectedEntity = null; // entity whose bounding box is intersected
         float curDist = Float.MAX_VALUE; // the distance to the intersection
 
         // for each entity calculate the intersection
+        entity_loop:
         for (Entity e : entities) {
-            // TODO this does not generalize in case of CGI, maybe skip according to parameter?
-            if (e.getComponent(GhostComponent.class) != null) continue; // skip the ghost
-            if (e.getComponent(PlayerComponent.class) != null) continue; // skip the player
+            // ignore entities that contain an ignoreable component
+            for (Class<? extends Component> component: this.ignorableComponents) {
+                // skip this entity
+                if (e.getComponent(component) != null) {
+                    continue entity_loop;
+                }
+            }
 
             List<Vector3f> intersections = this.intersects(e); // get intersection points
 
@@ -64,7 +94,8 @@ public class Ray {
     }
 
     /**
-     *  Ray intersection point with a single entity
+     * Ray intersection point with a single entity
+     *
      * @param entity the entity to check for an intersection
      * @return the positions of intersections with the  bounding box of the entity
      */
@@ -95,8 +126,8 @@ public class Ray {
             // if line segments dont intersect, skip
             if (!line.intersectsLine(rayAsLine)) continue;
             // otherwise calculate the intersection between the "infinite lines"
-            Vector3f inter = this.lineIntersection(new Vector3f((float) line.getX1(), (float) line.getY1(),0 ),
-                                                    new Vector3f((float) line.getX2(), (float) line.getY2(), 0));
+            Vector3f inter = this.lineIntersection(new Vector3f((float) line.getX1(), (float) line.getY1(), 0),
+                    new Vector3f((float) line.getX2(), (float) line.getY2(), 0));
             if (inter == null) {
                 continue;
             }
@@ -128,7 +159,7 @@ public class Ray {
         float C2 = A2 * b.x + B2 * b.y;
         float C1 = A1 * this.startPos.x + B1 * this.startPos.y;
 
-        float invdelta = 1/delta;
+        float invdelta = 1 / delta;
         return new Vector3f((B2 * C1 - B1 * C2) * invdelta, (A1 * C2 - A2 * C1) * invdelta, this.startPos.z);
     }
 }
