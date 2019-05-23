@@ -40,7 +40,7 @@ public abstract class AbstractMovementHandler<T extends Entity> {
             // make sure that were not following a spline anymore
             if (isSplineMob(entity)) {
                 SplinePathComponent spc = Mappers.splinePathMapper.get(entity);
-                spc.onSpline = false;
+                spc.leaveSpline();
             }
         } else if (isSplineMob(entity)) {
             // splines mobs have a different target than normal mobs
@@ -57,7 +57,7 @@ public abstract class AbstractMovementHandler<T extends Entity> {
 
                 // check if we arrived at the spline
                 if (closeToStart(pc, spc)) {
-                    spc.onSpline = true;
+                    spc.startSpline();
                 }
             }
         } else {
