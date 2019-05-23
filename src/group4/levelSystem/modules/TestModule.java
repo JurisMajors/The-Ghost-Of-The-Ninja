@@ -174,8 +174,7 @@ public class TestModule extends Module {
         }
       
         // my little spline test
-        /*
-        Vector3f tempPosition = new Vector3f(4.0f, 4.0f, 0.0f);
+        Vector3f tempPosition = new Vector3f(15.0f, 4.5f, 0.0f);
         Vector3f tempDimension = new Vector3f(2.0f, 1.0f, 0.0f);
         float thickness = 0.4f;
         Vector3f[] tempPoint = new Vector3f[]{
@@ -194,7 +193,6 @@ public class TestModule extends Module {
         MultiSpline mySpline = new MultiSpline(tempPoint);
         SplinePlatform splinePlatform = new SplinePlatform(tempPosition, tempDimension, mySpline, 0.4f, Shader.SIMPLE, Texture.WHITE);
         this.addEntity(splinePlatform);
-         */
 
         // Create the exit
         this.addEntity(
