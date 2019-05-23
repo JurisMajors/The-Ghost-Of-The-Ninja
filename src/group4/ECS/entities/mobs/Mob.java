@@ -40,7 +40,7 @@ public class Mob extends Entity {
         this.add(new MobComponent(handler));
     }
 
-    public String getName() {
+    public static String getName() {
         return "Mob";
     }
 }

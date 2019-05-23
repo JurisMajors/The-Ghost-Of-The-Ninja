@@ -17,7 +17,7 @@ public class FlappingMob extends Mob {
         this.add(new FlappingMobComponent());
     }
 
-    public String getName() {
+    public static String getName() {
         return "FlappingMob";
     }
 }

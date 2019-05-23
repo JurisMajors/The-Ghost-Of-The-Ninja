@@ -30,7 +30,7 @@ public class MovingPlatform extends Platform {
         this.add(new RangeComponent(lbbCornerRange, rtfCornerRange.sub(dimension)));
     }
 
-    public String getName() {
+    public static String getName() {
         return "MovingPlatform";
     }
 }

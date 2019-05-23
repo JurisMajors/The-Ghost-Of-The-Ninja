@@ -36,7 +36,7 @@ public class FlyingMob extends Mob {
         this.add(new SplinePathComponent(spline, new Vector3f(3, 3, 0), new Vector3f(3, 2, 0), 0, 100));
     }
 
-    public String getName() {
+    public static String getName() {
         return "FlyingMob";
     }
 }

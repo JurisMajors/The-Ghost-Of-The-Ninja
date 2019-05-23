@@ -37,7 +37,7 @@ public class Bullet extends Entity {
         this.add(new CollisionComponent(BulletCollision.getInstance()));
     }
 
-    public String getName() {
+    public static String getName() {
         return "Bullet";
     }
 }

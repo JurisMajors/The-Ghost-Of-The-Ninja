@@ -17,7 +17,7 @@ public class WalkingMob extends Mob {
         this.add(new WalkingMobComponent());
     }
 
-    public String getName() {
+    public static String getName() {
         return "WalkingMob";
     }
 }
