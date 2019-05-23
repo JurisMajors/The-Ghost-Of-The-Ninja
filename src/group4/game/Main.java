@@ -35,7 +35,9 @@ import static org.lwjgl.opengl.GL11.*;
 public class Main implements Runnable {
     private Thread thread;
     /** enable this if you want to run the genetic algorithm, instead of playing urself **/
-    public static boolean AI = false;
+    public static final boolean AI = false;
+    /** whether should do calls to OPENGL **/
+    public static final boolean SHOULD_OPENGL = !Main.AI || Evolver.render;
 
     private Window win;
     public static long window; // The id of the window
@@ -135,7 +137,7 @@ public class Main implements Runnable {
             // Systems which are essentially observers of the changed gamestate
             engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem
             engine.addSystem(new RenderSystem());
-            this.level = new TiledLevel();
+            this.level = new TestLevel();
 
         }
         // Initialize the level
