@@ -5,6 +5,7 @@ import group4.AI.Brain;
 import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
+import group4.ECS.entities.Player;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
 import group4.ECS.etc.TheEngine;
@@ -19,12 +20,14 @@ import org.json.JSONTokener;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class defines the interface for modules that can be used to create levels
  * A module represents a height * width grid on which entities can be positioned
- *      entities may overlap multiple cells of the grid
+ * entities may overlap multiple cells of the grid
  * A module can have entries and exits that can link to other modules in a levelSystem (links defined on levelSystem basis)
  */
 public class Module {
@@ -49,6 +52,9 @@ public class Module {
     // JSON Object containing the tiled data
     JSONObject tiledData;
 
+    // Storing the mapping from the tilemap indices to the engine Entities
+    private Map<Integer, String> moduleTileMap;
+
 
     /**
      * Default construct, which constructs a module based on a Tiled .tmx file
@@ -58,6 +64,7 @@ public class Module {
         if (ghostModelName != null) {
             this.ghostPath = Evolver.path + ghostModelName;
         }
+        this.configureMap();
         this.loadTiledObject(TiledModuleLocation);
         this.setup(l);
     }
@@ -88,7 +95,6 @@ public class Module {
             throw new IllegalArgumentException("Module: could not find the tiled module JSON file");
         }
     }
-
 
 
     /**
@@ -129,45 +135,39 @@ public class Module {
         // Now, we loop over the layers
         for (int i = 0; i < layers.length(); i++) {
             JSONObject layer = layers.getJSONObject(i);
+            if (layer.getString("name").equals("MAIN")) {
+                if (layer.getBoolean("visible")) {
+                    // Get height and width of layer
+                    int layerHeight = layer.getInt("height");
+                    int layerWidth = layer.getInt("width");
 
-            // Check that they layer is visible, if so, add its entities to the module
-            if (layer.getBoolean("visible")) {
-                // Get height and width of layer
-                int layerHeight = layer.getInt("height");
-                int layerWidth = layer.getInt("width");
+                    // Loop over the data grid
+                    JSONArray data = layer.getJSONArray("data");
+                    for (int tile = 0; tile < data.length(); tile++) {
+                        // Get the grid position of the tile
+                        int tileGridY = layerHeight - 1 - (int) Math.floor(tile / layerWidth);
+                        int tileGridX = tile % layerWidth;
 
-                // Loop over the data grid
-                JSONArray data = layer.getJSONArray("data");
-                for (int tile = 0; tile < data.length(); tile++) {
-                    // Get the grid position of the tile
-                    int tileGridY = layerHeight - 1 - (int) Math.floor(tile / layerWidth);
-                    int tileGridX = tile % layerWidth;
+                        // Get the type of the tile
+                        String entityIdentifier = moduleTileMap.get(tile);
 
-                    // Get the type of the tile
-                    switch(data.getInt(tile)) {
-
-                        case 1:
-                            // If the tile type is 1, we need to add a platform
+                        // TODO: Can't use switch with static function as comparison. i.e. case Platform.getName() is not possible. Something better?
+                        if (entityIdentifier == null) {
+                            continue;
+                        } else if (entityIdentifier.equals(Platform.getName())) {
                             this.addPlatform(tileGridX, tileGridY);
-                            break;
-
-                        case 2:
-                            // If the tile type is 2, we need to set the players initial position
-                            this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
-                            break;
-
-                        case 3:
-                            // If the tile type is 3, we need to add an exit
+                        } else if (entityIdentifier.equals(Exit.getName())) {
                             this.addExit(tileGridX, tileGridY);
-
-                        default:
-                            // By default, the tile is just empty
-                            break;
+                        } else if (entityIdentifier.equals(Player.getName())) {
+                            this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
+                        } else {
+                            continue;
+                        }
                     }
                 }
-
             }
 
+            // Check that they layer is visible, if so, add its entities to the module
         }
     }
 
@@ -202,6 +202,7 @@ public class Module {
 
     /**
      * Add an entity to the module
+     *
      * @param e the entity to add to the module
      */
     public void addEntity(Entity e) {
@@ -211,6 +212,7 @@ public class Module {
 
     /**
      * Remove an entity from the module
+     *
      * @param e the entity to remove from the module
      */
     public void removeEntity(Entity e) {
@@ -221,7 +223,7 @@ public class Module {
     /**
      * Get an iterator of the entities that are in this module
      */
-    public  Iterable<Entity> getEntities() {
+    public Iterable<Entity> getEntities() {
         return this.entities;
     }
 
@@ -262,6 +264,7 @@ public class Module {
 
     /**
      * Adds a platform entity to the module
+     *
      * @param x the x position of the platform in the module grid
      * @param y the y position of the platform in the module grid
      */
@@ -274,6 +277,7 @@ public class Module {
 
     /**
      * Adds a exit entity to the module
+     *
      * @param x the x position of the exit in the module grid
      * @param y the y position of the exit in the module grid
      */
@@ -306,5 +310,26 @@ public class Module {
      */
     public Level getLevel() {
         return this.level;
+    }
+
+    /**
+     * Function which contains the mapping from the tileMap index as on the texture, to the appropriate Entity class.
+     */
+    private void configureMap() {
+        int[] platforms = new int[]{0, 1, 2, 5, 6, 8, 9, 10, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 32, 33, 34, 35};
+        int[] exits = new int[]{3, 4, 11, 12};
+        int[] players = new int[]{7};
+        moduleTileMap = new HashMap<Integer, String>();
+        for (int i : platforms) {
+            moduleTileMap.put(i, Platform.getName());
+        }
+
+        for (int i : exits) {
+            moduleTileMap.put(i, Exit.getName());
+        }
+
+        for (int i : players) {
+            moduleTileMap.put(i, Player.getName());
+        }
     }
 }

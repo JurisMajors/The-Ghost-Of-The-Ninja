@@ -6,21 +6,20 @@ import group4.ECS.etc.TheEngine;
 import group4.levelSystem.ExitAction;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
-import group4.levelSystem.modules.SimpleModule;
 import group4.levelSystem.modules.TestModule;
 import group4.maths.Vector3f;
 
-public class TestLevel extends Level {
+public class Level01 extends Level {
 
     @Override
     protected Module createRoot() {
-        return new TestModule(this, "best-40");
+        return new Module(this, "./src/group4/res/maps/level_01/module_01_01.json", null);
     }
 
     @Override
     protected void createAdditionalModules() {
         // Add the SimpleModule as well (Tiled version)
-        this.addModule(new Module(this, "./src/group4/levelSystem/modules/TiledModules/simpleModule.json", null));
+//        this.addModule();
     }
 
     @Override
