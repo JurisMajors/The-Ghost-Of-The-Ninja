@@ -40,6 +40,7 @@ public class CollisionData {
     public CollisionData(Entity entity, Vector3f displacement, Vector3f newPos) {
         this.entity = entity;
         this.displacement = displacement;
+        this.newPos = newPos;
     }
 
 
