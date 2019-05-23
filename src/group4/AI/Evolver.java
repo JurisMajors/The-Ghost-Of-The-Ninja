@@ -13,7 +13,6 @@ import org.uncommons.watchmaker.framework.termination.TargetFitness;
 import org.apache.commons.cli.*;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -95,7 +94,7 @@ public class Evolver {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
             System.out.println(e.getMessage());
-            formatter.printHelp("utiltiies", options);
+            formatter.printHelp("utilities", options);
             System.exit(1);
         }
 
@@ -152,7 +151,7 @@ public class Evolver {
         popSize.setRequired(false);
         options.addOption(popSize);
 
-        Option gen = new Option("g", "generations", true, "Nr of generations, defualt: 50");
+        Option gen = new Option("g", "generations", true, "Nr of generations, default: 50");
         gen.setRequired(false);
         options.addOption(gen);
 
