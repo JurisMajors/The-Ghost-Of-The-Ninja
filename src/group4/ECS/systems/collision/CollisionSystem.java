@@ -8,6 +8,7 @@ import group4.ECS.components.SplineComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.etc.Families;
@@ -39,10 +40,14 @@ public class CollisionSystem extends IteratingSystem {
      * @param e entity
      */
     private void detectCollisions(Entity e) {
+        ImmutableArray<Entity> entities;
+        if (e instanceof Bullet) {
+            entities = TheEngine.getInstance().getEntitiesFor(Families.allCollidableFamily);
+        } else {
+            entities = TheEngine.getInstance().getEntitiesFor(Families.collidableFamily);
+        }
         // get all normal collidable entities
-        ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.collidableFamily);
         CollisionComponent cc = Mappers.collisionMapper.get(e);
-
         for (Entity other : entities) {
             // dont process collision with itself
             if (e.equals(other)) continue;
@@ -57,6 +62,10 @@ public class CollisionSystem extends IteratingSystem {
             if (intersection == null) {
                 continue;
             }
+            if (e instanceof Player && !(e instanceof Ghost)) {
+                System.out.println(other.getClass().getName());
+            }
+
 
             // Get displacement vector
             Vector3f displacement = processCollision(e, other);

@@ -60,10 +60,12 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
     }
 
     private static void handleExit(Player player, Exit exit) {
-        exit.module.getLevel().handleExit(exit);
         if (Main.AI && player instanceof Ghost) { // kill ghost if has reached exit
             player.getComponent(HealthComponent.class).health = 0;
+        } else if (player instanceof  Ghost) {
+            return;
         }
+        exit.module.getLevel().handleExit(exit);
         // after player exit interaction we dont want to fix their positions (we are just going to execute the exit action)
         CollisionComponent pcc = Mappers.collisionMapper.get(player);
         pcc.collisions.remove(exit);

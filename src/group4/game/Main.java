@@ -130,8 +130,8 @@ public class Main implements Runnable {
 
             engine.addSystem(new MobMovementSystem());
 
-            engine.addSystem(new BulletMovementSystem());
             engine.addSystem(new ShootingSystem());
+            engine.addSystem(new BulletMovementSystem());
             engine.addSystem(new CollisionSystem());
             engine.addSystem(new CollisionEventSystem());
             engine.addSystem(new UncollidingSystem());

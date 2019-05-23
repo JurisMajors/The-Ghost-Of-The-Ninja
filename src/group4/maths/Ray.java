@@ -34,7 +34,6 @@ public class Ray {
     public Ray(Vector3f startingPos, Vector3f dir, List<Class<? extends Component>> ignorableComponents, float length) {
         this.startPos = startingPos;
         this.dir = dir;
-        // TODO have smarter scaling to end point
         this.end = this.startPos.add(this.dir.normalized().scale(length));
         this.ignorableComponents = ignorableComponents;
     }
