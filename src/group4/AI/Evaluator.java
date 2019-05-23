@@ -57,8 +57,10 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         this.timer = new Timer();
         // register systems to engine
         // initSystems(TheEngine.getInstance());
-        Shader.loadAllShaders();
-        Texture.loadAllTextures();
+        if (Main.SHOULD_OPENGL) {
+            Shader.loadAllShaders();
+            Texture.loadAllTextures();
+        }
 
     }
 

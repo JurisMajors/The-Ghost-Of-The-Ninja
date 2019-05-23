@@ -12,6 +12,8 @@ import org.uncommons.watchmaker.framework.termination.GenerationCount;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -62,7 +64,7 @@ public class Evolver {
     /** Path to save trained models**/
     public static final String path = "src/group4/AI/models/";
     /** Path for loading the module to train on **/
-    public static final String modulePath = "./src/group4/levelSystem/modules/TiledModules/simpleModule.json";
+    public static String modulePath = "./src/group4/levelSystem/modules/TiledModules/simpleModule.json";
     /**
      * whether to render
      */
@@ -105,9 +107,11 @@ public class Evolver {
         Brain result = engine.evolve(Evolver.populationSize, Evolver.elitism,
                 new GenerationCount(Evolver.genCount),
                 new TargetFitness(Evolver.maxFit, true));
-
-        // uncomment to save resulting weights
-        // Evolver.toFile(result + "BEST", path);
+        try {
+            Evolver.toFile(result, path);
+        }catch (IOException e) {
+            System.err.println("Warning: Could not save final model on path:\n" + path);
+        }
     }
 
 }
