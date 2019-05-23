@@ -7,6 +7,7 @@ import group4.ECS.components.identities.ConsumableComponent;
 import group4.ECS.components.physics.*;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.components.stats.RangeWeaponComponent;
 
 /**
  * Mappers retrieve components from entities in O(1) time
@@ -47,8 +48,8 @@ public class Mappers {
     public static final ComponentMapper<RangeComponent> rangeMapper =
             ComponentMapper.getFor(RangeComponent.class);
 
-    public static final ComponentMapper<ShootingComponent> shootingMapper =
-            ComponentMapper.getFor(ShootingComponent.class);
+    public static final ComponentMapper<RangeWeaponComponent> shootingMapper =
+            ComponentMapper.getFor(RangeWeaponComponent.class);
 
     public static final ComponentMapper<CollisionComponent> collisionMapper =
             ComponentMapper.getFor(CollisionComponent.class);

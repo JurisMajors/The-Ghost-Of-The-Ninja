@@ -1,7 +1,7 @@
 package group4.ECS.entities.items.weapons;
 
 import group4.ECS.components.GraphicsComponent;
-import group4.ECS.components.stats.WeaponComponent;
+import group4.ECS.components.stats.RangeWeaponComponent;
 import group4.ECS.etc.EntityConst;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -22,7 +22,7 @@ public class AK47 extends Gun {
                 this.vertices, this.indices, this.tcs));
 
         // TODO: damage-system
-        this.add(new WeaponComponent(600, EntityConst.BulletType.MACHINEGUN));
+        this.add(new RangeWeaponComponent(10, 50, new Vector3f(), new Vector3f()));
     }
 
 }

@@ -3,13 +3,14 @@ package group4.ECS.etc;
 import com.badlogic.ashley.core.Family;
 import group4.ECS.components.AudioComponent;
 import group4.ECS.components.GraphicsComponent;
-import group4.ECS.components.ShootingComponent;
+import group4.ECS.components.stats.RangeWeaponComponent;
 import group4.ECS.components.SplineComponent;
 import group4.ECS.components.identities.*;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PhysicsComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
 
@@ -93,7 +94,7 @@ public class Families {
 
     // all shooting entities
     public static final Family shootingFamily = Family
-            .all(ShootingComponent.class).get();
+            .all(RangeWeaponComponent.class).get();
 
     // all bullets
     public static final Family bulletFamily = Family
@@ -109,6 +110,7 @@ public class Families {
     //All entities with which collision is possible
     public static final Family collidableFamily = Family
             .all(CollisionComponent.class).exclude(MovementComponent.class).get();
+
     //All entities with which collision is possible
     public static final Family collidableMovingFamily = Family
             .all(CollisionComponent.class, MovementComponent.class).get();
@@ -119,4 +121,7 @@ public class Families {
 
     public static final Family allCollidableFamily = Family
             .all(CollisionComponent.class).get();
+
+    public static final Family damageFamily = Family
+            .all(DamageComponent.class).get();
 }
