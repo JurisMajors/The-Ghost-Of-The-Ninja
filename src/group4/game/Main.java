@@ -13,7 +13,10 @@ import group4.ECS.systems.collision.UncollidingSystem;
 import group4.ECS.systems.death.GhostDyingSystem;
 import group4.ECS.systems.death.MobDyingSystem;
 import group4.ECS.systems.death.PlayerDyingSystem;
-import group4.ECS.systems.movement.*;
+import group4.ECS.systems.movement.BulletMovementSystem;
+import group4.ECS.systems.movement.GhostMovementSystem;
+import group4.ECS.systems.movement.MobMovementSystem;
+import group4.ECS.systems.movement.PlayerMovementSystem;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;
@@ -22,7 +25,6 @@ import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
 import group4.levelSystem.levels.MobTestLevel;
-import group4.levelSystem.levels.TestLevel;
 import group4.levelSystem.levels.TiledLevel;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -34,7 +36,9 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Main implements Runnable {
     private Thread thread;
-    /** enable this if you want to run the genetic algorithm, instead of playing urself **/
+    /**
+     * enable this if you want to run the genetic algorithm, instead of playing urself
+     **/
     public static boolean AI = false;
 
     private Window win;
@@ -120,11 +124,6 @@ public class Main implements Runnable {
             engine.addSystem(new GhostMovementSystem());
 
             engine.addSystem(new MobMovementSystem());
-//            engine.addSystem(new WalkingMobMovementSystem());
-//            engine.addSystem(new JumpingWalkingMobMovementSystem());
-//            engine.addSystem(new JumpingMobMovementSystem());
-//            engine.addSystem(new FlappingMobMovementSystem());
-//            engine.addSystem(new FlyingMobMovementSystem());
 
             engine.addSystem(new BulletMovementSystem());
             engine.addSystem(new ShootingSystem());
@@ -138,7 +137,7 @@ public class Main implements Runnable {
             // Systems which are essentially observers of the changed gamestate
             engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem
             engine.addSystem(new RenderSystem());
-            this.level = new MobTestLevel();
+            this.level = new TiledLevel();
 
         }
         // Initialize the level
