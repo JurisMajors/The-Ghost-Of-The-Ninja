@@ -2,27 +2,65 @@ package group4.graphics;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.lang.Math.max;
 // https://github.com/SilverTiger/lwjgl3-tutorial/blob/master/src/silvertiger/tutorial/lwjgl/text/Font.java
 public class Text {
+    private Map<Character, Glyph> atlas;
+    private Texture texture;
+
+    public Text(java.awt.Font font) {
+        this.atlas = new HashMap<>();
+        this.texture = createAtlas(font);
+    }
+
     private Texture createAtlas(Font font) {
         int width = 0;
         int height = 0;
-        
+
+        // We skip 0 to 31 as they are just ascii control codes
         for (int i = 32; i < 256; i++) {
-            if (i == 127) continue;
-            
+            if (i == 127) continue; // Another control code
+
             char c = (char) i;
             BufferedImage glyphImage = createGlyphImage(font, c);
 
-            width += glyphImage.getWidth();
-            height = max(height, glyphImage.getHeight());
+            width += glyphImage.getWidth(); // Update the width of the image to store this additional character
+            height = max(height, glyphImage.getHeight()); // Update the height the image should be
         }
 
-//        fontHeight = height;
+        int fontHeight = height;
+
+        BufferedImage atlasImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = atlasImage.createGraphics();
+
+        int x = 0; // For tracking the start position of the next character in the atlas
+
+        // We skip 0 to 31 as they are just ascii control codes
+        for (int i = 32; i < 256; i++) {
+            if (i == 127) continue; // Another control code
+
+            char c = (char) i;
+            BufferedImage glyphImage = createGlyphImage(font, c);
+            int glyphWidth = glyphImage.getWidth();
+            int glyphHeight = glyphImage.getHeight();
+
+            Glyph glyph = new Glyph(glyphWidth, glyphHeight, x, atlasImage.getHeight() - glyphHeight, 0.0f);
+            g.drawImage(glyphImage, x, 0, null);
+            x += glyph.width;
+            atlas.put(c, glyph);
+        }
+
+        return new Texture("");
     }
 
+    /**
+     * @param font
+     * @param c
+     * @return
+     */
     private BufferedImage createGlyphImage(Font font, char c) {
         BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB); // Optional??
         Graphics2D g = image.createGraphics(); // Container which enables us to draw into
