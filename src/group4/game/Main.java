@@ -210,7 +210,7 @@ public class Main implements Runnable {
 
     public static void main(String[] args) {
         if (Main.AI && args.length != 0) {
-            Evolver.modulePath = args[0];
+            Evolver.parseArgs(args);
         }
         new Main().start();
     }
