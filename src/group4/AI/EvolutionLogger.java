@@ -53,8 +53,8 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
      */
     @Override
     public void populationUpdate(PopulationData<? extends Brain> data) {
-        String log = String.format("Current generation: %d \n Mean Fitness: %f \n Best Fitness: %f \n STD fitness : %f",
-                data.getGenerationNumber(), data.getMeanFitness(),
+        String log = String.format("Current generation: %d / %d \n Mean Fitness: %f \n Best Fitness: %f \n STD fitness: %f",
+                data.getGenerationNumber(), Evolver.genCount, data.getMeanFitness(),
                 data.getBestCandidateFitness(), data.getFitnessStandardDeviation());
 
         System.out.println(log);
