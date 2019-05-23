@@ -37,7 +37,7 @@ public class Ghost extends Player {
         this(position, level, new Brain(brainPath));
     }
 
-    public String getName() {
+    public static String getName() {
         return "Ghost";
     }
 }
