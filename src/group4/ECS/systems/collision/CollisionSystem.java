@@ -64,10 +64,6 @@ public class CollisionSystem extends IteratingSystem {
             if (intersection == null) {
                 continue;
             }
-            if (e instanceof Player && !(e instanceof Ghost)) {
-                System.out.println(other.getClass().getName());
-            }
-
 
             // Get displacement vector
             Vector3f displacement = processCollision(e, other);
