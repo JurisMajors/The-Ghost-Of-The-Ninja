@@ -1,15 +1,16 @@
-package group4.ECS.systems.movement;
+package group4.ECS.systems.movement.MovementHandlers;
 
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.stats.MovementComponent;
-import group4.ECS.etc.Families;
+import group4.ECS.entities.mobs.FlyingMob;
 import group4.maths.Vector3f;
 
-public class FlyingMobMovementSystem extends MobMovementSystem {
+public class FlyingMobMovementHandler extends AbstractMovementHandler<FlyingMob> {
 
-    public FlyingMobMovementSystem() {
-        super(Families.flyingMobFamily);
-    }
+    /**
+     * Singleton
+     **/
+    private static AbstractMovementHandler me = new FlyingMobMovementHandler();
 
     @Override
     protected boolean canJump(Vector3f velocity) {
@@ -26,5 +27,9 @@ public class FlyingMobMovementSystem extends MobMovementSystem {
     @Override
     protected void doGravity(MovementComponent mc, GravityComponent gc) {
         // flying mobs are not affected by gravity
+    }
+
+    public static AbstractMovementHandler getInstance() {
+        return me;
     }
 }
