@@ -88,6 +88,9 @@ public class CollisionSystem extends IteratingSystem {
         Vector3f tr = pc.position.add(dc.dimension);
         Vector3f tl = pc.position.add(new Vector3f(0.0f, dc.dimension.y, dc.dimension.z));
 
+        int[] codes = new int[]{0, 1, 2, 3};
+        Vector3f[] corners = new Vector3f[]{bl, br, tr, tl};
+
         // loop through all collidable splines
         for (Entity spline : entities) {
             // don't do collision with the same object
@@ -100,6 +103,7 @@ public class CollisionSystem extends IteratingSystem {
 
             // store the smallest vector that goes from a spline point to one of the points in the bounding box
             Vector3f smallestDisplacement = new Vector3f(1000f, 1000f, 1000f);
+            int smallestCode = -1;
 
             // store the point on the spline that is closest to the closest bounding box point
             Vector3f closestPoint = null;
@@ -115,11 +119,17 @@ public class CollisionSystem extends IteratingSystem {
                 // change the spline coords to world space
                 Vector3f worldPoint = point.add(spc.position);
 
+                for (int k = 0; k < 4; k++) {
+                    if (corners[k].sub(worldPoint).length() < smallestDisplacement.length()) {
+                        smallestDisplacement = corners[k].sub(worldPoint);
+                        smallestCode = k;
+                    }
+                }
                 // compute difference with bounding box point and spline point and store the smallest displacement
-                smallestDisplacement = Vector3f.min(smallestDisplacement, bl.sub(worldPoint));
-                smallestDisplacement = Vector3f.min(smallestDisplacement, br.sub(worldPoint));
-                smallestDisplacement = Vector3f.min(smallestDisplacement, tr.sub(worldPoint));
-                smallestDisplacement = Vector3f.min(smallestDisplacement, tl.sub(worldPoint));
+//                smallestDisplacement = Vector3f.min(smallestDisplacement, bl.sub(worldPoint));
+//                smallestDisplacement = Vector3f.min(smallestDisplacement, br.sub(worldPoint));
+//                smallestDisplacement = Vector3f.min(smallestDisplacement, tr.sub(worldPoint));
+//                smallestDisplacement = Vector3f.min(smallestDisplacement, tl.sub(worldPoint));
 
                 // get closest point to the bounding box
                 if (smallestDisplacement.length() < oldSmallest.length()) {
@@ -137,14 +147,23 @@ public class CollisionSystem extends IteratingSystem {
             // get the position on the spline edge closest to the bounding box
             Vector3f newPos = closestPoint.add(clostestNormal);
 
+            if (smallestCode == 1) {
+                newPos.x -= dc.dimension.x;
+            } else if (smallestCode == 2) {
+                newPos.x -= dc.dimension.x;
+                newPos.y -= dc.dimension.y;
+            } else if (smallestCode == 3) {
+                newPos.y -= dc.dimension.y;
+            }
+
             // if the smallest displacement is smaller than half of the thickness there is a collision
             if (smallestDisplacement.length() <= sc.normals[0].scale(0.5f * sc.thickness).length()) {
                 smallestDisplacement.scalei(smallestDisplacement.sub(sc.normals[0].scale(0.5f * sc.thickness)).length());
                 CollisionComponent scc = Mappers.collisionMapper.get(spline);
 
                 // add collision to entity and spline
-                CollisionData c1 = new CollisionData(spline, smallestDisplacement);
-                CollisionData c2 = new CollisionData(e, smallestDisplacement.scale(-1.0f));
+                CollisionData c1 = new CollisionData(spline, smallestDisplacement, newPos);
+                CollisionData c2 = new CollisionData(e, smallestDisplacement.scale(-1.0f), newPos);
                 cc.collisions.add(c1);
                 scc.collisions.add(c2);
             }
