@@ -44,6 +44,7 @@ public class UncollidingSystem extends IteratingSystem {
             // if there is a new position component in the collision it means its a spline collision and
             // the new position of this entity should be at newpos
             if (cd.newPos != null) {
+                System.out.println(cd.newPos);
                 mc.velocity = new Vector3f();
                 pc.position = cd.newPos;
                 continue;
