@@ -25,6 +25,7 @@ import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
 import group4.levelSystem.levels.MobTestLevel;
+import group4.levelSystem.levels.TestLevel;
 import group4.levelSystem.levels.TiledLevel;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -39,7 +40,11 @@ public class Main implements Runnable {
     /**
      * enable this if you want to run the genetic algorithm, instead of playing urself
      **/
-    public static boolean AI = false;
+    public static final boolean AI = false;
+    /**
+     * whether should do calls to OPENGL
+     **/
+    public static final boolean SHOULD_OPENGL = !Main.AI || Evolver.render;
 
     private Window win;
     public static long window; // The id of the window
@@ -137,7 +142,7 @@ public class Main implements Runnable {
             // Systems which are essentially observers of the changed gamestate
             engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem
             engine.addSystem(new RenderSystem());
-            this.level = new TiledLevel();
+            this.level = new TestLevel();
 
         }
         // Initialize the level
