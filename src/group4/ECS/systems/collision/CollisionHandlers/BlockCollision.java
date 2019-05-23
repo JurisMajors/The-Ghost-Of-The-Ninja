@@ -1,6 +1,6 @@
 package group4.ECS.systems.collision.CollisionHandlers;
 
-import group4.ECS.components.CollisionComponent;
+import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.entities.world.Block;
 
 public class BlockCollision extends AbstractCollisionHandler<Block> {

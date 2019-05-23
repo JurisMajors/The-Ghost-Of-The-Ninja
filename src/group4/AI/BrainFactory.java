@@ -9,6 +9,7 @@ import java.util.Random;
  */
 public class BrainFactory extends AbstractCandidateFactory<Brain> {
     int[] layerInfo;
+    public static int seed = 1;
     /**
      * Give neural network sizes.
      */
@@ -23,7 +24,7 @@ public class BrainFactory extends AbstractCandidateFactory<Brain> {
             layerInfo[i] = sizes[i - 1];
         }
         // output
-        layerInfo[layerInfo.length - 1] = 4;
+        layerInfo[layerInfo.length - 1] = GhostMove.moveAmount();
 
     }
 

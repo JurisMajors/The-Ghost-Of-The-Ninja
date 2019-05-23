@@ -1,7 +1,11 @@
 package group4.ECS.entities.world;
 
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.components.*;
+import group4.ECS.components.GraphicsComponent;
+import group4.ECS.components.identities.PlatformComponent;
+import group4.ECS.components.physics.CollisionComponent;
+import group4.ECS.components.physics.DimensionComponent;
+import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.systems.collision.CollisionHandlers.PlatformCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -20,17 +24,17 @@ public class Platform extends Entity {
      * @param texture   texture for this platform
      */
     public Platform(Vector3f position, Vector3f dimension, Shader shader, Texture texture) {
+        this(position, dimension);
+        // create the graphics component with a vertex array repeating the texture over this platform
+        GraphicsComponent graphicsComponent = createGraphicsComponent(position, dimension, texture, shader);
+        this.add(graphicsComponent);
+    }
+
+    public Platform(Vector3f position, Vector3f dimension) {
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
         this.add(new PlatformComponent());
-        //TODO: one of these should be redundant and removed
         this.add(new CollisionComponent(PlatformCollision.getInstance()));
-        this.add(new ColliderComponent());
-
-        // create the graphics component with a vertex array repeating the texture over this platform
-        GraphicsComponent graphicsComponent = createGraphicsComponent(position, dimension, texture, shader);
-//        GraphicsComponent graphicsComponent = new GraphicsComponent(shader, texture, dimension);
-        this.add(graphicsComponent);
     }
 
     private GraphicsComponent createGraphicsComponent(Vector3f position, Vector3f dimension, Texture texture, Shader shader) {

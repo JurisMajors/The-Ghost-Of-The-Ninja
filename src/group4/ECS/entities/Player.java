@@ -1,7 +1,14 @@
 package group4.ECS.entities;
 
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.components.*;
+import group4.ECS.components.GraphicsComponent;
+import group4.ECS.components.identities.PlayerComponent;
+import group4.ECS.components.physics.CollisionComponent;
+import group4.ECS.components.physics.DimensionComponent;
+import group4.ECS.components.physics.GravityComponent;
+import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.HealthComponent;
+import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.systems.collision.CollisionHandlers.PlayerCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -14,7 +21,7 @@ public class Player extends Entity {
     /**
      * dimension of player aka bounding box, ghost inherits in order to apply texture
      */
-    protected Vector3f dimension = new Vector3f(1.0f, 1f, 0.0f);
+    protected Vector3f dimension = new Vector3f(1.0f, 1.5f, 0.0f);
 
     /**
      * the level that the player is part of
@@ -61,9 +68,7 @@ public class Player extends Entity {
         this.add(new GraphicsComponent(shader, texture, dimension));
         this.add(new HealthComponent(100));
         this.add(new PlayerComponent());
-        //TODO: one of these should be redundant and removed
         this.add(new CollisionComponent(PlayerCollision.getInstance()));
-        this.add(new ColliderComponent());
     }
 
 }

@@ -1,7 +1,7 @@
 package group4.AI.decoders;
 
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.components.MovementComponent;
+import group4.ECS.components.stats.MovementComponent;
 import group4.maths.Vector3f;
 
 /**

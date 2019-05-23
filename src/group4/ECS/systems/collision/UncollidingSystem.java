@@ -2,9 +2,9 @@ package group4.ECS.systems.collision;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
-import group4.ECS.components.CollisionComponent;
-import group4.ECS.components.MovementComponent;
-import group4.ECS.components.PositionComponent;
+import group4.ECS.components.physics.CollisionComponent;
+import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.maths.Vector3f;
@@ -39,24 +39,33 @@ public class UncollidingSystem extends IteratingSystem {
         PositionComponent pc = Mappers.positionMapper.get(e);
         // get all entities that i collide with
         CollisionComponent cc = Mappers.collisionMapper.get(e);
-
+        int resolved = 0; // keep track of resolved collisions
         for (CollisionData cd : cc.collisions) {
             // if there is a new position component in the collision it means its a spline collision and
             // the new position of this entity should be at newpos
             if (cd.newPos != null) {
                 mc.velocity = new Vector3f();
                 pc.position = cd.newPos;
+                continue;
             }
 
             // all normal collisions
             Entity other = cd.entity;
             if (other.equals(e)) continue;
             // get the displacement vector
-            Vector3f colDim = cd.displacement;
-            handleVelocity(mc, colDim);
+            Vector3f trueDisplacement;
 
-            // displace the position
-            curPos.addi(colDim);
+            if (resolved != 0) { // if resolved more than one
+                // recalculate the collision (since position has changed)
+                trueDisplacement = CollisionSystem.processCollision(e, other);
+            } else {
+                trueDisplacement = cd.displacement;
+            }
+
+            handleVelocity(mc, trueDisplacement);
+            // displace the positions
+            curPos.addi(trueDisplacement);
+            resolved ++;
         }
 
         // remove all collisions after fixing them all
