@@ -32,5 +32,7 @@ public class Exit extends Entity {
         this.module = m;
     }
 
-
+    public String getName() {
+        return "Exit";
+    }
 }

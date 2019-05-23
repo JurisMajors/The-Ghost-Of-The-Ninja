@@ -155,4 +155,7 @@ public class Platform extends Entity {
         return result;
     }
 
+    public String getName() {
+        return "Platform";
+    }
 }

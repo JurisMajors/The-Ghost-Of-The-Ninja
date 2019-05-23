@@ -16,4 +16,8 @@ public class JumpingWalkingMob extends Mob {
         super(position, l, JumpingWalkingMobMovementHandler.getInstance());
         this.add(new JumpingWalkingMobComponent());
     }
+
+    public String getName() {
+        return "JumpingWalkingMob";
+    }
 }

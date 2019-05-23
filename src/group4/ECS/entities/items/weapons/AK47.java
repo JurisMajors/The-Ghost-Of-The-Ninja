@@ -25,4 +25,7 @@ public class AK47 extends Gun {
         this.add(new WeaponComponent(600, EntityConst.BulletType.MACHINEGUN));
     }
 
+    public String getName() {
+        return "AK47";
+    }
 }

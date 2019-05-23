@@ -39,4 +39,8 @@ public class Mob extends Entity {
         this.add(new HealthComponent(100));
         this.add(new MobComponent(handler));
     }
+
+    public String getName() {
+        return "Mob";
+    }
 }

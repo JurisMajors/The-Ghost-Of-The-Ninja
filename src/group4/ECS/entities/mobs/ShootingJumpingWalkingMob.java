@@ -17,4 +17,8 @@ public class ShootingJumpingWalkingMob extends Mob {
         this.add(new ShootingComponent(new Vector3f(0.5f, 2.0f, 0.0f), 150));
         this.add(new JumpingWalkingMobComponent());
     }
+
+    public String getName() {
+        return "ShootingJumpingWalkingMob";
+    }
 }
