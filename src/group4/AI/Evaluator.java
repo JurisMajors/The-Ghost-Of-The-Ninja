@@ -75,7 +75,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
 
         // create the ghost
         Entity ghost = new Ghost(
-                startingPos,
+                new Vector3f(startingPos),
                 level,
                 brain);
         engine.addEntity(ghost);
