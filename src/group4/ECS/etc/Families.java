@@ -1,7 +1,17 @@
 package group4.ECS.etc;
 
 import com.badlogic.ashley.core.Family;
-import group4.ECS.components.*;
+import group4.ECS.components.AudioComponent;
+import group4.ECS.components.GraphicsComponent;
+import group4.ECS.components.ShootingComponent;
+import group4.ECS.components.SplineComponent;
+import group4.ECS.components.identities.*;
+import group4.ECS.components.physics.CollisionComponent;
+import group4.ECS.components.physics.DimensionComponent;
+import group4.ECS.components.physics.PhysicsComponent;
+import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.HealthComponent;
+import group4.ECS.components.stats.MovementComponent;
 
 /**
  * This class determines groups (families) of entities which share the same components
@@ -58,13 +68,36 @@ public class Families {
     public static final Family movingNonPlatformFamily = Family
             .all(MovementComponent.class).exclude(PlatformComponent.class).get();
 
-    // all moving mobs except flying mobs
-    public static final Family movingGravityMobFamily = Family
-            .all(GravityComponent.class, MovementComponent.class, MobComponent.class).get();
+    public static final Family mobFamily = Family
+            .all(MobComponent.class).get();
+
+    // all walking mobs
+    public static final Family walkingMobFamily = Family
+            .all(WalkingMobComponent.class).get();
+
+    // all jumping&walking mobs
+    public static final Family jumpingWalkingMobFamily = Family
+            .all(JumpingWalkingMobComponent.class).get();
+
+    // all jumping mobs
+    public static final Family jumpingMobFamily = Family
+            .all(JumpingMobComponent.class).get();
+
+    // all flapping mobs
+    public static final Family flappingMobFamily = Family
+            .all(FlappingMobComponent.class).get();
 
     // all flying mobs
-    public static final Family movingNonGravityMobFamily = Family
-            .all(MovementComponent.class, MobComponent.class).exclude(GravityComponent.class).get();
+    public static final Family flyingMobFamily = Family
+            .all(FlyingMobComponent.class).get();
+
+    // all shooting entities
+    public static final Family shootingFamily = Family
+            .all(ShootingComponent.class).get();
+
+    // all bullets
+    public static final Family bulletFamily = Family
+            .all(BulletComponent.class).get();
 
     // player
     public static final Family playerFamily = Family
@@ -75,12 +108,15 @@ public class Families {
 
     //All entities with which collision is possible
     public static final Family collidableFamily = Family
-            .all(ColliderComponent.class).exclude(MovementComponent.class).get();
+            .all(CollisionComponent.class).exclude(MovementComponent.class).get();
     //All entities with which collision is possible
     public static final Family collidableMovingFamily = Family
-            .all(ColliderComponent.class, MovementComponent.class).get();
+            .all(CollisionComponent.class, MovementComponent.class).get();
 
     //All entities with spline collision
     public static final Family collidableSplineFamily = Family
             .all(SplineComponent.class, CollisionComponent.class).get();
+
+    public static final Family allCollidableFamily = Family
+            .all(CollisionComponent.class).get();
 }

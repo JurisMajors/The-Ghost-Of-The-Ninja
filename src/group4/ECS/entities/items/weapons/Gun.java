@@ -1,7 +1,7 @@
 package group4.ECS.entities.items.weapons;
 
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.components.PositionComponent;
+import group4.ECS.components.physics.PositionComponent;
 import group4.maths.Vector3f;
 
 public class Gun extends Entity {
@@ -14,7 +14,7 @@ public class Gun extends Entity {
             2.0f, 0, 0,
     };
 
-    // Construct index array (used for triangle mesh)
+    // Construct index array (used for geometry mesh)
     protected byte[] indices = new byte[] {
             0, 1, 2,
             2, 3, 0

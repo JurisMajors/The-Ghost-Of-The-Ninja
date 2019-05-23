@@ -4,17 +4,29 @@ import com.badlogic.ashley.core.Engine;
 import group4.AI.Evolver;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.*;
+import group4.ECS.systems.CameraSystem;
+import group4.ECS.systems.RenderSystem;
+import group4.ECS.systems.ShootingSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
 import group4.ECS.systems.collision.UncollidingSystem;
+import group4.ECS.systems.death.GhostDyingSystem;
+import group4.ECS.systems.death.MobDyingSystem;
+import group4.ECS.systems.death.PlayerDyingSystem;
+import group4.ECS.systems.movement.BulletMovementSystem;
+import group4.ECS.systems.movement.GhostMovementSystem;
+import group4.ECS.systems.movement.MobMovementSystem;
+import group4.ECS.systems.movement.PlayerMovementSystem;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
+import group4.graphics.TileMapping;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
+import group4.levelSystem.levels.MobTestLevel;
 import group4.levelSystem.levels.TestLevel;
+import group4.levelSystem.levels.TiledLevel;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
@@ -25,8 +37,14 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Main implements Runnable {
     private Thread thread;
-    /** enable this if you want to run the genetic algorithm, instead of playing urself **/
-    public static boolean AI = false;
+    /**
+     * enable this if you want to run the genetic algorithm, instead of playing urself
+     **/
+    public static final boolean AI = false;
+    /**
+     * whether should do calls to OPENGL
+     **/
+    public static final boolean SHOULD_OPENGL = !Main.AI || Evolver.render;
 
     private Window win;
     public static long window; // The id of the window
@@ -35,7 +53,7 @@ public class Main implements Runnable {
     private Level level;
     private Engine engine;
 
-    public static final float SCREEN_WIDTH = 20.0f;
+    public static final float SCREEN_WIDTH = 16.5f;
     public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
 
 
@@ -100,6 +118,7 @@ public class Main implements Runnable {
 
         Shader.loadAllShaders();
         Texture.loadAllTextures();
+        TileMapping.loadAllTileMappings();
 
         // Initialize the engine
         engine = TheEngine.getInstance();
@@ -108,18 +127,25 @@ public class Main implements Runnable {
             // Systems which change the gamestate
             engine.addSystem(new PlayerMovementSystem());
             engine.addSystem(new GhostMovementSystem());
+
+            engine.addSystem(new MobMovementSystem());
+
+            engine.addSystem(new ShootingSystem());
+            engine.addSystem(new BulletMovementSystem());
             engine.addSystem(new CollisionSystem());
             engine.addSystem(new CollisionEventSystem());
             engine.addSystem(new UncollidingSystem());
             engine.addSystem(new PlayerDyingSystem(true));
             engine.addSystem(new GhostDyingSystem(false));
+            engine.addSystem(new MobDyingSystem());
 
             // Systems which are essentially observers of the changed gamestate
             engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem
             engine.addSystem(new RenderSystem());
-
             this.level = new TestLevel();
+
         }
+        // Initialize the level
     }
 
     /**

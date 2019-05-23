@@ -1,7 +1,7 @@
 package group4.ECS.systems.collision.CollisionHandlers;
 
-import group4.ECS.components.CollisionComponent;
-import group4.ECS.entities.items.weapons.Bullet;
+import group4.ECS.components.physics.CollisionComponent;
+import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.etc.TheEngine;
 
 public class BulletCollision extends AbstractCollisionHandler<Bullet> {

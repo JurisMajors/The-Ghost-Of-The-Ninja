@@ -10,11 +10,12 @@ public class SimpleLevel extends Level {
 
     @Override
     protected Module createRoot() {
-        return new SimpleModule(this);
+        return new SimpleModule(this, null);
     }
 
     @Override
     protected void createAdditionalModules() {
+        // For now I'll not add additional modules to this level
         return;
     }
 
@@ -22,6 +23,12 @@ public class SimpleLevel extends Level {
     protected Player createPlayer() {
         // We don't care about the player position, as that will be initialized on level switching
         return new Player(new Vector3f(), this);
+    }
+
+    @Override
+    protected void configExits() {
+        // This level's modules don't have exits
+        return;
     }
 
 }

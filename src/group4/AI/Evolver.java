@@ -40,7 +40,7 @@ public class Evolver {
     /**
      * hidden layer sizes (dont include input/output)
      **/
-    public final static int[] layerSizes = new int[]{100};
+    public final static int[] layerSizes = new int[]{10};
     /**
      * decoder of gamestates
      **/
@@ -57,18 +57,20 @@ public class Evolver {
      * Crossover
      **/
     private static AbstractBrainCrossover crossover = new StandardCrossover();
-    /** TODO: find feasible time limit **/
+    /** time limit for the module to train, after this time has reached, the ghost is killed **/
     public static double timelimit = 5.00;
-    /** Model path **/
+    /** Path to save trained models**/
     public static final String path = "src/group4/AI/models/";
+    /** Path for loading the module to train on **/
+    public static final String modulePath = "./src/group4/levelSystem/modules/TiledModules/simpleModule.json";
     /**
      * whether to render
      */
-    public static final boolean render = true;
+    public static final boolean render = false;
     /**
      * Currently not supported for GA
      */
-    public static final boolean multiThreaded = false;
+    public static final boolean multiThreaded = true;
 
     private static void toFile(Brain b, String filePath) throws IOException {
         b.toFile(filePath);

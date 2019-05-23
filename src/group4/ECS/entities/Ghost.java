@@ -1,7 +1,8 @@
 package group4.ECS.entities;
 
 import group4.AI.Brain;
-import group4.ECS.components.*;
+import group4.ECS.components.GraphicsComponent;
+import group4.ECS.components.identities.GhostComponent;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
@@ -28,7 +29,7 @@ public class Ghost extends Player {
         this.remove(GraphicsComponent.class);
 
         //// add needed components
-        this.add(new GraphicsComponent(shader, texture, new Vector3f(1.0f, 1.0f, 0.0f)));
+        this.add(new GraphicsComponent(shader, texture, this.dimension));
         this.add(new GhostComponent(brain));
     }
 

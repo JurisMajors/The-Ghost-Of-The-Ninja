@@ -1,7 +1,7 @@
 package group4.ECS.entities.world;
 
-import group4.ECS.components.MovementComponent;
 import group4.ECS.components.RangeComponent;
+import group4.ECS.components.stats.MovementComponent;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
