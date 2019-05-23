@@ -2,6 +2,7 @@ package group4.ECS.entities.mobs;
 
 import group4.ECS.components.stats.RangeWeaponComponent;
 import group4.ECS.components.identities.JumpingWalkingMobComponent;
+import group4.ECS.systems.movement.MovementHandlers.JumpingWalkingMobMovementHandler;
 import group4.levelSystem.Level;
 import group4.maths.Vector3f;
 
@@ -12,8 +13,8 @@ public class ShootingJumpingWalkingMob extends Mob {
      * @param position left-bottom-back corner of the cuboid representing the mob
      */
     public ShootingJumpingWalkingMob(Vector3f position, Level l) {
-        super(position, l);
-        this.add(new RangeWeaponComponent(new Vector3f(0.5f, 2.0f, 0.0f), 150));
+        super(position, l, JumpingWalkingMobMovementHandler.getInstance());
+        this.add(new RangeWeaponComponent(10, 10, new Vector3f(), new Vector3f(0.5f, 2.0f, 0.0f)));
         this.add(new JumpingWalkingMobComponent());
     }
 }

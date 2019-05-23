@@ -2,7 +2,9 @@ package group4.levelSystem.levels;
 
 import group4.ECS.entities.Player;
 import group4.ECS.entities.mobs.*;
+import group4.ECS.entities.world.Exit;
 import group4.ECS.etc.TheEngine;
+import group4.levelSystem.ExitAction;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
 import group4.levelSystem.modules.TestModule;
@@ -38,6 +40,19 @@ public class MobTestLevel extends Level {
     @Override
     protected void configExits() {
         // The MobTestLevel uses the SimpleModule, which doesn't have exits, so we do not need to configure them
+        ExitAction global = new ExitAction() {
+            @Override
+            public void exit() {
+                System.out.println("Reached the exit :-)");
+            }
+        };
+
+        for (Module m : this.modules) {
+            for (Exit e : m.getExits()) {
+                this.setExitAction(e, global);
+            }
+        }
+
         return;
     }
 

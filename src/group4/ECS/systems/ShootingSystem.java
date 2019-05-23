@@ -19,12 +19,14 @@ public class ShootingSystem extends IteratingSystem {
     public void processEntity(Entity entity, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(entity);
         RangeWeaponComponent sc = Mappers.shootingMapper.get(entity);
-        PositionComponent playerPos = Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
+        PositionComponent playerPos = Mappers.positionMapper.get(TheEngine.getInstance()
+                .getEntitiesFor(Families.playerFamily).get(0));
         if (sc.wait < sc.rate) sc.wait++; //count frames until next shot
         else { //shoot
             sc.wait = 0;
             //create new bullet
-            TheEngine.getInstance().addEntity(new Bullet(pc.position.add(sc.position), playerPos.position.sub(pc.position.add(sc.position)).normalized()));
+            TheEngine.getInstance().addEntity(new Bullet(
+                    pc.position.add(sc.bulletPos), playerPos.position.sub(pc.position.add(sc.bulletPos)).normalized()));
         }
     }
 }

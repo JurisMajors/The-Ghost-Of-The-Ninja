@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import group4.ECS.components.*;
 import group4.ECS.components.identities.CameraComponent;
 import group4.ECS.components.identities.ConsumableComponent;
+import group4.ECS.components.identities.MobComponent;
 import group4.ECS.components.physics.*;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
@@ -59,4 +60,7 @@ public class Mappers {
 
     public static final ComponentMapper<SplinePathComponent> splinePathMapper =
             ComponentMapper.getFor(SplinePathComponent.class);
+
+    public static final ComponentMapper<MobComponent> mobMapper =
+            ComponentMapper.getFor(MobComponent.class);
 }

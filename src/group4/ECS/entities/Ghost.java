@@ -29,7 +29,7 @@ public class Ghost extends Player {
         this.remove(GraphicsComponent.class);
 
         //// add needed components
-        this.add(new GraphicsComponent(shader, texture, new Vector3f(1.0f, 1.0f, 0.0f)));
+        this.add(new GraphicsComponent(shader, texture, this.dimension));
         this.add(new GhostComponent(brain));
     }
 

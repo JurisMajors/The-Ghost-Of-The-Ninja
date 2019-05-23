@@ -10,6 +10,7 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.systems.collision.CollisionHandlers.MobCollision;
+import group4.ECS.systems.movement.MovementHandlers.AbstractMovementHandler;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
@@ -24,7 +25,7 @@ public class Mob extends Entity {
      *
      * @param position left-bottom-back corner of the cuboid representing the mob
      */
-    public Mob(Vector3f position, Level l) {
+    public Mob(Vector3f position, Level l, AbstractMovementHandler handler) {
         Vector3f velocityRange = new Vector3f(0.05f, 0.25f, 0.0f);//velocity range
         Shader shader = Shader.SIMPLE;//shader
         Texture texture = Texture.EXIT;//texture
@@ -36,6 +37,6 @@ public class Mob extends Entity {
         this.add(new GraphicsComponent(shader, texture, dimension));
         this.add(new CollisionComponent(MobCollision.getInstance()));
         this.add(new HealthComponent(100));
-        this.add(new MobComponent());
+        this.add(new MobComponent(handler));
     }
 }
