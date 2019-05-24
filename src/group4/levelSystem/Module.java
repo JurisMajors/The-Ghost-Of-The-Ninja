@@ -267,11 +267,12 @@ public class Module {
      *
      * @param x the x position of the platform in the module grid
      * @param y the y position of the platform in the module grid
+     * @param i the identifier for the tile within the TileMap
      */
-    private void addPlatform(int x, int y) {
+    private void addPlatform(int x, int y, int i) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
         Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
-        Platform p = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.BRICK);
+        Platform p = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
         this.addEntity(p);
     }
 
@@ -280,11 +281,12 @@ public class Module {
      *
      * @param x the x position of the exit in the module grid
      * @param y the y position of the exit in the module grid
+     * @param i the identifier for the tile within the TileMap
      */
-    private void addExit(int x, int y) {
+    private void addExit(int x, int y, int i) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
         Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
-        Exit e = new Exit(tempPosition, tempDimension, this);
+        Exit e = new Exit(tempPosition, tempDimension, this, TileMapping.MAIN.get(i));
         this.addEntity(e);
     }
 
