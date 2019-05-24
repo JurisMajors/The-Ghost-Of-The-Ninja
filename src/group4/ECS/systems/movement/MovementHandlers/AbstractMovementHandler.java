@@ -87,12 +87,11 @@ public abstract class AbstractMovementHandler<T extends Mob> {
         }
 
         if (needsToMove) {
-            // determine the velocity for this mob
+            // get velocity for mob
             move(entity, targetPosition, deltaTime);
         } else {
             mc.velocity.x = 0;
         }
-
         // apply gravity
         doGravity(mc, gc);
 

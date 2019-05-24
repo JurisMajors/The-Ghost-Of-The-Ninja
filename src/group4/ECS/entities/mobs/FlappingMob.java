@@ -16,4 +16,8 @@ public class FlappingMob extends Mob {
         super(position, l, FlappingMobMovementHandler.getInstance());
         this.add(new FlappingMobComponent());
     }
+
+    public static String getName() {
+        return "FlappingMob";
+    }
 }

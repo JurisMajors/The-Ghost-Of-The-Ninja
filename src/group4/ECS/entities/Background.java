@@ -31,4 +31,7 @@ public class Background extends Entity {
         this.add(new GraphicsComponent(shader, texture, dimension, Layer.BACKGROUND));
     }
 
+    public static String getName() {
+        return "Background";
+    }
 }
