@@ -12,6 +12,7 @@ import group4.ECS.etc.TheEngine;
 import group4.game.Main;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
+import group4.graphics.TileMapping;
 import group4.maths.Vector3f;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -136,38 +137,37 @@ public class Module {
         for (int i = 0; i < layers.length(); i++) {
             JSONObject layer = layers.getJSONObject(i);
             if (layer.getString("name").equals("MAIN")) {
-                if (layer.getBoolean("visible")) {
-                    // Get height and width of layer
-                    int layerHeight = layer.getInt("height");
-                    int layerWidth = layer.getInt("width");
+                // Get height and width of layer
+                int layerHeight = layer.getInt("height");
+                int layerWidth = layer.getInt("width");
 
-                    // Loop over the data grid
-                    JSONArray data = layer.getJSONArray("data");
-                    for (int tile = 0; tile < data.length(); tile++) {
-                        // Get the grid position of the tile
-                        int tileGridY = layerHeight - 1 - (int) Math.floor(tile / layerWidth);
-                        int tileGridX = tile % layerWidth;
+                // Loop over the data grid
+                JSONArray data = layer.getJSONArray("data");
+                for (int tile = 0; tile < data.length(); tile++) {
+                    // Get the grid position of the tile
+                    int tileGridX = tile % layerWidth;
+                    int tileGridY = layerHeight - 1 - (int) Math.floor(tile / layerWidth);
 
-                        // Get the type of the tile
-                        String entityIdentifier = moduleTileMap.get(tile);
+                    // Get the type of the tile
+                    int tileId = Integer.parseInt(data.get(tile).toString()) - 1;
+//                    System.out.println(tileId);
+                    String entityId = moduleTileMap.get(tileId);
 
-                        // TODO: Can't use switch with static function as comparison. i.e. case Platform.getName() is not possible. Something better?
-                        if (entityIdentifier == null) {
-                            continue;
-                        } else if (entityIdentifier.equals(Platform.getName())) {
-                            this.addPlatform(tileGridX, tileGridY);
-                        } else if (entityIdentifier.equals(Exit.getName())) {
-                            this.addExit(tileGridX, tileGridY);
-                        } else if (entityIdentifier.equals(Player.getName())) {
-                            this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
-                        } else {
-                            continue;
-                        }
+                    // TODO: Can't use switch with static function as comparison. i.e. case Platform.getName() is not possible. Something better?
+                    if (entityId == null) {
+                        continue;
+                    } else if (entityId.equals(Platform.getName())) {
+                        this.addPlatform(tileGridX, tileGridY, tileId);
+                    } else if (entityId.equals(Exit.getName())) {
+                        this.addExit(tileGridX, tileGridY, tileId);
+                    } else if (entityId.equals(Player.getName())) {
+                        System.out.println("GOTCHA");
+                        this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
+                    } else {
+                        continue;
                     }
                 }
             }
-
-            // Check that they layer is visible, if so, add its entities to the module
         }
     }
 
