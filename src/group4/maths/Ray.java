@@ -103,28 +103,13 @@ public class Ray {
      */
     public List<Vector3f> intersects(Entity entity) {
         List<Vector3f> intersections = new ArrayList<>();
-        PositionComponent posComp = Mappers.positionMapper.get(entity);
-        DimensionComponent dimComp = Mappers.dimensionMapper.get(entity);
-        Vector3f dim = dimComp.dimension;
-        Vector3f botL = posComp.position;
-
-        // points of the bounding box
-        // the z coordinates dont matter, since we only care about 2D intersection
-        Vector3f botLeft = new Vector3f(botL); // copy botleft
-        Vector3f topLeft = new Vector3f(botLeft.x, botLeft.y + dim.y, botLeft.z);
-        Vector3f topRight = botLeft.add(dim);
-        Vector3f botRight = new Vector3f(botLeft.x + dim.x, botLeft.y, botLeft.z);
-
         // define lines of the bounding box
-        List<Line2D.Float> lines = new ArrayList<>();
+        List<Line2D.Float> lines;
 
         if (entity instanceof SplinePlatform) {
-            addSplineLines(entity, lines);
+            lines = getSplineLines(entity);
         } else {
-            lines.add(createLine(topLeft, topRight));
-            lines.add(createLine(topLeft, botLeft));
-            lines.add(createLine(botLeft, botRight));
-            lines.add(createLine(botRight, topRight));
+            lines = getBBLines(entity);
         }
         // this can be extended for more dimensions if necessary...
         Line2D.Float rayAsLine = createLine(this.startPos, this.end);
@@ -144,12 +129,34 @@ public class Ray {
         return intersections;
     }
 
-    private void addSplineLines(Entity splinePlatform, List<Line2D.Float> lines) {
+    private List<Line2D.Float> getSplineLines(Entity splinePlatform) {
+        List<Line2D.Float> lines = new ArrayList<>();
         PositionComponent pc = Mappers.positionMapper.get(splinePlatform);
         SplineComponent sc = Mappers.splineMapper.get(splinePlatform);
         for (int i = 0; i < sc.points.length - 1; i++) {
             lines.add(createLine(sc.points[i].add(pc.position), sc.points[i + 1].add(pc.position)));
         }
+        return lines;
+    }
+
+    private List<Line2D.Float> getBBLines(Entity entity) {
+        List<Line2D.Float> lines = new ArrayList<>();
+        PositionComponent posComp = Mappers.positionMapper.get(entity);
+        DimensionComponent dimComp = Mappers.dimensionMapper.get(entity);
+        Vector3f dim = dimComp.dimension;
+        Vector3f botL = posComp.position;
+        // points of the bounding box
+        // the z coordinates dont matter, since we only care about 2D intersection
+        Vector3f botLeft = new Vector3f(botL); // copy botleft
+        Vector3f topLeft = new Vector3f(botLeft.x, botLeft.y + dim.y, botLeft.z);
+        Vector3f topRight = botLeft.add(dim);
+        Vector3f botRight = new Vector3f(botLeft.x + dim.x, botLeft.y, botLeft.z);
+
+        lines.add(createLine(topLeft, topRight));
+        lines.add(createLine(topLeft, botLeft));
+        lines.add(createLine(botLeft, botRight));
+        lines.add(createLine(botRight, topRight));
+        return lines;
     }
 
     private Line2D.Float createLine(Vector3f a, Vector3f b) {
