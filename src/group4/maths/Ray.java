@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.SplineComponent;
-import group4.ECS.components.SplinePathComponent;
 import group4.ECS.components.identities.GhostComponent;
 import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.DimensionComponent;
