@@ -13,6 +13,7 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.entities.bullets.Bullet;
 
 /**
  * This class determines groups (families) of entities which share the same components
@@ -67,6 +68,9 @@ public class Families {
 
     public static final Family mobFamily = Family
             .all(MobComponent.class).get();
+
+    public static final Family bulletFamily = Family
+            .all(BulletComponent.class).get();
 
     // all walking mobs
     public static final Family walkingMobFamily = Family

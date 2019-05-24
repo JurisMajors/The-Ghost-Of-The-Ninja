@@ -124,10 +124,7 @@ public class Main implements Runnable {
             // Systems which change the gamestate
             engine.addSystem(new PlayerMovementSystem());
             engine.addSystem(new GhostMovementSystem());
-
             engine.addSystem(new MobMovementSystem());
-
-            engine.addSystem(new ShootingSystem());
             engine.addSystem(new BulletMovementSystem());
             engine.addSystem(new CollisionSystem());
             engine.addSystem(new CollisionEventSystem());

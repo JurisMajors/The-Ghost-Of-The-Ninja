@@ -6,14 +6,10 @@ import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MeleeWeaponComponent;
 import group4.ECS.components.stats.WeaponComponent;
-import group4.ECS.entities.DamageAreaTemp;
-import group4.ECS.entities.bullets.Bullet;
+import group4.ECS.entities.DamageArea;
 import group4.ECS.entities.items.Item;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
-import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.timed.timedEventHandlers.OneTimeHandler;
-import group4.ECS.systems.timed.timedEventHandlers.TimedHandler;
 import group4.input.KeyBoard;
 import group4.maths.Vector3f;
 
@@ -62,9 +58,9 @@ public class PlayerCombatSystem extends IteratingSystem {
                         // if melee
                         if (wc.getClass().equals(MeleeWeaponComponent.class)) {
                             Vector3f position = pc.position.add(((MeleeWeaponComponent)wc).hitboxOffset);
-                            //TODO: orientation of player
-                            new DamageAreaTemp(position, ((MeleeWeaponComponent)wc).hitBox,
-                                    wc.damage, ((MeleeWeaponComponent)wc).attackDuration, new OneTimeHandler());
+                            //TODO: orientation
+                            new DamageArea(position, ((MeleeWeaponComponent)wc).hitBox,
+                                    wc.damage);
                         }
                     }
                 }

@@ -1,13 +1,15 @@
 package group4.ECS.entities;
 
 import com.badlogic.ashley.core.Entity;
+import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.collision.CollisionHandlers.MeleeCollision;
 import group4.maths.Vector3f;
 
-public abstract class DamageArea extends Entity {
+public class DamageArea extends Entity {
 
     /**
      *
@@ -19,6 +21,7 @@ public abstract class DamageArea extends Entity {
 
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
+        this.add(new CollisionComponent(new MeleeCollision()));
         this.add(new DamageComponent(damage));
 
         // add entity to engine on construction

@@ -60,6 +60,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
     private static void handleBullet(Player player, Bullet bullet) {
         HealthComponent h = player.getComponent(HealthComponent.class);
         DamageComponent dmg = bullet.getComponent(DamageComponent.class);
+
         // take damage
         h.health -= dmg.damage;
         // TODO: process knockback

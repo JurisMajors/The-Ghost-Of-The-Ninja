@@ -14,7 +14,6 @@ public class ShootingJumpingWalkingMob extends Mob {
      */
     public ShootingJumpingWalkingMob(Vector3f position, Level l) {
         super(position, l, JumpingWalkingMobMovementHandler.getInstance());
-        this.add(new RangeWeaponComponent(10, 10, new Vector3f(), new Vector3f(0.5f, 2.0f, 0.0f)));
         this.add(new JumpingWalkingMobComponent());
     }
 }

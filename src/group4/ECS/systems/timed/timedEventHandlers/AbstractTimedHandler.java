@@ -1,8 +1,13 @@
 package group4.ECS.systems.timed.timedEventHandlers;
 
-public abstract class AbstractTimedHandler {
+import group4.ECS.components.physics.CollisionComponent;
 
-    public abstract void doOnInit();
-    public abstract void doOnElapsed();
+import javax.swing.text.html.parser.Entity;
+
+public abstract class AbstractTimedHandler<T extends Entity> {
+
+    public abstract void doOnInit(T e, CollisionComponent cc);
+
+    public abstract void doOnElapsed(T e, CollisionComponent cc);
 
 }
