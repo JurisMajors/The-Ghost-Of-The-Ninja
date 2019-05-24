@@ -163,6 +163,7 @@ public class Module {
                     } else if (entityId.equals(Player.getName())) {
                         this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
                     } else {
+                        System.err.println("Some tiles not drawing!");
                         continue;
                     }
                 }

@@ -42,7 +42,7 @@ public class TileMapping {
      */
     private static float[] generateTexCoords(int numTilesX, int numTilesY, int i) {
         int x = i % numTilesX;
-        int y = i / numTilesY;
+        int y = i / numTilesX;
         float hStep = 1.0f / numTilesX;
         float vStep = 1.0f / numTilesY;
         return new float[]{
