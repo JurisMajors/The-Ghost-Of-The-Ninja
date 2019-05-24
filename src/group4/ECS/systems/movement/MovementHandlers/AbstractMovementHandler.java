@@ -2,7 +2,9 @@ package group4.ECS.systems.movement.MovementHandlers;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
+import group4.ECS.components.SplineComponent;
 import group4.ECS.components.SplinePathComponent;
+import group4.ECS.components.identities.GhostComponent;
 import group4.ECS.components.identities.MobComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.GravityComponent;
@@ -29,6 +31,8 @@ public abstract class AbstractMovementHandler<T extends Entity> {
         DimensionComponent dc = Mappers.dimensionMapper.get(entity);
         MovementComponent mc = Mappers.movementMapper.get(entity);
         GravityComponent gc = Mappers.gravityMapper.get(entity);
+
+        boolean needsToMove = true;
 
         // the position that this entity wants to move towards
         Vector3f targetPosition;
@@ -62,11 +66,16 @@ public abstract class AbstractMovementHandler<T extends Entity> {
             }
         } else {
             // don't move
+            needsToMove = false;
             targetPosition = pc.position;
         }
 
-        // process movement events
-        move(entity, targetPosition, deltaTime);
+        if (needsToMove) {
+            // process movement events
+            move(entity, targetPosition, deltaTime);
+        } else {
+            mc.velocity.x = 0;
+        }
         // apply gravity
         doGravity(mc, gc);
 
@@ -147,16 +156,13 @@ public abstract class AbstractMovementHandler<T extends Entity> {
     private boolean canSeePlayer(float angleRange, int nrRays, PositionComponent pc, DimensionComponent dc, MovementComponent mc) {
         List<Class<? extends Component>> seeThrough = new ArrayList<>();
         seeThrough.add(MobComponent.class);
+        seeThrough.add(GhostComponent.class);
+//        seeThrough.add(SplineComponent.class);
 
         // look in the direction the mob is moving
-        Vector3f dir = new Vector3f(mc.velocity);
+        Vector3f dir = new Vector3f(0, 1, 0);
         // center of the mob
         Vector3f center = pc.position.add(dc.dimension.scale(0.5f));
-
-        // no velocity means hes looking to the top
-        if (Math.abs(dir.length()) < 1e04) {
-            dir = new Vector3f(0, 1, 0);
-        }
 
         float deltaTheta = angleRange / (float) nrRays;
         // start at the bottom of the range

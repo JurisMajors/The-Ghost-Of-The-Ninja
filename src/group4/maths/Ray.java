@@ -3,10 +3,13 @@ package group4.maths;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
+import group4.ECS.components.SplineComponent;
+import group4.ECS.components.SplinePathComponent;
 import group4.ECS.components.identities.GhostComponent;
 import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.Mappers;
 
 import java.awt.geom.Line2D;
@@ -65,7 +68,7 @@ public class Ray {
         entity_loop:
         for (Entity e : entities) {
             // ignore entities that contain an ignoreable component
-            for (Class<? extends Component> component: this.ignorableComponents) {
+            for (Class<? extends Component> component : this.ignorableComponents) {
                 // skip this entity
                 if (e.getComponent(component) != null) {
                     continue entity_loop;
@@ -114,10 +117,15 @@ public class Ray {
 
         // define lines of the bounding box
         List<Line2D.Float> lines = new ArrayList<>();
-        lines.add(createLine(topLeft, topRight));
-        lines.add(createLine(topLeft, botLeft));
-        lines.add(createLine(botLeft, botRight));
-        lines.add(createLine(botRight, topRight));
+
+        if (entity instanceof SplinePlatform) {
+            addSplineLines(entity, lines);
+        } else {
+            lines.add(createLine(topLeft, topRight));
+            lines.add(createLine(topLeft, botLeft));
+            lines.add(createLine(botLeft, botRight));
+            lines.add(createLine(botRight, topRight));
+        }
         // this can be extended for more dimensions if necessary...
         Line2D.Float rayAsLine = createLine(this.startPos, this.end);
         // check for intersections on each line
@@ -134,6 +142,14 @@ public class Ray {
         }
 
         return intersections;
+    }
+
+    private void addSplineLines(Entity splinePlatform, List<Line2D.Float> lines) {
+        PositionComponent pc = Mappers.positionMapper.get(splinePlatform);
+        SplineComponent sc = Mappers.splineMapper.get(splinePlatform);
+        for (int i = 0; i < sc.points.length - 1; i++) {
+            lines.add(createLine(sc.points[i].add(pc.position), sc.points[i + 1].add(pc.position)));
+        }
     }
 
     private Line2D.Float createLine(Vector3f a, Vector3f b) {
