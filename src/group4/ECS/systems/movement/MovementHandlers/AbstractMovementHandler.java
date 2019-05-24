@@ -188,7 +188,7 @@ public abstract class AbstractMovementHandler<T extends Mob> {
         final float chaseRange = 6.0f; // once a mob has spotted the player this will be his vision range
         final float viewRange = 2.0f; // if the mob has not spotted the player yet, this is their vision range
 
-        if (canSeePlayer(pc, dc, viewRange)) {
+        if (canSeePlayer(pc, dc, mc.currentVisionRange)) {
             mc.currentVisionRange = chaseRange;
         } else {
             mc.currentVisionRange = viewRange;
