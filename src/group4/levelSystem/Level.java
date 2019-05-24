@@ -1,6 +1,8 @@
 package group4.levelSystem;
 
+import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.etc.TheEngine;

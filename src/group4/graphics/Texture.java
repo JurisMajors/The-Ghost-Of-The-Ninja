@@ -20,6 +20,7 @@ public class Texture {
     public static Texture WHITE;
     public static Texture MAIN_TILES;
     public static Texture BACKGROUND;
+    public static Texture NOTHINGNESS;
 
     // width and height of the texture
     private int width, height;
@@ -44,6 +45,7 @@ public class Texture {
         BACKGROUND = new Texture("src/group4/res/textures/cave.jpg");
         BLACK = new Texture("src/group4/res/textures/black.png");
         WHITE = new Texture("src/group4/res/textures/white.png");
+        NOTHINGNESS = new Texture("src/group4/res/textures/FF4D00-0.png");
     }
 
     /**

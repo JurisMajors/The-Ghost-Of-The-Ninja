@@ -142,7 +142,7 @@ public class Main implements Runnable {
             // Systems which are essentially observers of the changed gamestate
             engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem
             engine.addSystem(new RenderSystem());
-            this.level = new TestLevel();
+            this.level = new TiledLevel();
 
         }
         // Initialize the level
