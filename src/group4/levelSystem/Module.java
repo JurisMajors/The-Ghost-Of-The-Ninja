@@ -150,7 +150,7 @@ public class Module {
 
                     // Get the type of the tile
                     int tileId = Integer.parseInt(data.get(tile).toString()) - 1;
-//                    System.out.println(tileId);
+
                     String entityId = moduleTileMap.get(tileId);
 
                     // TODO: Can't use switch with static function as comparison. i.e. case Platform.getName() is not possible. Something better?
@@ -161,7 +161,6 @@ public class Module {
                     } else if (entityId.equals(Exit.getName())) {
                         this.addExit(tileGridX, tileGridY, tileId);
                     } else if (entityId.equals(Player.getName())) {
-                        System.out.println("GOTCHA");
                         this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
                     } else {
                         continue;
