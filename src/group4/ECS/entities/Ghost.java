@@ -36,4 +36,8 @@ public class Ghost extends Player {
     public Ghost (Vector3f position, Level level, String brainPath) {
         this(position, level, new Brain(brainPath));
     }
+
+    public static String getName() {
+        return "Ghost";
+    }
 }

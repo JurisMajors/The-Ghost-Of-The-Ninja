@@ -46,7 +46,7 @@ public class TestModule extends Module {
                             new Vector3f(0.0f, 2.0f + i * 1.0f, 0.0f),
                             Shader.SIMPLE,
                             Texture.MAIN_TILES,
-                            TileMapping.MAIN.WALL_LEFT1
+                            TileMapping.MAIN.get(10)
                     )
             );
         }
@@ -60,7 +60,7 @@ public class TestModule extends Module {
                                     new Vector3f(j * 1.0f, i * 1.0f, 0.0f),
                                     Shader.SIMPLE,
                                     Texture.MAIN_TILES,
-                                    TileMapping.MAIN.WALL_CORNER_LEFT1
+                                    TileMapping.MAIN.get(10)
                             )
                     );
                 } else {
@@ -69,7 +69,7 @@ public class TestModule extends Module {
                                     new Vector3f(j * 1.0f, i * 1.0f, 0.0f),
                                     Shader.SIMPLE,
                                     Texture.MAIN_TILES,
-                                    TileMapping.MAIN.FLOOR1
+                                    TileMapping.MAIN.get(1)
                             )
                     );
                 }
@@ -125,7 +125,7 @@ public class TestModule extends Module {
                             new Vector3f(9.0f + i * 1.0f, 2.0f, 0.0f),
                             Shader.SIMPLE,
                             Texture.MAIN_TILES,
-                            TileMapping.MAIN.FLOOR1                    )
+                            TileMapping.MAIN.get(1)                    )
             );
         }
 
@@ -135,7 +135,7 @@ public class TestModule extends Module {
                             new Vector3f(11.0f + i * 1.0f, 3.0f, 0.0f),
                             Shader.SIMPLE,
                             Texture.MAIN_TILES,
-                            TileMapping.MAIN.FLOOR1                    )
+                            TileMapping.MAIN.get(1)                    )
             );
         }
 
@@ -145,7 +145,7 @@ public class TestModule extends Module {
                             new Vector3f(13.0f + i * 1.0f, 4.0f, 0.0f),
                             Shader.SIMPLE,
                             Texture.MAIN_TILES,
-                            TileMapping.MAIN.FLOOR1                    )
+                            TileMapping.MAIN.get(1)                    )
             );
         }
 
@@ -159,7 +159,7 @@ public class TestModule extends Module {
                             new Vector3f(29.0f + i * 1.0f, 2.0f, 0.0f),
                             Shader.SIMPLE,
                             Texture.MAIN_TILES,
-                            TileMapping.MAIN.FLOOR1                    )
+                            TileMapping.MAIN.get(1)                    )
             );
         }
 
@@ -169,7 +169,7 @@ public class TestModule extends Module {
                             new Vector3f(31.0f + i * 1.0f, 3.0f, 0.0f),
                             Shader.SIMPLE,
                             Texture.MAIN_TILES,
-                            TileMapping.MAIN.FLOOR1                    )
+                            TileMapping.MAIN.get(1)                    )
             );
         }
       

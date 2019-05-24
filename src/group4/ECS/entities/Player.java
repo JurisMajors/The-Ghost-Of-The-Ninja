@@ -71,4 +71,7 @@ public class Player extends Entity {
         this.add(new CollisionComponent(PlayerCollision.getInstance()));
     }
 
+    public static String getName() {
+        return "Player";
+    }
 }
