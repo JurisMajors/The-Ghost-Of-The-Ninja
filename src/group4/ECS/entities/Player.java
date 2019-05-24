@@ -54,7 +54,7 @@ public class Player extends Entity {
         // shader
         Shader shader = Shader.SIMPLE;
         // TODO: proper texture
-        Texture texture = Texture.DEBUG;
+        Texture texture = Texture.PLAYER;
 
         // Level
         this.level = level;
