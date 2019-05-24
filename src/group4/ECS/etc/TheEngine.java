@@ -12,10 +12,10 @@ public class TheEngine {
     /** ThreadID -> Engine Instance **/
     private static HashMap<Long, Engine> threadEngines = new HashMap<>();
 
-    public static Engine getInstance() {
+    public synchronized static Engine getInstance() {
         long ID = Thread.currentThread().getId(); // get the id of the thread that this was called from
         // if it hasnt been called on that thread before
-        if (!threadEngines.containsKey(ID)) {
+        if (!threadEngines.containsKey(ID) || threadEngines.get(ID) == null) {
             // create a new engine for that thread
             threadEngines.put(ID, new Engine());
         }

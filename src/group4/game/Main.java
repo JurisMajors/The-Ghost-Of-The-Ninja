@@ -1,4 +1,4 @@
-package group4.game;
+        package group4.game;
 
 import com.badlogic.ashley.core.Engine;
 import group4.AI.Evolver;
@@ -69,20 +69,21 @@ public class Main implements Runnable {
      * The main logic for controlling the program flow of this class.
      */
     public void run() {
-        init();
+        if (Main.SHOULD_OPENGL) init();
         if (AI) {
             Evolver.train();
         } else {
             loop();
         }
+        if (Main.SHOULD_OPENGL) {
+            // Cleanup after we exit the game loop
+            glfwFreeCallbacks(window); // Free the window callbacks
+            glfwDestroyWindow(window); // Destroy the window
 
-        // Cleanup after we exit the game loop
-        glfwFreeCallbacks(window); // Free the window callbacks
-        glfwDestroyWindow(window); // Destroy the window
-
-        // Terminate GLFW and free the error callback
-        glfwTerminate();
-        glfwSetErrorCallback(null).free();
+            // Terminate GLFW and free the error callback
+            glfwTerminate();
+            glfwSetErrorCallback(null).free();
+        }
     }
 
     /**
@@ -208,6 +209,9 @@ public class Main implements Runnable {
     }
 
     public static void main(String[] args) {
+        if (Main.AI && args.length != 0) {
+            Evolver.parseArgs(args);
+        }
         new Main().start();
     }
 

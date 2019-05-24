@@ -57,8 +57,10 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         this.timer = new Timer();
         // register systems to engine
         // initSystems(TheEngine.getInstance());
-        Shader.loadAllShaders();
-        Texture.loadAllTextures();
+        if (Main.SHOULD_OPENGL) {
+            Shader.loadAllShaders();
+            Texture.loadAllTextures();
+        }
 
     }
 
@@ -137,13 +139,13 @@ public class Evaluator implements FitnessEvaluator<Brain> {
     /**
      * registers all necessary systems for running a minimal game for the AI
      */
-    private void initSystems(Engine e) {
+    private void initSystems(Engine engine) {
+//        System.out.println(engine);
         // clear all systems for robustness
-        for (EntitySystem system : e.getSystems()) {
-            e.removeSystem(system);
+        for (EntitySystem system : engine.getSystems()) {
+            engine.removeSystem(system);
         }
 
-        Engine engine = TheEngine.getInstance();
         if (Evolver.render) {
             engine.addSystem(new CameraSystem(Families.ghostFamily));
         }
