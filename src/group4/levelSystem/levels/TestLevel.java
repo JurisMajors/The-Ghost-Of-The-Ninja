@@ -27,7 +27,6 @@ public class TestLevel extends Level {
     protected Player createPlayer() {
         //temporary add mob to the level here
         TheEngine.getInstance().addEntity(new ShootingJumpingWalkingMob(new Vector3f(15.0f, 10.0f, 0.0f), this));
-
         // We don't care about the player position, as that will be initialized on level switching
         return new Player(new Vector3f(), this);
     }
