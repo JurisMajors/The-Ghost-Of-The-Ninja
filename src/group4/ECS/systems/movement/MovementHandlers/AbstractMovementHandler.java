@@ -27,66 +27,76 @@ import java.util.List;
 
 public abstract class AbstractMovementHandler<T extends Mob> {
 
-    private final float chaseRange = 6.0f;
-    private final float viewRange = 2.0f;
 
     public void handleMovement(Entity entity, float deltaTime) {
+        // Get some components from the mob that is supposed to move
         PositionComponent pc = Mappers.positionMapper.get(entity);
         DimensionComponent dc = Mappers.dimensionMapper.get(entity);
         MovementComponent mc = Mappers.movementMapper.get(entity);
         GravityComponent gc = Mappers.gravityMapper.get(entity);
         MobComponent mobComponent = Mappers.mobMapper.get(entity);
 
+        // determine the range of vision this mob has, depends on if its 'chasing' or 'idle'
+        setVisionRange(entity);
+
         boolean needsToMove = true;
+        boolean canSeePlayer = canSeePlayer(pc, dc, mobComponent.currentVisionRange);
 
         // the position that this entity wants to move towards
-        Vector3f targetPosition;
-        // send rays and check if the mob can see the player
-        if (canSeePlayer(360, 36, pc, dc, mobComponent.currentVisionRange)) {
-            mobComponent.currentVisionRange = chaseRange;
-            // set target to the player position
-            targetPosition = getPlayerPosition();
+        Vector3f targetPosition = null;
 
-            // make sure that were not following a spline anymore
-            if (isSplineMob(entity)) {
-                SplinePathComponent spc = Mappers.splinePathMapper.get(entity);
-                spc.leaveSpline();
-            }
-        } else if (isSplineMob(entity)) {
-            mobComponent.currentVisionRange = viewRange;
-            // splines mobs have a different target than normal mobs
-            SplinePathComponent spc = Mappers.splinePathMapper.get(entity);
-
-            if (spc.isOnSpline()) {
-                // do movement using the spline path system
-                spc.updateU(deltaTime);
-                pc.position = spc.getPoint();
-                targetPosition = pc.position;
+        // handle mobs that should follow a spline
+        if (isSplineMob(entity)) {
+            if (canSeePlayer) {
+                // make sure that were not following a spline anymore
+                if (isSplineMob(entity)) {
+                    SplinePathComponent spc = Mappers.splinePathMapper.get(entity);
+                    spc.leaveSpline();
+                }
             } else {
-                // move towards the starting point of the spline
-                targetPosition = spc.points[0];
+                // move along the spline
+                SplinePathComponent spc = Mappers.splinePathMapper.get(entity);
 
-                // check if we arrived at the spline
-                if (closeToStart(pc, spc)) {
-                    spc.startSpline();
+                if (spc.isOnSpline()) {
+                    // do movement using the spline path system
+                    spc.updateU(deltaTime);
+                    pc.position = spc.getPoint();
+                    targetPosition = pc.position;
+                } else {
+                    // move towards the starting point of the spline
+                    targetPosition = spc.points[0];
+
+                    // check if we arrived at the spline
+                    if (closeToStart(pc, spc)) {
+                        spc.startSpline();
+                    }
                 }
             }
+        }
+
+        // determine the target position if it is not yet determined
+        if (canSeePlayer) {
+            // set target to the player position
+            targetPosition = getPlayerPosition();
         } else {
-            mobComponent.currentVisionRange = viewRange;
-            // don't move
-            needsToMove = false;
-            targetPosition = pc.position;
+            if (targetPosition == null) {
+                // don't move
+                needsToMove = false;
+                targetPosition = pc.position;
+            }
         }
 
         if (needsToMove) {
-            // process movement events
+            // determine the velocity for this mob
             move(entity, targetPosition, deltaTime);
         } else {
             mc.velocity.x = 0;
         }
+
         // apply gravity
         doGravity(mc, gc);
 
+        // update position
         pc.position.addi(mc.velocity.scale(deltaTime));
     }
 
@@ -161,40 +171,93 @@ public abstract class AbstractMovementHandler<T extends Mob> {
         return Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0)).position;
     }
 
-    private boolean canSeePlayer(float angleRange, int nrRays, PositionComponent pc, DimensionComponent dc, float viewRange) {
+    private Vector3f getPlayerDimension() {
+        return Mappers.dimensionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0)).dimension;
+    }
+
+    /**
+     * Sets the vision range for the mob depending on if he is chasing the player or is idle.
+     *
+     * @param mob
+     */
+    private void setVisionRange(Entity mob) {
+        MobComponent mc = Mappers.mobMapper.get(mob);
+        PositionComponent pc = Mappers.positionMapper.get(mob);
+        DimensionComponent dc = Mappers.dimensionMapper.get(mob);
+
+        // for now define the vision ranges of the mobs here
+        final float chaseRange = 6.0f; // once a mob has spotted the player this will be his vision range
+        final float viewRange = 2.0f; // if the mob has not spotted the player yet, this is their vision range
+
+        if (canSeePlayer(pc, dc, viewRange)) {
+            mc.currentVisionRange = chaseRange;
+        } else {
+            mc.currentVisionRange = viewRange;
+        }
+    }
+
+    private boolean canSeePlayer(PositionComponent pc, DimensionComponent dc, float viewRange) {
         List<Class<? extends Component>> seeThrough = new ArrayList<>();
         seeThrough.add(MobComponent.class);
         seeThrough.add(GhostComponent.class);
-//        seeThrough.add(SplineComponent.class);
 
-        // look in the direction the mob is moving
-        Vector3f dir = new Vector3f(0, 1, 0);
         // center of the mob
         Vector3f center = pc.position.add(dc.dimension.scale(0.5f));
+        // get the corners of the mob
+        Vector3f[] mobCorners = getCorners(pc.position, dc.dimension);
 
-        float deltaTheta = angleRange / (float) nrRays;
-        // start at the bottom of the range
-        dir = dir.rotateXY(-1f * (angleRange / viewRange));
-
-        for (int i = 0; i < nrRays; i++) {
-            Ray ray = new Ray(center, dir, seeThrough, viewRange);
-            IntersectionPair ip = ray.cast(TheEngine.getInstance().getEntitiesFor(Families.allCollidableFamily));
-
-            // if this ray reaches the player
-            if (ip.entity instanceof Player && !(ip.entity instanceof Ghost)) {
-                return true;
-            }
-
-            DebugUtils.drawLine(center, ip.point);
-
-            // rotate the next ray
-            dir = dir.rotateXY(deltaTheta);
+        // the mob can see from all its corners and its center
+        Vector3f[] mobEyes = new Vector3f[5];
+        mobEyes[0] = center;
+        // add the corners
+        for (int i = 0; i < 4; i++) {
+            mobEyes[i + 1] = mobCorners[i];
         }
 
+        // we want to look at all player corners
+        Vector3f[] playerCorners = getCorners(getPlayerPosition(), getPlayerDimension());
+
+        // cast rays for each corner combination to make sure that the mob detects the player if it has a ray that reaches the player
+        for (int i = 0; i < mobEyes.length; i++) {
+            for (int j = 0; j < playerCorners.length; j++) {
+                // look from the eye to one of the player corners
+                Vector3f dir = playerCorners[j].sub(mobEyes[i]);
+
+                // cast the ray and get the point and entity it intersects with
+                Ray ray = new Ray(center, dir, seeThrough, viewRange);
+                IntersectionPair ip = ray.cast(TheEngine.getInstance().getEntitiesFor(Families.allCollidableFamily));
+
+                DebugUtils.drawLine(mobEyes[i], ip.point);
+
+                // if this ray reaches the player
+                if (ip.entity instanceof Player && !(ip.entity instanceof Ghost)) {
+                    return true;
+                }
+            }
+        }
+
+        // no ray hit the target
         return false;
     }
 
-    protected final boolean isSplineMob(Entity e) {
+    /**
+     * Returns the corners of a rectangle with bottom left corner position and dimension dimension.
+     *
+     * @param position
+     * @param dimension
+     * @return array of corner vectors
+     */
+    private Vector3f[] getCorners(Vector3f position, Vector3f dimension) {
+        Vector3f[] result = new Vector3f[4];
+        result[0] = position; // bl
+        result[1] = position.add(new Vector3f(dimension.x, 0, 0)); // br
+        result[2] = position.add(dimension); // tr
+        result[3] = position.add(new Vector3f(0, dimension.y, 0)); // tl
+
+        return result;
+    }
+
+    private final boolean isSplineMob(Entity e) {
         SplinePathComponent spc = Mappers.splinePathMapper.get(e);
         return spc != null;
     }
