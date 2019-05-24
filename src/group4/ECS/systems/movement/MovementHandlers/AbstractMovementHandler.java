@@ -12,6 +12,7 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
+import group4.ECS.entities.mobs.Mob;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
@@ -24,20 +25,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class AbstractMovementHandler<T extends Entity> {
+public abstract class AbstractMovementHandler<T extends Mob> {
+
+    private final float chaseRange = 6.0f;
+    private final float viewRange = 2.0f;
 
     public void handleMovement(Entity entity, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(entity);
         DimensionComponent dc = Mappers.dimensionMapper.get(entity);
         MovementComponent mc = Mappers.movementMapper.get(entity);
         GravityComponent gc = Mappers.gravityMapper.get(entity);
+        MobComponent mobComponent = Mappers.mobMapper.get(entity);
 
         boolean needsToMove = true;
 
         // the position that this entity wants to move towards
         Vector3f targetPosition;
         // send rays and check if the mob can see the player
-        if (canSeePlayer(360, 36, pc, dc, mc)) {
+        if (canSeePlayer(360, 36, pc, dc, mobComponent.currentVisionRange)) {
+            mobComponent.currentVisionRange = chaseRange;
             // set target to the player position
             targetPosition = getPlayerPosition();
 
@@ -47,6 +53,7 @@ public abstract class AbstractMovementHandler<T extends Entity> {
                 spc.leaveSpline();
             }
         } else if (isSplineMob(entity)) {
+            mobComponent.currentVisionRange = viewRange;
             // splines mobs have a different target than normal mobs
             SplinePathComponent spc = Mappers.splinePathMapper.get(entity);
 
@@ -65,6 +72,7 @@ public abstract class AbstractMovementHandler<T extends Entity> {
                 }
             }
         } else {
+            mobComponent.currentVisionRange = viewRange;
             // don't move
             needsToMove = false;
             targetPosition = pc.position;
@@ -153,7 +161,7 @@ public abstract class AbstractMovementHandler<T extends Entity> {
         return Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0)).position;
     }
 
-    private boolean canSeePlayer(float angleRange, int nrRays, PositionComponent pc, DimensionComponent dc, MovementComponent mc) {
+    private boolean canSeePlayer(float angleRange, int nrRays, PositionComponent pc, DimensionComponent dc, float viewRange) {
         List<Class<? extends Component>> seeThrough = new ArrayList<>();
         seeThrough.add(MobComponent.class);
         seeThrough.add(GhostComponent.class);
@@ -166,10 +174,10 @@ public abstract class AbstractMovementHandler<T extends Entity> {
 
         float deltaTheta = angleRange / (float) nrRays;
         // start at the bottom of the range
-        dir = dir.rotateXY(-1f * (angleRange / 2.0f));
+        dir = dir.rotateXY(-1f * (angleRange / viewRange));
 
         for (int i = 0; i < nrRays; i++) {
-            Ray ray = new Ray(center, dir, seeThrough, 2f);
+            Ray ray = new Ray(center, dir, seeThrough, viewRange);
             IntersectionPair ip = ray.cast(TheEngine.getInstance().getEntitiesFor(Families.allCollidableFamily));
 
             // if this ray reaches the player
