@@ -1,4 +1,4 @@
-package group4.ECS.systems;
+package group4.ECS.systems.combat;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -14,7 +14,7 @@ public class DamageSystem extends EntitySystem {
     public DamageSystem(int priority) {}
 
     public void addedToEngine(Engine engine) {
-        entities = engine.getEntitiesFor(Families.damageFamily);
+        entities = engine.getEntitiesFor(Families.dmgReceivingFamily);
     }
 
     public void removedFromEngine(Engine engine) {}

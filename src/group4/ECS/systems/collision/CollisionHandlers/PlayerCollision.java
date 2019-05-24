@@ -9,7 +9,6 @@ import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.world.Exit;
-import group4.ECS.etc.Mappers;
 import group4.ECS.systems.collision.CollisionData;
 import group4.game.Main;
 

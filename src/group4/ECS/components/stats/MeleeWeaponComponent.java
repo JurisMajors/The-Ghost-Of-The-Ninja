@@ -6,11 +6,14 @@ public class MeleeWeaponComponent extends WeaponComponent {
 
     public Vector3f hitBox;
     public Vector3f hitboxOffset;
+    public float attackDuration;
 
-    public MeleeWeaponComponent(int damage, Vector3f gripPos, Vector3f hitBox, Vector3f hitboxOffset) {
-        super(damage, gripPos);
+    public MeleeWeaponComponent(int damage, int rateOfDamage, Vector3f gripPos,
+                                Vector3f hitBox, Vector3f hitboxOffset, float attackDuration) {
+        super(damage, rateOfDamage, gripPos);
         this.hitBox = hitBox;
         this.hitboxOffset = hitboxOffset;
+        this.attackDuration = attackDuration;
     }
 
 }

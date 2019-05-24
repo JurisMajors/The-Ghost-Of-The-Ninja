@@ -22,9 +22,7 @@ public class UncollidingSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(entity);
-
         uncollideEntity(entity, deltaTime, pc.position);
-
     }
 
     /**
@@ -37,8 +35,10 @@ public class UncollidingSystem extends IteratingSystem {
     void uncollideEntity(Entity e, float deltaTime, Vector3f curPos) {
         MovementComponent mc = Mappers.movementMapper.get(e);
         PositionComponent pc = Mappers.positionMapper.get(e);
+
         // get all entities that i collide with
         CollisionComponent cc = Mappers.collisionMapper.get(e);
+
         int resolved = 0; // keep track of resolved collisions
         for (CollisionData cd : cc.collisions) {
             // deal with splines
@@ -48,8 +48,11 @@ public class UncollidingSystem extends IteratingSystem {
                 continue;
             }
 
+            // get other colliding entity
             Entity other = cd.entity;
+            // except if itself
             if (other.equals(e)) continue;
+
             // get the displacement vector
             Vector3f trueDisplacement;
 
@@ -70,6 +73,11 @@ public class UncollidingSystem extends IteratingSystem {
         cc.collisions.clear();
     }
 
+    /**
+     * TODO: add javadoc
+     * @param mc
+     * @param displacement
+     */
     private void handleVelocity (MovementComponent mc, Vector3f displacement) {
         if (displacement.y > 0) { // displacement from bottom
             if (mc.velocity.y <= 0) { // if falling down
@@ -84,12 +92,6 @@ public class UncollidingSystem extends IteratingSystem {
         }
         // cap the velocity (for safety)
         mc.velocity.capValuesi(mc.velocityRange);
-
     }
-
-
-
-
-
 
 }

@@ -7,10 +7,14 @@ public class WeaponComponent implements Component {
 
     public int damage;
     public Vector3f gripPos;
+    public int rateOfAttack;
+    public float cooldown;
 
-    public WeaponComponent(int damage, Vector3f gripPos) {
+    public WeaponComponent(int damage, int rateOfAttack, Vector3f gripPos) {
         this.damage = damage;
+        this.rateOfAttack = rateOfAttack;
         this.gripPos = gripPos;
+        this.cooldown = 0.0f;
     }
 
 }

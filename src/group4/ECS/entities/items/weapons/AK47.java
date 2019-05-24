@@ -21,8 +21,9 @@ public class AK47 extends Gun {
         this.add(new GraphicsComponent(shader, texture,
                 this.vertices, this.indices, this.tcs));
 
-        // TODO: damage-system
-        this.add(new RangeWeaponComponent(10, 50, new Vector3f(), new Vector3f()));
+        // add weapon specs
+        this.add(new RangeWeaponComponent(10, 15, new Vector3f(),
+                new Vector3f(0.5f, 2.0f,0.0f), EntityConst.BulletType.MACHINEGUN));
     }
 
 }
