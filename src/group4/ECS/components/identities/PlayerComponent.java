@@ -2,6 +2,7 @@ package group4.ECS.components.identities;
 
 import com.badlogic.ashley.core.Component;
 import group4.ECS.entities.items.Item;
+import group4.ECS.entities.items.weapons.Sword;
 
 public class PlayerComponent implements Component{
 
@@ -10,6 +11,7 @@ public class PlayerComponent implements Component{
 
     public PlayerComponent() {
         inventory = new Item[8];
+        inventory[0] = new Sword();
     }
 
 }

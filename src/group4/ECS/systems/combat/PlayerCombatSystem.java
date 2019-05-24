@@ -5,8 +5,11 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MeleeWeaponComponent;
+import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.components.stats.RangeWeaponComponent;
 import group4.ECS.components.stats.WeaponComponent;
 import group4.ECS.entities.DamageArea;
+import group4.ECS.entities.Player;
 import group4.ECS.entities.items.Item;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
@@ -23,6 +26,7 @@ public class PlayerCombatSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(entity);
         PlayerComponent plc = Mappers.playerMapper.get(entity);
+        MovementComponent mc = Mappers.movementMapper.get(entity);
 
 //        // if damage is inflicted by rangeweapon
 //        PositionComponent playerPos = Mappers.positionMapper.get(TheEngine.getInstance()
@@ -35,12 +39,45 @@ public class PlayerCombatSystem extends IteratingSystem {
 //                    playerPos.position.sub(pc.position.add(rwc.bulletPos)).normalized());
 //        }
 
+        // process cooldown for all items
+        cooldown(deltaTime, plc);
 
+        // if active item is a weapon
+        // TODO: also other items
+        MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(plc.inventory[0]);
+
+        // when player hits enter, attack
+        if (wc != null && KeyBoard.isKeyDown(GLFW_KEY_ENTER)) {
+            // set cooldown in accordance to rate of attack
+
+            // if melee
+            System.out.println(wc.cooldown);
+            if (wc.cooldown <= 0.0f) {
+                wc.cooldown = 1 / wc.rateOfAttack;
+
+                System.out.println(mc.orientation);
+
+                // TODO: account for y
+                Vector3f hitboxOffset = wc.hitboxOffset.scale(mc.orientation);
+                Vector3f position = pc.position.add(hitboxOffset);
+                new DamageArea(position, wc.hitBox,
+                        wc.damage);
+            }
+        }
+
+    }
+
+    private void cooldown(float deltaTime, PlayerComponent plc) {
         for (Item item : plc.inventory) {
-            WeaponComponent wc = Mappers.weaponMapper.get(item);
+            // if itemslot is not used
+            if (item == null) {
+                continue;
+            }
+            MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(item);
+            RangeWeaponComponent rc = Mappers.rangeWeaponMapper.get(item);
 
             // if item is a weapon
-            if (wc != null) {
+            if (wc != null || rc != null) {
                 // update cooldown
                 wc.cooldown = wc.cooldown - deltaTime;
 
@@ -48,21 +85,6 @@ public class PlayerCombatSystem extends IteratingSystem {
                 if (wc.cooldown <= 0.0f) {
                     // set cooldown to 0, i.e. weapon can be used
                     wc.cooldown = 0.0f;
-
-                    // when player hits enter, attack
-                    if (KeyBoard.isKeyDown(GLFW_KEY_ENTER)) {
-                        // set cooldown in accordance to rate of attack
-                        wc.cooldown = 1 / wc.rateOfAttack;
-
-                        System.out.println(wc.getClass());
-                        // if melee
-                        if (wc.getClass().equals(MeleeWeaponComponent.class)) {
-                            Vector3f position = pc.position.add(((MeleeWeaponComponent)wc).hitboxOffset);
-                            //TODO: orientation
-                            new DamageArea(position, ((MeleeWeaponComponent)wc).hitBox,
-                                    wc.damage);
-                        }
-                    }
                 }
             }
         }

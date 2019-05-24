@@ -9,6 +9,7 @@ import group4.ECS.systems.RenderSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
 import group4.ECS.systems.collision.UncollidingSystem;
+import group4.ECS.systems.combat.PlayerCombatSystem;
 import group4.ECS.systems.death.GhostDyingSystem;
 import group4.ECS.systems.death.MobDyingSystem;
 import group4.ECS.systems.death.PlayerDyingSystem;
@@ -129,6 +130,7 @@ public class Main implements Runnable {
             engine.addSystem(new CollisionSystem());
             engine.addSystem(new CollisionEventSystem());
             engine.addSystem(new UncollidingSystem());
+            engine.addSystem(new PlayerCombatSystem());
             engine.addSystem(new PlayerDyingSystem(true));
             engine.addSystem(new GhostDyingSystem(false));
             engine.addSystem(new MobDyingSystem());

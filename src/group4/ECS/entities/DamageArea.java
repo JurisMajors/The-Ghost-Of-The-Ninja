@@ -1,12 +1,15 @@
 package group4.ECS.entities;
 
 import com.badlogic.ashley.core.Entity;
+import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.collision.CollisionHandlers.MeleeCollision;
+import group4.graphics.Shader;
+import group4.graphics.Texture;
 import group4.maths.Vector3f;
 
 public class DamageArea extends Entity {
@@ -23,6 +26,33 @@ public class DamageArea extends Entity {
         this.add(new DimensionComponent(dimension));
         this.add(new CollisionComponent(new MeleeCollision()));
         this.add(new DamageComponent(damage));
+
+        // Construct vertex array
+        float[] vertices = new float[] {
+                0, 0, 0,
+                0, 1.0f, 0,
+                1.0f, 1.0f, 0,
+                1.0f, 0, 0,
+        };
+
+        // Construct index array (used for geometry mesh)
+        byte[] indices = new byte[] {
+                0, 1, 2,
+                2, 3, 0
+        };
+
+        // Construct texture coords
+        float[] tcs = new float[] {
+                0, 1,
+                0, 0,
+                1, 0,
+                1, 1
+        };
+
+        Shader shader = Shader.SIMPLE;
+        Texture texture = Texture.HITBOX;
+
+        this.add(new GraphicsComponent(shader, texture, vertices, indices, tcs));
 
         // add entity to engine on construction
         TheEngine.getInstance().addEntity(this);

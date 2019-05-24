@@ -28,6 +28,9 @@ public class MeleeCollision extends AbstractCollisionHandler<DamageArea> {
             }
         }
 
+        // clear collisions
+        others.clear();
+
         // damage dealt by the area is dealt on a single tick
         TheEngine.getInstance().removeEntity(dmgArea);
     }

@@ -68,17 +68,19 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     private void moveRight(MovementComponent mc) {
-        moveDirection(1, mc);
+        moveDirection(MovementComponent.RIGHT, mc);
     }
 
     private void moveLeft(MovementComponent mc) {
-        moveDirection(-1, mc);
+        moveDirection(MovementComponent.LEFT, mc);
     }
+
     /**
     * Moves along the x axis in the specified direction
     * @param dir positive or negative direction, optionally with a multiplier.
     */
     private void moveDirection(int dir, MovementComponent mc) {
+        mc.orientation = dir;
         if (shouldSprint() && canSprint(mc.velocity)) {
             mc.velocity.x = dir * getSprintingVel(mc);
             mc.velocity.x += dir * mc.acceleration.x;
@@ -87,7 +89,6 @@ public class PlayerMovementSystem extends IteratingSystem {
             mc.velocity.x = dir * getWalkingVel(mc);
         }
     }
-
 
     private float getSprintingVel(MovementComponent mc) {
         // provides with the "starting" or "current" sprinting velocity

@@ -6,14 +6,12 @@ import group4.maths.Vector3f;
 public class WeaponComponent implements Component {
 
     public int damage;
-    public Vector3f gripPos;
-    public int rateOfAttack;
+    public float rateOfAttack;
     public float cooldown;
 
-    public WeaponComponent(int damage, int rateOfAttack, Vector3f gripPos) {
+    public WeaponComponent(int damage, float rateOfAttack) {
         this.damage = damage;
         this.rateOfAttack = rateOfAttack;
-        this.gripPos = gripPos;
         this.cooldown = 0.0f;
     }
 

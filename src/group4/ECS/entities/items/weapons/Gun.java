@@ -1,6 +1,5 @@
 package group4.ECS.entities.items.weapons;
 
-import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.entities.items.Item;
 import group4.maths.Vector3f;

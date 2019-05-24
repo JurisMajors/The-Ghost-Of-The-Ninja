@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.components.stats.HealthComponent;
+import group4.ECS.entities.DamageArea;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
@@ -41,6 +42,8 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
             } else if (other instanceof Exit) {
                 handleExit(player, (Exit) other);
                 // after player exit interaction we dont want to fix their positions (we are just going to execute the exit action)
+                removables.add(cd);
+            } else if (other instanceof DamageArea) { // TODO: super janky, damageArea does not apply to player whatsoever
                 removables.add(cd);
             }
         }

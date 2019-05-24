@@ -5,9 +5,13 @@ import group4.maths.Vector3f;
 
 public class MovementComponent implements Component {
 
+    public static int LEFT = -1;
+    public static int RIGHT = 1;
+
     public Vector3f velocity;
     public Vector3f velocityRange;
     public Vector3f acceleration;
+    public int orientation;
 
     // joris TODO: subclasses
 
@@ -17,6 +21,8 @@ public class MovementComponent implements Component {
      * @param velocityRange restricting the velocity: -velocityRange.x<=velocity.x<=velocityRange.x and (-velocityRange.y<=)velocity.y<=velocityRange.y
      */
     public MovementComponent(Vector3f velocityRange) {
+        // right by default
+        this.orientation = 1;
         this.velocity = new Vector3f();
         this.velocityRange = velocityRange;
         this.acceleration = new Vector3f();
@@ -29,6 +35,8 @@ public class MovementComponent implements Component {
      * @param velocityRange restricting the velocity: -velocityRange.x<=velocity.x<=velocityRange.x and (-velocityRange.y<=)velocity.y<=velocityRange.y
      */
     public MovementComponent(Vector3f velocity, Vector3f velocityRange) {
+        // right by default
+        this.orientation = 1;
         this.velocity = velocity;
         this.velocityRange = velocityRange;
         this.acceleration = new Vector3f(); //no acceleration (zero vector)
@@ -42,6 +50,16 @@ public class MovementComponent implements Component {
      * @param acceleration  acceleration vector
      */
     public MovementComponent(Vector3f velocity, Vector3f velocityRange, Vector3f acceleration) {
+        // right by default
+        this.orientation = 1;
+        this.velocity = velocity;
+        this.velocityRange = velocityRange;
+        this.acceleration = acceleration;
+    }
+
+    public MovementComponent(Vector3f velocity, Vector3f velocityRange, Vector3f acceleration, int dimension) {
+        // right by default
+        this.orientation = dimension;
         this.velocity = velocity;
         this.velocityRange = velocityRange;
         this.acceleration = acceleration;
