@@ -90,7 +90,7 @@ public abstract class AbstractMovementHandler<T extends Mob> {
             // get velocity for mob
             move(entity, targetPosition, deltaTime);
         } else {
-            mc.velocity.x = 0;
+            becomeIdle(mc);
         }
         // apply gravity
         doGravity(mc, gc);
@@ -160,6 +160,10 @@ public abstract class AbstractMovementHandler<T extends Mob> {
     protected boolean canJump(Vector3f velocity) {
         // velocity has to be close to zero (avoid double jumping)
         return velocity.y <= 1e-3 && velocity.y >= -1e-3;
+    }
+
+    protected void becomeIdle(MovementComponent mc) {
+        mc.velocity.x = 0;
     }
 
     protected void doGravity(MovementComponent mc, GravityComponent gc) {
