@@ -4,6 +4,7 @@ import group4.ECS.components.SplinePathComponent;
 import group4.ECS.components.identities.FlyingMobComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.etc.Mappers;
+import group4.ECS.systems.movement.MovementHandlers.FlyingMobMovementHandler;
 import group4.levelSystem.Level;
 import group4.maths.Vector3f;
 import group4.maths.spline.MultiSpline;
@@ -16,7 +17,7 @@ public class FlyingMob extends Mob {
      * @param position left-bottom-back corner of the cuboid representing the mob
      */
     public FlyingMob(Vector3f position, Level l) {
-        super(position, l);
+        super(position, l, FlyingMobMovementHandler.getInstance());
 
         // limit the velocity of the flying mob to prevent shaking of the texture
         MovementComponent mc = Mappers.movementMapper.get(this);

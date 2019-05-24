@@ -1,10 +1,7 @@
 package group4.ECS.etc;
 
 import com.badlogic.ashley.core.Family;
-import group4.ECS.components.AudioComponent;
-import group4.ECS.components.GraphicsComponent;
-import group4.ECS.components.ShootingComponent;
-import group4.ECS.components.SplineComponent;
+import group4.ECS.components.*;
 import group4.ECS.components.identities.*;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
@@ -108,14 +105,14 @@ public class Families {
 
     //All entities with which collision is possible
     public static final Family collidableFamily = Family
-            .all(CollisionComponent.class).exclude(MovementComponent.class).get();
+            .all(CollisionComponent.class).exclude(MovementComponent.class, SplineComponent.class).get();
     //All entities with which collision is possible
     public static final Family collidableMovingFamily = Family
             .all(CollisionComponent.class, MovementComponent.class).get();
 
     //All entities with spline collision
     public static final Family collidableSplineFamily = Family
-            .all(SplineComponent.class, CollisionComponent.class).get();
+            .all(SplineComponent.class, CollisionComponent.class).exclude(SplinePathComponent.class).get();
 
     public static final Family allCollidableFamily = Family
             .all(CollisionComponent.class).get();
