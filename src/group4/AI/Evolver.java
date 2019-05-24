@@ -194,6 +194,7 @@ public class Evolver {
         }
         if (cmd.hasOption("rays")) {
             Evolver.rays = Integer.parseInt(cmd.getOptionValue("rays"));
+            Evolver.decoder = new CircleVisionStateDecoder(Evolver.rays, 10);
         }
         if (cmd.hasOption("layers")) {
             String[] sizes = cmd.getOptionValue("layers").split(",");
