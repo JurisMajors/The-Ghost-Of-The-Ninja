@@ -146,10 +146,10 @@ public class Module {
                 for (int tile = 0; tile < data.length(); tile++) {
                     // Get the grid position of the tile
                     int tileGridX = tile % layerWidth;
-                    int tileGridY = layerHeight - 1 - (int) Math.floor(tile / layerWidth);
+                    int tileGridY = layerHeight - tile / layerWidth;
 
                     // Get the type of the tile
-                    int tileId = Integer.parseInt(data.get(tile).toString()) - 1;
+                    int tileId = data.getInt(tile) - 1;
 
                     String entityId = moduleTileMap.get(tileId);
 
