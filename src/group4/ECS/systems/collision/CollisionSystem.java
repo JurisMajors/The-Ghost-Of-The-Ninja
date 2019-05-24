@@ -14,6 +14,7 @@ import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.maths.Vector3f;
+import group4.utils.DebugUtils;
 
 /**
  * This applies collision to entities that can move and have a bounding box
@@ -161,6 +162,8 @@ public class CollisionSystem extends IteratingSystem {
     static Vector3f processCollision(Entity first, Entity scnd) {
         Rectangle intersection = getIntersectingRectangle(first, scnd);
         if (intersection == null) return new Vector3f();
+        DebugUtils.drawBox(new Vector3f(intersection.x, intersection.y, 0), new Vector3f(intersection.x + intersection.width, intersection.y + intersection.height, 0));
+
         // resolve the collision with the smallest displacement
         if (intersection.height <= intersection.width) {
             return resolveYCollision(first, scnd, intersection);
@@ -177,7 +180,7 @@ public class CollisionSystem extends IteratingSystem {
         Vector3f firstCntr = firstPos.add(firstDim.scale(0.5f));
 
         // if the first is not on or below the second, then no displacement
-        if (!(firstCntr.x >= scndPos.x && firstCntr.x <= scndPos.x + scndDim.x)) {
+        if (!(firstCntr.x + 0.3f >= scndPos.x && firstCntr.x - 0.3f <= scndPos.x + scndDim.x)) {
             return new Vector3f();
         }
         // otherwise displace in the inverse direction
