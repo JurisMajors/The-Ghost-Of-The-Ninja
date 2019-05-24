@@ -32,6 +32,23 @@ public class Exit extends Entity {
         this.module = m;
     }
 
+    /**
+     * Construct a simple block (flexible texture and shader) in a certain position of certain size
+     *
+     * @param p       The position of the block (lower left corner)
+     * @param d       The dimensions of the block
+     * @param m       The module the exit is part of
+     */
+    public Exit(Vector3f p, Vector3f d, Module m, float[] texCoords) {
+        this.add(new PositionComponent(p));
+        this.add(new DimensionComponent(d));
+        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.MAIN_TILES, d, texCoords));
+        this.add(new CollisionComponent(ExitCollision.getInstance()));
+
+        // Set the module this exit belongs to
+        this.module = m;
+    }
+
     public static String getName() {
         return "Exit";
     }
