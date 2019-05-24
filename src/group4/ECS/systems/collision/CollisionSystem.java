@@ -108,12 +108,13 @@ public class CollisionSystem extends IteratingSystem {
 
     /**
      * Handles collision with moving entity e and spline spline.
-     * @param e moving entity
-     * @param spline spline entity
-     * @param codes corner encoding
+     *
+     * @param e       moving entity
+     * @param spline  spline entity
+     * @param codes   corner encoding
      * @param corners corners of e
-     * @param cc e's CollisionComponent
-     * @param dc e's DimensionComponent
+     * @param cc      e's CollisionComponent
+     * @param dc      e's DimensionComponent
      */
     private void handleSpline(Entity e, Entity spline, int[] codes, Vector3f[] corners, CollisionComponent cc, DimensionComponent dc) {
         PositionComponent spc = Mappers.positionMapper.get(spline);
@@ -248,7 +249,7 @@ public class CollisionSystem extends IteratingSystem {
         Vector3f firstCntr = firstPos.add(firstDim.scale(0.5f));
 
         // if the first is not on or below the second, then no displacement
-        if (!(firstCntr.x >= scndPos.x && firstCntr.x <= scndPos.x + scndDim.x)) {
+        if (!(firstCntr.x + 0.3f >= scndPos.x && firstCntr.x - 0.3f <= scndPos.x + scndDim.x)) {
             return new Vector3f();
         }
         // otherwise displace in the inverse direction
