@@ -22,10 +22,7 @@ import group4.graphics.Shader;
 import group4.maths.Matrix4f;
 import group4.utils.DebugUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.lwjgl.opengl.GL41.*;
 
@@ -102,7 +99,7 @@ public class RenderSystem extends EntitySystem {
                         gc.shader.bind();
 
                         // Set uniforms
-                        gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position.add(bp.relativePosition))); // Tmp fix for giving correct positions to vertices in the vertexbuffers
+                        gc.shader.setUniformMat4f("md_matrix", bp.getModelMatrix()); // Tmp fix for giving correct positions to vertices in the vertexbuffers
                         gc.shader.setUniform1f("tex", gc.texture.getTextureID()); // Specify which texture slot to use
 
                         // Bind texture and specify texture slot

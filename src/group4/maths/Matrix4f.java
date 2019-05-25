@@ -143,7 +143,7 @@ public class Matrix4f {
      * Adds the current matrix to other. Returns the result.
      *
      * @param other
-     * @return this * other
+     * @return this + other
      */
     public Matrix4f add(Matrix4f other) {
         Matrix4f result = new Matrix4f();
