@@ -68,7 +68,8 @@ public class Evolver {
     /** Path to save trained models**/
     public static String path = "src/group4/AI/models/";
     /** Path for loading the module to train on **/
-    public static String modulePath = "./src/group4/levelSystem/modules/TiledModules/simpleModule.json";
+    public static String modulePath ="./src/group4/res/maps/level_01/module_01_01.json";
+
     /**
      * whether to render
      */
