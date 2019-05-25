@@ -38,7 +38,7 @@ public class Evolver {
     /**
      * if max fit known, then terminate on that otherwise leave max val.
      **/
-    public static int maxFit = Integer.MAX_VALUE;
+    public static double maxFit = 0.1;
     /**
      * hidden layer sizes (dont include input/output)
      **/
