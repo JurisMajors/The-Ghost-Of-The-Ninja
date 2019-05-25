@@ -3,7 +3,6 @@ package group4.ECS.entities;
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.physics.DimensionComponent;
-import group4.ECS.components.physics.PositionComponent;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Matrix4f;
@@ -61,11 +60,17 @@ public class BodyPart extends Entity implements GraphicsHierarchy {
      * Will return the model matrix for this body part
      */
     public Matrix4f getModelMatrix() {
-        System.out.println("Parent: " + Arrays.toString(parent.getModelMatrix().elements));
-        System.out.println("This: " + Arrays.toString(Matrix4f.translate(this.relativePosition).elements));
-        System.out.println("Comb: " + Arrays.toString(parent.getModelMatrix().multiply(Matrix4f.translate(this.relativePosition)).elements));
+        // Translate to parent position
+        Matrix4f result = this.parent.getModelMatrix();
 
-        return parent.getModelMatrix().multiply(Matrix4f.translate(this.relativePosition));
+        // Translate relative to the parent position
+        result = result.multiply(Matrix4f.translate(this.relativePosition));
+
+        // Rotate the body part
+        result = result.multiply(Matrix4f.rotate2D(this.rotation));
+
+        // Return the model matrix
+        return result;
     }
 
 }
