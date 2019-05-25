@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.identities.CameraComponent;
+import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.BodyPart;
@@ -155,16 +156,18 @@ public class RenderSystem extends EntitySystem {
 
             // Temporary example for drawing lines or boxes.
             // NOTE: Uncomment to see the effect
-//            for (Entity a: entities) { // For all A, for all B...  N^2 loop
-//                PositionComponent pca = Mappers.positionMapper.get(a);
+            for (Entity a: entities) { // For all A, for all B...  N^2 loop
+                PositionComponent pca = Mappers.positionMapper.get(a);
+                DimensionComponent dca = Mappers.dimensionMapper.get(a);
+                DebugUtils.drawBox(pca.position, pca.position.add(dca.dimension));
+
 //                for (int i = 0; i < entities.size(); i++) { // NOTE: Can't access Iterator in a nested fashion for some reason.. Hence the for(i = 0... style
-//                    Entity b = entities.get(i);
-//                    PositionComponent pcb = Mappers.positionMapper.get(b);
-//                    DebugUtils.drawLine(pca.position, pcb.position);
-//                    DebugUtils.drawBox(pca.position, pcb.position);
-//                    DebugUtils.drawCircle(pca.position, 2.0f, 50);
+////                    Entity b = entities.get(i);
+////                    PositionComponent pcb = Mappers.positionMapper.get(b);
+////                    DebugUtils.drawLine(pca.position, pcb.position);
+////                    DebugUtils.drawCircle(pca.position, 2.0f, 50);
 //                }
-//            }
+            }
 
             DebugUtils.flush();
         }

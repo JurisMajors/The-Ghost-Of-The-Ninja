@@ -179,4 +179,7 @@ public class SplinePlatform extends Entity {
         return result;
     }
 
+    public static String getName() {
+        return "SplinePlatform";
+    }
 }

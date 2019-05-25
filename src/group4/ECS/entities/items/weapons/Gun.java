@@ -36,4 +36,7 @@ public class Gun extends Entity {
         this.add(new PositionComponent(position));
     }
 
+    public static String getName() {
+        return "Gun";
+    }
 }

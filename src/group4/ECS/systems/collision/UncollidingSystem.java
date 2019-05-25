@@ -41,13 +41,15 @@ public class UncollidingSystem extends IteratingSystem {
         CollisionComponent cc = Mappers.collisionMapper.get(e);
         int resolved = 0; // keep track of resolved collisions
         for (CollisionData cd : cc.collisions) {
-            // deal with splines
+            // if there is a new position component in the collision it means its a spline collision and
+            // the new position of this entity should be at newpos
             if (cd.newPos != null) {
                 mc.velocity = new Vector3f();
                 pc.position = cd.newPos;
                 continue;
             }
 
+            // all normal collisions
             Entity other = cd.entity;
             if (other.equals(e)) continue;
             // get the displacement vector
@@ -70,13 +72,13 @@ public class UncollidingSystem extends IteratingSystem {
         cc.collisions.clear();
     }
 
-    private void handleVelocity (MovementComponent mc, Vector3f displacement) {
+    private void handleVelocity(MovementComponent mc, Vector3f displacement) {
         if (displacement.y > 0) { // displacement from bottom
             if (mc.velocity.y <= 0) { // if falling down
                 mc.velocity.y = 0; // set velocity to zero
             }
-        } else if (displacement.y < 0){  // displacement from top
-            mc.velocity.y *= -0.3; // go down when hit from top
+        } else if (displacement.y < 0) {  // displacement from top
+            mc.velocity.y *= -0.5; // go down when hit from top
         }
 
         if (displacement.x != 0) {
@@ -86,10 +88,5 @@ public class UncollidingSystem extends IteratingSystem {
         mc.velocity.capValuesi(mc.velocityRange);
 
     }
-
-
-
-
-
 
 }

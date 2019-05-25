@@ -50,4 +50,7 @@ public class Block extends Entity {
         this.add(new GraphicsComponent(shader, texture, dimension));
     }
 
+    public static String getName() {
+        return "Exit";
+    }
 }

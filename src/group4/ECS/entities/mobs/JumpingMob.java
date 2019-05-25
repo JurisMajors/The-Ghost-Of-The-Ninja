@@ -16,4 +16,8 @@ public class JumpingMob extends Mob {
         super(position, l, JumpingMobMovementHandler.getInstance());
         this.add(new JumpingMobComponent());
     }
+
+    public static String getName() {
+        return "JumpingMob";
+    }
 }

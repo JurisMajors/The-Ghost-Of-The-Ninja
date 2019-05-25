@@ -24,6 +24,7 @@ import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
+import group4.levelSystem.levels.Level01;
 import group4.levelSystem.levels.MobTestLevel;
 import group4.levelSystem.levels.TestLevel;
 import group4.levelSystem.levels.TiledLevel;
@@ -69,20 +70,21 @@ public class Main implements Runnable {
      * The main logic for controlling the program flow of this class.
      */
     public void run() {
-        init();
+        if (Main.SHOULD_OPENGL) init();
         if (AI) {
             Evolver.train();
         } else {
             loop();
         }
+        if (Main.SHOULD_OPENGL) {
+            // Cleanup after we exit the game loop
+            glfwFreeCallbacks(window); // Free the window callbacks
+            glfwDestroyWindow(window); // Destroy the window
 
-        // Cleanup after we exit the game loop
-        glfwFreeCallbacks(window); // Free the window callbacks
-        glfwDestroyWindow(window); // Destroy the window
-
-        // Terminate GLFW and free the error callback
-        glfwTerminate();
-        glfwSetErrorCallback(null).free();
+            // Terminate GLFW and free the error callback
+            glfwTerminate();
+            glfwSetErrorCallback(null).free();
+        }
     }
 
     /**
@@ -208,6 +210,9 @@ public class Main implements Runnable {
     }
 
     public static void main(String[] args) {
+        if (Main.AI && args.length != 0) {
+            Evolver.parseArgs(args);
+        }
         new Main().start();
     }
 

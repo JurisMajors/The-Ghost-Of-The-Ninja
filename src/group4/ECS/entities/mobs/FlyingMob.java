@@ -33,6 +33,10 @@ public class FlyingMob extends Mob {
         MultiSpline spline = new MultiSpline(splinePoints);
 
         // uncomment this and put a flying mob in the level to see spline pathing in action
-        this.add(new SplinePathComponent(spline, new Vector3f(3, 3, 0), new Vector3f(3, 2, 0), 0, 100));
+//        this.add(new SplinePathComponent(spline, new Vector3f(3, 3, 0), new Vector3f(3, 2, 0), 0, 100));
+    }
+
+    public static String getName() {
+        return "FlyingMob";
     }
 }
