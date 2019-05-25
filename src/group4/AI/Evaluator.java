@@ -123,7 +123,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         }
         // fitness = if no exits exist, simply take x coordinate, otherwise the distance traveled in the direction of closest exit
         float fitness = closestExit == null ? ghostPos.x :
-                startingPos.euclidDist(closestExit) - ghostPos.euclidDist(closestExit);
+                Math.max(startingPos.euclidDist(closestExit) - ghostPos.euclidDist(closestExit), 0);
         currModule.unload();
         return fitness;
     }

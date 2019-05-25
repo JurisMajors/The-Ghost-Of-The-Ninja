@@ -41,7 +41,7 @@ public class Main implements Runnable {
     /**
      * enable this if you want to run the genetic algorithm, instead of playing urself
      **/
-    public static final boolean AI = false;
+    public static final boolean AI = true;
     /**
      * whether should do calls to OPENGL
      **/
@@ -70,7 +70,11 @@ public class Main implements Runnable {
      * The main logic for controlling the program flow of this class.
      */
     public void run() {
-        if (Main.SHOULD_OPENGL) init();
+        if (Main.SHOULD_OPENGL) {
+            init();
+        } else {
+            TileMapping.loadAllTileMappings();
+        }
         if (AI) {
             Evolver.train();
         } else {

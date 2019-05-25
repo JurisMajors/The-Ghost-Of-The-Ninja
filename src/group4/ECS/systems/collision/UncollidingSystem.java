@@ -78,7 +78,7 @@ public class UncollidingSystem extends IteratingSystem {
                 mc.velocity.y = 0; // set velocity to zero
             }
         } else if (displacement.y < 0) {  // displacement from top
-            mc.velocity.y += displacement.y; // go down when hit from top
+            mc.velocity.y *= -0.5; // go down when hit from top
         }
 
         if (displacement.x != 0) {
