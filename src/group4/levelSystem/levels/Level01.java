@@ -1,5 +1,6 @@
 package group4.levelSystem.levels;
 
+import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.mobs.ShootingJumpingWalkingMob;
 import group4.ECS.entities.world.Exit;
@@ -26,7 +27,7 @@ public class Level01 extends Level {
     @Override
     protected Player createPlayer() {
         // We don't care about the player position, as that will be initialized on level switching
-        return new Player(new Vector3f(), this);
+        return new HierarchicalPlayer(new Vector3f(), this);
     }
 
     @Override

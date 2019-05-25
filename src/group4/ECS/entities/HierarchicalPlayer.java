@@ -1,6 +1,5 @@
 package group4.ECS.entities;
 
-import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphicsComponent;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -48,9 +47,21 @@ public class HierarchicalPlayer extends Player {
      * Create the entities for the hierarchy
      */
     protected void createHierarchy() {
+        // TODO: Maybe we can make the positions of certain body parts depend on each other, e.g. the position of the head on the torso
+
         // Add the torso
-        BodyPart torso = new BodyPart(new Vector3f(0.2f, 0.5f, 0.0f), new Vector3f(0.6f, 1.0f, 0.0f), 0, Texture.DEBUG);
+        BodyPart torso = new BodyPart(new Vector3f(0.3f, 0.8f, 0.0f), new Vector3f(0.4f, 0.8f, 0.0f), 0, Texture.DEBUG);
         this.hierarchy.add(torso);
+
+        // Add the head (slightly above the torso)
+        BodyPart head = new BodyPart(new Vector3f(0.3f, 1.7f, 0.0f), new Vector3f(0.3f, 0.3f, 0.0f), 0, Texture.DEBUG);
+        this.hierarchy.add(head);
+
+        // Add upper right leg (take into account that the leg is rotated)
+        BodyPart rLeg = new BodyPart(new Vector3f(0.4f, 0.8f, 0.0f), new Vector3f(0.2f, 0.4f, 0.0f), 150, Texture.DEBUG);
+
+        // Add left leg
+        // TODO: should somehow be behind the right leg
     }
 
 
