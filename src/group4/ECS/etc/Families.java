@@ -121,13 +121,12 @@ public class Families {
     // nonstatic damage inflicting entities (mobs, player, ghost..), static entities (traps..) excluded
     // static objects don't have variable bb's
     public static final Family dmgInflictingFamily = Family
-            .all(DamageComponent.class, CollisionComponent.class, DimensionComponent.class, MovementComponent.class)
-            .all(PositionComponent.class)
+            .all(DamageComponent.class, CollisionComponent.class, DimensionComponent.class, PositionComponent.class)
             .get();
 
     // all objects who can receive damage, i.e. have health
     public static final Family dmgReceivingFamily = Family
-            .all(HealthComponent.class, CollisionComponent.class, DimensionComponent.class)
-            .all(PositionComponent.class)
+            .all(HealthComponent.class, CollisionComponent.class, DimensionComponent.class,
+                    PositionComponent.class)
             .get();
 }

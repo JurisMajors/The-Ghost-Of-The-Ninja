@@ -1,29 +1,36 @@
 package group4.ECS.systems.combat;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.ashley.systems.IteratingSystem;
+import group4.ECS.components.physics.CollisionComponent;
+import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.etc.Families;
+import group4.ECS.etc.Mappers;
+import group4.ECS.systems.collision.CollisionData;
 
-public class DamageSystem extends EntitySystem {
-    private ImmutableArray<Entity> entities;
+public class DamageSystem extends IteratingSystem {
 
-    public DamageSystem() {}
+    public DamageSystem() { super(Families.dmgInflictingFamily); }
 
-    public DamageSystem(int priority) {}
+    protected void processEntity(Entity entity, float deltaTime) {
+        CollisionComponent cc = Mappers.collisionMapper.get(entity);
+        DamageComponent dc = Mappers.damageMapper.get(entity);
 
-    public void addedToEngine(Engine engine) {
-        entities = engine.getEntitiesFor(Families.dmgReceivingFamily);
+        for (CollisionData cd : cc.collisions) {
+            if (!Mappers.healthMapper.has(cd.entity)) {
+                continue;
+            }
+
+            int health = Mappers.healthMapper.get(cd.entity).health;
+            System.out.println(health);
+
+            if (health <= 0) {
+                break;
+            }
+
+            Mappers.healthMapper.get(cd.entity).health = health - dc.damage;
+        }
     }
-
-    public void removedFromEngine(Engine engine) {}
-
-    public void update(float deltaTime) {}
-
-    public boolean checkProcessing() { return false; }
-
-    public void setProcessing(boolean processing) {}
 
 }
 

@@ -47,6 +47,8 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
                 removables.add(cd);
             }
         }
+
+        // remove entities for which we don't want displacement
         for (CollisionData data : removables) {
             others.remove(data);
         }

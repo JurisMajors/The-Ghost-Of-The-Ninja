@@ -8,6 +8,7 @@ import group4.ECS.components.SplineComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.entities.DamageArea;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
@@ -46,7 +47,7 @@ public class CollisionSystem extends IteratingSystem {
         ImmutableArray<Entity> entities;
 
         // ???
-        if (e instanceof Bullet) {
+        if (e instanceof Bullet || e instanceof DamageArea) {
             entities = TheEngine.getInstance().getEntitiesFor(Families.allCollidableFamily);
         } else {
             entities = TheEngine.getInstance().getEntitiesFor(Families.collidableFamily);

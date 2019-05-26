@@ -75,4 +75,7 @@ public class Mappers {
 
     public static final ComponentMapper<PlayerComponent> playerMapper =
             ComponentMapper.getFor(PlayerComponent.class);
+
+    public static final ComponentMapper<HealthComponent> healthMapper =
+            ComponentMapper.getFor(HealthComponent.class);
 }

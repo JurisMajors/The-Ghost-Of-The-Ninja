@@ -28,17 +28,6 @@ public class PlayerCombatSystem extends IteratingSystem {
         PlayerComponent plc = Mappers.playerMapper.get(entity);
         MovementComponent mc = Mappers.movementMapper.get(entity);
 
-//        // if damage is inflicted by rangeweapon
-//        PositionComponent playerPos = Mappers.positionMapper.get(TheEngine.getInstance()
-//                .getEntitiesFor(Families.playerFamily).get(0));
-//        if (rwc.wait < rwc.rate) rwc.wait++; //count frames until next shot
-//        else { //shoot
-//            rwc.wait = 0;
-//            //create new bullet
-//            new Bullet(pc.position.add(rwc.bulletPos),
-//                    playerPos.position.sub(pc.position.add(rwc.bulletPos)).normalized());
-//        }
-
         // process cooldown for all items
         cooldown(deltaTime, plc);
 
@@ -48,14 +37,11 @@ public class PlayerCombatSystem extends IteratingSystem {
 
         // when player hits enter, attack
         if (wc != null && KeyBoard.isKeyDown(GLFW_KEY_ENTER)) {
-            // set cooldown in accordance to rate of attack
 
             // if melee
-            System.out.println(wc.cooldown);
             if (wc.cooldown <= 0.0f) {
+                // set cooldown in accordance to rate of attack
                 wc.cooldown = 1 / wc.rateOfAttack;
-
-                System.out.println(mc.orientation);
 
                 // TODO: account for y
                 Vector3f hitboxOffset = wc.hitboxOffset.scale(mc.orientation);
@@ -64,7 +50,6 @@ public class PlayerCombatSystem extends IteratingSystem {
                         wc.damage);
             }
         }
-
     }
 
     private void cooldown(float deltaTime, PlayerComponent plc) {
@@ -73,6 +58,7 @@ public class PlayerCombatSystem extends IteratingSystem {
             if (item == null) {
                 continue;
             }
+
             MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(item);
             RangeWeaponComponent rc = Mappers.rangeWeaponMapper.get(item);
 
@@ -88,7 +74,6 @@ public class PlayerCombatSystem extends IteratingSystem {
                 }
             }
         }
-
     }
 
 }

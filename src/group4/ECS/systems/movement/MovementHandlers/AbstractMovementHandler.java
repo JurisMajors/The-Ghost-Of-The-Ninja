@@ -7,6 +7,7 @@ import group4.ECS.components.identities.MobComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
@@ -147,6 +148,7 @@ public abstract class AbstractMovementHandler<T extends Entity> {
     private boolean canSeePlayer(float angleRange, int nrRays, PositionComponent pc, DimensionComponent dc, MovementComponent mc) {
         List<Class<? extends Component>> seeThrough = new ArrayList<>();
         seeThrough.add(MobComponent.class);
+        seeThrough.add(DamageComponent.class);
 
         // look in the direction the mob is moving
         Vector3f dir = new Vector3f(mc.velocity);

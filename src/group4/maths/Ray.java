@@ -4,9 +4,11 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.identities.GhostComponent;
+import group4.ECS.components.identities.MobComponent;
 import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.etc.Mappers;
 
 import java.awt.geom.Line2D;
@@ -48,7 +50,6 @@ public class Ray {
         this.end = this.startPos.add(this.dir.normalized().scale(10000));
         this.ignorableComponents = defaultList;
     }
-
 
     /**
      * Cast the ray to the given entities
