@@ -98,11 +98,11 @@ public class Evaluator implements FitnessEvaluator<Brain> {
                 System.out.println("death");
                 break;
             } else if (timer.getTime() - initTime >= Evolver.timelimit) {
+                System.out.println(Arrays.toString(ghost.getComponent(GhostComponent.class).moveFreq));
                 System.out.println("timeout");
                 break;
             }
         }
-        System.out.println(Arrays.toString(ghost.getComponent(GhostComponent.class).moveFreq));
         // unload the entities from the engine and delete them from the module reference
         Vector3f closestExit = null;
         Vector3f ghostPos = ghost.getComponent(PositionComponent.class).position;
@@ -122,8 +122,8 @@ public class Evaluator implements FitnessEvaluator<Brain> {
 
         }
         // fitness = if no exits exist, simply take x coordinate, otherwise the distance traveled in the direction of closest exit
-        float fitness = closestExit == null ? ghostPos.x :
-                Math.max(startingPos.euclidDist(closestExit) - ghostPos.euclidDist(closestExit), 0);
+        float fitness = closestExit == null ? Math.max(ghostPos.x, 0) :
+                ghostPos.euclidDist(closestExit)/startingPos.euclidDist(closestExit);
         currModule.unload();
         return fitness;
     }
@@ -133,7 +133,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
      */
     @Override
     public boolean isNatural() {
-        return true;
+        return false;
     }
 
     /**
