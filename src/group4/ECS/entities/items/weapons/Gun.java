@@ -36,4 +36,7 @@ public class Gun extends Item {
         this.add(new PositionComponent(position));
     }
 
+    public static String getName() {
+        return "Gun";
+    }
 }

@@ -49,4 +49,8 @@ public class Bullet extends Entity {
 
     }
 
+    public static String getName() {
+        return "Bullet";
+    }
+
 }

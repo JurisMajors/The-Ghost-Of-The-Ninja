@@ -7,6 +7,7 @@ import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.systems.collision.CollisionHandlers.PlatformCollision;
+import group4.game.Main;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
@@ -25,9 +26,17 @@ public class Platform extends Entity {
      */
     public Platform(Vector3f position, Vector3f dimension, Shader shader, Texture texture) {
         this(position, dimension);
+        if (Main.SHOULD_OPENGL) {
+            // create the graphics component with a vertex array repeating the texture over this platform
+            GraphicsComponent graphicsComponent = createGraphicsComponent(position, dimension, texture, shader);
+            this.add(graphicsComponent);
+        }
+    }
+
+    public Platform(Vector3f position, Vector3f dimension, Shader shader, Texture texture, float[] texCoords) {
+        this(position, dimension);
         // create the graphics component with a vertex array repeating the texture over this platform
-        GraphicsComponent graphicsComponent = createGraphicsComponent(position, dimension, texture, shader);
-        this.add(graphicsComponent);
+        this.add(new GraphicsComponent(shader, texture, dimension, texCoords));
     }
 
     public Platform(Vector3f position, Vector3f dimension) {
@@ -155,4 +164,7 @@ public class Platform extends Entity {
         return result;
     }
 
+    public static String getName() {
+        return "Platform";
+    }
 }

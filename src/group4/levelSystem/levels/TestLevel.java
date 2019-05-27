@@ -7,7 +7,6 @@ import group4.ECS.etc.TheEngine;
 import group4.levelSystem.ExitAction;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
-import group4.levelSystem.modules.SimpleModule;
 import group4.levelSystem.modules.TestModule;
 import group4.maths.Vector3f;
 

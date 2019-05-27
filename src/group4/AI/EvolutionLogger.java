@@ -4,6 +4,7 @@ import org.uncommons.watchmaker.framework.EvolutionObserver;
 import org.uncommons.watchmaker.framework.PopulationData;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -32,7 +33,11 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);
 
-            LOGGER.info("Logger initialized");
+            LOGGER.info("Logger initialized! \n" +
+                    "Layers: " + Arrays.toString(Evolver.layerSizes) + "\n" +
+                    "Population: " + Evolver.populationSize + "\n" +
+                    "MutationProb: " + Evolver.mutationProbability + "\n" +
+                    "Rays: " + Evolver.rays);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -53,8 +58,8 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
      */
     @Override
     public void populationUpdate(PopulationData<? extends Brain> data) {
-        String log = String.format("Current generation: %d \n Mean Fitness: %f \n Best Fitness: %f \n STD fitness : %f",
-                data.getGenerationNumber(), data.getMeanFitness(),
+        String log = String.format("Current generation: %d / %d \n Mean Fitness: %f \n Best Fitness: %f \n STD fitness: %f",
+                data.getGenerationNumber(), Evolver.genCount, data.getMeanFitness(),
                 data.getBestCandidateFitness(), data.getFitnessStandardDeviation());
 
         System.out.println(log);

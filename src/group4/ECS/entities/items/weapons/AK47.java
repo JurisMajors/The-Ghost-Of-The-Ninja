@@ -26,4 +26,7 @@ public class AK47 extends Gun {
                 new Vector3f(0.5f, 2.0f,0.0f), EntityConst.BulletType.MACHINEGUN));
     }
 
+    public static String getName() {
+        return "AK47";
+    }
 }

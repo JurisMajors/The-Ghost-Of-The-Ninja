@@ -36,7 +36,11 @@ public class Mob extends Entity {
         this.add(new GravityComponent());
         this.add(new GraphicsComponent(shader, texture, dimension));
         this.add(new CollisionComponent(MobCollision.getInstance()));
-        this.add(new HealthComponent(100));
+        this.add(new HealthComponent(30));
         this.add(new MobComponent(handler));
+    }
+
+    public static String getName() {
+        return "Mob";
     }
 }

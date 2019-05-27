@@ -19,6 +19,7 @@ public class Texture {
     public static Texture BLACK;
     public static Texture WHITE;
     public static Texture MAIN_TILES;
+    public static Texture PLAYER;
     public static Texture BACKGROUND;
     public static Texture HITBOX;
 
@@ -41,11 +42,12 @@ public class Texture {
         AK47 = new Texture("src/group4/res/textures/weapons/AK47.png");
         MG_BULLET = new Texture("src/group4/res/textures/weapons/Bullet.png");
         EXIT = new Texture("src/group4/res/textures/exit.jpg");
-        MAIN_TILES = new Texture("src/group4/res/textures/maintiles.png");
+        MAIN_TILES = new Texture("src/group4/res/textures/tilemap-main.png");
         BACKGROUND = new Texture("src/group4/res/textures/cave.jpg");
         BLACK = new Texture("src/group4/res/textures/black.png");
         WHITE = new Texture("src/group4/res/textures/white.png");
         HITBOX = new Texture("src/group4/res/textures/hitbox.png");
+        PLAYER = new Texture("src/group4/res/textures/char1.png");
     }
 
     /**

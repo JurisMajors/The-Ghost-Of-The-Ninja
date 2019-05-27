@@ -50,7 +50,7 @@ public class DamageSystem extends IteratingSystem {
             Mappers.healthMapper.get(cd.entity).health = health - dc.damage;
 
             System.out.println(cd.entity);
-            System.out.println(health);
+            System.out.println(Mappers.healthMapper.get(cd.entity).health);
         }
     }
 

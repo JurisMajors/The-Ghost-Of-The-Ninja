@@ -57,8 +57,10 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         this.timer = new Timer();
         // register systems to engine
         // initSystems(TheEngine.getInstance());
-        Shader.loadAllShaders();
-        Texture.loadAllTextures();
+        if (Main.SHOULD_OPENGL) {
+            Shader.loadAllShaders();
+            Texture.loadAllTextures();
+        }
 
     }
 
@@ -74,7 +76,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         Vector3f startingPos = currModule.getPlayerInitialPosition();
 
         // create the ghost
-        Entity ghost = new Ghost(
+        Ghost ghost = new Ghost(
                 new Vector3f(startingPos),
                 level,
                 brain);
@@ -93,14 +95,11 @@ public class Evaluator implements FitnessEvaluator<Brain> {
             }
             // termination conditions
             if (ghost.getComponent(HealthComponent.class).health <= 0) {
-                System.out.println("death");
                 break;
             } else if (timer.getTime() - initTime >= Evolver.timelimit) {
-                System.out.println("timeout");
                 break;
             }
         }
-        System.out.println(Arrays.toString(ghost.getComponent(GhostComponent.class).moveFreq));
         // unload the entities from the engine and delete them from the module reference
         Vector3f closestExit = null;
         Vector3f ghostPos = ghost.getComponent(PositionComponent.class).position;
@@ -120,8 +119,11 @@ public class Evaluator implements FitnessEvaluator<Brain> {
 
         }
         // fitness = if no exits exist, simply take x coordinate, otherwise the distance traveled in the direction of closest exit
-        float fitness = closestExit == null ? ghostPos.x :
-                startingPos.euclidDist(closestExit) - ghostPos.euclidDist(closestExit);
+        float fitness = ghostPos.euclidDist(closestExit) / startingPos.euclidDist(closestExit);
+        if (ghost.best) {
+            System.out.println("Got best ghost");
+            fitness = 0;
+        }
         currModule.unload();
         return fitness;
     }
@@ -131,19 +133,19 @@ public class Evaluator implements FitnessEvaluator<Brain> {
      */
     @Override
     public boolean isNatural() {
-        return true;
+        return false;
     }
 
     /**
      * registers all necessary systems for running a minimal game for the AI
      */
-    private void initSystems(Engine e) {
+    private void initSystems(Engine engine) {
+//        System.out.println(engine);
         // clear all systems for robustness
-        for (EntitySystem system : e.getSystems()) {
-            e.removeSystem(system);
+        for (EntitySystem system : engine.getSystems()) {
+            engine.removeSystem(system);
         }
 
-        Engine engine = TheEngine.getInstance();
         if (Evolver.render) {
             engine.addSystem(new CameraSystem(Families.ghostFamily, 0));
         }

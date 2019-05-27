@@ -1,20 +1,11 @@
 package group4.ECS.etc;
 
 import com.badlogic.ashley.core.Family;
-import group4.ECS.components.AudioComponent;
-import group4.ECS.components.GraphicsComponent;
-import group4.ECS.components.events.TickComponent;
-import group4.ECS.components.events.TimedComponent;
-import group4.ECS.components.stats.RangeWeaponComponent;
-import group4.ECS.components.SplineComponent;
+import group4.ECS.components.*;
 import group4.ECS.components.identities.*;
-import group4.ECS.components.physics.CollisionComponent;
-import group4.ECS.components.physics.DimensionComponent;
-import group4.ECS.components.physics.PhysicsComponent;
-import group4.ECS.components.physics.PositionComponent;
-import group4.ECS.components.stats.DamageComponent;
-import group4.ECS.components.stats.HealthComponent;
-import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.components.physics.*;
+import group4.ECS.components.stats.*;
+import group4.ECS.components.events.*;
 
 /**
  * This class determines groups (families) of entities which share the same components
@@ -106,15 +97,14 @@ public class Families {
 
     //All entities with which collision is possible
     public static final Family collidableFamily = Family
-            .all(CollisionComponent.class).exclude(MovementComponent.class).get();
-
+            .all(CollisionComponent.class).exclude(MovementComponent.class, SplineComponent.class).get();
     //All entities with which collision is possible
     public static final Family collidableMovingFamily = Family
             .all(CollisionComponent.class, MovementComponent.class).get();
 
     //All entities with spline collision
     public static final Family collidableSplineFamily = Family
-            .all(SplineComponent.class, CollisionComponent.class).get();
+            .all(SplineComponent.class, CollisionComponent.class).exclude(SplinePathComponent.class).get();
 
     public static final Family allCollidableFamily = Family
             .all(CollisionComponent.class).get();

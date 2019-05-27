@@ -1,4 +1,4 @@
-package group4.game;
+        package group4.game;
 
 import com.badlogic.ashley.core.Engine;
 import group4.AI.Evolver;
@@ -27,7 +27,7 @@ import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
-import group4.levelSystem.levels.TestLevel;
+import group4.levelSystem.levels.Level01;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
@@ -70,20 +70,25 @@ public class Main implements Runnable {
      * The main logic for controlling the program flow of this class.
      */
     public void run() {
-        init();
+        if (Main.SHOULD_OPENGL) {
+            init();
+        } else {
+            TileMapping.loadAllTileMappings();
+        }
         if (AI) {
             Evolver.train();
         } else {
             loop();
         }
+        if (Main.SHOULD_OPENGL) {
+            // Cleanup after we exit the game loop
+            glfwFreeCallbacks(window); // Free the window callbacks
+            glfwDestroyWindow(window); // Destroy the window
 
-        // Cleanup after we exit the game loop
-        glfwFreeCallbacks(window); // Free the window callbacks
-        glfwDestroyWindow(window); // Destroy the window
-
-        // Terminate GLFW and free the error callback
-        glfwTerminate();
-        glfwSetErrorCallback(null).free();
+            // Terminate GLFW and free the error callback
+            glfwTerminate();
+            glfwSetErrorCallback(null).free();
+        }
     }
 
     /**
@@ -144,7 +149,7 @@ public class Main implements Runnable {
             engine.addSystem(new RenderSystem(13));
             engine.addSystem(new TimedEventSystem(14));
             engine.addSystem(new UncollidingSystem(15));
-            this.level = new TestLevel();
+            this.level = new Level01();
 
         }
         // Initialize the level
@@ -210,6 +215,9 @@ public class Main implements Runnable {
     }
 
     public static void main(String[] args) {
+        if (Main.AI && args.length != 0) {
+            Evolver.parseArgs(args);
+        }
         new Main().start();
     }
 

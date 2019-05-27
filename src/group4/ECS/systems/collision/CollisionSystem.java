@@ -98,72 +98,137 @@ public class CollisionSystem extends IteratingSystem {
         PositionComponent pc = Mappers.positionMapper.get(e);
         DimensionComponent dc = Mappers.dimensionMapper.get(e);
 
-        // get all corner points of the bounding box of the entity colliding with a spline
-//        Vector3f ct = pc.position.add(dc.dimension.scale(0.5f));
-        Vector3f bl = pc.position;
-        Vector3f br = pc.position.add(new Vector3f(dc.dimension.x, 0.0f, dc.dimension.z));
-        Vector3f tr = pc.position.add(dc.dimension);
-        Vector3f tl = pc.position.add(new Vector3f(0.0f, dc.dimension.y, dc.dimension.z));
+        // encode the corners of the rectangle (bl, br, tr, tl)
+        int[] codes = new int[]{0, 1, 2, 3};
+        Vector3f[] corners = getCorners(pc.position, dc.dimension);
 
+        // loop through all collidable splines
         for (Entity spline : entities) {
+            // don't do collision with the same object
             if (e.equals(spline)) {
                 continue;
             }
-            PositionComponent spc = Mappers.positionMapper.get(spline);
-            SplineComponent sc = Mappers.splineMapper.get(spline);
 
-            // store the smallest vector that goes from a spline point to a boundingbox point
-            Vector3f smallestDisplacement = new Vector3f(1000f, 1000f, 1000f);
-            Vector3f closestPoint = null;
-            Vector3f clostestNormal = null;
-
-            // loop through all spline points
-            for (int i = 0; i < sc.points.length; i++) {
-                Vector3f point = sc.points[i];
-                Vector3f normal = sc.normals[i];
-
-                Vector3f oldSmallest = new Vector3f(smallestDisplacement);
-                Vector3f worldPoint = point.add(spc.position);
-                // compute difference with bounding box point and spline point and store the smallest displacement
-                smallestDisplacement = Vector3f.min(smallestDisplacement, bl.sub(worldPoint));
-                smallestDisplacement = Vector3f.min(smallestDisplacement, br.sub(worldPoint));
-                smallestDisplacement = Vector3f.min(smallestDisplacement, tr.sub(worldPoint));
-                smallestDisplacement = Vector3f.min(smallestDisplacement, tl.sub(worldPoint));
-//                smallestDisplacement = Vector3f.min(smallestDisplacement, ct.sub(worldPoint));
-
-                // get closest point to the bounding box
-                if (smallestDisplacement.length() < oldSmallest.length()) {
-                    closestPoint = point;
-                    clostestNormal = normal;
-                }
-            }
-
-            // make sure that the normal is facing the right way
-            if (clostestNormal.scale(-1.0f).sub(smallestDisplacement).length() < clostestNormal.sub(smallestDisplacement).length()) {
-                clostestNormal.scalei(-1.0f);
-            }
-
-            // get the position on the spline edge closest to the bb
-            Vector3f newPos = closestPoint.add(clostestNormal);
-
-            // if the smallest displacement is smaller than half of the thickness there is a collision
-            // TODO: FIX HACK AT END OF IF STATEMENT VERY DANGAROUS
-            if (smallestDisplacement.length() <= sc.normals[0].scale(0.5f * sc.thickness).length()) {
-                smallestDisplacement.scalei(smallestDisplacement.sub(sc.normals[0].scale(0.5f * sc.thickness)).length());
-                CollisionComponent scc = Mappers.collisionMapper.get(spline);
-
-                // add collision to entity and spline
-                CollisionData c1 = new CollisionData(spline, smallestDisplacement, newPos);
-                CollisionData c2 = new CollisionData(e, smallestDisplacement.scale(-1.0f), newPos);
-                cc.collisions.add(c1);
-                scc.collisions.add(c2);
-            }
+            handleSpline(e, spline, codes, corners, cc, dc);
         }
     }
 
-    /// BELOW ARE FUNCTIONS TO DEAL WITH AXIS ALIGNED RECTANGLE INTERSECTION
-    // TODO: maybe move those around a bit since there will also be functions to deal with spline intersection
+    /**
+     * Handles collision with moving entity e and spline spline.
+     *
+     * @param e       moving entity
+     * @param spline  spline entity
+     * @param codes   corner encoding
+     * @param corners corners of e
+     * @param cc      e's CollisionComponent
+     * @param dc      e's DimensionComponent
+     */
+    private void handleSpline(Entity e, Entity spline, int[] codes, Vector3f[] corners, CollisionComponent cc, DimensionComponent dc) {
+        PositionComponent spc = Mappers.positionMapper.get(spline);
+        SplineComponent sc = Mappers.splineMapper.get(spline);
 
+        // store the smallest vector that goes from a spline point to one of the points in the bounding box
+        Vector3f smallestDisplacement = new Vector3f(Float.MAX_VALUE, 0f, 0f);
+        // store the code for the corresponding corner
+        int smallestCode = -1;
+        // store the point on the spline that is closest to the closest bounding box point
+        Vector3f closestPoint = null;
+        Vector3f clostestNormal = null;
+
+        for (int i = 0; i < sc.points.length; i++) {
+            // get local spline position and its normal
+            Vector3f point = sc.points[i];
+            Vector3f normal = sc.normals[i];
+            Vector3f oldSmallest = new Vector3f(smallestDisplacement);
+
+            // change the spline coordinates to world space
+            Vector3f worldPoint = point.add(spc.position);
+
+            // compute difference vector of bounding box point and spline point and store the smallest displacement
+            for (int k = 0; k < 4; k++) {
+                if (corners[k].sub(worldPoint).length() < smallestDisplacement.length()) {
+                    smallestDisplacement = corners[k].sub(worldPoint);
+                    smallestCode = codes[k];
+                }
+            }
+
+            // get closest point to the bounding box
+            if (smallestDisplacement.length() < oldSmallest.length()) {
+                closestPoint = worldPoint;
+                clostestNormal = normal;
+            }
+        }
+
+        // make sure that the normal is facing the right way
+        if (clostestNormal.scale(-1.0f).sub(smallestDisplacement).length() < clostestNormal.sub(smallestDisplacement).length()) {
+            clostestNormal.scalei(-1.0f);
+        }
+
+        // get the position on the spline edge closest to the bounding box
+        Vector3f newPos = closestPoint.add(clostestNormal.scale(0.5f * sc.thickness));
+
+        // correct for which corner needs to get this new position
+        cornerCorrection(newPos, dc.dimension, smallestCode);
+
+        // if the smallest displacement is smaller than half of the thickness there is a collision
+        if (smallestDisplacement.length() <= 0.5f * sc.thickness) {
+            CollisionComponent scc = Mappers.collisionMapper.get(spline);
+
+            // add collision to entity and spline
+            CollisionData c1 = new CollisionData(spline, smallestDisplacement, newPos);
+            CollisionData c2 = new CollisionData(e, smallestDisplacement.scale(-1.0f), newPos);
+            cc.collisions.add(c1);
+            scc.collisions.add(c2);
+        }
+    }
+
+    /**
+     * Corrects the new position for which corner it is for.
+     * The newPosition is for the corner represented by smallestCode.
+     * After this function is called newPos is for the bottomLeft postion.
+     *
+     * @param newPos       new position for a corner
+     * @param dimension    dimension of the rectangle
+     * @param smallestCode code for the corner
+     */
+    private void cornerCorrection(Vector3f newPos, Vector3f dimension, int smallestCode) {
+        // do a position offset according to which corner of the bounding box is on the spline
+        if (smallestCode == 1) {
+            // bottom right corner needs to be shifted left by the width
+            newPos.x -= dimension.x;
+        } else if (smallestCode == 2) {
+            // top right corner needs to be shifted left and up by width and down by height
+            newPos.x -= dimension.x;
+            newPos.y -= dimension.y;
+        } else if (smallestCode == 3) {
+            // top left corner needs to be shifted down by height
+            newPos.y -= dimension.y;
+        }
+
+    }
+
+    /**
+     * Given a position and dimension, return a list of the corner of the rectangle represented
+     * by this position and dimension. The order is
+     * {BottomLeft, BottomRight, TopRight, TopLeft}.
+     *
+     * @param position
+     * @param dimension
+     * @return corners of rectangle
+     */
+    private Vector3f[] getCorners(Vector3f position, Vector3f dimension) {
+        Vector3f[] result = new Vector3f[4];
+
+        // get all corner points of the bounding box of the entity colliding with a spline
+        result[0] = position; // bottom left
+        result[1] = position.add(new Vector3f(dimension.x, 0.0f, dimension.z)); // bottom right
+        result[2] = position.add(dimension); // top right
+        result[3] = position.add(new Vector3f(0.0f, dimension.y, dimension.z)); // top left
+
+        return result;
+    }
+
+    /// BELOW ARE FUNCTIONS TO DEAL WITH AXIS ALIGNED RECTANGLE INTERSECTION
 
     /**
      * Produces a displacement vector for a possibly occuring collision
@@ -201,7 +266,7 @@ public class CollisionSystem extends IteratingSystem {
         Vector3f firstCntr = firstPos.add(firstDim.scale(0.5f));
 
         // if the first is not on or below the second, then no displacement
-        if (!(firstCntr.x >= scndPos.x && firstCntr.x <= scndPos.x + scndDim.x)) {
+        if (!(firstCntr.x + 0.3f >= scndPos.x && firstCntr.x - 0.3f <= scndPos.x + scndDim.x)) {
             return new Vector3f();
         }
 

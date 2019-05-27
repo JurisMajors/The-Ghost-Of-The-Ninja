@@ -3,12 +3,15 @@ package group4.maths;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
+import group4.ECS.components.SplineComponent;
+import group4.ECS.components.identities.ExitComponent;
 import group4.ECS.components.identities.GhostComponent;
 import group4.ECS.components.identities.MobComponent;
 import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.DamageComponent;
+import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.Mappers;
 
 import java.awt.geom.Line2D;
@@ -43,6 +46,7 @@ public class Ray {
     public Ray(Vector3f startingPos, Vector3f dir) {
         List<Class<? extends Component>> defaultList = new ArrayList<>();
         defaultList.add(GhostComponent.class);
+        defaultList.add(ExitComponent.class);
         defaultList.add(PlayerComponent.class);
 
         this.startPos = startingPos;
@@ -66,7 +70,7 @@ public class Ray {
         entity_loop:
         for (Entity e : entities) {
             // ignore entities that contain an ignoreable component
-            for (Class<? extends Component> component: this.ignorableComponents) {
+            for (Class<? extends Component> component : this.ignorableComponents) {
                 // skip this entity
                 if (e.getComponent(component) != null) {
                     continue entity_loop;
@@ -101,24 +105,14 @@ public class Ray {
      */
     public List<Vector3f> intersects(Entity entity) {
         List<Vector3f> intersections = new ArrayList<>();
-        PositionComponent posComp = Mappers.positionMapper.get(entity);
-        DimensionComponent dimComp = Mappers.dimensionMapper.get(entity);
-        Vector3f dim = dimComp.dimension;
-        Vector3f botL = posComp.position;
-
-        // points of the bounding box
-        // the z coordinates dont matter, since we only care about 2D intersection
-        Vector3f botLeft = new Vector3f(botL); // copy botleft
-        Vector3f topLeft = new Vector3f(botLeft.x, botLeft.y + dim.y, botLeft.z);
-        Vector3f topRight = botLeft.add(dim);
-        Vector3f botRight = new Vector3f(botLeft.x + dim.x, botLeft.y, botLeft.z);
-
         // define lines of the bounding box
-        List<Line2D.Float> lines = new ArrayList<>();
-        lines.add(createLine(topLeft, topRight));
-        lines.add(createLine(topLeft, botLeft));
-        lines.add(createLine(botLeft, botRight));
-        lines.add(createLine(botRight, topRight));
+        List<Line2D.Float> lines;
+
+        if (entity instanceof SplinePlatform) {
+            lines = getSplineLines(entity);
+        } else {
+            lines = getBBLines(entity);
+        }
         // this can be extended for more dimensions if necessary...
         Line2D.Float rayAsLine = createLine(this.startPos, this.end);
         // check for intersections on each line
@@ -135,6 +129,36 @@ public class Ray {
         }
 
         return intersections;
+    }
+
+    private List<Line2D.Float> getSplineLines(Entity splinePlatform) {
+        List<Line2D.Float> lines = new ArrayList<>();
+        PositionComponent pc = Mappers.positionMapper.get(splinePlatform);
+        SplineComponent sc = Mappers.splineMapper.get(splinePlatform);
+        for (int i = 0; i < sc.points.length - 1; i++) {
+            lines.add(createLine(sc.points[i].add(pc.position), sc.points[i + 1].add(pc.position)));
+        }
+        return lines;
+    }
+
+    private List<Line2D.Float> getBBLines(Entity entity) {
+        List<Line2D.Float> lines = new ArrayList<>();
+        PositionComponent posComp = Mappers.positionMapper.get(entity);
+        DimensionComponent dimComp = Mappers.dimensionMapper.get(entity);
+        Vector3f dim = dimComp.dimension;
+        Vector3f botL = posComp.position;
+        // points of the bounding box
+        // the z coordinates dont matter, since we only care about 2D intersection
+        Vector3f botLeft = new Vector3f(botL); // copy botleft
+        Vector3f topLeft = new Vector3f(botLeft.x, botLeft.y + dim.y, botLeft.z);
+        Vector3f topRight = botLeft.add(dim);
+        Vector3f botRight = new Vector3f(botLeft.x + dim.x, botLeft.y, botLeft.z);
+
+        lines.add(createLine(topLeft, topRight));
+        lines.add(createLine(topLeft, botLeft));
+        lines.add(createLine(botLeft, botRight));
+        lines.add(createLine(botRight, topRight));
+        return lines;
     }
 
     private Line2D.Float createLine(Vector3f a, Vector3f b) {
