@@ -12,11 +12,27 @@ public class DamageSystem extends IteratingSystem {
 
     public DamageSystem() { super(Families.dmgInflictingFamily); }
 
+    /**
+     * This will resolve damage for all collisions of damage inflicting entities
+     *
+     * @param entity the entity which inflicts damage
+     * @param deltaTime the time which passed in between the last and current tick
+     */
+    @Override
     protected void processEntity(Entity entity, float deltaTime) {
         CollisionComponent cc = Mappers.collisionMapper.get(entity);
         DamageComponent dc = Mappers.damageMapper.get(entity);
 
+        // for all collisions of dmg inflicting entity
         for (CollisionData cd : cc.collisions) {
+
+            // if the damage inflicting entity collides with its origin, skip
+            // e.g. player shouldn't hit himself
+            if (dc.origin.equals(cd.entity)) {
+                continue;
+            }
+
+            // if colliding entity does not have health, skip
             if (!Mappers.healthMapper.has(cd.entity)) {
                 continue;
             }
@@ -24,10 +40,12 @@ public class DamageSystem extends IteratingSystem {
             int health = Mappers.healthMapper.get(cd.entity).health;
             System.out.println(health);
 
+            // if entity dead, skip
             if (health <= 0) {
-                break;
+                continue;
             }
 
+            // resolve damage
             Mappers.healthMapper.get(cd.entity).health = health - dc.damage;
         }
     }

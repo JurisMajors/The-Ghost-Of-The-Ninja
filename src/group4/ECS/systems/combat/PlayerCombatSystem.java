@@ -7,9 +7,7 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MeleeWeaponComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.components.stats.RangeWeaponComponent;
-import group4.ECS.components.stats.WeaponComponent;
-import group4.ECS.entities.DamageArea;
-import group4.ECS.entities.Player;
+import group4.ECS.entities.MeleeArea;
 import group4.ECS.entities.items.Item;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
@@ -22,6 +20,13 @@ public class PlayerCombatSystem extends IteratingSystem {
 
     public PlayerCombatSystem() { super(Families.playerFamily); }
 
+    /**
+     * This manages the combat of the player, i.e. input -> attack
+     * as well as all cooldowns of players items in inventory
+     *
+     * @param entity player
+     * @param deltaTime time in between past and current tick
+     */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(entity);
@@ -46,12 +51,18 @@ public class PlayerCombatSystem extends IteratingSystem {
                 // TODO: account for y
                 Vector3f hitboxOffset = wc.hitboxOffset.scale(mc.orientation);
                 Vector3f position = pc.position.add(hitboxOffset);
-                new DamageArea(position, wc.hitBox,
-                        wc.damage);
+                new MeleeArea(position, wc.hitBox,
+                        wc.damage, entity);
             }
         }
     }
 
+    /**
+     * This method manages all cooldowns for all items within the players inventory
+     *
+     * @param deltaTime time in between past and current tick
+     * @param plc referencing the player
+     */
     private void cooldown(float deltaTime, PlayerComponent plc) {
         for (Item item : plc.inventory) {
             // if itemslot is not used
@@ -59,6 +70,7 @@ public class PlayerCombatSystem extends IteratingSystem {
                 continue;
             }
 
+            // get mappers
             MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(item);
             RangeWeaponComponent rc = Mappers.rangeWeaponMapper.get(item);
 
