@@ -18,7 +18,9 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER;
 
 public class PlayerCombatSystem extends IteratingSystem {
 
-    public PlayerCombatSystem() { super(Families.playerFamily); }
+    public PlayerCombatSystem(int priority) {
+        super(Families.playerFamily, priority);
+    }
 
     /**
      * This manages the combat of the player, i.e. input -> attack

@@ -20,6 +20,7 @@ public class MobCollision extends AbstractCollisionHandler<Mob> {
     public void collision(Mob e, CollisionComponent cc) {
         Set<CollisionData> others = cc.collisions;
         List<CollisionData> removables = new ArrayList<>();
+
         // loop through all collisions and handle them accordingly
         for (CollisionData cd : others) {
             Entity other = cd.entity;

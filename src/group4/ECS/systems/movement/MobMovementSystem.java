@@ -8,8 +8,8 @@ import group4.ECS.etc.Mappers;
 
 public class MobMovementSystem extends IteratingSystem {
 
-    public MobMovementSystem() {
-        super(Families.mobFamily);
+    public MobMovementSystem(int priority) {
+        super(Families.mobFamily, priority);
     }
 
     @Override

@@ -23,9 +23,9 @@ import group4.maths.Vector3f;
  */
 public class CollisionSystem extends IteratingSystem {
 
-    public CollisionSystem() {
+    public CollisionSystem(int priority) {
         // only process collisions for moving entities that are collidable
-        super(Families.collidableMovingFamily);
+        super(Families.collidableMovingFamily, priority);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class CollisionSystem extends IteratingSystem {
         ImmutableArray<Entity> entities;
 
         // ???
-        if (e instanceof Bullet || e instanceof DamageArea) {
+        if (e instanceof Bullet) {
             entities = TheEngine.getInstance().getEntitiesFor(Families.allCollidableFamily);
         } else {
             entities = TheEngine.getInstance().getEntitiesFor(Families.collidableFamily);

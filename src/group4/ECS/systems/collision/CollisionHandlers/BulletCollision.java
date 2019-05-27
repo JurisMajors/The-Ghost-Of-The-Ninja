@@ -18,7 +18,7 @@ public class BulletCollision extends AbstractCollisionHandler<Bullet> {
             // set of collisions in the other entity
             TheEngine.getInstance().removeEntity(e);
             // clear the set so that we
-            // dont do displacement of the bullet in the UncollidingSystem
+            // dont do displacement of the bullet in the DisplacementSystem
             cc.collisions.clear();
         }
     }

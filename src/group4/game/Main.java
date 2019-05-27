@@ -8,6 +8,7 @@ import group4.ECS.systems.CameraSystem;
 import group4.ECS.systems.RenderSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
+import group4.ECS.systems.collision.DisplacementSystem;
 import group4.ECS.systems.collision.UncollidingSystem;
 import group4.ECS.systems.combat.DamageSystem;
 import group4.ECS.systems.combat.PlayerCombatSystem;
@@ -122,24 +123,25 @@ public class Main implements Runnable {
         // Initialize the engine
         engine = TheEngine.getInstance();
         if (!AI) {
-            // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
+            // Set up all engine systems
             // Systems which change the gamestate
-            engine.addSystem(new PlayerMovementSystem());
-            engine.addSystem(new GhostMovementSystem());
-            engine.addSystem(new MobMovementSystem());
-            engine.addSystem(new BulletMovementSystem());
-            engine.addSystem(new CollisionSystem());
-            engine.addSystem(new PlayerCombatSystem());
-            engine.addSystem(new DamageSystem());
-            engine.addSystem(new CollisionEventSystem());
-            engine.addSystem(new UncollidingSystem());
-            engine.addSystem(new PlayerDyingSystem(true));
-            engine.addSystem(new GhostDyingSystem(false));
-            engine.addSystem(new MobDyingSystem());
+            engine.addSystem(new PlayerMovementSystem(0));
+            engine.addSystem(new GhostMovementSystem(1));
+            engine.addSystem(new MobMovementSystem(2));
+            engine.addSystem(new BulletMovementSystem(3));
+            engine.addSystem(new CollisionSystem(4));
+            engine.addSystem(new PlayerCombatSystem(5));
+            engine.addSystem(new DamageSystem(6));
+            engine.addSystem(new CollisionEventSystem(7));
+            engine.addSystem(new DisplacementSystem(8));
+            engine.addSystem(new PlayerDyingSystem(true, 9));
+            engine.addSystem(new GhostDyingSystem(false, 10));
+            engine.addSystem(new MobDyingSystem(11));
 
             // Systems which are essentially observers of the changed gamestate
-            engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem
-            engine.addSystem(new RenderSystem());
+            engine.addSystem(new CameraSystem(Families.playerFamily, 12));
+            engine.addSystem(new RenderSystem(13));
+            engine.addSystem(new UncollidingSystem(14));
             this.level = new TestLevel();
 
         }

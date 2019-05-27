@@ -10,7 +10,9 @@ import group4.ECS.systems.collision.CollisionData;
 
 public class DamageSystem extends IteratingSystem {
 
-    public DamageSystem() { super(Families.dmgInflictingFamily); }
+    public DamageSystem(int priority) {
+        super(Families.dmgInflictingFamily, priority);
+    }
 
     /**
      * This will resolve damage for all collisions of damage inflicting entities
@@ -37,6 +39,7 @@ public class DamageSystem extends IteratingSystem {
                 continue;
             }
 
+            System.out.println(cd.entity);
             int health = Mappers.healthMapper.get(cd.entity).health;
             System.out.println(health);
 

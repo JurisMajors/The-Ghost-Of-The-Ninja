@@ -23,7 +23,8 @@ public class CameraSystem extends EntitySystem {
     private ImmutableArray<Entity> entities;
     private Family family;
 
-    public CameraSystem(Family f) {
+    public CameraSystem(Family f, int priority) {
+        super(priority);
         this.family = f;
     }
 

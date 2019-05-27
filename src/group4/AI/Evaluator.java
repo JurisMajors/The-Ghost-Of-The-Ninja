@@ -16,7 +16,7 @@ import group4.ECS.systems.CameraSystem;
 import group4.ECS.systems.RenderSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
-import group4.ECS.systems.collision.UncollidingSystem;
+import group4.ECS.systems.collision.DisplacementSystem;
 import group4.ECS.systems.death.GhostDyingSystem;
 import group4.ECS.systems.movement.GhostMovementSystem;
 import group4.game.Main;
@@ -145,15 +145,15 @@ public class Evaluator implements FitnessEvaluator<Brain> {
 
         Engine engine = TheEngine.getInstance();
         if (Evolver.render) {
-            engine.addSystem(new CameraSystem(Families.ghostFamily));
+            engine.addSystem(new CameraSystem(Families.ghostFamily, 0));
         }
-        engine.addSystem(new GhostMovementSystem());
-        engine.addSystem(new CollisionSystem());
-        engine.addSystem(new CollisionEventSystem());
-        engine.addSystem(new UncollidingSystem());
-        engine.addSystem(new GhostDyingSystem());
+        engine.addSystem(new GhostMovementSystem(1));
+        engine.addSystem(new CollisionSystem(2));
+        engine.addSystem(new CollisionEventSystem(3));
+        engine.addSystem(new DisplacementSystem(4));
+        engine.addSystem(new GhostDyingSystem(5));
         if (Evolver.render) {
-            engine.addSystem(new RenderSystem());
+            engine.addSystem(new RenderSystem(6));
         }
     }
 

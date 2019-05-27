@@ -29,6 +29,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
     public void collision(Player player, CollisionComponent cc) {
         Set<CollisionData> others = cc.collisions;
         List<CollisionData> removables = new ArrayList<>();
+
         // loop through all collisions and handle them accordingly
         for (CollisionData cd : others) {
             Entity other = cd.entity;
@@ -36,7 +37,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
             if (other instanceof Mob) {
                 handleMob(player, (Mob) other);
             } else if (other instanceof Bullet) {
-                handleBullet(player, (Bullet) other);
+//                handleBullet(player, (Bullet) other);
                 // after player bullet interaction we dont want to fix their positions (because the bullet might die)
                 removables.add(cd);
             } else if (other instanceof Exit) {
@@ -62,14 +63,14 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
         // this is a placeholder to show how the system would work
     }
 
-    private static void handleBullet(Player player, Bullet bullet) {
-        HealthComponent h = player.getComponent(HealthComponent.class);
-        DamageComponent dmg = bullet.getComponent(DamageComponent.class);
-
-        // take damage
-        h.health -= dmg.damage;
-        // TODO: process knockback
-    }
+//    private static void handleBullet(Player player, Bullet bullet) {
+//        HealthComponent h = player.getComponent(HealthComponent.class);
+//        DamageComponent dmg = bullet.getComponent(DamageComponent.class);
+//
+//        // take damage
+//        h.health -= dmg.damage;
+//        // TODO: process knockback
+//    }
 
     private static void handleExit(Player player, Exit exit) {
         if (Main.AI && player instanceof Ghost) { // kill ghost if has reached exit

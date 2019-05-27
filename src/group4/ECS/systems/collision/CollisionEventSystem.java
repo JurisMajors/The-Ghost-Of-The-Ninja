@@ -8,8 +8,8 @@ import group4.ECS.etc.Mappers;
 
 public class CollisionEventSystem extends IteratingSystem {
 
-    public CollisionEventSystem() {
-        super(Families.collidableMovingFamily);
+    public CollisionEventSystem(int priority) {
+        super(Families.collidableMovingFamily, priority);
     }
 
     /**

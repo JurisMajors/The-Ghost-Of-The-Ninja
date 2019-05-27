@@ -5,12 +5,12 @@ import group4.ECS.etc.Families;
 
 public class MobDyingSystem extends PlayerDyingSystem {
 
-    MobDyingSystem(Family f) {
-        super(f, false);
+    MobDyingSystem(Family f, int priority) {
+        super(f, false, priority);
     }
 
-    public MobDyingSystem() {
-        this(Families.mobFamily);
+    public MobDyingSystem(int priority) {
+        this(Families.mobFamily, priority);
     }
 
 }

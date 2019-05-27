@@ -22,12 +22,12 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class PlayerMovementSystem extends IteratingSystem {
 
-    public PlayerMovementSystem() {
-        super(Families.playerFamily);
+    public PlayerMovementSystem(int priority) {
+        super(Families.playerFamily, priority);
     }
 
-    public PlayerMovementSystem(Family f) {
-        super(f);
+    public PlayerMovementSystem(Family f, int priority) {
+        super(f, priority);
     }
 
     @Override
