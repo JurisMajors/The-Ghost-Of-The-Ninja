@@ -3,6 +3,8 @@ package group4.ECS.etc;
 import com.badlogic.ashley.core.Family;
 import group4.ECS.components.AudioComponent;
 import group4.ECS.components.GraphicsComponent;
+import group4.ECS.components.events.TickComponent;
+import group4.ECS.components.events.TimedComponent;
 import group4.ECS.components.stats.RangeWeaponComponent;
 import group4.ECS.components.SplineComponent;
 import group4.ECS.components.identities.*;
@@ -13,7 +15,6 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
-import group4.ECS.entities.bullets.Bullet;
 
 /**
  * This class determines groups (families) of entities which share the same components
@@ -129,4 +130,8 @@ public class Families {
             .all(HealthComponent.class, CollisionComponent.class, DimensionComponent.class,
                     PositionComponent.class)
             .get();
+
+    // all entities which react to a timed event
+    public static final Family timedEventFamily = Family.one(TickComponent.class, TimedComponent.class).get();
+
 }

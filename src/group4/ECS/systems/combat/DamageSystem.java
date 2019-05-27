@@ -39,9 +39,7 @@ public class DamageSystem extends IteratingSystem {
                 continue;
             }
 
-            System.out.println(cd.entity);
             int health = Mappers.healthMapper.get(cd.entity).health;
-            System.out.println(health);
 
             // if entity dead, skip
             if (health <= 0) {
@@ -50,6 +48,9 @@ public class DamageSystem extends IteratingSystem {
 
             // resolve damage
             Mappers.healthMapper.get(cd.entity).health = health - dc.damage;
+
+            System.out.println(cd.entity);
+            System.out.println(health);
         }
     }
 

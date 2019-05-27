@@ -19,6 +19,7 @@ import group4.ECS.systems.movement.BulletMovementSystem;
 import group4.ECS.systems.movement.GhostMovementSystem;
 import group4.ECS.systems.movement.MobMovementSystem;
 import group4.ECS.systems.movement.PlayerMovementSystem;
+import group4.ECS.systems.timed.timedEventHandlers.TimedEventSystem;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;
@@ -141,7 +142,8 @@ public class Main implements Runnable {
             // Systems which are essentially observers of the changed gamestate
             engine.addSystem(new CameraSystem(Families.playerFamily, 12));
             engine.addSystem(new RenderSystem(13));
-            engine.addSystem(new UncollidingSystem(14));
+            engine.addSystem(new TimedEventSystem(14));
+            engine.addSystem(new UncollidingSystem(15));
             this.level = new TestLevel();
 
         }

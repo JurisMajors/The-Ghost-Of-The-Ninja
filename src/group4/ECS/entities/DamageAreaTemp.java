@@ -1,6 +1,6 @@
 package group4.ECS.entities;
 
-import group4.ECS.components.identities.TimerComponent;
+import group4.ECS.components.events.TimerComponent;
 import group4.ECS.systems.timed.timedEventHandlers.AbstractTimedHandler;
 import group4.maths.Vector3f;
 
