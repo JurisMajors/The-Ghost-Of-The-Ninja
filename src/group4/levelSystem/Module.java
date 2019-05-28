@@ -285,7 +285,7 @@ public class Module {
      */
     private void addExit(int x, int y, int i) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
-        Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
+        Vector3f tempDimension = new Vector3f(2.0f, 2.0f, 0.0f);
         Exit e = new Exit(tempPosition, tempDimension, this, TileMapping.MAIN.get(i));
         this.addEntity(e);
     }
