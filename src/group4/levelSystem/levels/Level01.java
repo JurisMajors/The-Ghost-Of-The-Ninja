@@ -29,7 +29,7 @@ public class Level01 extends Level {
             if (fileEntry.isDirectory()) {
                 continue;
             } else {
-                System.err.println(fileEntry.getPath());
+//                System.err.println(fileEntry.getPath());
                 this.modulePaths.add(fileEntry.getPath());
             }
         }
@@ -42,14 +42,14 @@ public class Level01 extends Level {
         findModulePaths();
 
         // Load in the 0th module. I think this is based on lexicographic ordering of the filenames.
-        return new Module(this, this.modulePaths.get(0), null);
+        return new Module(this, this.modulePaths.get(1), "module-01-02-ghost"); // Change .get(#) to the module you wish to load by default. For testing purposes. Should be ZERO.
     }
 
     @Override
     protected void createAdditionalModules() {
         // Load in all other modules found.
         for (int i = 1; i < this.modulePaths.size(); i++) {
-            this.addModule(new Module(this, this.modulePaths.get(i), null));
+            this.addModule(new Module(this, this.modulePaths.get(i), "module-01-02-ghost"));
         }
     }
 
@@ -61,17 +61,9 @@ public class Level01 extends Level {
 
     @Override
     protected void configExits() {
-        // We need to configure all exits
-        ExitAction global = new ExitAction() {
-            @Override
-            public void exit() {
-                System.out.println("Reached the exit :-)");
-            }
-        };
-
         for (Module m : this.modules) {
             for (Exit e : m.getExits()) {
-                System.err.println("e: " + e.targetModule);
+//                System.err.println("e: " + e.targetModule);
                 this.setExitAction(
                         e, // The exit that we want to set the action for
                         new ExitAction(this) { // Make sure to pass in the level in the constructor, so we can call back to it
@@ -80,10 +72,8 @@ public class Level01 extends Level {
                                 this.callBackLevel.switchModule(this.callBackLevel.getModuleReference(e.targetModule)); // Switch to the Simple Module once the exit is reached
                             }
                         }
-                );            }
+                );
+            }
         }
-
-        // Configure the only exit of the level: the exit of the test module
-
     }
 }
