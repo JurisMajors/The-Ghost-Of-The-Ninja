@@ -22,7 +22,7 @@ public class StandardIntersectionDecoder implements IntersectionDecoder {
         // euclidean distance / max distance ray can get, produces a normalized feature
         features[0] = pair.point.euclidDist(ghostPos) / r.end.euclidDist(ghostPos);
         // somem identifier for entities
-        features[1] = this.decodeEntity(pair.entity);
+        // features[1] = this.decodeEntity(pair.entity);
         return features;
     }
 
@@ -36,6 +36,6 @@ public class StandardIntersectionDecoder implements IntersectionDecoder {
 
     @Override
     public int nrFeatures() {
-        return 2;
+        return 1;
     }
 }
