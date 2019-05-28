@@ -36,6 +36,16 @@ public class Vector3f {
     }
 
     /**
+     * Give this vector the values of the vector to copy
+     * @param toCopy vector to copy
+     */
+    public void setVector(Vector3f toCopy) {
+        this.x = toCopy.x;
+        this.y = toCopy.y;
+        this.z = toCopy.z;
+    }
+
+    /**
      * Adds this vector to another vector and results the result.
      *
      * @param other vector
