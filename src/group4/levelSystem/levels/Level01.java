@@ -42,7 +42,7 @@ public class Level01 extends Level {
         findModulePaths();
 
         // Load in the 0th module. I think this is based on lexicographic ordering of the filenames.
-        return new Module(this, this.modulePaths.get(0), null);
+        return new Module(this, this.modulePaths.get(1), "module-01-02-ghost"); // Change .get(i) to specify module for testing.
     }
 
     @Override

@@ -23,9 +23,13 @@
         {
          "firstgid":1,
          "source":"..\/tilemap-main.tsx"
+        }, 
+        {
+         "firstgid":57,
+         "source":"..\/tilemap-exits.tsx"
         }],
  "tilewidth":32,
  "type":"map",
  "version":1.2,
- "width":50
+ "width":61
 }
