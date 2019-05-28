@@ -6,6 +6,7 @@ import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
+import group4.ECS.entities.world.ArtTile;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
 import group4.ECS.etc.TheEngine;
@@ -136,7 +137,9 @@ public class Module {
         // Now, we loop over the layers
         for (int i = 0; i < layers.length(); i++) {
             JSONObject layer = layers.getJSONObject(i);
-            if (layer.getString("name").equals("MAIN")) {
+            if (layer.getString("name").equals("EXITS")) {
+                setupExits(layer);
+            } else if (layer.getString("name").equals("MAIN")) {
                 // Get height and width of layer
                 int layerHeight = layer.getInt("height");
                 int layerWidth = layer.getInt("width");
@@ -158,8 +161,8 @@ public class Module {
                         continue;
                     } else if (entityId.equals(Platform.getName())) {
                         this.addPlatform(tileGridX, tileGridY, tileId);
-                    } else if (entityId.equals(Exit.getName())) {
-                        this.addExit(tileGridX, tileGridY, tileId);
+                    } else if (entityId.equals(ArtTile.getName())) {
+                        this.addArtTile(tileGridX, tileGridY, tileId);
                     } else if (entityId.equals(Player.getName())) {
                         this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
                     } else {
@@ -167,6 +170,9 @@ public class Module {
                         continue;
                     }
                 }
+            } else {
+                // In case the layer is not MAIN or EXITS
+                System.err.println("Unrecognized layer name: " + layer.getString("name"));
             }
         }
     }
@@ -261,6 +267,19 @@ public class Module {
         return this.height;
     }
 
+    /**
+     * Adds an artTile entity to the module. These entities only render. They have no collision.
+     *
+     * @param x the x position of the platform in the module grid
+     * @param y the y position of the platform in the module grid
+     * @param i the identifier for the tile within the TileMap
+     */
+    private void addArtTile(int x, int y, int i) {
+        Vector3f tempPosition = new Vector3f(x, y, 0.0f);
+        Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
+        ArtTile p = new ArtTile(tempPosition, tempDimension, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        this.addEntity(p);
+    }
 
     /**
      * Adds a platform entity to the module
@@ -319,15 +338,16 @@ public class Module {
      */
     private void configureMap() {
         int[] platforms = new int[]{0, 1, 2, 5, 6, 8, 9, 10, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 32, 33, 34, 35};
-        int[] exits = new int[]{3, 4, 11, 12};
+        int[] artTiles = new int[]{3, 4, 11, 12};
         int[] players = new int[]{7};
+
         moduleTileMap = new HashMap<Integer, String>();
         for (int i : platforms) {
             moduleTileMap.put(i, Platform.getName());
         }
 
-        for (int i : exits) {
-            moduleTileMap.put(i, Exit.getName());
+        for (int i : artTiles) {
+            moduleTileMap.put(i, ArtTile.getName());
         }
 
         for (int i : players) {
