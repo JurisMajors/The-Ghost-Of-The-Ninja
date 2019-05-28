@@ -31,6 +31,9 @@ public abstract class Level {
     // Keep track of ExitActions that are registered per Exit
     private HashMap<Exit, ExitAction> exitActions;
 
+    // Keep track of the root folder for a level, Optional!
+    protected String levelRoot;
+
     /**
      * Initializes the level using factory & template method
      * Override @code{createRoot} and @code{createAdditionalModules} to specify the modules to be used for the level
@@ -56,6 +59,16 @@ public abstract class Level {
         this.checkSanity();                                 // Check that the level was created appropriately
     }
 
+    /**
+     * Initializes the level using factory & template method. Bases modules on a given folder path.
+     * Override @code{createRoot} and @code{createAdditionalModules} to specify the modules to be used for the level
+     *
+     * @param levelRoot String, the root path of the level
+     */
+    public Level(String levelRoot) {
+        this();
+        this.levelRoot = levelRoot;
+    }
 
     /**
      * Checks the sanity of the level

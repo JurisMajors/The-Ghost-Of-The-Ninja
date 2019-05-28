@@ -10,7 +10,30 @@ import group4.levelSystem.Module;
 import group4.levelSystem.modules.TestModule;
 import group4.maths.Vector3f;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Level01 extends Level {
+    private List<String> modulePaths;
+
+    public Level01(String levelRoot) {
+        super(levelRoot);
+        findModulePaths();
+    }
+
+    private void findModulePaths() {
+        this.modulePaths = new ArrayList<>();
+
+        File folder = new File(this.levelRoot);
+        for (final File fileEntry : folder.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                continue;
+            } else {
+                System.out.println(fileEntry.getPath());
+            }
+        }
+    }
 
     @Override
     protected Module createRoot() {
