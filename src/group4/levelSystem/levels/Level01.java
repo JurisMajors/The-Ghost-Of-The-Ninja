@@ -71,9 +71,19 @@ public class Level01 extends Level {
 
         for (Module m : this.modules) {
             for (Exit e : m.getExits()) {
-                this.setExitAction(e, global);
-            }
+                System.err.println("e: " + e.targetModule);
+                this.setExitAction(
+                        e, // The exit that we want to set the action for
+                        new ExitAction(this) { // Make sure to pass in the level in the constructor, so we can call back to it
+                            @Override
+                            public void exit() { // The actual action to execute
+                                this.callBackLevel.switchModule(this.callBackLevel.getModuleReference(e.targetModule)); // Switch to the Simple Module once the exit is reached
+                            }
+                        }
+                );            }
         }
-    }
 
+        // Configure the only exit of the level: the exit of the test module
+
+    }
 }
