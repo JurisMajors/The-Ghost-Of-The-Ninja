@@ -176,7 +176,7 @@ public class TestModule extends Module {
         // my little spline test
         Vector3f tempPosition = new Vector3f(15.0f, 4.0f, 0.0f);
         Vector3f tempDimension = new Vector3f(2.0f, 1.0f, 0.0f);
-        float thickness = 1.0f;
+        float thickness = 0.4f;
         Vector3f[] tempPoint = new Vector3f[]{
                 new Vector3f(0.0f, 0.0f, 0.0f).add(new Vector3f(0.0f, thickness * 0.5f, 0.0f)),
                 new Vector3f(2.0f, 0.0f, 0.0f).add(new Vector3f(0.0f, thickness * 0.5f, 0.0f)),
