@@ -4,10 +4,12 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.BooleanArray;
 import group4.ECS.components.SplineComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
@@ -16,6 +18,7 @@ import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.maths.Vector3f;
+import group4.utils.DebugUtils;
 
 /**
  * This applies collision to entities that can move and have a bounding box
@@ -117,62 +120,200 @@ public class CollisionSystem extends IteratingSystem {
      * @param dc      e's DimensionComponent
      */
     private void handleSpline(Entity e, Entity spline, int[] codes, Vector3f[] corners, CollisionComponent cc, DimensionComponent dc) {
+        /*
+        if (isInSpline(e, spline)) {
+            System.out.println("in spline");
+            // undo the previous movement that got the entity into the spline
+            PositionComponent pc = Mappers.positionMapper.get(e);
+            MovementComponent mc = Mappers.movementMapper.get(e);
+            pc.position.subi(mc.velocity);
+        } else {
+            // there is no collision
+            return;
+        }
+         */
+
+
+        // (moving) entity components
+        MovementComponent mc = Mappers.movementMapper.get(e);
+        // TODO: get other components this way
+
+        // spline components
         PositionComponent spc = Mappers.positionMapper.get(spline);
         SplineComponent sc = Mappers.splineMapper.get(spline);
 
+        // for each corner store the spline point (and normal) closest to it
+        Vector3f[] closestPoints = new Vector3f[corners.length];
+        Vector3f[] closestNormals = new Vector3f[corners.length];
+
+        // initialize the arrays with the first point/normal
+        for (int k = 0; k < closestPoints.length; k++) {
+            closestPoints[k] = sc.points[0];
+            closestNormals[k] = sc.normals[0];
+        }
+
         // store the smallest vector that goes from a spline point to one of the points in the bounding box
-        Vector3f smallestDisplacement = new Vector3f(Float.MAX_VALUE, 0f, 0f);
+//        Vector3f smallestDisplacement = new Vector3f(Float.MAX_VALUE, 0f, 0f);
+
         // store the code for the corresponding corner
         int smallestCode = -1;
+
         // store the point on the spline that is closest to the closest bounding box point
         Vector3f closestPoint = null;
-        Vector3f clostestNormal = null;
+        Vector3f closestNormal = null;
 
         for (int i = 0; i < sc.points.length; i++) {
             // get local spline position and its normal
             Vector3f point = sc.points[i];
             Vector3f normal = sc.normals[i];
-            Vector3f oldSmallest = new Vector3f(smallestDisplacement);
+//            Vector3f oldSmallest = new Vector3f(smallestDisplacement);
 
             // change the spline coordinates to world space
             Vector3f worldPoint = point.add(spc.position);
 
-            // compute difference vector of bounding box point and spline point and store the smallest displacement
+            // for each corner update the closest point and normal
             for (int k = 0; k < 4; k++) {
-                if (corners[k].sub(worldPoint).length() < smallestDisplacement.length()) {
-                    smallestDisplacement = corners[k].sub(worldPoint);
-                    smallestCode = codes[k];
+                if (corners[k].sub(worldPoint).length() < corners[k].sub(closestPoints[k]).length()) {
+                    closestPoints[k] = new Vector3f(worldPoint);
+                    closestNormals[k] = new Vector3f(normal);
+                }
+
+                // TODO: remove
+//                if (corners[k].sub(worldPoint).length() < smallestDisplacement.length()) {
+//                    smallestDisplacement = corners[k].sub(worldPoint);
+//                    smallestCode = codes[k];
+//                }
+            }
+
+            // TODO: remove
+            // get closest point to the bounding box
+//            if (smallestDisplacement.length() < oldSmallest.length()) {
+//                closestPoint = worldPoint;
+//                closestNormal = normal;
+//            }
+        }
+
+        // make sure that all normals are pointing the right direction
+        for (int k = 0; k < closestNormals.length; k++) {
+            // vector from closest spline point to corner
+            Vector3f displacement = corners[k].sub(closestPoints[k]);
+
+            if (closestNormals[k].scale(-1.0f).sub(displacement).length() < closestNormals[k].sub(displacement).length()) {
+                closestNormals[k].scalei(-1.0f);
+            }
+
+            /*
+            // angle between the normal and the displacement
+            float angle = displacement.angle(closestNormals[k]);
+//            System.out.println(angle);
+
+            // if the normal is pointing the other way, flip it so that it is pointing the same way as the displacement
+            if (angle > 90) {
+                closestNormals[k].scalei(-1.0f);
+            }
+             */
+        }
+
+        boolean[] discard = new boolean[closestPoints.length];
+
+        Vector3f velocity = mc.velocity;
+
+        for (int k = 0; k < closestPoints.length; k++) {
+            if (corners[k].sub(closestPoints[k]).angle(velocity) < 90) {
+//                discard[k] = true;
+            }
+            if (corners[k].sub(closestPoints[k]).length() > 0.5f * sc.thickness) {
+                discard[k] = true;
+            }
+        }
+
+        boolean allTrue = true;
+        for (int k = 0; k < discard.length; k++) {
+            if (!discard[k]) {
+                allTrue = false;
+                break;
+            }
+        }
+
+        if (allTrue) {
+            // no collision
+        } else {
+            float minLen = Float.MAX_VALUE;
+            for (int k = 0; k < closestPoints.length; k++) {
+                if (discard[k]) continue;
+
+                if (corners[k].sub(closestPoints[k]).length() < minLen) {
+                    minLen = corners[k].sub(closestPoints[k]).length();
+                    closestPoint = closestPoints[k];
+                    closestNormal = closestNormals[k];
+                    smallestCode = k;
                 }
             }
 
-            // get closest point to the bounding box
-            if (smallestDisplacement.length() < oldSmallest.length()) {
-                closestPoint = worldPoint;
-                clostestNormal = normal;
+            if (closestNormal.y < 0) {
+                // collision from below
+                mc.velocity.y = -0.5f * mc.velocity.y;
             }
-        }
 
-        // make sure that the normal is facing the right way
-        if (clostestNormal.scale(-1.0f).sub(smallestDisplacement).length() < clostestNormal.sub(smallestDisplacement).length()) {
-            clostestNormal.scalei(-1.0f);
-        }
+            DebugUtils.setColor(new Vector3f(0, 1.0f, 0));
+            DebugUtils.drawBox(closestPoint, closestPoint.add(new Vector3f(0.1f, 0.1f, 0.1f)));
+            DebugUtils.drawLine(closestPoint, closestPoint.add(closestNormal.scale(0.5f * sc.thickness)));
 
-        // get the position on the spline edge closest to the bounding box
-        Vector3f newPos = closestPoint.add(clostestNormal.scale(0.5f * sc.thickness));
+            DebugUtils.setColor(new Vector3f(1.0f, 0, 0));
+            Vector3f newPos = closestPoint.add(closestNormal.scale(0.5f * sc.thickness));
 
-        // correct for which corner needs to get this new position
-        cornerCorrection(newPos, dc.dimension, smallestCode);
+            // correct for which corner needs to get this new position
+            cornerCorrection(newPos, dc.dimension, smallestCode);
 
-        // if the smallest displacement is smaller than half of the thickness there is a collision
-        if (smallestDisplacement.length() <= 0.5f * sc.thickness) {
+            // if the smallest displacement is smaller than half of the thickness there is a collision
+//            if (smallestDisplacement.length() <= 0.5f * sc.thickness) {
             CollisionComponent scc = Mappers.collisionMapper.get(spline);
 
             // add collision to entity and spline
-            CollisionData c1 = new CollisionData(spline, smallestDisplacement, newPos);
-            CollisionData c2 = new CollisionData(e, smallestDisplacement.scale(-1.0f), newPos);
+            CollisionData c1 = new CollisionData(spline, closestNormal, newPos);
+            CollisionData c2 = new CollisionData(e, closestNormal.scale(-1.0f), newPos);
             cc.collisions.add(c1);
             scc.collisions.add(c2);
+//            }
         }
+
+//        for (int k = 0; k < closestNormals.length; k++) {
+//            System.out.println(k + ": " + closestNormals[k]);
+//        }
+
+
+        // TODO: already done in new thing
+        // make sure that the normal is facing the right way
+//        if (clostestNormal.scale(-1.0f).sub(smallestDisplacement).length() < clostestNormal.sub(smallestDisplacement).length()) {
+//            clostestNormal.scalei(-1.0f);
+//        }
+
+        // get the position on the spline edge closest to the bounding box
+
+    }
+
+    private boolean isInSpline(Entity e, Entity spline) {
+        // entity components
+        PositionComponent pc = Mappers.positionMapper.get(e);
+        DimensionComponent dc = Mappers.dimensionMapper.get(e);
+        Vector3f[] corners = getCorners(pc.position, dc.dimension);
+
+        // spline components
+        PositionComponent spc = Mappers.positionMapper.get(spline);
+        SplineComponent sc = Mappers.splineMapper.get(spline);
+
+        for (int i = 0; i < sc.points.length; i++) { // loop over spline points
+            Vector3f worldPoint = sc.points[i].add(spc.position);
+            for (int j = 0; j < corners.length; j++) { // loop over all corners
+                // if this corner is inside the spline return true
+                if (worldPoint.sub(corners[j]).length() < sc.normals[i].scale(0.5f * sc.thickness).length()) {
+                    DebugUtils.drawBox(corners[j], corners[j].add(new Vector3f(0.1f, 0.1f, 0.1f)));
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -109,6 +109,21 @@ public class Vector3f {
     }
 
     /**
+     * Computes the angle between this vector and other in degrees
+     * @param other vector
+     * @return angle between this and other in degrees
+     */
+    public float angle(Vector3f other) {
+        // cos(alpha) = (A . B) / (|A| * |B|)
+        float cosa = dot(other) / (length() * other.length());
+
+        float angle = (float) Math.acos(cosa);
+        float degrees = (float) Math.toDegrees(angle);
+
+        return degrees;
+    }
+
+    /**
      * Computes and returns the cross producto of this vector with other.
      *
      * @param other vector
