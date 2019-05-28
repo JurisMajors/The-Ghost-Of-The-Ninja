@@ -19,7 +19,6 @@ public class Level01 extends Level {
 
     public Level01(String levelRoot) {
         super(levelRoot);
-        findModulePaths();
     }
 
     private void findModulePaths() {
@@ -30,20 +29,28 @@ public class Level01 extends Level {
             if (fileEntry.isDirectory()) {
                 continue;
             } else {
-                System.out.println(fileEntry.getPath());
+                System.err.println(fileEntry.getPath());
+                this.modulePaths.add(fileEntry.getPath());
             }
         }
     }
 
     @Override
     protected Module createRoot() {
-        return new Module(this, "./src/group4/res/maps/level_01/module_01_01.json", null);
+        /* Find the actual module files here. Would have liked to have done this in the constructor, but it is impossible
+        to call a function before super(). */
+        findModulePaths();
+
+        // Load in the 0th module. I think this is based on lexicographic ordering of the filenames.
+        return new Module(this, this.modulePaths.get(0), null);
     }
 
     @Override
     protected void createAdditionalModules() {
-        // Add the SimpleModule as well (Tiled version)
-//        this.addModule();
+        // Load in all other modules found.
+        for (int i = 1; i < this.modulePaths.size(); i++) {
+            this.addModule(new Module(this, this.modulePaths.get(i), null));
+        }
     }
 
     @Override

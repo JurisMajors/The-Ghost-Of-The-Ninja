@@ -66,8 +66,28 @@ public abstract class Level {
      * @param levelRoot String, the root path of the level
      */
     public Level(String levelRoot) {
-        this();
         this.levelRoot = levelRoot;
+
+        // I want to set the levelRoot before calling this(), which java won't allow. Hence this is a copy paste
+        // of the other constructor.
+        this.modules = new ArrayList<>();                   // Initialize the modules list
+
+        this.rootModule = this.createRoot();                // Create and add the root module
+        this.addModule(this.rootModule);
+
+        this.createAdditionalModules();                     // Create and add the additional modules
+
+        this.player = this.createPlayer();                  // Create the level wide player instance
+        TheEngine.getInstance().addEntity(this.player);     // Register the level wide player instance to the engine
+
+        this.switchModule(this.rootModule);                 // Switch the current module to the root module
+        // Also takes care of positioning the player entity etc.
+
+        this.exitActions = new HashMap<>();                 // Initialize the exit action list
+
+        this.configExits();                                 // Configure the exits
+
+        this.checkSanity();                                 // Check that the level was created appropriately
     }
 
     /**
