@@ -54,8 +54,8 @@ public class Module {
 
     // Storing the mapping from the tilemap indices to the engine Entities
     private Map<Integer, String> moduleTileMap;
-    // maps id to 4 spline points
-    private Map<Integer, Vector3f[]> splineMap;
+    // maps character of spline to its control points
+    private Map<Character, List<Vector3f>> splineMap;
 
 
     /**
@@ -67,6 +67,7 @@ public class Module {
             this.ghostPath = Evolver.path + ghostModelName;
         }
         this.configureMap();
+        this.splineMap = new HashMap<>();
         this.loadTiledObject(TiledModuleLocation);
         this.setup(l);
     }
@@ -173,24 +174,26 @@ public class Module {
             } else if (layerName.equals("SPLINES")) {
                 // Loop over the data grid
                 JSONArray data = layer.getJSONArray("objects");
-                for (int tile = 0; tile < data.length(); tile++) {
-                    // Get the grid position of the tile
-                    // Get the type of the tile
-                    JSONObject tileInfo = data.getJSONObject(tile);
-                    float pointX = tileInfo.getFloat("x")/32f;
-                    float pointY = mapHeight - tileInfo.getFloat("y")/32f;
-                    int tileId = Integer.parseInt(tileInfo.getString("name"));
+                for (int point = 0; point < data.length(); point++) {
+                    // get information about the object
+                    JSONObject pointInfo = data.getJSONObject(point);
+                    // get the coordinates for the control point
+                    float pointX = pointInfo.getFloat("x") / 32f;
+                    float pointY = mapHeight - pointInfo.getFloat("y")/32f;
 
-                    int pointId = tileId % 4; // id of the control point within the spline
-                    int splineId = tileId - pointId; // the identification of the spline itself
+                    String tileName = pointInfo.getString("name");
+                    // get the identification of the spline (first character in the string)
+                    char splineId = tileName.charAt(0);
+                    // get the identification of the current point within the spline
+                    int pointId = Integer.parseInt(tileName.substring(1));
 
                     if (!splineMap.containsKey(splineId)) { // create a new spline array if none exists for this spline
-                       splineMap.put(splineId, new Vector3f[4]);
+                       splineMap.put(splineId, new ArrayList<>(4));
                     }
-                    // add the point to the spline
-                    splineMap.get(splineId)[pointId] = new Vector3f(pointX, pointY, 0);
+                    // add the control point to the spline
+                    splineMap.get(splineId).add(pointId, new Vector3f(pointX, pointY, 0));
                 }
-                for (Vector3f[] cPoints : splineMap.values()) { // for each given control point
+                for (List<Vector3f> cPoints: splineMap.values()) { // for each given control point
                     addSpline(cPoints);
                 }
             }
@@ -200,10 +203,14 @@ public class Module {
     /**
      * Adds a spline to the module with the given control points
       * @param cPoints control points of the spline
+     * @throws IllegalStateException if cPoints.size() % 4 != 0
      */
-    private void addSpline(Vector3f[] cPoints) {
-        MultiSpline spline = new MultiSpline(cPoints);
-        System.out.println(Arrays.toString(cPoints));
+    private void addSpline(List<Vector3f> cPoints) throws IllegalStateException {
+        if (cPoints.size() % 4 != 0) throw new IllegalStateException("Module.addSpline() " +
+                "Control points must be multiple of 4, " +
+                "was given " + cPoints.size() + " control points instead!");
+        Vector3f[] cPointsArr = cPoints.toArray(new Vector3f[0]);
+        MultiSpline spline = new MultiSpline(cPointsArr);
         SplinePlatform platform = new SplinePlatform(spline, Shader.SIMPLE, Texture.WHITE);
         this.addEntity(platform);
     }
@@ -358,7 +365,6 @@ public class Module {
         int[] platforms = new int[]{0, 1, 2, 5, 6, 8, 9, 10, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 32, 33, 34, 35};
         int[] exits = new int[]{3, 4, 11, 12};
         int[] players = new int[]{7};
-        splineMap = new HashMap<>();
         moduleTileMap = new HashMap<Integer, String>();
         for (int i : platforms) {
             moduleTileMap.put(i, Platform.getName());
