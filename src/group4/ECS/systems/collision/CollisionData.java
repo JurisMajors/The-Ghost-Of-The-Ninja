@@ -14,6 +14,8 @@ public class CollisionData {
      */
     public Vector3f displacement;
 
+    public Vector3f closestNormal;
+
     /**
      * Vector used for spline collision, determines where to put the entity colliding with a spline.
      */
@@ -33,13 +35,13 @@ public class CollisionData {
     /**
      * Creates new CollisionData especially for splines.
      *
-     * @param entity       entity which collides with the owner of this collision data.
-     * @param displacement vector that needs to be added to the owners position to prevent the collision.
-     * @param newPos       new position for the entity that should be displaced.
+     * @param entity        entity which collides with the owner of this collision data.
+     * @param closestNormal normal from the closest spline point to where the player should be
+     * @param newPos        new position for the entity that should be displaced.
      */
-    public CollisionData(Entity entity, Vector3f displacement, Vector3f newPos) {
+    public CollisionData(Entity entity, Vector3f closestNormal, Vector3f newPos) {
         this.entity = entity;
-        this.displacement = displacement;
+        this.closestNormal = closestNormal;
         this.newPos = newPos;
     }
 

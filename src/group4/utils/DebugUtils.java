@@ -287,4 +287,8 @@ public class DebugUtils {
 
         return newQueue;
     }
+
+    public static void setColor(Vector3f color) {
+        DebugUtils.color = color;
+    }
 }
