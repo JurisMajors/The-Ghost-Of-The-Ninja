@@ -295,17 +295,38 @@ public class Module {
         this.addEntity(p);
     }
 
+    private void setupExits(JSONObject exitLayer) {
+        // Loop over the data grid
+        JSONArray data = exitLayer.getJSONArray("data");
+        for (int tile = 0; tile < data.length(); tile++) {
+            // Get height and width of layer
+            int layerHeight = exitLayer.getInt("height");
+            int layerWidth = exitLayer.getInt("width");
+
+            // Get the grid position of the tile
+            int tileGridX = tile % layerWidth;
+            int tileGridY = layerHeight - tile / layerWidth;
+
+            // Get the type of the tile
+            int targetModule = data.getInt(tile); // NOTE: targetModule == tileId in the tilemap texture here as well
+            if (targetModule == 0) {
+                continue; // Default "no tile placed here" marker is 0.
+            } else {
+                addExit(tileGridX, tileGridY, targetModule - TileMapping.MAIN_SIZE);
+            }
+        }
+    }
     /**
      * Adds a exit entity to the module
      *
      * @param x the x position of the exit in the module grid
      * @param y the y position of the exit in the module grid
-     * @param i the identifier for the tile within the TileMap
+     * @param targetModule the identifier for the module (with respect to the level) to which the exit points
      */
-    private void addExit(int x, int y, int i) {
+    private void addExit(int x, int y, int targetModule) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
         Vector3f tempDimension = new Vector3f(2.0f, 2.0f, 0.0f);
-        Exit e = new Exit(tempPosition, tempDimension, this, TileMapping.MAIN.get(i));
+        Exit e = new Exit(tempPosition, tempDimension, this, targetModule);
         this.addEntity(e);
     }
 
