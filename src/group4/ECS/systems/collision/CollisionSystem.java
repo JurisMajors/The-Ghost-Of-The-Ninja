@@ -250,10 +250,10 @@ public class CollisionSystem extends IteratingSystem {
                 }
             }
 
-            if (closestNormal.y < 0) {
-                // collision from below
-                mc.velocity.y = -0.5f * mc.velocity.y;
-            }
+//            if (closestNormal.y < 0) {
+//                // collision from below
+//                mc.velocity.y = -0.5f * mc.velocity.y;
+//            }
 
             DebugUtils.setColor(new Vector3f(0, 1.0f, 0));
             DebugUtils.drawBox(closestPoint, closestPoint.add(new Vector3f(0.1f, 0.1f, 0.1f)));
