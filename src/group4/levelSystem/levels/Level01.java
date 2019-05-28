@@ -29,7 +29,7 @@ public class Level01 extends Level {
             if (fileEntry.isDirectory()) {
                 continue;
             } else {
-                System.err.println(fileEntry.getPath());
+//                System.err.println(fileEntry.getPath());
                 this.modulePaths.add(fileEntry.getPath());
             }
         }
@@ -61,17 +61,8 @@ public class Level01 extends Level {
 
     @Override
     protected void configExits() {
-        // We need to configure all exits
-        ExitAction global = new ExitAction() {
-            @Override
-            public void exit() {
-                System.out.println("Reached the exit :-)");
-            }
-        };
-
         for (Module m : this.modules) {
             for (Exit e : m.getExits()) {
-                System.err.println("e: " + e.targetModule);
                 this.setExitAction(
                         e, // The exit that we want to set the action for
                         new ExitAction(this) { // Make sure to pass in the level in the constructor, so we can call back to it
@@ -80,10 +71,8 @@ public class Level01 extends Level {
                                 this.callBackLevel.switchModule(this.callBackLevel.getModuleReference(e.targetModule)); // Switch to the Simple Module once the exit is reached
                             }
                         }
-                );            }
+                );
+            }
         }
-
-        // Configure the only exit of the level: the exit of the test module
-
     }
 }
