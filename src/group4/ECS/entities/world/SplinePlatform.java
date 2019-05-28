@@ -23,14 +23,13 @@ public class SplinePlatform extends Entity {
      * Note that all the points of the spline argument MUST be inside the dimension vector.
      *
      * @param position  left-bottom-back corner of the cuboid representing the platform
-     * @param dimension such that the right-top-front corner of the cuboid representing the platform is position+dimension
      * @param spline    spline representing the actual walkable platform
      * @param shader    shader for this platform
      * @param texture   texture for this platform
      */
-    public SplinePlatform(Vector3f position, Vector3f dimension, MultiSpline spline, float thickness, Shader shader, Texture texture) {
+    public SplinePlatform(Vector3f position, MultiSpline spline, float thickness, Shader shader, Texture texture) {
         this.add(new PositionComponent(position));
-        this.add(new DimensionComponent(dimension));
+        this.add(new DimensionComponent(new Vector3f()));
         this.add(new PlatformComponent());
         this.add(new CollisionComponent(SplinePlatformCollision.getInstance()));
 
