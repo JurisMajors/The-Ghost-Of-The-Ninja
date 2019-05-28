@@ -185,7 +185,11 @@ public class CollisionSystem extends IteratingSystem {
             // vector from closest spline point to corner
             Vector3f displacement = corners[k].sub(closestPoints[k]);
 
-            if (closestNormals[k].scale(-1.0f).sub(displacement).length() < closestNormals[k].sub(displacement).length()) {
+            Vector3f center = corners[0].add(dc.dimension.scale(0.5f));
+            Vector3f centerDir = center.sub(closestPoints[k]);
+            boolean flip = centerDir.y < 0;
+//            if (closestNormals[k].scale(-1.0f).sub(displacement).length() < closestNormals[k].sub(displacement).length()) {
+            if (flip) {
                 closestNormals[k].scalei(-1.0f);
             }
 
