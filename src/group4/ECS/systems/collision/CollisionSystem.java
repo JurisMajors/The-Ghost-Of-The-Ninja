@@ -120,6 +120,7 @@ public class CollisionSystem extends IteratingSystem {
      * @param dc      e's DimensionComponent
      */
     private void handleSpline(Entity e, Entity spline, int[] codes, Vector3f[] corners, CollisionComponent cc, DimensionComponent dc) {
+        if (!isInSpline(e, spline)) return;
 
         // (moving) entity components
         MovementComponent mc = Mappers.movementMapper.get(e);
@@ -160,7 +161,7 @@ public class CollisionSystem extends IteratingSystem {
 
             // for each corner update the closest point and normal
             for (int k = 0; k < 4; k++) {
-                if (corners[k].sub(worldPoint).length() < corners[k].sub(closestPoints[k]).length()) {
+                if (corners[k].euclidDist(worldPoint) < corners[k].euclidDist(closestPoints[k])) {
                     closestPoints[k] = new Vector3f(worldPoint);
                     closestNormals[k] = new Vector3f(normal);
                 }

@@ -14,7 +14,7 @@ public class Level01 extends Level {
 
     @Override
     protected Module createRoot() {
-        return new Module(this, "./src/group4/res/maps/level_01/module_01_02.json", "module-01-02-ghost");
+        return new Module(this, "./src/group4/res/maps/level_03/spline_test.json", null);
     }
 
     @Override

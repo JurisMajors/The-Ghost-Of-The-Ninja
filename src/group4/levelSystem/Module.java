@@ -8,22 +8,21 @@ import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
+import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.TheEngine;
 import group4.game.Main;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;
 import group4.maths.Vector3f;
+import group4.maths.spline.MultiSpline;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class defines the interface for modules that can be used to create levels
@@ -55,6 +54,8 @@ public class Module {
 
     // Storing the mapping from the tilemap indices to the engine Entities
     private Map<Integer, String> moduleTileMap;
+    // maps id to 4 spline points
+    private Map<Integer, Vector3f[]> splineMap;
 
 
     /**
@@ -132,14 +133,17 @@ public class Module {
 
         // Now, we get all tile layers from the JSON object
         JSONArray layers = this.tiledData.getJSONArray("layers");
+        int mapHeight = 0;
 
         // Now, we loop over the layers
         for (int i = 0; i < layers.length(); i++) {
             JSONObject layer = layers.getJSONObject(i);
-            if (layer.getString("name").equals("MAIN")) {
-                // Get height and width of layer
+            String layerName = layer.getString("name");
+            // Get height and width of layer
+            if (layerName.equals("MAIN")) {
                 int layerHeight = layer.getInt("height");
                 int layerWidth = layer.getInt("width");
+                mapHeight = layerHeight;
 
                 // Loop over the data grid
                 JSONArray data = layer.getJSONArray("data");
@@ -166,8 +170,42 @@ public class Module {
                         continue;
                     }
                 }
+            } else if (layerName.equals("SPLINES")) {
+                // Loop over the data grid
+                JSONArray data = layer.getJSONArray("objects");
+                for (int tile = 0; tile < data.length(); tile++) {
+                    // Get the grid position of the tile
+                    // Get the type of the tile
+                    JSONObject tileInfo = data.getJSONObject(tile);
+                    int pointX = tileInfo.getInt("x")/32;
+                    int pointY = mapHeight - tileInfo.getInt("y")/32;
+                    int tileId = Integer.parseInt(tileInfo.getString("name"));
+
+                    int pointId = tileId % 4; // id of the control point within the spline
+                    int splineId = tileId - pointId; // the identification of the spline itself
+
+                    if (!splineMap.containsKey(splineId)) { // create a new spline array if none exists for this spline
+                       splineMap.put(splineId, new Vector3f[4]);
+                    }
+                    // add the point to the spline
+                    splineMap.get(splineId)[pointId] = new Vector3f(pointX, pointY, 0);
+                }
+                for (Vector3f[] cPoints : splineMap.values()) { // for each given control point
+                    addSpline(cPoints);
+                }
             }
         }
+    }
+
+    /**
+     * Adds a spline to the module with the given control points
+      * @param cPoints control points of the spline
+     */
+    private void addSpline(Vector3f[] cPoints) {
+        MultiSpline spline = new MultiSpline(cPoints);
+        System.out.println(Arrays.toString(cPoints));
+        SplinePlatform platform = new SplinePlatform(spline, Shader.SIMPLE, Texture.WHITE);
+        this.addEntity(platform);
     }
 
 
@@ -320,6 +358,7 @@ public class Module {
         int[] platforms = new int[]{0, 1, 2, 5, 6, 8, 9, 10, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 32, 33, 34, 35};
         int[] exits = new int[]{3, 4, 11, 12};
         int[] players = new int[]{7};
+        splineMap = new HashMap<>();
         moduleTileMap = new HashMap<Integer, String>();
         for (int i : platforms) {
             moduleTileMap.put(i, Platform.getName());

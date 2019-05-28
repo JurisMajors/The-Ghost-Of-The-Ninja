@@ -40,6 +40,10 @@ public class SplinePlatform extends Entity {
         this.add(gc);
     }
 
+    public SplinePlatform(MultiSpline spline, Shader shader, Texture texture) {
+        this(new Vector3f(), spline, 0.5f, shader, texture);
+    }
+
     private SplineComponent createSplineComponent(MultiSpline spline, int numPoints, float thickness) {
         Vector3f[] points = new Vector3f[numPoints + 1];
         Vector3f[] normals = new Vector3f[numPoints + 1];
