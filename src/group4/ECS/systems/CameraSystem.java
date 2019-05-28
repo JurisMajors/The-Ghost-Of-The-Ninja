@@ -61,6 +61,9 @@ public class CameraSystem extends EntitySystem {
         CameraComponent cc = Mappers.cameraMapper.get(mainCamera);
         PositionComponent pc = Mappers.positionMapper.get(player);
 
+        // update cam world pos
+        Mappers.positionMapper.get(mainCamera).position = pc.position;
+
         // Update the view matrix to be the player position
         // Note that player position vector should be inverted to center the view on the player
         cc.viewMatrix = Matrix4f.translate(pc.position.scale(-1.0f));

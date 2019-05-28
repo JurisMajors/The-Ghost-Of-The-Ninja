@@ -20,7 +20,7 @@ public class Level01 extends Level {
 
         // temp! add mob for showcasing purposes
         Mob mob = new ShootingJumpingWalkingMob(module.getPlayerInitialPosition()
-                .add(new Vector3f(2.0f, 2.0f, 0.0f)), this);
+                .add(new Vector3f(3.0f, 2.0f, 0.0f)), this);
         module.addEntity(mob);
 
         return module;

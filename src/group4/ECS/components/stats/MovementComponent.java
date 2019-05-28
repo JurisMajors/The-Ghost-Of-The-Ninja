@@ -1,10 +1,12 @@
 package group4.ECS.components.stats;
 
 import com.badlogic.ashley.core.Component;
+import freemarker.template.utility.RichObjectWrapper;
 import group4.maths.Vector3f;
 
 public class MovementComponent implements Component {
 
+    /* constants for orientation */
     public static int LEFT = -1;
     public static int RIGHT = 1;
 
@@ -22,7 +24,7 @@ public class MovementComponent implements Component {
      */
     public MovementComponent(Vector3f velocityRange) {
         // right by default
-        this.orientation = 1;
+        this.orientation = RIGHT;
         this.velocity = new Vector3f();
         this.velocityRange = velocityRange;
         this.acceleration = new Vector3f();
@@ -36,7 +38,7 @@ public class MovementComponent implements Component {
      */
     public MovementComponent(Vector3f velocity, Vector3f velocityRange) {
         // right by default
-        this.orientation = 1;
+        this.orientation = RIGHT;
         this.velocity = velocity;
         this.velocityRange = velocityRange;
         this.acceleration = new Vector3f(); //no acceleration (zero vector)
@@ -51,7 +53,7 @@ public class MovementComponent implements Component {
      */
     public MovementComponent(Vector3f velocity, Vector3f velocityRange, Vector3f acceleration) {
         // right by default
-        this.orientation = 1;
+        this.orientation = RIGHT;
         this.velocity = velocity;
         this.velocityRange = velocityRange;
         this.acceleration = acceleration;
