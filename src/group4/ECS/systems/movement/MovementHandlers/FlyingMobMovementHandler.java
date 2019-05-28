@@ -25,6 +25,12 @@ public class FlyingMobMovementHandler extends AbstractMovementHandler<FlyingMob>
     }
 
     @Override
+    protected void becomeIdle(MovementComponent mc) {
+        mc.velocity.x = 0;
+        mc.velocity.y = 0;
+    }
+
+    @Override
     protected void doGravity(MovementComponent mc, GravityComponent gc) {
         // flying mobs are not affected by gravity
     }

@@ -58,7 +58,7 @@ public abstract class RayStateDecoder implements StateDecoderInterface {
 
     @Override
     public int getInputSize() {
-        return 2 * this.nrRays + this.ghostFeatureAmount();
+        return this.nrRays + this.ghostFeatureAmount();
     }
 
     /**

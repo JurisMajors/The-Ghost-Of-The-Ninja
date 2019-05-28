@@ -38,7 +38,7 @@ public class Evolver {
     /**
      * if max fit known, then terminate on that otherwise leave max val.
      **/
-    public static int maxFit = Integer.MAX_VALUE;
+    public static int maxFit = 0;
     /**
      * hidden layer sizes (dont include input/output)
      **/
@@ -68,7 +68,10 @@ public class Evolver {
     /** Path to save trained models**/
     public static String path = "src/group4/AI/models/";
     /** Path for loading the module to train on **/
-    public static String modulePath = "./src/group4/levelSystem/modules/TiledModules/simpleModule.json";
+    public static String modulePath ="./src/group4/res/maps/level_01/module_01_01.json";
+    /** How often (in generations) to save a model **/
+    public static int checkpoint = 2;
+
     /**
      * whether to render
      */
@@ -121,7 +124,7 @@ public class Evolver {
 
         engine.setSingleThreaded(!multiThreaded);
 
-        EvolutionLogger logger = new EvolutionLogger(path, 2);
+        EvolutionLogger logger = new EvolutionLogger(path, checkpoint);
 
         // add logger to the engine
         engine.addEvolutionObserver(logger);
@@ -129,7 +132,7 @@ public class Evolver {
         // uncomment to run
         Brain result = engine.evolve(Evolver.populationSize, Evolver.elitism,
                 new GenerationCount(Evolver.genCount),
-                new TargetFitness(Evolver.maxFit, true));
+                new TargetFitness(Evolver.maxFit, false));
         try {
             Evolver.toFile(result, path + "BEST-"+System.currentTimeMillis());
         }catch (IOException e) {
@@ -171,6 +174,10 @@ public class Evolver {
         layers.setRequired(false);
         options.addOption(layers);
 
+        Option check = new Option("checkpoint", true, "how often, in generations, to save models, default:2");
+        check.setRequired(false);
+        options.addOption(check);
+
     }
 
     private static void setGivenOptions(CommandLine cmd) {
@@ -191,6 +198,7 @@ public class Evolver {
         }
         if (cmd.hasOption("mutation")) {
             Evolver.mutationProbability = Float.parseFloat(cmd.getOptionValue("mutation"));
+            mutator = new StandardMutation(new Probability(Evolver.mutationProbability));
         }
         if (cmd.hasOption("rays")) {
             Evolver.rays = Integer.parseInt(cmd.getOptionValue("rays"));
@@ -202,6 +210,9 @@ public class Evolver {
             for (int i = 0; i < sizes.length; i++) {
                 Evolver.layerSizes[i] = Integer.parseInt(sizes[i]);
             }
+        }
+        if (cmd.hasOption("checkpoint")) {
+            Evolver.checkpoint = Integer.parseInt(cmd.getOptionValue("checkpoint"));
         }
     }
 }
