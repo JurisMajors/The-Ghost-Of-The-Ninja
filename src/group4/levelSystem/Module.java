@@ -177,8 +177,8 @@ public class Module {
                     // Get the grid position of the tile
                     // Get the type of the tile
                     JSONObject tileInfo = data.getJSONObject(tile);
-                    int pointX = tileInfo.getInt("x")/32;
-                    int pointY = mapHeight - tileInfo.getInt("y")/32;
+                    float pointX = tileInfo.getFloat("x")/32f;
+                    float pointY = mapHeight - tileInfo.getFloat("y")/32f;
                     int tileId = Integer.parseInt(tileInfo.getString("name"));
 
                     int pointId = tileId % 4; // id of the control point within the spline
