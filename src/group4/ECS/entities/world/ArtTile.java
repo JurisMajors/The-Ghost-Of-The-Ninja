@@ -15,7 +15,7 @@ public class ArtTile extends Entity {
 
     /**
      * Simple tile for displaying art which does not have to deal with collisions.
-     * 
+     *
      * @param position Vector3f, where to place the tile
      * @param dimension Vector3f, the size of the tile
      * @param shader Shader, the material to use
