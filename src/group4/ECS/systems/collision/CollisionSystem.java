@@ -120,19 +120,6 @@ public class CollisionSystem extends IteratingSystem {
      * @param dc      e's DimensionComponent
      */
     private void handleSpline(Entity e, Entity spline, int[] codes, Vector3f[] corners, CollisionComponent cc, DimensionComponent dc) {
-        /*
-        if (isInSpline(e, spline)) {
-            System.out.println("in spline");
-            // undo the previous movement that got the entity into the spline
-            PositionComponent pc = Mappers.positionMapper.get(e);
-            MovementComponent mc = Mappers.movementMapper.get(e);
-            pc.position.subi(mc.velocity);
-        } else {
-            // there is no collision
-            return;
-        }
-         */
-
 
         // (moving) entity components
         MovementComponent mc = Mappers.movementMapper.get(e);
@@ -248,11 +235,6 @@ public class CollisionSystem extends IteratingSystem {
                     closestNormal = closestNormals[k];
                     smallestCode = k;
                 }
-            }
-
-            if (closestNormal.y < 0) {
-                // collision from below
-                mc.velocity.y = -0.5f * mc.velocity.y;
             }
 
             DebugUtils.setColor(new Vector3f(0, 1.0f, 0));
