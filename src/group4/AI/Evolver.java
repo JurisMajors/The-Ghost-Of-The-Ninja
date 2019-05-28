@@ -38,7 +38,7 @@ public class Evolver {
     /**
      * if max fit known, then terminate on that otherwise leave max val.
      **/
-    public static double maxFit = 0.1;
+    public static int maxFit = 0;
     /**
      * hidden layer sizes (dont include input/output)
      **/
@@ -132,7 +132,7 @@ public class Evolver {
         // uncomment to run
         Brain result = engine.evolve(Evolver.populationSize, Evolver.elitism,
                 new GenerationCount(Evolver.genCount),
-                new TargetFitness(Evolver.maxFit, true));
+                new TargetFitness(Evolver.maxFit, false));
         try {
             Evolver.toFile(result, path + "BEST-"+System.currentTimeMillis());
         }catch (IOException e) {

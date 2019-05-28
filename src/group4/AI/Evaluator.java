@@ -76,7 +76,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         Vector3f startingPos = currModule.getPlayerInitialPosition();
 
         // create the ghost
-        Entity ghost = new Ghost(
+        Ghost ghost = new Ghost(
                 new Vector3f(startingPos),
                 level,
                 brain);
@@ -95,11 +95,8 @@ public class Evaluator implements FitnessEvaluator<Brain> {
             }
             // termination conditions
             if (ghost.getComponent(HealthComponent.class).health <= 0) {
-                System.out.println("death");
                 break;
             } else if (timer.getTime() - initTime >= Evolver.timelimit) {
-                System.out.println(Arrays.toString(ghost.getComponent(GhostComponent.class).moveFreq));
-                System.out.println("timeout");
                 break;
             }
         }
@@ -122,8 +119,11 @@ public class Evaluator implements FitnessEvaluator<Brain> {
 
         }
         // fitness = if no exits exist, simply take x coordinate, otherwise the distance traveled in the direction of closest exit
-        float fitness = closestExit == null ? Math.max(ghostPos.x, 0) :
-                ghostPos.euclidDist(closestExit)/startingPos.euclidDist(closestExit);
+        float fitness = ghostPos.euclidDist(closestExit) / startingPos.euclidDist(closestExit);
+        if (ghost.best) {
+            System.out.println("Got best ghost");
+            fitness = 0;
+        }
         currModule.unload();
         return fitness;
     }

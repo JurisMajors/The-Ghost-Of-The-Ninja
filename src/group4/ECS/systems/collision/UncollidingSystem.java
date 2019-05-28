@@ -46,10 +46,10 @@ public class UncollidingSystem extends IteratingSystem {
             if (cd.newPos != null) {
 
                 System.out.println(cd.closestNormal);
-                if (cd.closestNormal.y < 0) {
-                    mc.velocity.y = -0.5f * mc.velocity.y;
-                } else {
-                    mc.velocity = new Vector3f();
+                if (cd.closestNormal.y < 0 && mc.velocity.y >= 0) {
+                    mc.velocity.y *= -0.5f;
+                } else if (cd.closestNormal.y > 0 && mc.velocity.y <= 0) {
+                    mc.velocity.y = 0;
                 }
 
                 pc.position = cd.newPos;
