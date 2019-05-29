@@ -187,7 +187,7 @@ public class Module {
             JSONObject pointInfo = data.getJSONObject(point);
             // get the coordinates for the control point
             float pointX = pointInfo.getFloat("x") / 32f;
-            float pointY = this.height - pointInfo.getFloat("y")/32f;
+            float pointY = this.height - pointInfo.getFloat("y") / 32f;
 
             String tileName = pointInfo.getString("name");
             // get the identification of the spline (first character in the string)
@@ -202,14 +202,15 @@ public class Module {
             splineMap.get(splineId).add(pointId, new Vector3f(pointX, pointY, 0));
         }
 
-        for (List<Vector3f> cPoints: splineMap.values()) { // for each given control point
+        for (List<Vector3f> cPoints : splineMap.values()) { // for each given control point
             addSpline(cPoints);
         }
     }
 
     /**
      * Adds a spline to the module with the given control points
-      * @param cPoints control points of the spline
+     *
+     * @param cPoints control points of the spline
      * @throws IllegalStateException if cPoints.size() % 4 != 0
      */
     private void addSpline(List<Vector3f> cPoints) throws IllegalStateException {
