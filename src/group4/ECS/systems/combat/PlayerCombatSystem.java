@@ -57,13 +57,14 @@ public class PlayerCombatSystem extends IteratingSystem {
         // if active item is a weapon and when player hits enter, attack
         MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(plc.activeItem);
         if (wc != null && MouseClicks.leftMouseDown()) {
-            System.out.println(wc.hitBox);
+            System.out.println(plc.activeItem);
 
             // if melee
             if (wc.cooldown <= 0.0f) {
                 // set cooldown in accordance to rate of attack
                 wc.cooldown = 1 / wc.rateOfAttack;
 
+                System.out.println(wc.hitBox);
                 // camera x in world position
                 float camX = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0)
                         .getComponent(PositionComponent.class).position.x;
@@ -98,6 +99,7 @@ public class PlayerCombatSystem extends IteratingSystem {
      *
      * @param deltaTime time in between past and current tick
      * @param plc referencing the player
+     * TODO: add cooldown on weaponswitch
      */
     private void cooldown(float deltaTime, PlayerComponent plc) {
         for (Item item : plc.inventory) {

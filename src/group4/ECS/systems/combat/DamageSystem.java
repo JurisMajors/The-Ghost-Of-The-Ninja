@@ -8,9 +8,6 @@ import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.systems.collision.CollisionData;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class DamageSystem extends IteratingSystem {
 
     public DamageSystem(int priority) {

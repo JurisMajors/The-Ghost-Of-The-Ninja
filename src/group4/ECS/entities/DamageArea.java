@@ -30,9 +30,9 @@ public class DamageArea extends Entity {
         // Construct vertex array
         float[] vertices = new float[] {
                 0, 0, 0,
-                0, 1.0f, 0,
-                1.0f, 1.0f, 0,
-                1.0f, 0, 0,
+                0, dimension.y, 0,
+                dimension.x, dimension.y, 0,
+                dimension.x, 0, 0,
         };
 
         // Construct index array (used for geometry mesh)
