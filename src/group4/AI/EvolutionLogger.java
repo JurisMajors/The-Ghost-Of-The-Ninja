@@ -4,6 +4,7 @@ import org.uncommons.watchmaker.framework.EvolutionObserver;
 import org.uncommons.watchmaker.framework.PopulationData;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -32,7 +33,11 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);
 
-            LOGGER.info("Logger initialized");
+            LOGGER.info("Logger initialized! \n" +
+                    "Layers: " + Arrays.toString(Evolver.layerSizes) + "\n" +
+                    "Population: " + Evolver.populationSize + "\n" +
+                    "MutationProb: " + Evolver.mutationProbability + "\n" +
+                    "Rays: " + Evolver.rays);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.SplineComponent;
+import group4.ECS.components.identities.ExitComponent;
 import group4.ECS.components.identities.GhostComponent;
 import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.DimensionComponent;
@@ -43,6 +44,7 @@ public class Ray {
     public Ray(Vector3f startingPos, Vector3f dir) {
         List<Class<? extends Component>> defaultList = new ArrayList<>();
         defaultList.add(GhostComponent.class);
+        defaultList.add(ExitComponent.class);
         defaultList.add(PlayerComponent.class);
 
         this.startPos = startingPos;

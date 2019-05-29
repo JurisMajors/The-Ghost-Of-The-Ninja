@@ -67,7 +67,11 @@ public class Main implements Runnable {
      * The main logic for controlling the program flow of this class.
      */
     public void run() {
-        if (Main.SHOULD_OPENGL) init();
+        if (Main.SHOULD_OPENGL) {
+            init();
+        } else {
+            TileMapping.loadAllTileMappings();
+        }
         if (AI) {
             Evolver.train();
         } else {

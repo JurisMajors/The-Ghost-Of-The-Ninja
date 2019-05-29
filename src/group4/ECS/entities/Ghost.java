@@ -13,7 +13,7 @@ import group4.maths.Vector3f;
  * The helper Ghost
  */
 public class Ghost extends Player {
-
+    public boolean best; // whether has reached the exit
     /**
      * @param position center point of Ghost
      * @param level    the level that the Ghost is part of
@@ -21,7 +21,7 @@ public class Ghost extends Player {
      */
     public Ghost(Vector3f position, Level level, Brain brain) {
         super(position, level);
-
+        best = false;
         Shader shader = Shader.SIMPLE;
         Texture texture = Texture.BRICK;
 
