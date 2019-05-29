@@ -9,6 +9,7 @@ import group4.maths.Vector3f;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FileLevel extends Level {
@@ -62,6 +63,7 @@ public class FileLevel extends Level {
                 filePaths.add(fileEntry.getPath());
             }
         }
+        Collections.sort(filePaths); // sort the modules in the correct order
         return filePaths;
     }
 
