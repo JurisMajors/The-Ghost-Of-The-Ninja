@@ -32,7 +32,7 @@ public class Bullet extends Entity {
         this.add(new DimensionComponent(dimension));
         this.add(new DamageComponent(1));
         this.add(new MovementComponent(velocityDirection.scale(velocityMagnitude), velocityRange));
-        this.add(new GraphicsComponent(shader, texture, dimension));
+        this.add(new GraphicsComponent(shader, texture, dimension, false));
         this.add(new BulletComponent());
         this.add(new CollisionComponent(BulletCollision.getInstance()));
     }

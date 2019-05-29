@@ -52,7 +52,7 @@ public class BodyPart extends Entity implements GraphicsHierarchy {
         // Set the texture
         this.texture = texture;
         // Create a graphics component
-        this.add(new GraphicsComponent(Shader.SIMPLE, this.texture, dimension));
+        this.add(new GraphicsComponent(Shader.SIMPLE, this.texture, dimension, true));
     }
 
 
