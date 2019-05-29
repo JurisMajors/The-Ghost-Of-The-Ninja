@@ -1,13 +1,10 @@
 package group4.levelSystem.levels;
 
 import group4.ECS.entities.Player;
-import group4.ECS.entities.mobs.ShootingJumpingWalkingMob;
 import group4.ECS.entities.world.Exit;
-import group4.ECS.etc.TheEngine;
 import group4.levelSystem.ExitAction;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
-import group4.levelSystem.modules.TestModule;
 import group4.maths.Vector3f;
 
 import java.io.File;
@@ -30,12 +27,13 @@ public class FileLevel extends Level {
         this.modulePaths = this.getFilePaths(this.levelRoot + "/modules");
         this.ghostPaths = this.getFilePaths(this.levelRoot + "/ghosts");
 
-        if (this.modulePaths.size() < this.ghostPaths.size()) {
+        // Some informative feedback to the console.
+        if (this.modulePaths.size() == 0 || this.ghostPaths.size() == 0) {
+            System.err.println("ERROR : No modules or no ghost files.");
+        } else if (this.modulePaths.size() < this.ghostPaths.size()) {
             System.err.println("WARNING : MODULE count < GHOST count. Trimming # of ghosts.");
             this.ghostPaths = this.ghostPaths.subList(0, this.modulePaths.size());
-        }
-
-        if (this.modulePaths.size() > this.ghostPaths.size()) {
+        } else { // if (this.modulePaths.size() > this.ghostPaths.size()) {
             System.err.println("WARNING : MODULE count > GHOST count. Extending # of ghosts with the last ghost in the list.");
             while (this.modulePaths.size() > this.ghostPaths.size()) {
                 this.ghostPaths.add(this.ghostPaths.get(this.ghostPaths.size() - 1));
@@ -63,14 +61,14 @@ public class FileLevel extends Level {
         configurePaths();
 
         // Load in the 0th module. I think this is based on lexicographic ordering of the filenames.
-        return new Module(this, this.modulePaths.get(0), "module-01-02-ghost"); // Change .get(#) to the module you wish to load by default. For testing purposes. Should be ZERO.
+        return new Module(this, this.modulePaths.get(0), this.ghostPaths.get(0)); // Change .get(#) to the module you wish to load by default. For testing purposes. Should be ZERO.
     }
 
     @Override
     protected void createAdditionalModules() {
         // Load in all other modules found.
         for (int i = 1; i < this.modulePaths.size(); i++) {
-            this.addModule(new Module(this, this.modulePaths.get(i), "module-01-02-ghost"));
+            this.addModule(new Module(this, this.modulePaths.get(i), this.ghostPaths.get(i)));
         }
     }
 
@@ -84,7 +82,6 @@ public class FileLevel extends Level {
     protected void configExits() {
         for (Module m : this.modules) {
             for (Exit e : m.getExits()) {
-//                System.err.println("e: " + e.targetModule);
                 this.setExitAction(
                         e, // The exit that we want to set the action for
                         new ExitAction(this) { // Make sure to pass in the level in the constructor, so we can call back to it
