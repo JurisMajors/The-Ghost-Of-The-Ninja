@@ -43,7 +43,11 @@ public class UncollidingSystem extends IteratingSystem {
         for (CollisionData cd : cc.collisions) {
             // deal with splines
             if (cd.newPos != null) {
-                mc.velocity = new Vector3f();
+                if (cd.closestNormal.y < 0 && mc.velocity.y >= 0) { // from bot collision
+                    mc.velocity.y *= -0.5f;
+                } else if (cd.closestNormal.y > 0 && mc.velocity.y <= 0) { // from top
+                    mc.velocity.y = 0;
+                }
                 pc.position = cd.newPos;
                 continue;
             }

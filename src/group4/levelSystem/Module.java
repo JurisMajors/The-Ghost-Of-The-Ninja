@@ -8,22 +8,21 @@ import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
+import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.TheEngine;
 import group4.game.Main;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;
 import group4.maths.Vector3f;
+import group4.maths.spline.MultiSpline;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class defines the interface for modules that can be used to create levels
@@ -55,6 +54,8 @@ public class Module {
 
     // Storing the mapping from the tilemap indices to the engine Entities
     private Map<Integer, String> moduleTileMap;
+    // maps character of spline to its control points
+    private Map<Character, List<Vector3f>> splineMap;
 
 
     /**
@@ -66,6 +67,7 @@ public class Module {
             this.ghostPath = Evolver.path + ghostModelName;
         }
         this.configureMap();
+        this.splineMap = new HashMap<>();
         this.loadTiledObject(TiledModuleLocation);
         this.setup(l);
     }
@@ -136,38 +138,89 @@ public class Module {
         // Now, we loop over the layers
         for (int i = 0; i < layers.length(); i++) {
             JSONObject layer = layers.getJSONObject(i);
-            if (layer.getString("name").equals("MAIN")) {
-                // Get height and width of layer
-                int layerHeight = layer.getInt("height");
-                int layerWidth = layer.getInt("width");
-
-                // Loop over the data grid
-                JSONArray data = layer.getJSONArray("data");
-                for (int tile = 0; tile < data.length(); tile++) {
-                    // Get the grid position of the tile
-                    int tileGridX = tile % layerWidth;
-                    int tileGridY = layerHeight - 1 - (int) Math.floor(tile / layerWidth);
-
-                    // Get the type of the tile
-                    int tileId = Integer.parseInt(data.get(tile).toString()) - 1;
-
-                    String entityId = moduleTileMap.get(tileId);
-
-                    // TODO: Can't use switch with static function as comparison. i.e. case Platform.getName() is not possible. Something better?
-                    if (entityId == null) {
-                        continue;
-                    } else if (entityId.equals(Platform.getName())) {
-                        this.addPlatform(tileGridX, tileGridY, tileId);
-                    } else if (entityId.equals(Exit.getName())) {
-                        this.addExit(tileGridX, tileGridY, tileId);
-                    } else if (entityId.equals(Player.getName())) {
-                        this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
-                    } else {
-                        continue;
-                    }
-                }
+            String layerName = layer.getString("name");
+            // Get height and width of layer
+            if (layerName.equals("MAIN")) {
+                parseMainLayer(layer);
+            } else if (layerName.equals("SPLINES")) {
+                parseSplineLayer(layer);
             }
         }
+    }
+
+    private void parseMainLayer(JSONObject layer) {
+        int layerHeight = layer.getInt("height");
+        int layerWidth = layer.getInt("width");
+
+        // Loop over the data grid
+        JSONArray data = layer.getJSONArray("data");
+        for (int tile = 0; tile < data.length(); tile++) {
+            // Get the grid position of the tile
+            int tileGridX = tile % layerWidth;
+            int tileGridY = layerHeight - 1 - (int) Math.floor(tile / layerWidth);
+
+            // Get the type of the tile
+            int tileId = Integer.parseInt(data.get(tile).toString()) - 1;
+
+            String entityId = moduleTileMap.get(tileId);
+
+            // TODO: Can't use switch with static function as comparison. i.e. case Platform.getName() is not possible. Something better?
+            if (entityId == null) {
+                continue;
+            } else if (entityId.equals(Platform.getName())) {
+                this.addPlatform(tileGridX, tileGridY, tileId);
+            } else if (entityId.equals(Exit.getName())) {
+                this.addExit(tileGridX, tileGridY, tileId);
+            } else if (entityId.equals(Player.getName())) {
+                this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
+            } else {
+                continue;
+            }
+        }
+    }
+
+    private void parseSplineLayer(JSONObject layer) {
+        // Loop over the data grid
+        JSONArray data = layer.getJSONArray("objects");
+        for (int point = 0; point < data.length(); point++) {
+            // get information about the object
+            JSONObject pointInfo = data.getJSONObject(point);
+            // get the coordinates for the control point
+            float pointX = pointInfo.getFloat("x") / 32f;
+            float pointY = this.height - pointInfo.getFloat("y") / 32f;
+
+            String tileName = pointInfo.getString("name");
+            // get the identification of the spline (first character in the string)
+            char splineId = tileName.charAt(0);
+            // get the identification of the current point within the spline
+            int pointId = Integer.parseInt(tileName.substring(1));
+
+            if (!splineMap.containsKey(splineId)) { // create a new spline array if none exists for this spline
+                splineMap.put(splineId, new ArrayList<>(4));
+            }
+            // add the control point to the spline
+            splineMap.get(splineId).add(pointId, new Vector3f(pointX, pointY, 0));
+        }
+
+        for (List<Vector3f> cPoints : splineMap.values()) { // for each given control point
+            addSpline(cPoints);
+        }
+    }
+
+    /**
+     * Adds a spline to the module with the given control points
+     *
+     * @param cPoints control points of the spline
+     * @throws IllegalStateException if cPoints.size() % 4 != 0
+     */
+    private void addSpline(List<Vector3f> cPoints) throws IllegalStateException {
+        if (cPoints.size() % 4 != 0) throw new IllegalStateException("Module.addSpline() " +
+                "Control points must be multiple of 4, " +
+                "was given " + cPoints.size() + " control points instead!");
+        Vector3f[] cPointsArr = cPoints.toArray(new Vector3f[0]);
+        MultiSpline spline = new MultiSpline(cPointsArr);
+        SplinePlatform platform = new SplinePlatform(spline, Shader.SIMPLE, Texture.WHITE);
+        this.addEntity(platform);
     }
 
 

@@ -36,6 +36,16 @@ public class Vector3f {
     }
 
     /**
+     * Give this vector the values of the vector to copy
+     * @param toCopy vector to copy
+     */
+    public void setVector(Vector3f toCopy) {
+        this.x = toCopy.x;
+        this.y = toCopy.y;
+        this.z = toCopy.z;
+    }
+
+    /**
      * Adds this vector to another vector and results the result.
      *
      * @param other vector
@@ -106,6 +116,21 @@ public class Vector3f {
      */
     public float dot(Vector3f other) {
         return this.x * other.x + this.y * other.y + this.z * other.z;
+    }
+
+    /**
+     * Computes the angle between this vector and other in degrees
+     * @param other vector
+     * @return angle between this and other in degrees
+     */
+    public float angle(Vector3f other) {
+        // cos(alpha) = (A . B) / (|A| * |B|)
+        float cosa = dot(other) / (length() * other.length());
+
+        float angle = (float) Math.acos(cosa);
+        float degrees = (float) Math.toDegrees(angle);
+
+        return degrees;
     }
 
     /**

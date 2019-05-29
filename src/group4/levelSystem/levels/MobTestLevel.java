@@ -31,7 +31,7 @@ public class MobTestLevel extends Level {
 //        TheEngine.getInstance().addEntity(new JumpingMob(new Vector3f(15.0f, 10.0f, 0.0f), this));
 //        TheEngine.getInstance().addEntity(new JumpingWalkingMob(new Vector3f(15.0f, 10.0f, 0.0f), this));
 //        TheEngine.getInstance().addEntity(new WalkingMob(new Vector3f(15.0f, 10.0f, 0.0f), this));
-        TheEngine.getInstance().addEntity(new FlyingMob(new Vector3f(15.0f, 10.0f, 0.0f), this));
+//        TheEngine.getInstance().addEntity(new FlyingMob(new Vector3f(15.0f, 10.0f, 0.0f), this));
 
         // We don't care about the player position, as that will be initialized on level switching
         return new Player(new Vector3f(), this);

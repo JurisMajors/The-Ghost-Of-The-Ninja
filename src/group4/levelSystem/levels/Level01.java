@@ -15,8 +15,7 @@ public class Level01 extends Level {
 
     @Override
     protected Module createRoot() {
-        Module module = new Module(this, "./src/group4/res/maps/level_01/module_01_02.json",
-                "module-01-02-ghost");
+        Module module = new Module(this, "./src/group4/res/maps/level_03/spline_test.json", null);
 
         // temp! add mob for showcasing purposes
         Mob mob = new ShootingJumpingWalkingMob(module.getPlayerInitialPosition()
