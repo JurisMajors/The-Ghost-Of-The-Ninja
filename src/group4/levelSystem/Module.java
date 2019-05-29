@@ -45,7 +45,6 @@ public class Module {
     private List<Entity> entities;
 
     // ghost model
-    private String ghostPath = null;
     private Brain ghostModel = null;
 
     // Keeps track of the initial player position
@@ -66,7 +65,7 @@ public class Module {
 
     public Module(Level l, String tiledModuleLocation, String ghostModelLocation) {
         if (ghostModelLocation != null) {
-            this.ghostPath = ghostModelLocation;
+            loadGhost(ghostModelLocation);
         }
         this.configureMap();
         this.splineMap = new HashMap<>();
@@ -80,11 +79,15 @@ public class Module {
      */
     public Module(Level l, String ghostModelLocation) {
         if (ghostModelLocation != null) {
-            this.ghostPath = ghostModelLocation;
+            loadGhost(ghostModelLocation);
         }
         this.setup(l);
     }
 
+
+    private void loadGhost (String loc) {
+        this.ghostModel = new Brain(loc);
+    }
 
     /**
      * This method is used to create a JSON object containing the tiled module information
@@ -110,7 +113,6 @@ public class Module {
         this.level = l;
         this.entities = new ArrayList<>();
         this.constructModule();
-        this.ghostModel = new Brain(this.ghostPath);
     }
 
 
@@ -305,7 +307,7 @@ public class Module {
         if (this.entities == null) {
             throw new IllegalStateException("Adding ghost before initialized entities container");
         }
-        if (this.ghostPath != null) {
+        if (this.ghostModel != null) {
             TheEngine.getInstance().addEntity(new Ghost(this.level, this.ghostModel, master));
         } else {
             System.err.println("WARNING: Not loading ghost in module");
