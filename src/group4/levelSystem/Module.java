@@ -69,7 +69,7 @@ public class Module {
         }
         this.configureMap();
         this.splineMap = new HashMap<>();
-        this.loadTiledObject(TiledModuleLocation);
+        this.loadTiledObject(tiledModuleLocation);
         this.setup(l);
     }
 
