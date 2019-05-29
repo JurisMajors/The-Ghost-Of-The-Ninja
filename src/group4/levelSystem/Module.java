@@ -312,6 +312,21 @@ public class Module {
             if (targetModule == 0) {
                 continue; // Default "no tile placed here" marker is 0.
             } else {
+                /*
+                    We subtract TileMapping.MAIN_SIZE here from targetModule, as the tilenumber is based off the second
+                    "exits" tilemap, and hence its number is offset by the size of the first "main" tilemap.
+
+                                ...Beware, dark magic around these parts...
+
+                    Consider the following:
+                        int targetModule = data.getInt(tile) - some_number;  Causes targetModule to be "- some_number".
+
+                    Similarly for:
+                        int targetModule = data.getInt(tile);
+                        targetModule = targetModule - some_number; (or targetModule -= some_number)
+
+                    The following line below this comment works however as expected... 
+                 */
                 addExit(tileGridX, tileGridY, targetModule - TileMapping.MAIN_SIZE);
             }
         }
