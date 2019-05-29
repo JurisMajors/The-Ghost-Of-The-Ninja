@@ -307,7 +307,7 @@ public class Module {
         if (this.entities == null) {
             throw new IllegalStateException("Adding ghost before initialized entities container");
         }
-        if (this.ghostPath != null) {
+        if (this.ghostModel != null) {
             TheEngine.getInstance().addEntity(new Ghost(this.level, this.ghostModel, master));
         } else {
             System.err.println("WARNING: Not loading ghost in module");
