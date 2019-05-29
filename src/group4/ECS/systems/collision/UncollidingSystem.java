@@ -39,6 +39,7 @@ public class UncollidingSystem extends IteratingSystem {
         CollisionComponent cc = Mappers.collisionMapper.get(e);
 
         int resolved = 0; // keep track of resolved collisions
+
         for (CollisionData cd : cc.collisions) {
             // deal with splines
             if (cd.newPos != null) {
@@ -49,7 +50,7 @@ public class UncollidingSystem extends IteratingSystem {
                 uncollideRectangle(cd, e, mc, resolved, curPos);
             }
 
-            resolved ++;
+            resolved++;
         }
     }
 
