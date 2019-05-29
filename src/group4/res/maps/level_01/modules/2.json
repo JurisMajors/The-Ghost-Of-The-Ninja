@@ -22,7 +22,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"..\/tilemap-main.tsx"
+         "source":"..\/..\/tilemap-main.tsx"
         }],
  "tilewidth":32,
  "type":"map",
