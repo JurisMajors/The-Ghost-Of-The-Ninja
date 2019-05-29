@@ -295,6 +295,12 @@ public class Module {
         this.addEntity(p);
     }
 
+    /**
+     * Given the data for the "EXITS" layer, adds all exits and gives them an integer ID for the module
+     * to which they point.
+     *
+     * @param exitLayer JSONObject, the layer within the "tiled" JSON file.
+     */
     private void setupExits(JSONObject exitLayer) {
         // Loop over the data grid
         JSONArray data = exitLayer.getJSONArray("data");
@@ -325,7 +331,7 @@ public class Module {
                         int targetModule = data.getInt(tile);
                         targetModule = targetModule - some_number; (or targetModule -= some_number)
 
-                    The following line below this comment works however as expected... 
+                    The following line below this comment works however as expected...
                  */
                 addExit(tileGridX, tileGridY, targetModule - TileMapping.MAIN_SIZE);
             }
@@ -336,7 +342,7 @@ public class Module {
      *
      * @param x the x position of the exit in the module grid
      * @param y the y position of the exit in the module grid
-     * @param targetModule the identifier for the module (with respect to the level) to which the exit points
+     * @param targetModule the integer identifier for the module (with respect to the level) to which the exit points
      */
     private void addExit(int x, int y, int targetModule) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);

@@ -16,33 +16,54 @@ import java.util.List;
 
 public class FileLevel extends Level {
     private List<String> modulePaths;
+    private List<String> ghostPaths;
 
     public FileLevel(String levelRoot) {
         super(levelRoot);
     }
 
-    private void findModulePaths() {
-        this.modulePaths = new ArrayList<>();
+    /**
+     * This function is used to load in the ghostPaths and modulePaths, essentially presenting all the files that should
+     * be used in the specific level.
+     */
+    private void configurePaths() {
+        this.modulePaths = this.getFilePaths(this.levelRoot + "/modules");
+        this.ghostPaths = this.getFilePaths(this.levelRoot + "/ghosts");
 
-        File folder = new File(this.levelRoot);
-        for (final File fileEntry : folder.listFiles()) {
+        if (this.modulePaths.size() < this.ghostPaths.size()) {
+            System.err.println("WARNING : MODULE count < GHOST count. Trimming # of ghosts.");
+            this.ghostPaths = this.ghostPaths.subList(0, this.modulePaths.size());
+        }
+
+        if (this.modulePaths.size() > this.ghostPaths.size()) {
+            System.err.println("WARNING : MODULE count > GHOST count. Extending # of ghosts with the last ghost in the list.");
+            while (this.modulePaths.size() > this.ghostPaths.size()) {
+                this.ghostPaths.add(this.ghostPaths.get(this.ghostPaths.size() - 1));
+            }
+        }
+    }
+
+    private List<String> getFilePaths(String folder) {
+        List<String> filePaths = new ArrayList<>();
+        File folder_fd = new File(folder);
+        for (final File fileEntry : folder_fd.listFiles()) {
             if (fileEntry.isDirectory()) {
                 continue;
             } else {
-//                System.err.println(fileEntry.getPath());
-                this.modulePaths.add(fileEntry.getPath());
+                filePaths.add(fileEntry.getPath());
             }
         }
+        return filePaths;
     }
 
     @Override
     protected Module createRoot() {
         /* Find the actual module files here. Would have liked to have done this in the constructor, but it is impossible
         to call a function before super(). */
-        findModulePaths();
+        configurePaths();
 
         // Load in the 0th module. I think this is based on lexicographic ordering of the filenames.
-        return new Module(this, this.modulePaths.get(1), "module-01-02-ghost"); // Change .get(#) to the module you wish to load by default. For testing purposes. Should be ZERO.
+        return new Module(this, this.modulePaths.get(0), "module-01-02-ghost"); // Change .get(#) to the module you wish to load by default. For testing purposes. Should be ZERO.
     }
 
     @Override
