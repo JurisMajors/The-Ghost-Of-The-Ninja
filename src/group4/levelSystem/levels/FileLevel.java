@@ -14,10 +14,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Level01 extends Level {
+public class FileLevel extends Level {
     private List<String> modulePaths;
 
-    public Level01(String levelRoot) {
+    public FileLevel(String levelRoot) {
         super(levelRoot);
     }
 
