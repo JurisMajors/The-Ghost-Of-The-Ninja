@@ -6,6 +6,7 @@ import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
+import group4.ECS.entities.world.ArtTile;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
 import group4.ECS.entities.world.SplinePlatform;
@@ -63,13 +64,13 @@ public class Module {
      * Default construct, which constructs a module based on a Tiled .tmx file
      */
 
-    public Module(Level l, String TiledModuleLocation, String ghostModelName) {
-        if (ghostModelName != null) {
-            this.ghostPath = Evolver.path + ghostModelName;
+    public Module(Level l, String tiledModuleLocation, String ghostModelLocation) {
+        if (ghostModelLocation != null) {
+            this.ghostPath = ghostModelLocation;
         }
         this.configureMap();
         this.splineMap = new HashMap<>();
-        this.loadTiledObject(TiledModuleLocation);
+        this.loadTiledObject(tiledModuleLocation);
         this.setup(l);
     }
 
@@ -77,9 +78,9 @@ public class Module {
     /**
      * Constructor to work with non-tiled modules
      */
-    public Module(Level l, String ghostModelName) {
-        if (ghostModelName != null) {
-            this.ghostPath = Evolver.path + ghostModelName;
+    public Module(Level l, String ghostModelLocation) {
+        if (ghostModelLocation != null) {
+            this.ghostPath = ghostModelLocation;
         }
         this.setup(l);
     }
@@ -140,16 +141,23 @@ public class Module {
         for (int i = 0; i < layers.length(); i++) {
             JSONObject layer = layers.getJSONObject(i);
             String layerName = layer.getString("name");
-            // Get height and width of layer
+
             if (layerName.equals("MAIN")) {
                 parseMainLayer(layer);
             } else if (layerName.equals("SPLINES")) {
                 parseSplineLayer(layer);
+            } else if (layerName.equals("EXITS")) {
+                setupExits(layer);
+            } else {
+                // In case the layer is not MAIN or EXITS
+                System.err.println("Unrecognized layer name: " + layer.getString("name"));
+                setupExits(layer);
             }
         }
     }
 
     private void parseMainLayer(JSONObject layer) {
+        // Get height and width of layer
         int layerHeight = layer.getInt("height");
         int layerWidth = layer.getInt("width");
 
@@ -158,10 +166,10 @@ public class Module {
         for (int tile = 0; tile < data.length(); tile++) {
             // Get the grid position of the tile
             int tileGridX = tile % layerWidth;
-            int tileGridY = layerHeight - 1 - (int) Math.floor(tile / layerWidth);
+            int tileGridY = layerHeight - tile / layerWidth;
 
             // Get the type of the tile
-            int tileId = Integer.parseInt(data.get(tile).toString()) - 1;
+            int tileId = data.getInt(tile) - 1;
 
             String entityId = moduleTileMap.get(tileId);
 
@@ -170,14 +178,16 @@ public class Module {
                 continue;
             } else if (entityId.equals(Platform.getName())) {
                 this.addPlatform(tileGridX, tileGridY, tileId);
-            } else if (entityId.equals(Exit.getName())) {
-                this.addExit(tileGridX, tileGridY, tileId);
+            } else if (entityId.equals(ArtTile.getName())) {
+                this.addArtTile(tileGridX, tileGridY, tileId);
             } else if (entityId.equals(Player.getName())) {
                 this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
             } else {
+                System.err.println("Some tiles not drawing!");
                 continue;
             }
         }
+
     }
 
     private void parseSplineLayer(JSONObject layer) {
@@ -318,6 +328,19 @@ public class Module {
         return this.height;
     }
 
+    /**
+     * Adds an artTile entity to the module. These entities only render. They have no collision.
+     *
+     * @param x the x position of the platform in the module grid
+     * @param y the y position of the platform in the module grid
+     * @param i the identifier for the tile within the TileMap
+     */
+    private void addArtTile(int x, int y, int i) {
+        Vector3f tempPosition = new Vector3f(x, y, 0.0f);
+        Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
+        ArtTile p = new ArtTile(tempPosition, tempDimension, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        this.addEntity(p);
+    }
 
     /**
      * Adds a platform entity to the module
@@ -334,16 +357,59 @@ public class Module {
     }
 
     /**
+     * Given the data for the "EXITS" layer, adds all exits and gives them an integer ID for the module
+     * to which they point.
+     *
+     * @param exitLayer JSONObject, the layer within the "tiled" JSON file.
+     */
+    private void setupExits(JSONObject exitLayer) {
+        // Loop over the data grid
+        JSONArray data = exitLayer.getJSONArray("data");
+        for (int tile = 0; tile < data.length(); tile++) {
+            // Get height and width of layer
+            int layerHeight = exitLayer.getInt("height");
+            int layerWidth = exitLayer.getInt("width");
+
+            // Get the grid position of the tile
+            int tileGridX = tile % layerWidth;
+            int tileGridY = layerHeight - tile / layerWidth;
+
+            // Get the type of the tile
+            int targetModule = data.getInt(tile); // NOTE: targetModule == tileId in the tilemap texture here as well
+            if (targetModule == 0) {
+                continue; // Default "no tile placed here" marker is 0.
+            } else {
+                /*
+                    We subtract TileMapping.MAIN_SIZE here from targetModule, as the tilenumber is based off the second
+                    "exits" tilemap, and hence its number is offset by the size of the first "main" tilemap.
+
+                                ...Beware, dark magic around these parts...
+
+                    Consider the following:
+                        int targetModule = data.getInt(tile) - some_number;  Causes targetModule to be "- some_number".
+
+                    Similarly for:
+                        int targetModule = data.getInt(tile);
+                        targetModule = targetModule - some_number; (or targetModule -= some_number)
+
+                    The following line below this comment works however as expected...
+                 */
+                addExit(tileGridX, tileGridY, targetModule - TileMapping.MAIN_SIZE);
+            }
+        }
+    }
+
+    /**
      * Adds a exit entity to the module
      *
-     * @param x the x position of the exit in the module grid
-     * @param y the y position of the exit in the module grid
-     * @param i the identifier for the tile within the TileMap
+     * @param x            the x position of the exit in the module grid
+     * @param y            the y position of the exit in the module grid
+     * @param targetModule the integer identifier for the module (with respect to the level) to which the exit points
      */
-    private void addExit(int x, int y, int i) {
+    private void addExit(int x, int y, int targetModule) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
-        Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
-        Exit e = new Exit(tempPosition, tempDimension, this, TileMapping.MAIN.get(i));
+        Vector3f tempDimension = new Vector3f(2.0f, 2.0f, 0.0f);
+        Exit e = new Exit(tempPosition, tempDimension, this, targetModule);
         this.addEntity(e);
     }
 
@@ -376,15 +442,16 @@ public class Module {
      */
     private void configureMap() {
         int[] platforms = new int[]{0, 1, 2, 5, 6, 8, 9, 10, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 32, 33, 34, 35};
-        int[] exits = new int[]{3, 4, 11, 12};
+        int[] artTiles = new int[]{3, 4, 11, 12};
         int[] players = new int[]{7};
+
         moduleTileMap = new HashMap<Integer, String>();
         for (int i : platforms) {
             moduleTileMap.put(i, Platform.getName());
         }
 
-        for (int i : exits) {
-            moduleTileMap.put(i, Exit.getName());
+        for (int i : artTiles) {
+            moduleTileMap.put(i, ArtTile.getName());
         }
 
         for (int i : players) {
