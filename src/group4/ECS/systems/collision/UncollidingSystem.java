@@ -36,45 +36,83 @@ public class UncollidingSystem extends IteratingSystem {
      */
     void uncollideEntity(Entity e, float deltaTime, Vector3f curPos) {
         MovementComponent mc = Mappers.movementMapper.get(e);
-        PositionComponent pc = Mappers.positionMapper.get(e);
         // get all entities that i collide with
         CollisionComponent cc = Mappers.collisionMapper.get(e);
         int resolved = 0; // keep track of resolved collisions
+
         for (CollisionData cd : cc.collisions) {
             // if there is a new position component in the collision it means its a spline collision and
             // the new position of this entity should be at newpos
             if (cd.newPos != null) {
-                if (cd.closestNormal.y < 0 && mc.velocity.y >= 0) {
-                    mc.velocity.y *= -0.5f;
-                } else if (cd.closestNormal.y > 0 && mc.velocity.y <= 0) {
-                    mc.velocity.y = 0;
-                }
-
-                pc.position = cd.newPos;
-                continue;
-            }
-
-            // all normal collisions
-            Entity other = cd.entity;
-            if (other.equals(e)) continue;
-            // get the displacement vector
-            Vector3f trueDisplacement;
-
-            if (resolved != 0) { // if resolved more than one
-                // recalculate the collision (since position has changed)
-                trueDisplacement = CollisionSystem.processCollision(e, other);
+                // spline collision
+                uncollideSpline(cd, mc, curPos);
             } else {
-                trueDisplacement = cd.displacement;
+                // all normal collisions
+                uncollideRectangle(cd, e, mc, resolved, curPos);
             }
 
-            handleVelocity(mc, trueDisplacement);
-            // displace the positions
-            curPos.addi(trueDisplacement);
-            resolved ++;
+            resolved++;
         }
 
         // remove all collisions after fixing them all
         cc.collisions.clear();
+    }
+
+    /**
+     * Uncollides a moving entity from a spline given the collision data.
+     * Updates the mc and curPos of the moving entity.
+     *
+     * @param cd     collision data
+     * @param mc     movement component of moving entity
+     * @param curPos the current position of the moving entity
+     */
+    private void uncollideSpline(CollisionData cd, MovementComponent mc, Vector3f curPos) {
+        if (cd.closestNormal.y < 0 && mc.velocity.y >= 0) {
+            mc.velocity.y *= -0.5f;
+        } else if (cd.closestNormal.y > 0 && mc.velocity.y <= 0) {
+            mc.velocity.y = 0;
+
+            // rotate velocity when walking over spline
+            Vector3f up = new Vector3f(0, 0, 1.0f);
+            Vector3f tangent = cd.closestNormal.cross(up);
+
+            // move along the spline tangent with the speed that the x velocity was
+            mc.velocity = tangent.scale(mc.velocity.x);
+        }
+
+
+
+
+        curPos.setVector(cd.newPos);
+    }
+
+    /**
+     * Uncollides a moving entity (e) with a rectangle entity given the collision data.
+     * Updates the mc and curPos of the moving entity (e).
+     *
+     * @param cd
+     * @param e
+     * @param mc
+     * @param resolved
+     * @param curPos
+     */
+    private void uncollideRectangle(CollisionData cd, Entity e, MovementComponent mc, int resolved, Vector3f curPos) {
+        Entity other = cd.entity;
+        if (other.equals(e)) return;
+
+        // get the displacement vector
+        Vector3f trueDisplacement;
+
+        if (resolved != 0) { // if resolved more than one
+            // recalculate the collision (since position has changed)
+            trueDisplacement = CollisionSystem.processCollision(e, other);
+        } else {
+            trueDisplacement = cd.displacement;
+        }
+
+        handleVelocity(mc, trueDisplacement);
+        // displace the positions
+        curPos.addi(trueDisplacement);
     }
 
     private void handleVelocity(MovementComponent mc, Vector3f displacement) {
