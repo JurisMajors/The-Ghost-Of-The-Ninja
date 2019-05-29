@@ -69,33 +69,33 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         Vector3f upperLegDimension =  new Vector3f(0.15f, 0.5f, 0.0f);
         Vector3f lowerLegDimension = new Vector3f(0.12f, 0.4f, 0.0f);
 
-        BodyPart rLegUpper = new BodyPart(torso, new Vector3f(0.2f, 0.05f, 0.0f), upperLegDimension, 150, Texture.DEBUG);
+        BodyPart rLegUpper = new BodyPart(torso, new Vector3f(0.0f, 0.05f, 0.0f), upperLegDimension, 150, Texture.DEBUG);
         this.hierarchy.add(rLegUpper);
-        BodyPart rLegLower = new BodyPart(rLegUpper, upperLegDimension, lowerLegDimension, 70, Texture.DEBUG);
-        //this.hierarchy.add(rLegLower);
+        BodyPart rLegLower = new BodyPart(rLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, 70, Texture.DEBUG);
+        this.hierarchy.add(rLegLower);
 
         // Add left leg
         // TODO: should somehow be behind the right leg if moving to the right, and other way around if moving to left
-        BodyPart lLegUpper = new BodyPart(torso, new Vector3f(0.2f, 0.05f, 0.0f), upperLegDimension, 190, Texture.DEBUG);
-        //this.hierarchy.add(lLegUpper);
-        BodyPart lLegLower = new BodyPart(lLegUpper, upperLegDimension, lowerLegDimension, 70, Texture.DEBUG);
-        //this.hierarchy.add(lLegLower);
+        BodyPart lLegUpper = new BodyPart(torso, new Vector3f(0.0f, 0.05f, 0.0f), upperLegDimension, 190, Texture.DEBUG);
+        this.hierarchy.add(lLegUpper);
+        BodyPart lLegLower = new BodyPart(lLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, 70, Texture.DEBUG);
+        this.hierarchy.add(lLegLower);
 
         // TODO: Position arms in front or behind player depending on movement direction
         // Add right arm
         Vector3f upperArmDimension = new Vector3f(0.1f, 0.5f, 0.0f);
         Vector3f lowerArmDimension = new Vector3f( 0.08f, 0.4f, 0.0f);
 
-        BodyPart rArmUpper = new BodyPart(torso, new Vector3f(0.15f, 0.6f, 0.0f), upperArmDimension, 90, Texture.DEBUG);
-        //this.hierarchy.add(rArmUpper);
-        BodyPart rArmLower = new BodyPart(rArmUpper, upperArmDimension, lowerArmDimension, -90, Texture.DEBUG);
-        //this.hierarchy.add(rArmLower);
+        BodyPart rArmUpper = new BodyPart(torso, new Vector3f(0.0f, 0.6f, 0.0f), upperArmDimension, 110, Texture.DEBUG);
+        this.hierarchy.add(rArmUpper);
+        BodyPart rArmLower = new BodyPart(rArmUpper, new Vector3f(0.0f, upperArmDimension.y, 0.0f), lowerArmDimension, -90, Texture.DEBUG);
+        this.hierarchy.add(rArmLower);
 
         // Add left arm
-        BodyPart lArmUpper = new BodyPart(torso, new Vector3f(0.15f, 0.6f, 0.0f), upperArmDimension, 120, Texture.DEBUG);
-        //this.hierarchy.add(lArmUpper);
-        BodyPart lArmLower = new BodyPart(lArmUpper, upperArmDimension, lowerArmDimension, -60, Texture.DEBUG);
-        //this.hierarchy.add(lArmLower);
+        BodyPart lArmUpper = new BodyPart(torso, new Vector3f(0.0f, 0.6f, 0.0f), upperArmDimension, 130, Texture.DEBUG);
+        this.hierarchy.add(lArmUpper);
+        BodyPart lArmLower = new BodyPart(lArmUpper, new Vector3f(0.0f, upperArmDimension.y, 0.0f), lowerArmDimension, -60, Texture.DEBUG);
+        this.hierarchy.add(lArmLower);
     }
 
 
