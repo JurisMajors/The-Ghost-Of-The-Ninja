@@ -196,10 +196,15 @@ public class Module {
             int pointId = Integer.parseInt(tileName.substring(1));
 
             if (!splineMap.containsKey(splineId)) { // create a new spline array if none exists for this spline
-                splineMap.put(splineId, new ArrayList<>(4));
+                splineMap.put(splineId, new ArrayList<>(data.length()));
             }
             // add the control point to the spline
-            splineMap.get(splineId).add(pointId, new Vector3f(pointX, pointY, 0));
+            List<Vector3f> points = splineMap.get(splineId);
+            if (pointId >= points.size()) {
+                points.add(new Vector3f(pointX, pointY, 0));
+            } else {
+                points.add(pointId, new Vector3f(pointX, pointY, 0));
+            }
         }
 
         for (List<Vector3f> cPoints : splineMap.values()) { // for each given control point
