@@ -191,7 +191,7 @@ public class TestModule extends Module {
 //            v.addi(new Vector3f(4.0f, 4.0f, 0.0f));
         }
         MultiSpline mySpline = new MultiSpline(tempPoint);
-        SplinePlatform splinePlatform = new SplinePlatform(tempPosition, tempDimension, mySpline, thickness, Shader.SIMPLE, Texture.WHITE);
+        SplinePlatform splinePlatform = new SplinePlatform(tempPosition,  mySpline, thickness, Shader.SIMPLE, Texture.BRICK);
         this.addEntity(splinePlatform);
 
         // Create the exit
