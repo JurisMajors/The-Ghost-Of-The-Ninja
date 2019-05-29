@@ -14,12 +14,15 @@ import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.game.Main;
 import group4.game.Window;
+import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.maths.Vector3f;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 public class PlayerCombatSystem extends IteratingSystem {
 
@@ -43,12 +46,18 @@ public class PlayerCombatSystem extends IteratingSystem {
         // process cooldown for all items
         cooldown(deltaTime, plc);
 
-        // if active item is a weapon
-        // TODO: also other items
-        MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(plc.inventory[0]);
+        // check if weapon was switched
+        switchWeapon(deltaTime, plc);
 
-        // when player hits enter, attack
+        // if slot is empty, i.e. null, do nothing
+        if (plc.activeItem == null) {
+            return;
+        }
+
+        // if active item is a weapon and when player hits enter, attack
+        MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(plc.activeItem);
         if (wc != null && MouseClicks.leftMouseDown()) {
+            System.out.println(wc.hitBox);
 
             // if melee
             if (wc.cooldown <= 0.0f) {
@@ -60,7 +69,8 @@ public class PlayerCombatSystem extends IteratingSystem {
                         .getComponent(PositionComponent.class).position.x;
 
                 // mouse x in world pos
-                float mouseWorldX = camX + ((float) MouseMovement.mouseX * (Main.SCREEN_WIDTH / Window.getWidth()) - Main.SCREEN_WIDTH / 2);
+                float mouseWorldX = camX + ((float) MouseMovement.mouseX *
+                        (Main.SCREEN_WIDTH / Window.getWidth()) - Main.SCREEN_WIDTH / 2);
 
                 // TODO: account for y
                 // if clicking right of player, hit right, else hit left
@@ -74,7 +84,6 @@ public class PlayerCombatSystem extends IteratingSystem {
                 // exclude ghost and player for the damage
                 Set<Entity> excluded = new HashSet<>();
                 excluded.add(entity);
-                // ghost
                 excluded.add(TheEngine.getInstance().getEntitiesFor(Families.ghostFamily).get(0));
 
                 Vector3f position = pc.position.add(hitboxOffset);
@@ -112,6 +121,32 @@ public class PlayerCombatSystem extends IteratingSystem {
                     wc.cooldown = 0.0f;
                 }
             }
+        }
+    }
+
+    /**
+     * This method manages which weapon is currently active
+     *
+     * @param deltatime
+     * @param plc
+     */
+    private void switchWeapon(float deltatime, PlayerComponent plc) {
+        if (KeyBoard.isKeyDown(GLFW_KEY_1)) {
+            plc.activeItem = plc.inventory[0];
+        } else if (KeyBoard.isKeyDown(GLFW_KEY_2)) {
+            plc.activeItem = plc.inventory[1];
+        } else if (KeyBoard.isKeyDown(GLFW_KEY_3)) {
+            plc.activeItem = plc.inventory[2];
+        } else if (KeyBoard.isKeyDown(GLFW_KEY_4)) {
+            plc.activeItem = plc.inventory[3];
+        } else if (KeyBoard.isKeyDown(GLFW_KEY_5)) {
+            plc.activeItem = plc.inventory[4];
+        } else if (KeyBoard.isKeyDown(GLFW_KEY_6)) {
+            plc.activeItem = plc.inventory[5];
+        } else if (KeyBoard.isKeyDown(GLFW_KEY_7)) {
+            plc.activeItem = plc.inventory[6];
+        } else if (KeyBoard.isKeyDown(GLFW_KEY_8)) {
+            plc.activeItem = plc.inventory[7];
         }
     }
 

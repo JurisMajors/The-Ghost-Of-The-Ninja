@@ -1,7 +1,7 @@
 package group4.ECS.entities;
 
 import group4.ECS.components.events.TimerComponent;
-import group4.ECS.systems.timed.timedEventHandlers.AbstractTimedHandler;
+import group4.ECS.systems.timed.AbstractTimedHandler;
 import group4.maths.Vector3f;
 
 public class DamageAreaTemp extends DamageArea {

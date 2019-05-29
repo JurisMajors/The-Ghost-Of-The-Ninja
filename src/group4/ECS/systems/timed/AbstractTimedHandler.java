@@ -1,4 +1,4 @@
-package group4.ECS.systems.timed.timedEventHandlers;
+package group4.ECS.systems.timed;
 
 import group4.ECS.components.physics.CollisionComponent;
 

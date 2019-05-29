@@ -19,7 +19,7 @@ import group4.ECS.systems.movement.BulletMovementSystem;
 import group4.ECS.systems.movement.GhostMovementSystem;
 import group4.ECS.systems.movement.MobMovementSystem;
 import group4.ECS.systems.movement.PlayerMovementSystem;
-import group4.ECS.systems.timed.timedEventHandlers.TimedEventSystem;
+import group4.ECS.systems.timed.TimedEventSystem;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;

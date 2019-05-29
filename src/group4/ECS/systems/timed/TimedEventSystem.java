@@ -1,4 +1,4 @@
-package group4.ECS.systems.timed.timedEventHandlers;
+package group4.ECS.systems.timed;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
