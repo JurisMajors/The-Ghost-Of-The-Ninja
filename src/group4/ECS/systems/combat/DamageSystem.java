@@ -8,6 +8,9 @@ import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.systems.collision.CollisionData;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class DamageSystem extends IteratingSystem {
 
     public DamageSystem(int priority) {
@@ -28,9 +31,8 @@ public class DamageSystem extends IteratingSystem {
         // for all collisions of dmg inflicting entity
         for (CollisionData cd : cc.collisions) {
 
-            // if the damage inflicting entity collides with its origin, skip
-            // e.g. player shouldn't hit himself
-            if (dc.origin.equals(cd.entity)) {
+            // skip if entity is listed in set excluded entities
+            if (dc.excluded.contains(cd.entity)) {
                 continue;
             }
 

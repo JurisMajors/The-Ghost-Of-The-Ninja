@@ -3,19 +3,26 @@ package group4.ECS.components.stats;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class DamageComponent implements Component {
 
     public int damage;
-    public Entity origin;
+    public Set<Entity> excluded;
 
     public DamageComponent(int damage) {
         this.damage = damage;
-        origin = null;
+        excluded = new HashSet<>();
     }
 
-    public DamageComponent(int damage, Entity dmgOrigin) {
+    /**
+     * @param damage
+     * @param excluded list of entities which get skipped in the damage process
+     */
+    public DamageComponent(int damage, Set<Entity> excluded) {
         this.damage = damage;
-        this.origin = dmgOrigin;
+        this.excluded = excluded;
     }
 
 }

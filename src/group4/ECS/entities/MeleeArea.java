@@ -5,6 +5,8 @@ import group4.ECS.components.events.TickComponent;
 import group4.ECS.etc.Mappers;
 import group4.maths.Vector3f;
 
+import java.util.Set;
+
 public class MeleeArea extends DamageArea {
 
     /**
@@ -14,12 +16,12 @@ public class MeleeArea extends DamageArea {
      * @param position  position of the damage area
      * @param dimension dimension field of effect
      * @param damage    damage inflicted on colliding entity (HealthComponent needed)
-     * @param origin    origin of the damage
+     * @param excluded  exclude for damage
      */
-    public MeleeArea(Vector3f position, Vector3f dimension, int damage, Entity origin) {
+    public MeleeArea(Vector3f position, Vector3f dimension, int damage, Set<Entity> excluded) {
         super(position, dimension, damage);
         this.add(new TickComponent(1));
-        Mappers.damageMapper.get(this).origin = origin;
+        Mappers.damageMapper.get(this).excluded = excluded;
     }
 
 }
