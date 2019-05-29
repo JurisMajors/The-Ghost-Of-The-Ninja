@@ -64,7 +64,7 @@ public class PlayerCombatSystem extends IteratingSystem {
                 // set cooldown in accordance to rate of attack
                 wc.cooldown = 1 / wc.rateOfAttack;
 
-                System.out.println(wc.hitBox);
+                // TODO: account for non-centric camera, e.g. pass on cam offset from display centre
                 // camera x in world position
                 float camX = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0)
                         .getComponent(PositionComponent.class).position.x;
