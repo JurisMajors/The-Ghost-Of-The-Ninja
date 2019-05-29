@@ -67,7 +67,7 @@ public class PlayerMovementSystem extends IteratingSystem {
 
         if (shouldSpawnGhost(ref) && !((Player) e).spawnedGhost) {
             ((Player) e).spawnedGhost = true;
-            ((Player) e).level.getCurrentModule().addGhost(new Vector3f(e.getComponent(PositionComponent.class).position));
+            ((Player) e).level.getCurrentModule().addGhost((Player) e);
         }
 
         mc.velocity.capValuesi(mc.velocityRange);
