@@ -45,6 +45,7 @@ public class Module {
 
     // ghost model
     private String ghostPath = null;
+    private Brain ghostModel = null;
 
     // Keeps track of the initial player position
     private Vector3f initialPlayerPos;
@@ -108,7 +109,7 @@ public class Module {
         this.level = l;
         this.entities = new ArrayList<>();
         this.constructModule();
-        this.addGhost();
+        this.ghostModel = new Brain(this.ghostPath);
     }
 
 
@@ -288,15 +289,14 @@ public class Module {
     /**
      * Add a ghost to the current module
      */
-    private void addGhost() throws IllegalStateException {
+    public void addGhost(Vector3f position) throws IllegalStateException {
         if (Main.AI) return;
 
         if (this.entities == null) {
             throw new IllegalStateException("Adding ghost before initialized entities container");
         }
         if (this.ghostPath != null) {
-            this.entities.add(new Ghost(this.getPlayerInitialPosition(), this.level,
-                    new Brain(this.ghostPath)));
+            this.addEntity(new Ghost(position,this.level, this.ghostModel));
         } else {
             System.err.println("WARNING: Not loading ghost in module");
         }
