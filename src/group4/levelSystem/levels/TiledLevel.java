@@ -11,7 +11,7 @@ public class TiledLevel extends Level {
 
     @Override
     protected Module createRoot() {
-        return new Module(this, "./src/group4/levelSystem/modules/TiledModules/test.json", null);
+        return new Module(this, "./src/group4/res/maps/level_01/module_01_02.json", "module-01-02-ghost");
     }
 
     @Override
