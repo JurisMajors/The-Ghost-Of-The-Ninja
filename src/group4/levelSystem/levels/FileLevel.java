@@ -26,7 +26,7 @@ public class FileLevel extends Level {
     private void configurePaths() {
         this.modulePaths = this.getFilePaths(this.levelRoot + "/modules");
         this.ghostPaths = new ArrayList<>();
-        
+
         List<String> allGhostFiles = this.getFilePaths(this.levelRoot + "/ghosts");
         for (String modulePath : this.modulePaths) {
             boolean matched = false; // See if we find a ghost for this module
@@ -48,18 +48,6 @@ public class FileLevel extends Level {
             // If we have not found a ghost for this module, add a null.
             if (!matched) {
                 this.ghostPaths.add(null);
-            }
-        }
-        // Some informative feedback to the console.
-        if (this.modulePaths.size() == 0 || this.ghostPaths.size() == 0) {
-            System.err.println("ERROR : No modules or no ghost files.");
-        } else if (this.modulePaths.size() < this.ghostPaths.size()) {
-            System.err.println("WARNING : MODULE count < GHOST count. Trimming # of ghosts.");
-            this.ghostPaths = this.ghostPaths.subList(0, this.modulePaths.size());
-        } else { // if (this.modulePaths.size() > this.ghostPaths.size()) {
-            System.err.println("WARNING : MODULE count > GHOST count. Extending # of ghosts with the last ghost in the list.");
-            while (this.modulePaths.size() > this.ghostPaths.size()) {
-                this.ghostPaths.add(this.ghostPaths.get(this.ghostPaths.size() - 1));
             }
         }
     }
