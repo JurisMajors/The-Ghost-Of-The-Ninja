@@ -62,12 +62,12 @@ public class Module {
      * Default construct, which constructs a module based on a Tiled .tmx file
      */
 
-    public Module(Level l, String TiledModuleLocation, String ghostModelName) {
-        if (ghostModelName != null) {
-            this.ghostPath = Evolver.path + ghostModelName;
+    public Module(Level l, String tiledModuleLocation, String ghostModelLocation) {
+        if (ghostModelLocation != null) {
+            this.ghostPath = ghostModelLocation;
         }
         this.configureMap();
-        this.loadTiledObject(TiledModuleLocation);
+        this.loadTiledObject(tiledModuleLocation);
         this.setup(l);
     }
 
@@ -75,9 +75,9 @@ public class Module {
     /**
      * Constructor to work with non-tiled modules
      */
-    public Module(Level l, String ghostModelName) {
-        if (ghostModelName != null) {
-            this.ghostPath = Evolver.path + ghostModelName;
+    public Module(Level l, String ghostModelLocation) {
+        if (ghostModelLocation != null) {
+            this.ghostPath = ghostModelLocation;
         }
         this.setup(l);
     }
