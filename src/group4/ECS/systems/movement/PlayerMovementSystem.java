@@ -64,6 +64,12 @@ public class PlayerMovementSystem extends IteratingSystem {
         if (shouldJump(ref) && canJump(mc.velocity)) {
             jump(mc);
         }
+
+        if (shouldSpawnGhost(ref) && !((Player) e).spawnedGhost) {
+            ((Player) e).spawnedGhost = true;
+            ((Player) e).level.getCurrentModule().addGhost(new Vector3f(e.getComponent(PositionComponent.class).position));
+        }
+
         mc.velocity.capValuesi(mc.velocityRange);
     }
 
@@ -148,6 +154,10 @@ public class PlayerMovementSystem extends IteratingSystem {
      */
     protected boolean shouldJump (Object ref) {
         return KeyBoard.isKeyDown(GLFW_KEY_SPACE);
+    }
+
+    protected boolean shouldSpawnGhost (Object ref) {
+        return KeyBoard.isKeyDown(GLFW_KEY_G);
     }
 
     /**
