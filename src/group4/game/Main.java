@@ -8,8 +8,8 @@ import group4.ECS.systems.CameraSystem;
 import group4.ECS.systems.RenderSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
-import group4.ECS.systems.collision.DisplacementSystem;
 import group4.ECS.systems.collision.UncollidingSystem;
+import group4.ECS.systems.collision.LastSystem;
 import group4.ECS.systems.combat.DamageSystem;
 import group4.ECS.systems.combat.PlayerCombatSystem;
 import group4.ECS.systems.death.GhostDyingSystem;
@@ -138,7 +138,7 @@ public class Main implements Runnable {
             engine.addSystem(new PlayerCombatSystem(5));
             engine.addSystem(new DamageSystem(6));
             engine.addSystem(new CollisionEventSystem(7));
-            engine.addSystem(new DisplacementSystem(8));
+            engine.addSystem(new UncollidingSystem(8));
             engine.addSystem(new PlayerDyingSystem(true, 9));
             engine.addSystem(new GhostDyingSystem(false, 10));
             engine.addSystem(new MobDyingSystem(11));
@@ -147,7 +147,7 @@ public class Main implements Runnable {
             engine.addSystem(new CameraSystem(Families.playerFamily, 12));
             engine.addSystem(new RenderSystem(13));
             engine.addSystem(new TimedEventSystem(14));
-            engine.addSystem(new UncollidingSystem(15));
+            engine.addSystem(new LastSystem(15));
             this.level = new Level01();
 
         }
