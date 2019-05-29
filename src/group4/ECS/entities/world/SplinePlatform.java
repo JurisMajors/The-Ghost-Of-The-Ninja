@@ -50,6 +50,8 @@ public class SplinePlatform extends Entity {
         float t = 0.0f;
         // loop through all controlpoints over the spline
         for (int k = 0; k <= numPoints; k++) {
+            if (t > 1.0f) t = 1.0f;
+
             points[k] = spline.getPoint(t);
             normals[k] = spline.getNormal(t);
 
