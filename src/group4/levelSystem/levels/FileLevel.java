@@ -25,8 +25,31 @@ public class FileLevel extends Level {
      */
     private void configurePaths() {
         this.modulePaths = this.getFilePaths(this.levelRoot + "/modules");
-        this.ghostPaths = this.getFilePaths(this.levelRoot + "/ghosts");
+        this.ghostPaths = new ArrayList<>();
+        
+        List<String> allGhostFiles = this.getFilePaths(this.levelRoot + "/ghosts");
+        for (String modulePath : this.modulePaths) {
+            boolean matched = false; // See if we find a ghost for this module
+            String[] splits = modulePath.split("\\" + File.separator); // a\b\c.json => [a, b, c.json]
+            String filePath = splits[splits.length - 1];                    // c.json
+            String fileName = filePath.split("\\.")[0];               // c
 
+            // Try to match vs all ghostPaths found. N^2, but N is guaranteed to be small. I.e. we won't have 10.000 modules or ghosts.
+            for (String ghostPath : allGhostFiles) {
+                splits = ghostPath.split("\\" + File.separator);
+                filePath = splits[splits.length - 1];
+                String ghostFileName = filePath.split("\\.")[0];
+                if (ghostFileName.equals(fileName)) {
+                    matched = true;
+                    this.ghostPaths.add(ghostPath);
+                }
+            }
+
+            // If we have not found a ghost for this module, add a null.
+            if (!matched) {
+                this.ghostPaths.add(null);
+            }
+        }
         // Some informative feedback to the console.
         if (this.modulePaths.size() == 0 || this.ghostPaths.size() == 0) {
             System.err.println("ERROR : No modules or no ghost files.");
