@@ -60,7 +60,9 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
         // If auto reset is enabled, reset the module to its original state
         // and reposition the player, while giving it new health
         if (this.autoReset) {
+            ((Player) entity).level.getCurrentModule().unload();
             ((Player) entity).level.getCurrentModule().reset();
+            ((Player) entity).level.getCurrentModule().load();
             ((Player) entity).getComponent(PositionComponent.class).position =
                     ((Player) entity).level.getCurrentModule().getPlayerInitialPosition();
             ((Player) entity).getComponent(HealthComponent.class).health = 100;
