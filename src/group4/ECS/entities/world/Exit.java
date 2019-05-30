@@ -15,7 +15,7 @@ import group4.maths.Vector3f;
 public class Exit extends Entity {
 
     public Module module;
-
+    public int targetModule;
     /**
      * Construct a simple block (flexible texture and shader) in a certain position of certain size
      *
@@ -41,15 +41,16 @@ public class Exit extends Entity {
      * @param d       The dimensions of the block
      * @param m       The module the exit is part of
      */
-    public Exit(Vector3f p, Vector3f d, Module m, float[] texCoords) {
+    public Exit(Vector3f p, Vector3f d, Module m, int targetModule) {
         this.add(new PositionComponent(p));
         this.add(new DimensionComponent(d));
-        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.MAIN_TILES, d, texCoords, false));
+        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.WHITE, d, false));
         this.add(new CollisionComponent(ExitCollision.getInstance()));
         this.add(new ExitComponent());
 
         // Set the module this exit belongs to
         this.module = m;
+        this.targetModule = targetModule;
     }
 
     public static String getName() {

@@ -6,24 +6,24 @@ import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
+import group4.ECS.entities.world.ArtTile;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
+import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.TheEngine;
 import group4.game.Main;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;
 import group4.maths.Vector3f;
+import group4.maths.spline.MultiSpline;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class defines the interface for modules that can be used to create levels
@@ -45,7 +45,7 @@ public class Module {
     private List<Entity> entities;
 
     // ghost model
-    private String ghostPath = null;
+    private Brain ghostModel = null;
 
     // Keeps track of the initial player position
     private Vector3f initialPlayerPos;
@@ -55,18 +55,21 @@ public class Module {
 
     // Storing the mapping from the tilemap indices to the engine Entities
     private Map<Integer, String> moduleTileMap;
+    // maps character of spline to its control points
+    private Map<Character, List<Vector3f>> splineMap;
 
 
     /**
      * Default construct, which constructs a module based on a Tiled .tmx file
      */
 
-    public Module(Level l, String TiledModuleLocation, String ghostModelName) {
-        if (ghostModelName != null) {
-            this.ghostPath = Evolver.path + ghostModelName;
+    public Module(Level l, String tiledModuleLocation, String ghostModelLocation) {
+        if (ghostModelLocation != null) {
+            loadGhost(ghostModelLocation);
         }
         this.configureMap();
-        this.loadTiledObject(TiledModuleLocation);
+        this.splineMap = new HashMap<>();
+        this.loadTiledObject(tiledModuleLocation);
         this.setup(l);
     }
 
@@ -74,13 +77,17 @@ public class Module {
     /**
      * Constructor to work with non-tiled modules
      */
-    public Module(Level l, String ghostModelName) {
-        if (ghostModelName != null) {
-            this.ghostPath = Evolver.path + ghostModelName;
+    public Module(Level l, String ghostModelLocation) {
+        if (ghostModelLocation != null) {
+            loadGhost(ghostModelLocation);
         }
         this.setup(l);
     }
 
+
+    private void loadGhost (String loc) {
+        this.ghostModel = new Brain(loc);
+    }
 
     /**
      * This method is used to create a JSON object containing the tiled module information
@@ -106,7 +113,6 @@ public class Module {
         this.level = l;
         this.entities = new ArrayList<>();
         this.constructModule();
-        this.addGhost();
     }
 
 
@@ -136,38 +142,103 @@ public class Module {
         // Now, we loop over the layers
         for (int i = 0; i < layers.length(); i++) {
             JSONObject layer = layers.getJSONObject(i);
-            if (layer.getString("name").equals("MAIN")) {
-                // Get height and width of layer
-                int layerHeight = layer.getInt("height");
-                int layerWidth = layer.getInt("width");
+            String layerName = layer.getString("name");
 
-                // Loop over the data grid
-                JSONArray data = layer.getJSONArray("data");
-                for (int tile = 0; tile < data.length(); tile++) {
-                    // Get the grid position of the tile
-                    int tileGridX = tile % layerWidth;
-                    int tileGridY = layerHeight - 1 - (int) Math.floor(tile / layerWidth);
-
-                    // Get the type of the tile
-                    int tileId = Integer.parseInt(data.get(tile).toString()) - 1;
-
-                    String entityId = moduleTileMap.get(tileId);
-
-                    // TODO: Can't use switch with static function as comparison. i.e. case Platform.getName() is not possible. Something better?
-                    if (entityId == null) {
-                        continue;
-                    } else if (entityId.equals(Platform.getName())) {
-                        this.addPlatform(tileGridX, tileGridY, tileId);
-                    } else if (entityId.equals(Exit.getName())) {
-                        this.addExit(tileGridX, tileGridY, tileId);
-                    } else if (entityId.equals(Player.getName())) {
-                        this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
-                    } else {
-                        continue;
-                    }
-                }
+            if (layerName.equals("MAIN")) {
+                parseMainLayer(layer);
+            } else if (layerName.equals("SPLINES")) {
+                parseSplineLayer(layer);
+            } else if (layerName.equals("EXITS")) {
+                setupExits(layer);
+            } else {
+                // In case the layer is not MAIN or EXITS
+                System.err.println("Unrecognized layer name: " + layer.getString("name"));
+                setupExits(layer);
             }
         }
+    }
+
+    private void parseMainLayer(JSONObject layer) {
+        // Get height and width of layer
+        int layerHeight = layer.getInt("height");
+        int layerWidth = layer.getInt("width");
+
+        // Loop over the data grid
+        JSONArray data = layer.getJSONArray("data");
+        for (int tile = 0; tile < data.length(); tile++) {
+            // Get the grid position of the tile
+            int tileGridX = tile % layerWidth;
+            int tileGridY = layerHeight - tile / layerWidth;
+
+            // Get the type of the tile
+            int tileId = data.getInt(tile) - 1;
+
+            String entityId = moduleTileMap.get(tileId);
+
+            // TODO: Can't use switch with static function as comparison. i.e. case Platform.getName() is not possible. Something better?
+            if (entityId == null) {
+                continue;
+            } else if (entityId.equals(Platform.getName())) {
+                this.addPlatform(tileGridX, tileGridY, tileId);
+            } else if (entityId.equals(ArtTile.getName())) {
+                this.addArtTile(tileGridX, tileGridY, tileId);
+            } else if (entityId.equals(Player.getName())) {
+                this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
+            } else {
+                System.err.println("Some tiles not drawing!");
+                continue;
+            }
+        }
+
+    }
+
+    private void parseSplineLayer(JSONObject layer) {
+        // Loop over the data grid
+        JSONArray data = layer.getJSONArray("objects");
+        for (int point = 0; point < data.length(); point++) {
+            // get information about the object
+            JSONObject pointInfo = data.getJSONObject(point);
+            // get the coordinates for the control point
+            float pointX = pointInfo.getFloat("x") / 32f;
+            float pointY = this.height - pointInfo.getFloat("y") / 32f;
+
+            String tileName = pointInfo.getString("name");
+            // get the identification of the spline (first character in the string)
+            char splineId = tileName.charAt(0);
+            // get the identification of the current point within the spline
+            int pointId = Integer.parseInt(tileName.substring(1));
+
+            if (!splineMap.containsKey(splineId)) { // create a new spline array if none exists for this spline
+                splineMap.put(splineId, new ArrayList<>(data.length()));
+            }
+            // add the control point to the spline
+            List<Vector3f> points = splineMap.get(splineId);
+            if (pointId >= points.size()) {
+                points.add(new Vector3f(pointX, pointY, 0));
+            } else {
+                points.add(pointId, new Vector3f(pointX, pointY, 0));
+            }
+        }
+
+        for (List<Vector3f> cPoints : splineMap.values()) { // for each given control point
+            addSpline(cPoints);
+        }
+    }
+
+    /**
+     * Adds a spline to the module with the given control points
+     *
+     * @param cPoints control points of the spline
+     * @throws IllegalStateException if cPoints.size() % 4 != 0
+     */
+    private void addSpline(List<Vector3f> cPoints) throws IllegalStateException {
+        if (cPoints.size() % 4 != 0) throw new IllegalStateException("Module.addSpline() " +
+                "Control points must be multiple of 4, " +
+                "was given " + cPoints.size() + " control points instead!");
+        Vector3f[] cPointsArr = cPoints.toArray(new Vector3f[0]);
+        MultiSpline spline = new MultiSpline(cPointsArr);
+        SplinePlatform platform = new SplinePlatform(spline, Shader.SIMPLE, Texture.WHITE);
+        this.addEntity(platform);
     }
 
 
@@ -230,15 +301,14 @@ public class Module {
     /**
      * Add a ghost to the current module
      */
-    private void addGhost() throws IllegalStateException {
+    public void addGhost(Player master) throws IllegalStateException {
         if (Main.AI) return;
 
         if (this.entities == null) {
             throw new IllegalStateException("Adding ghost before initialized entities container");
         }
-        if (this.ghostPath != null) {
-            this.entities.add(new Ghost(this.getPlayerInitialPosition(), this.level,
-                    new Brain(this.ghostPath)));
+        if (this.ghostModel != null) {
+            TheEngine.getInstance().addEntity(new Ghost(this.level, this.ghostModel, master));
         } else {
             System.err.println("WARNING: Not loading ghost in module");
         }
@@ -260,6 +330,19 @@ public class Module {
         return this.height;
     }
 
+    /**
+     * Adds an artTile entity to the module. These entities only render. They have no collision.
+     *
+     * @param x the x position of the platform in the module grid
+     * @param y the y position of the platform in the module grid
+     * @param i the identifier for the tile within the TileMap
+     */
+    private void addArtTile(int x, int y, int i) {
+        Vector3f tempPosition = new Vector3f(x, y, 0.0f);
+        Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
+        ArtTile p = new ArtTile(tempPosition, tempDimension, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        this.addEntity(p);
+    }
 
     /**
      * Adds a platform entity to the module
@@ -276,16 +359,59 @@ public class Module {
     }
 
     /**
+     * Given the data for the "EXITS" layer, adds all exits and gives them an integer ID for the module
+     * to which they point.
+     *
+     * @param exitLayer JSONObject, the layer within the "tiled" JSON file.
+     */
+    private void setupExits(JSONObject exitLayer) {
+        // Loop over the data grid
+        JSONArray data = exitLayer.getJSONArray("data");
+        for (int tile = 0; tile < data.length(); tile++) {
+            // Get height and width of layer
+            int layerHeight = exitLayer.getInt("height");
+            int layerWidth = exitLayer.getInt("width");
+
+            // Get the grid position of the tile
+            int tileGridX = tile % layerWidth;
+            int tileGridY = layerHeight - tile / layerWidth;
+
+            // Get the type of the tile
+            int targetModule = data.getInt(tile); // NOTE: targetModule == tileId in the tilemap texture here as well
+            if (targetModule == 0) {
+                continue; // Default "no tile placed here" marker is 0.
+            } else {
+                /*
+                    We subtract TileMapping.MAIN_SIZE here from targetModule, as the tilenumber is based off the second
+                    "exits" tilemap, and hence its number is offset by the size of the first "main" tilemap.
+
+                                ...Beware, dark magic around these parts...
+
+                    Consider the following:
+                        int targetModule = data.getInt(tile) - some_number;  Causes targetModule to be "- some_number".
+
+                    Similarly for:
+                        int targetModule = data.getInt(tile);
+                        targetModule = targetModule - some_number; (or targetModule -= some_number)
+
+                    The following line below this comment works however as expected...
+                 */
+                addExit(tileGridX, tileGridY, targetModule - TileMapping.MAIN_SIZE);
+            }
+        }
+    }
+
+    /**
      * Adds a exit entity to the module
      *
-     * @param x the x position of the exit in the module grid
-     * @param y the y position of the exit in the module grid
-     * @param i the identifier for the tile within the TileMap
+     * @param x            the x position of the exit in the module grid
+     * @param y            the y position of the exit in the module grid
+     * @param targetModule the integer identifier for the module (with respect to the level) to which the exit points
      */
-    private void addExit(int x, int y, int i) {
+    private void addExit(int x, int y, int targetModule) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
-        Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
-        Exit e = new Exit(tempPosition, tempDimension, this, TileMapping.MAIN.get(i));
+        Vector3f tempDimension = new Vector3f(2.0f, 2.0f, 0.0f);
+        Exit e = new Exit(tempPosition, tempDimension, this, targetModule);
         this.addEntity(e);
     }
 
@@ -318,15 +444,16 @@ public class Module {
      */
     private void configureMap() {
         int[] platforms = new int[]{0, 1, 2, 5, 6, 8, 9, 10, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 32, 33, 34, 35};
-        int[] exits = new int[]{3, 4, 11, 12};
+        int[] artTiles = new int[]{3, 4, 11, 12};
         int[] players = new int[]{7};
+
         moduleTileMap = new HashMap<Integer, String>();
         for (int i : platforms) {
             moduleTileMap.put(i, Platform.getName());
         }
 
-        for (int i : exits) {
-            moduleTileMap.put(i, Exit.getName());
+        for (int i : artTiles) {
+            moduleTileMap.put(i, ArtTile.getName());
         }
 
         for (int i : players) {

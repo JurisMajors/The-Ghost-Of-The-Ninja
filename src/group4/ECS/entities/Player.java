@@ -43,6 +43,8 @@ public class Player extends Entity {
      */
     public static final float walkingRatio = 3.0f/4.0f;
 
+    public boolean spawnedGhost;
+
     /**
      * Creates a player
      *
@@ -58,6 +60,7 @@ public class Player extends Entity {
 
         // Level
         this.level = level;
+        this.spawnedGhost = false;
 
         // add needed components
         this.add(new PositionComponent(position));

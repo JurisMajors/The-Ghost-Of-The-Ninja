@@ -24,7 +24,7 @@ import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
-import group4.levelSystem.levels.Level01;
+import group4.levelSystem.levels.FileLevel;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
@@ -145,7 +145,7 @@ public class Main implements Runnable {
             // Systems which are essentially observers of the changed gamestate
             engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem
             engine.addSystem(new RenderSystem());
-            this.level = new Level01();
+            this.level = new FileLevel("./src/group4/res/maps/level_01");
 
         }
         // Initialize the level
