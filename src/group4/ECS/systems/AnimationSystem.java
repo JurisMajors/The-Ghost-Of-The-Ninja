@@ -16,17 +16,18 @@ public class AnimationSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         if (entity instanceof HierarchicalPlayer) {
             for (IKEndEffector handle : ((HierarchicalPlayer) entity).IKHandles) {
-                handle.t += deltaTime / 100;
+                handle.t += deltaTime / 200;
                 handle.t %= 2.0f * Math.PI; // Rotate in radians.
 
-                handle.endPos = new Vector3f((float) Math.cos(handle.t) * 0.9f, (float) Math.sin(handle.t) * 0.9f, 0.0f);
-                //if (handle.label == "foot_L") {
-                //    handle.endPos.addi(new Vector3f(0.33f, 0.0f, 0.0f));
-                //} else {
-                //    handle.endPos.addi(new Vector3f(0.66f, 0.0f, 0.0f));
-                //}
+                Vector3f unitCircle;
 
-                System.out.println(handle.endPos);
+                if (handle.label == "foot_L") {
+                    unitCircle = new Vector3f((float) Math.cos(handle.t - 1) * 0.75f, (float) Math.sin(handle.t - 1) * 0.75f, 0.0f);
+                } else {
+                    unitCircle = new Vector3f((float) Math.cos(handle.t) * 0.9f, (float) Math.sin(handle.t) * 0.9f, 0.0f);
+                }
+
+                handle.endPos = unitCircle.add(new Vector3f(entity.getComponent(DimensionComponent.class).dimension.x / 2, 0.8f, 0.0f));
 
                 float upperLength = handle.upper.getComponent(DimensionComponent.class).dimension.y;
                 float lowerLength = handle.lower.getComponent(DimensionComponent.class).dimension.y;;

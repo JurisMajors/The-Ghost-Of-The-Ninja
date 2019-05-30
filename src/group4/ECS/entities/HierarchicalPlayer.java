@@ -93,16 +93,15 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         this.IKHandles.add(new IKEndEffector(rightLegUpper, rightLegLower, hipOffset, rightFootOffset, "foot_R"));
 
         // Set the position of the foot for the left leg
-        //Vector3f leftFootPosition = this.getComponent(PositionComponent.class).position
-        //        .add(new Vector3f(this.dimension.x, 0.5f, 0.0f));
+        Vector3f leftFootOffset = new Vector3f(this.dimension.x, 0.5f, 0.0f);
 
         // Draw the left leg
-        //float[] leftLegAngles = this.getLimbAngles(hipPosition, leftFootPosition, upperLegDimension.y, lowerLegDimension.y);
-        //leftLegUpper = new BodyPart(torso, new Vector3f(), upperLegDimension, leftLegAngles[0], Texture.DEBUG);
-        //leftLegLower = new BodyPart(leftLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, leftLegAngles[1], Texture.DEBUG);
-        //this.hierarchy.add(leftLegUpper);
-        //this.hierarchy.add(leftLegLower);
-        //this.IKHandles.add(new IKEndEffector(leftLegUpper, leftLegLower, hipPosition, leftFootPosition, "foot_L"));
+        float[] leftLegAngles = this.getLimbAngles(hipOffset, leftFootOffset, upperLegDimension.y, lowerLegDimension.y);
+        leftLegUpper = new BodyPart(torso, new Vector3f(), upperLegDimension, leftLegAngles[0], Texture.DEBUG);
+        leftLegLower = new BodyPart(leftLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, leftLegAngles[1], Texture.DEBUG);
+        this.hierarchy.add(leftLegUpper);
+        this.hierarchy.add(leftLegLower);
+        this.IKHandles.add(new IKEndEffector(leftLegUpper, leftLegLower, hipOffset, leftFootOffset, "foot_L"));
 
     }
 
@@ -135,7 +134,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         float offsetLength = offset.length();
 
         // Calculate Alpha2
-        double alpha2 = Math.toDegrees(Math.atan(offset.x / Math.abs(offset.y)));
+        double alpha2 = Math.toDegrees(Math.atan(Math.abs(offset.x / offset.y)));
 
         // Calculate Alpha1
         double alpha1 = Math.toDegrees(Math.acos(
@@ -143,7 +142,19 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
                         / (2 * upperLimbLength * offsetLength)));
 
         // Calculate Alpha0, which is the angle for the bodySidePosition joint, so store it as well
-        result[0] = (float) (180 - alpha1 - alpha2);
+        if (offset.x > 0) {
+            if (offset.y < 0) {
+                result[0] = (float) (180 - alpha1 - alpha2);
+            } else {
+                result[0] = (float) (alpha2 - alpha1);
+            }
+        } else {
+            if (offset.y < 0) {
+                result[0] = (float) (180 - alpha1 + alpha2);
+            } else {
+                result[0] = (float) (360 - alpha1 - alpha2);
+            }
+        }
 
         // Calculate Beta1
         double beta1 = Math.toDegrees(Math.acos(
