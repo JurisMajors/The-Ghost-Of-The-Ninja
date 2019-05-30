@@ -24,7 +24,10 @@ public class ConeVisionStateDecoder extends RayStateDecoder{
 
     @Override
     public JSONObject getSettings() {
-        return null;
+        JSONObject settings = new JSONObject();
+        settings.put("rays", this.nrRays);
+        settings.put("range", this.angleRange);
+        return settings;
     }
 
     /**
