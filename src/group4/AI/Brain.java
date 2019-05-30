@@ -16,10 +16,7 @@ import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -103,14 +100,14 @@ public class Brain {
         File modelFile = new File(filePath);
         ModelSerializer.writeModel(this.nn, modelFile, false);
         // write the settings of the model
-        String directory = modelFile.getParent(); // get the directory of filePath
-        String settingsPath = directory + modelFile.getName() + "-settings.json"; // declare name of the settings
+        String settingsPath = filePath + "-settings.json"; // declare name of the settings
         JSONObject settings = new JSONObject();
         // currently only storing decoder settings, if more, then multiple json objects should be appended
         JSONObject decoderSettings = this.decoder.getSettings(); // write this brains settings to a json object
-        settings.put("decoder", decoderSettings);
+        settings.put("decoder", decoderSettings.toMap());
         // write it to file
-        settings.write(new FileWriter(settingsPath));
+        Writer fw = settings.write(new FileWriter(settingsPath));
+        fw.flush();
     }
 
     private void setDecoder(JSONObject info) throws IllegalStateException {
