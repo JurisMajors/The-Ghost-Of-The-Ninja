@@ -20,7 +20,7 @@ public abstract class RayStateDecoder implements StateDecoderInterface {
     /**
      * nr of rays to cast
      **/
-    private int nrRays;
+    int nrRays;
     /**
      * range of the ray casting angle (in degrees)
      **/

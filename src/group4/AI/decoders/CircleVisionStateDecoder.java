@@ -33,7 +33,10 @@ public class CircleVisionStateDecoder extends RayStateDecoder implements StateDe
 
     @Override
     public JSONObject getSettings() {
-        return null;
+        JSONObject settings = new JSONObject();
+        settings.put("rays", this.nrRays);
+        settings.put("gap", this.gap);
+        return settings;
     }
 
     /**
