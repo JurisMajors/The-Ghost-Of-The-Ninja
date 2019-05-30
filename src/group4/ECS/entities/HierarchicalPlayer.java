@@ -128,11 +128,11 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         float[] result = new float[2];
 
         // Calculate the offset between the bodySidePosition and the limbEndPosition
-        Vector3f offset = bodySidePosition.sub(limbEndPosition);
+        Vector3f offset = limbEndPosition.sub(bodySidePosition);
         float offsetLength = offset.length();
 
         // Calculate Alpha2
-        double alpha2 = Math.toDegrees(Math.atan(offset.x / offset.y));
+        double alpha2 = Math.toDegrees(Math.atan(offset.x / Math.abs(offset.y)));
 
         // Calculate Alpha1
         double alpha1 = Math.toDegrees(Math.acos(
