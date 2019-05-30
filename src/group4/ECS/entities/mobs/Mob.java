@@ -34,7 +34,7 @@ public class Mob extends Entity {
         this.add(new DimensionComponent(dimension));
         this.add(new MovementComponent(new Vector3f(), velocityRange));
         this.add(new GravityComponent());
-        this.add(new GraphicsComponent(shader, texture, dimension));
+        this.add(new GraphicsComponent(shader, texture, dimension, false));
         this.add(new CollisionComponent(MobCollision.getInstance()));
         this.add(new HealthComponent(30));
         this.add(new MobComponent(handler));

@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class TileMapping {
     public static Map<Integer, float[]> MAIN; // For now only 1. This class would make the game skinnable as well :-)
-
+    public static int MAIN_SIZE = 8 * 7; // Important! Update this when the MAIN tilemap changes its dimensions.
     /**
      * Loads all TileMapping objects we need as statics into this holder class.
      *
@@ -42,7 +42,7 @@ public class TileMapping {
      */
     private static float[] generateTexCoords(int numTilesX, int numTilesY, int i) {
         int x = i % numTilesX;
-        int y = i / numTilesY;
+        int y = i / numTilesX;
         float hStep = 1.0f / numTilesX;
         float vStep = 1.0f / numTilesY;
         return new float[]{

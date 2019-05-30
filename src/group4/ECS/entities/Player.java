@@ -43,6 +43,8 @@ public class Player extends Entity {
      */
     public static final float walkingRatio = 3.0f/4.0f;
 
+    public boolean spawnedGhost;
+
     /**
      * Creates a player
      *
@@ -58,6 +60,7 @@ public class Player extends Entity {
 
         // Level
         this.level = level;
+        this.spawnedGhost = false;
 
         // add needed components
         this.add(new PositionComponent(position));
@@ -65,7 +68,7 @@ public class Player extends Entity {
         // temporary!!, player should initially not move
         this.add(new MovementComponent(new Vector3f(), velocityRange, accel));
         this.add(new GravityComponent());
-        this.add(new GraphicsComponent(shader, texture, dimension));
+        this.add(new GraphicsComponent(shader, texture, dimension, false));
         this.add(new HealthComponent(100));
         this.add(new PlayerComponent());
         this.add(new CollisionComponent(PlayerCollision.getInstance()));

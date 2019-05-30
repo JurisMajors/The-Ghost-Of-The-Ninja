@@ -68,7 +68,7 @@ public class Evolver {
     /** Path to save trained models**/
     public static String path = "src/group4/AI/models/";
     /** Path for loading the module to train on **/
-    public static String modulePath ="./src/group4/res/maps/level_01/module_01_01.json";
+    public static String modulePath ="./src/group4/res/maps/level_01/modules/1.json";
     /** How often (in generations) to save a model **/
     public static int checkpoint = 2;
 
@@ -81,8 +81,14 @@ public class Evolver {
      */
     public static final boolean multiThreaded = true;
 
+    /**
+     * Whether to save the json settings of brains only once during the training
+     * (Useful if dont want to pollute the folder and if all brains have same settings)
+     */
+    public static boolean saveSettingsOnce = true;
+
     private static void toFile(Brain b, String filePath) throws IOException {
-        b.toFile(filePath);
+        b.toFile(filePath, !saveSettingsOnce);
     }
 
     public static void parseArgs(String[] args) {
@@ -178,6 +184,11 @@ public class Evolver {
         check.setRequired(false);
         options.addOption(check);
 
+        Option settings = new Option("s", "settings", false, "activate this flag if " +
+                "you want to save settings on each checkpoint, otherwise they are simply saved once");
+        check.setRequired(false);
+        options.addOption(settings);
+
     }
 
     private static void setGivenOptions(CommandLine cmd) {
@@ -213,6 +224,9 @@ public class Evolver {
         }
         if (cmd.hasOption("checkpoint")) {
             Evolver.checkpoint = Integer.parseInt(cmd.getOptionValue("checkpoint"));
+        }
+        if (cmd.hasOption("settings")) {
+            Evolver.saveSettingsOnce = false;
         }
     }
 }

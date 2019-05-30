@@ -1,4 +1,4 @@
-        package group4.game;
+package group4.game;
 
 import com.badlogic.ashley.core.Engine;
 import group4.AI.Evolver;
@@ -27,7 +27,7 @@ import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
-import group4.levelSystem.levels.Level01;
+import group4.levelSystem.levels.FileLevel;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
@@ -148,7 +148,7 @@ public class Main implements Runnable {
             engine.addSystem(new RenderSystem(13));
             engine.addSystem(new TimedEventSystem(14));
             engine.addSystem(new LastSystem(15));
-            this.level = new Level01();
+            this.level = new FileLevel("./src/group4/res/maps/level_01");
 
         }
         // Initialize the level

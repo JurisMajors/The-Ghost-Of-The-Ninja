@@ -35,14 +35,16 @@ public class GhostDyingSystem extends PlayerDyingSystem {
         // if best move has more than 50 calls, but there are still
         // two moves with zero, this individual is dumb :)
         boolean tooDumb = (moveFreq[argMax] > 80 && zerosCount >= 2);
-        return super.shouldDie(entity, deltaTime) || tooDumb;
+        return super.shouldDie(entity, deltaTime) || (!Main.AI && tooDumb);
     }
 
     @Override
     protected boolean die(Entity entity, float deltaTime) {
         Ghost g = (Ghost) entity;
         if (!Main.AI) {
-            g.getComponent(PositionComponent.class).position = g.level.getCurrentModule().getPlayerInitialPosition();
+            g.getComponent(HealthComponent.class).health = 0;
+            g.master.spawnedGhost = false; // can spawn again
+            return true;
         } else {
             g.getComponent(HealthComponent.class).health = 0;
         }

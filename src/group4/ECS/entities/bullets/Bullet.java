@@ -2,6 +2,7 @@ package group4.ECS.entities.bullets;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphicsComponent;
+import group4.ECS.components.identities.BulletComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
@@ -41,7 +42,8 @@ public class Bullet extends Entity {
         this.add(new DimensionComponent(dimension));
         this.add(new DamageComponent(1));
         this.add(new MovementComponent(velocityDirection.scale(velocityMagnitude), velocityRange));
-        this.add(new GraphicsComponent(shader, texture, dimension));
+        this.add(new GraphicsComponent(shader, texture, dimension, false));
+        this.add(new BulletComponent());
         this.add(new CollisionComponent(BulletCollision.getInstance()));
 
         // add bullet to engine on construction

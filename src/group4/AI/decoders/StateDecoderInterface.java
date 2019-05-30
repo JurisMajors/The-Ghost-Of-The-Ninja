@@ -1,5 +1,6 @@
 package group4.AI.decoders;
 
+import org.json.JSONObject;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
 /**
@@ -20,4 +21,10 @@ public interface StateDecoderInterface {
      * decode(AnyGameState).length == getInputSize()
      */
     int getInputSize();
+
+    /**
+     * Write the settings of this decoder to a json object
+     * @return json object representing the settings of the decoder instance
+     */
+    JSONObject getSettings();
 }

@@ -9,6 +9,9 @@ import group4.ECS.components.identities.CameraComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.entities.BodyPart;
+import group4.ECS.entities.HierarchicalPlayer;
+import group4.ECS.entities.Player;
 import group4.ECS.entities.mobs.FlappingMob;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.etc.Families;
@@ -19,10 +22,7 @@ import group4.graphics.Shader;
 import group4.maths.Matrix4f;
 import group4.utils.DebugUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.lwjgl.opengl.GL41.*;
 
@@ -88,23 +88,48 @@ public class RenderSystem extends EntitySystem {
         for (Layer layer : Layer.values()) {
             glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
             for (Entity entity : entityLayers.get(layer)) {
-                // Get components via mapper for O(1) component retrieval
-                pc = Mappers.positionMapper.get(entity);
-                gc = Mappers.graphicsMapper.get(entity);
+                if (entity instanceof HierarchicalPlayer) {
+                    // Get components via mapper for O(1) component retrieval
+                    pc = Mappers.positionMapper.get(entity);
 
-                // Bind shader
-                gc.shader.bind();
+                    // Loop over the entities hierarchy and draw it correctly
+                    for (BodyPart bp : ((HierarchicalPlayer) entity).hierarchy) {
+                        gc = bp.getComponent(GraphicsComponent.class);
 
-                // Set uniforms
-                gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers
-                gc.shader.setUniform1f("tex", gc.texture.getTextureID()); // Specify which texture slot to use
+                        // Bind shader
+                        gc.shader.bind();
 
-                // Bind texture and specify texture slot
-                gc.texture.bind();
-                glActiveTexture(gc.texture.getTextureID());
+                        // Set uniforms
+                        gc.shader.setUniformMat4f("md_matrix", bp.getModelMatrix()); // Tmp fix for giving correct positions to vertices in the vertexbuffers
+                        gc.shader.setUniform1f("tex", gc.texture.getTextureID()); // Specify which texture slot to use
 
-                // Render!
-                gc.geometry.render();
+                        // Bind texture and specify texture slot
+                        gc.texture.bind();
+                        glActiveTexture(gc.texture.getTextureID());
+
+                        // Render!
+                        gc.geometry.render();
+                    }
+
+                } else {
+                    // Get components via mapper for O(1) component retrieval
+                    pc = Mappers.positionMapper.get(entity);
+                    gc = Mappers.graphicsMapper.get(entity);
+
+                    // Bind shader
+                    gc.shader.bind();
+
+                    // Set uniforms
+                    gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers
+                    gc.shader.setUniform1f("tex", gc.texture.getTextureID()); // Specify which texture slot to use
+
+                    // Bind texture and specify texture slot
+                    gc.texture.bind();
+                    glActiveTexture(gc.texture.getTextureID());
+
+                    // Render!
+                    gc.geometry.render();
+                }
             }
         }
 

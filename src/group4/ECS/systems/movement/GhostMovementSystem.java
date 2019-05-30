@@ -38,4 +38,7 @@ public class GhostMovementSystem extends PlayerMovementSystem {
     protected boolean shouldSprint() {
         return true;
     }
+
+    @Override
+    protected boolean shouldSpawnGhost(Object ref) { return false; }
 }
