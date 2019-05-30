@@ -29,6 +29,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
      */
     public List<BodyPart> hierarchy = new ArrayList<>();
     public List<IKEndEffector> IKHandles = new ArrayList<>();
+
     /**
      * Directly access the bodyparts in the hierarchy
      */
@@ -74,8 +75,6 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     protected void createHierarchy() {
         // Calculate and fix position of the hip
         Vector3f hipOffset = new Vector3f(this.dimension.x / 2, 0.8f, 0.0f);
-        Vector3f hipPosition = this.getComponent(PositionComponent.class).position
-                .add(hipOffset);
 
         // Draw torso to visualise hip position
         Vector3f TorsoDimension = new Vector3f(0.4f, 0.8f, 0.0f);
@@ -83,28 +82,27 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         this.hierarchy.add(torso);
 
         // Set the position of the foot for the right leg
-        Vector3f rightFootPosition = this.getComponent(PositionComponent.class).position
-                .add(new Vector3f(this.dimension.x / 3, 0.0f, 0.0f));
+        Vector3f rightFootOffset = new Vector3f(this.dimension.x / 3, 0.0f, 0.0f);
 
         // Draw the right leg
-        float[] rightLegAngles = this.getLimbAngles(hipPosition, rightFootPosition, upperLegDimension.y, lowerLegDimension.y);
+        float[] rightLegAngles = this.getLimbAngles(hipOffset, rightFootOffset, upperLegDimension.y, lowerLegDimension.y);
         rightLegUpper = new BodyPart(torso, new Vector3f(), upperLegDimension, rightLegAngles[0], Texture.DEBUG);
         rightLegLower = new BodyPart(rightLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, rightLegAngles[1], Texture.DEBUG);
         this.hierarchy.add(rightLegUpper);
         this.hierarchy.add(rightLegLower);
-        this.IKHandles.add(new IKEndEffector(rightLegUpper, rightLegLower, hipPosition, rightFootPosition, "foot_R"));
+        this.IKHandles.add(new IKEndEffector(rightLegUpper, rightLegLower, hipOffset, rightFootOffset, "foot_R"));
 
         // Set the position of the foot for the left leg
-        Vector3f leftFootPosition = this.getComponent(PositionComponent.class).position
-                .add(new Vector3f(this.dimension.x, 0.5f, 0.0f));
+        //Vector3f leftFootPosition = this.getComponent(PositionComponent.class).position
+        //        .add(new Vector3f(this.dimension.x, 0.5f, 0.0f));
 
         // Draw the left leg
-        float[] leftLegAngles = this.getLimbAngles(hipPosition, leftFootPosition, upperLegDimension.y, lowerLegDimension.y);
-        leftLegUpper = new BodyPart(torso, new Vector3f(), upperLegDimension, leftLegAngles[0], Texture.DEBUG);
-        leftLegLower = new BodyPart(leftLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, leftLegAngles[1], Texture.DEBUG);
-        this.hierarchy.add(leftLegUpper);
-        this.hierarchy.add(leftLegLower);
-        this.IKHandles.add(new IKEndEffector(leftLegUpper, leftLegLower, hipPosition, leftFootPosition, "foot_L"));
+        //float[] leftLegAngles = this.getLimbAngles(hipPosition, leftFootPosition, upperLegDimension.y, lowerLegDimension.y);
+        //leftLegUpper = new BodyPart(torso, new Vector3f(), upperLegDimension, leftLegAngles[0], Texture.DEBUG);
+        //leftLegLower = new BodyPart(leftLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, leftLegAngles[1], Texture.DEBUG);
+        //this.hierarchy.add(leftLegUpper);
+        //this.hierarchy.add(leftLegLower);
+        //this.IKHandles.add(new IKEndEffector(leftLegUpper, leftLegLower, hipPosition, leftFootPosition, "foot_L"));
 
     }
 
