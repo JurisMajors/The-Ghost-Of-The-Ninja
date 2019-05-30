@@ -74,9 +74,10 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
 
             Brain best = data.getBestCandidate();
             try {
+                String modelName = this.filePath + "Gen-" + data.getGenerationNumber() +
+                        "-Fit-" + data.getBestCandidateFitness() + "-" + System.currentTimeMillis();
                 // save it to file with some information in file name and timestamp
-                best.toFile(this.filePath + "Gen-" + data.getGenerationNumber() +
-                        "-Fit-" + data.getBestCandidateFitness() + "-" + System.currentTimeMillis());
+                best.toFile(modelName, !(Evolver.saveSettingsOnce && data.getGenerationNumber() > genToSave));
             } catch (IOException e) {
                 System.err.println("WARNING: Individuals are not being saved because " +
                                     "IOException was thrown on path " + this.filePath);
