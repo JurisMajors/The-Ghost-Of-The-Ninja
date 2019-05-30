@@ -9,6 +9,7 @@ import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
+import group4.utils.DebugUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,49 +56,29 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
      * Create the entities for the hierarchy
      */
     protected void createHierarchy() {
-        // Add the torso
-        Vector3f TorsoRelativePosition = new Vector3f(this.dimension.x / 2, 0.8f, 0.0f);
-        Vector3f TorsoDimension = new Vector3f(0.4f, 0.8f, 0.0f);
-        BodyPart torso = new BodyPart(this, TorsoRelativePosition, TorsoDimension, 0, Texture.DEBUG);
-        this.hierarchy.add(torso);
-
-        // Add the head (slightly above the torso)
-        Vector3f HeadRelativePosition = new Vector3f(0.0f, 0.9f, 0.0f);
-        Vector3f HeadDimension = new Vector3f(0.3f, 0.3f, 0.0f);
-        BodyPart head = new BodyPart(torso, HeadRelativePosition, HeadDimension, 0, Texture.DEBUG);
-        this.hierarchy.add(head);
-
-        // Add right leg (take into account that the leg is rotated)
+        // Define the leg dimensions
         Vector3f upperLegDimension =  new Vector3f(0.15f, 0.5f, 0.0f);
         Vector3f lowerLegDimension = new Vector3f(0.12f, 0.4f, 0.0f);
 
-        BodyPart rLegUpper = new BodyPart(torso, new Vector3f(0.0f, 0.05f, 0.0f), upperLegDimension, 150, Texture.DEBUG);
+        // Calculate and fix position of the hip
+        Vector3f HipPosition = this.getComponent(PositionComponent.class).position
+                .add(new Vector3f(this.dimension.x / 2, 0.8f, 0.0f));
+
+        // Draw torso to visualise hip position
+        Vector3f TorsoDimension = new Vector3f(0.4f, 0.8f, 0.0f);
+        BodyPart torso = new BodyPart(this, HipPosition, TorsoDimension, 0, Texture.DEBUG);
+        this.hierarchy.add(torso);
+
+        // Set the position of the foot for the right leg
+        Vector3f RightFootPosition = this.getComponent(PositionComponent.class).position
+                .add(new Vector3f(this.dimension.x / 3, 0.0f, 0.0f));
+
+        // Draw the right leg
+        float[] rightLegAngles = this.getLimbAngles(HipPosition, RightFootPosition, upperLegDimension.y, lowerLegDimension.y);
+        BodyPart rLegUpper = new BodyPart(torso, new Vector3f(), upperLegDimension, rightLegAngles[0], Texture.DEBUG);
+        BodyPart rLegLower = new BodyPart(rLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, rightLegAngles[1], Texture.DEBUG);
         this.hierarchy.add(rLegUpper);
-        BodyPart rLegLower = new BodyPart(rLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, 70, Texture.DEBUG);
         this.hierarchy.add(rLegLower);
-
-        // Add left leg
-        // TODO: should somehow be behind the right leg if moving to the right, and other way around if moving to left
-        BodyPart lLegUpper = new BodyPart(torso, new Vector3f(0.0f, 0.05f, 0.0f), upperLegDimension, 190, Texture.DEBUG);
-        this.hierarchy.add(lLegUpper);
-        BodyPart lLegLower = new BodyPart(lLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, 70, Texture.DEBUG);
-        this.hierarchy.add(lLegLower);
-
-        // TODO: Position arms in front or behind player depending on movement direction
-        // Add right arm
-        Vector3f upperArmDimension = new Vector3f(0.1f, 0.5f, 0.0f);
-        Vector3f lowerArmDimension = new Vector3f( 0.08f, 0.4f, 0.0f);
-
-        BodyPart rArmUpper = new BodyPart(torso, new Vector3f(0.0f, 0.6f, 0.0f), upperArmDimension, 110, Texture.DEBUG);
-        this.hierarchy.add(rArmUpper);
-        BodyPart rArmLower = new BodyPart(rArmUpper, new Vector3f(0.0f, upperArmDimension.y, 0.0f), lowerArmDimension, -90, Texture.DEBUG);
-        this.hierarchy.add(rArmLower);
-
-        // Add left arm
-        BodyPart lArmUpper = new BodyPart(torso, new Vector3f(0.0f, 0.6f, 0.0f), upperArmDimension, 130, Texture.DEBUG);
-        this.hierarchy.add(lArmUpper);
-        BodyPart lArmLower = new BodyPart(lArmUpper, new Vector3f(0.0f, upperArmDimension.y, 0.0f), lowerArmDimension, -60, Texture.DEBUG);
-        this.hierarchy.add(lArmLower);
     }
 
 
@@ -106,6 +87,48 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
      */
     public Matrix4f getModelMatrix() {
         return Matrix4f.translate(this.getComponent(PositionComponent.class).position);
+    }
+
+
+    /**
+     * Calculate the angles of two joints for e.g. a leg or arm based on two set positions and lengths of limb parts
+     * @param bodySidePosition the position of the limb on the body side (e.g. the hip position)
+     * @param limbEndPosition the position of the other end of the limb (e.g. the ankle)
+     * @param upperLimbLength the length of the first part of the limb seen from the body (e.g. upper leg)
+     * @param lowerLimbLength the length of the second part of the limb seen from the body (e.g. lower leg)
+     * @return float[2] where [0] is the angle of the joint of the bodySidePosition (e.g. hip)
+     *      and [1] is the angle of the second joint of the limb (e.g. knee)
+     */
+    private float[] getLimbAngles(Vector3f bodySidePosition, Vector3f limbEndPosition,
+                                  float upperLimbLength, float lowerLimbLength) {
+        // Array to store the calculated result angles
+        float[] result = new float[2];
+
+        // Calculate the offset between the bodySidePosition and the limbEndPosition
+        Vector3f offset = bodySidePosition.sub(limbEndPosition);
+        float offsetLength = offset.length();
+
+        // Calculate Alpha2
+        double alpha2 = Math.toDegrees(Math.atan(offset.x / offset.y));
+
+        // Calculate Alpha1
+        double alpha1 = Math.toDegrees(Math.acos(
+                (upperLimbLength * upperLimbLength + offsetLength * offsetLength - lowerLimbLength * lowerLimbLength)
+                        / (2 * upperLimbLength * offsetLength)));
+
+        // Calculate Alpha0, which is the angle for the bodySidePosition joint, so store it as well
+        result[0] = (float) (180 - alpha1 - alpha2);
+
+        // Calculate Beta1
+        double beta1 = Math.toDegrees(Math.acos(
+                (upperLimbLength * upperLimbLength + lowerLimbLength * lowerLimbLength - offsetLength * offsetLength)
+                        / (2 * upperLimbLength * lowerLimbLength)));
+
+        // Calculate Beta0, which is the angle for the second joint, so store it as well
+        result[1] = (float) (180 - beta1);
+
+        // Return the angle vector
+        return result;
     }
 
 
