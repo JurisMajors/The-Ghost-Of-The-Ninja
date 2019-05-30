@@ -43,14 +43,14 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     /**
      * Definition of body part dimensions
      */
-    Vector3f upperLegDimension =  new Vector3f(0.15f, 0.5f, 0.0f);
+    Vector3f upperLegDimension = new Vector3f(0.15f, 0.5f, 0.0f);
     Vector3f lowerLegDimension = new Vector3f(0.12f, 0.4f, 0.0f);
 
     /**
      * Creates a player
      *
      * @param position center point of player
-     * @param level the level that the player is part of
+     * @param level    the level that the player is part of
      */
     public HierarchicalPlayer(Vector3f position, Level level) {
         super(position, level);
@@ -116,16 +116,17 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
 
     /**
      * Calculate the angles of two joints for e.g. a leg or arm based on two set positions and lengths of limb parts
+     *
      * @param bodySidePosition the position of the limb on the body side (e.g. the hip position)
-     * @param limbEndPosition the position of the other end of the limb (e.g. the ankle)
-     * @param upperLimbLength the length of the first part of the limb seen from the body (e.g. upper leg)
-     * @param lowerLimbLength the length of the second part of the limb seen from the body (e.g. lower leg)
+     * @param limbEndPosition  the position of the other end of the limb (e.g. the ankle)
+     * @param upperLimbLength  the length of the first part of the limb seen from the body (e.g. upper leg)
+     * @param lowerLimbLength  the length of the second part of the limb seen from the body (e.g. lower leg)
      * @return float[2] where [0] is the angle of the joint of the bodySidePosition (e.g. hip)
-     *      and [1] is the angle of the second joint of the limb (e.g. knee)
+     * and [1] is the angle of the second joint of the limb (e.g. knee)
      */
     // See {root}/images/limbAngles.jpg for a drawing of all angles, most are calculated using the cosine law
     public float[] getLimbAngles(Vector3f bodySidePosition, Vector3f limbEndPosition,
-                                  float upperLimbLength, float lowerLimbLength) {
+                                 float upperLimbLength, float lowerLimbLength) {
         // Array to store the calculated result angles
         float[] result = new float[2];
 
@@ -137,9 +138,15 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         double alpha2 = Math.toDegrees(Math.atan(Math.abs(offset.x / offset.y)));
 
         // Calculate Alpha1
-        double alpha1 = Math.toDegrees(Math.acos(
-                (upperLimbLength * upperLimbLength + offsetLength * offsetLength - lowerLimbLength * lowerLimbLength)
-                        / (2 * upperLimbLength * offsetLength)));
+        double alpha1;
+        if (offsetLength >= upperLimbLength + lowerLimbLength) {
+            // For when the two IK bones have to be pointing to the limbEndPosition in 1 straight line
+            alpha1 = 0.0f;
+        } else {
+            alpha1 = Math.toDegrees(Math.acos(
+                    (upperLimbLength * upperLimbLength + offsetLength * offsetLength - lowerLimbLength * lowerLimbLength)
+                            / (2 * upperLimbLength * offsetLength)));
+        }
 
         // Calculate Alpha0, which is the angle for the bodySidePosition joint, so store it as well
         // See {root}/images/limbAnglesCaseDistinction.jpg for a drawing of all below cases
@@ -158,9 +165,15 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         }
 
         // Calculate Beta1
-        double beta1 = Math.toDegrees(Math.acos(
-                (upperLimbLength * upperLimbLength + lowerLimbLength * lowerLimbLength - offsetLength * offsetLength)
-                        / (2 * upperLimbLength * lowerLimbLength)));
+        double beta1;
+        if (offsetLength >= upperLimbLength + lowerLimbLength) {
+            // For when the two IK bones have to be pointing to the limbEndPosition in 1 straight line
+            beta1 = 180.0f;
+        } else {
+            beta1 = Math.toDegrees(Math.acos(
+                    (upperLimbLength * upperLimbLength + lowerLimbLength * lowerLimbLength - offsetLength * offsetLength)
+                            / (2 * upperLimbLength * lowerLimbLength)));
+        }
 
         // Calculate Beta0, which is the angle for the second joint, so store it as well
         result[1] = (float) (180 - beta1);
