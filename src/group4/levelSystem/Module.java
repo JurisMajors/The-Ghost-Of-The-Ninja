@@ -121,6 +121,7 @@ public class Module {
      */
     public void reset() {
         this.setup(this.level);
+        this.level.configExits();
     }
 
 
