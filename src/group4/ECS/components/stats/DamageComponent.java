@@ -9,7 +9,7 @@ import java.util.Set;
 public class DamageComponent implements Component {
 
     public int damage;
-    public Set<Entity> excluded;
+    public Set<Class<? extends Entity>> excluded;
 
     public DamageComponent(int damage) {
         this.damage = damage;
@@ -20,7 +20,7 @@ public class DamageComponent implements Component {
      * @param damage
      * @param excluded list of entities which get skipped in the damage process
      */
-    public DamageComponent(int damage, Set<Entity> excluded) {
+    public DamageComponent(int damage, Set<Class<? extends Entity>> excluded) {
         this.damage = damage;
         this.excluded = excluded;
     }

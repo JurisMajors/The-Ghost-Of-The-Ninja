@@ -7,9 +7,18 @@ public class MeleeWeaponComponent extends WeaponComponent {
     public Vector3f hitBox;
     public Vector3f hitboxOffset;
 
-    public MeleeWeaponComponent(int damage, float rateOfDamage,
+    /**
+     * This Component is a subclass to {@link WeaponComponent} which should be included in every
+     * melee weapon
+     *
+     * @param damage
+     * @param cooldown See {@link group4.ECS.systems.combat.PlayerCombatSystem}
+     * @param hitBox
+     * @param hitboxOffset
+     */
+    public MeleeWeaponComponent(int damage, float cooldown,
                                 Vector3f hitBox, Vector3f hitboxOffset) {
-        super(damage, rateOfDamage);
+        super(damage, cooldown);
         this.hitBox = hitBox;
         this.hitboxOffset = hitboxOffset;
     }

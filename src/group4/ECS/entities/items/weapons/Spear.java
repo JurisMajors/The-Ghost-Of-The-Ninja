@@ -13,9 +13,9 @@ public class Spear extends Item {
 
         // weapon stats
         int dmg = 15;
-        float rateOfDamage = 0.015f;
-        Vector3f hitBox = new Vector3f(1.6f, 0.4f, 0.0f);
-        Vector3f hitboxOffset = new Vector3f(2.3f, 0.0f, 0.0f);
+        float rateOfDamage = 0.65f;
+        Vector3f hitBox = new Vector3f(1.4f, 0.4f, 0.0f);
+        Vector3f hitboxOffset = new Vector3f(2.0f, 0.4f, 0.0f);
 
         // graphics stats
 

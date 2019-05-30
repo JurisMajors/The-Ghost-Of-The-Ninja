@@ -10,6 +10,11 @@ import group4.ECS.etc.TheEngine;
 
 public class TimedEventSystem extends IteratingSystem {
 
+    /**
+     * This System handles timed events
+     *
+     * @param priority
+     */
     public TimedEventSystem(int priority) {
         super(Families.timedEventFamily, priority);
     }
@@ -18,15 +23,17 @@ public class TimedEventSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         TimedComponent tc;
 
+        // if entity expires on ticks
         if (Mappers.tickMapper.get(entity) != null) {
             tc = Mappers.tickMapper.get(entity);
 
+            // if expired, remove from the engine
             if (((TickComponent) tc).duration <= 0) {
                 TheEngine.getInstance().removeEntity(entity);
-            } else {
+            } else {    // else tick--
                 ((TickComponent) tc).duration -= 1;
             }
-        } else if (Mappers.timedMapper.get(entity) != null) {
+        } else if (Mappers.timedMapper.get(entity) != null) {   // else if we are dealing with real time
             tc = Mappers.timedMapper.get(entity);
 
             // TODO: timed

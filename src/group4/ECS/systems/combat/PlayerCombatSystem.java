@@ -10,6 +10,7 @@ import group4.ECS.components.stats.MeleeWeaponComponent;
 import group4.ECS.components.stats.RangeWeaponComponent;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.MeleeArea;
+import group4.ECS.entities.Player;
 import group4.ECS.entities.items.Item;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
@@ -60,7 +61,6 @@ public class PlayerCombatSystem extends IteratingSystem {
         // if active item is a weapon and when player hits enter, attack
         MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(plc.activeItem);
         if (wc != null && MouseClicks.leftMouseDown()) {
-            System.out.println(plc.activeItem);
 
             // if melee
             if (wc.cooldown <= 0.0f) {
@@ -76,24 +76,17 @@ public class PlayerCombatSystem extends IteratingSystem {
                 float mouseWorldX = camX + ((float) MouseMovement.mouseX *
                         (Main.SCREEN_WIDTH / Window.getWidth()) - Main.SCREEN_WIDTH / 2);
 
-                // TODO: account for y
                 // if clicking right of player, hit right, else hit left
-                Vector3f hitboxOffset;
-                if (mouseWorldX >= pc.position.x + dc.dimension.x / 2) {
-                    hitboxOffset = wc.hitboxOffset.scale(1);
-                } else {
-                    hitboxOffset = wc.hitboxOffset.scale(-1);
+                if (mouseWorldX < pc.position.x + dc.dimension.x / 2) {
+                    wc.hitboxOffset.x *= -1;
                 }
 
                 // exclude ghost and player for the damage
-                Set<Entity> excluded = new HashSet<>();
-                excluded.add(entity);
-                ImmutableArray<Entity> ghostArray = TheEngine.getInstance().getEntitiesFor(Families.ghostFamily);
-                if (ghostArray.size() != 0) {
-                    excluded.add(ghostArray.get(0));
-                }
+                Set<Class<? extends Entity>> excluded = new HashSet<>();
+                excluded.add(Player.class);
+                excluded.add(Ghost.class);
 
-                Vector3f position = pc.position.add(hitboxOffset);
+                Vector3f position = pc.position.add(wc.hitboxOffset);
                 new MeleeArea(position, wc.hitBox,
                         wc.damage, excluded);
             }
@@ -116,10 +109,9 @@ public class PlayerCombatSystem extends IteratingSystem {
 
             // get mappers
             MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(item);
-            RangeWeaponComponent rc = Mappers.rangeWeaponMapper.get(item);
 
-            // if item is a weapon
-            if (wc != null || rc != null) {
+            // if item is a meleeweapon
+            if (wc != null) {
                 // update cooldown
                 wc.cooldown = wc.cooldown - deltaTime;
 

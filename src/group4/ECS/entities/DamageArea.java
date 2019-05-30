@@ -24,7 +24,7 @@ public class DamageArea extends Entity {
 
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
-        this.add(new CollisionComponent(new MeleeCollision()));
+        this.add(new CollisionComponent(MeleeCollision.getInstance()));
         this.add(new DamageComponent(damage));
 
         // Construct vertex array

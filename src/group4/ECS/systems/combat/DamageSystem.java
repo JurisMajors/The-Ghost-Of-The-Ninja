@@ -29,7 +29,7 @@ public class DamageSystem extends IteratingSystem {
         for (CollisionData cd : cc.collisions) {
 
             // skip if entity is listed in set excluded entities
-            if (dc.excluded.contains(cd.entity)) {
+            if (dc.excluded.contains(cd.entity.getClass())) {
                 continue;
             }
 

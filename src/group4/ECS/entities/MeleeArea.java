@@ -18,7 +18,7 @@ public class MeleeArea extends DamageArea {
      * @param damage    damage inflicted on colliding entity (HealthComponent needed)
      * @param excluded  exclude for damage
      */
-    public MeleeArea(Vector3f position, Vector3f dimension, int damage, Set<Entity> excluded) {
+    public MeleeArea(Vector3f position, Vector3f dimension, int damage, Set<Class<? extends Entity>> excluded) {
         super(position, dimension, damage);
         this.add(new TickComponent(1));
         Mappers.damageMapper.get(this).excluded = excluded;

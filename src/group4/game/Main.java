@@ -172,7 +172,9 @@ public class Main implements Runnable {
             long now = System.nanoTime();
             long updateLength = now - lastLoopTime;
             lastLoopTime = now;
-            double delta = updateLength / ((double) optimalTime);
+
+            // pass on delta in seconds
+            double delta = updateLength / 1e9;
 
             // update the frame counter
             lastFpsTime += updateLength;

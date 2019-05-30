@@ -74,7 +74,7 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
 
         // Level should take care of removing a player from the engine if that is necessary
         // Return that player should not be removed
-        return true;
+        return false;
     }
 
 }
