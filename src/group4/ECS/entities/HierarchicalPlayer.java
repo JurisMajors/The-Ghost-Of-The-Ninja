@@ -72,12 +72,13 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
      */
     protected void createHierarchy() {
         // Calculate and fix position of the hip
+        Vector3f hipOffset = new Vector3f(this.dimension.x / 2, 0.8f, 0.0f);
         Vector3f hipPosition = this.getComponent(PositionComponent.class).position
-                .add(new Vector3f(this.dimension.x / 2, 0.8f, 0.0f));
+                .add(hipOffset);
 
         // Draw torso to visualise hip position
         Vector3f TorsoDimension = new Vector3f(0.4f, 0.8f, 0.0f);
-        torso = new BodyPart(this, hipPosition, TorsoDimension, 0, Texture.DEBUG);
+        torso = new BodyPart(this, hipOffset, TorsoDimension, 0, Texture.DEBUG);
         this.hierarchy.add(torso);
 
         // Set the position of the foot for the right leg

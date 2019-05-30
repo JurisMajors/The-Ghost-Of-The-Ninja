@@ -20,6 +20,7 @@ import group4.ECS.etc.TheEngine;
 import group4.graphics.RenderLayer.Layer;
 import group4.graphics.Shader;
 import group4.maths.Matrix4f;
+import group4.maths.Vector3f;
 import group4.utils.DebugUtils;
 
 import java.util.*;
@@ -164,6 +165,10 @@ public class RenderSystem extends EntitySystem {
 ////                    DebugUtils.drawLine(pca.position, pcb.position);
 ////                    DebugUtils.drawCircle(pca.position, 2.0f, 50);
 //                }
+
+                if (a instanceof HierarchicalPlayer) {
+                    DebugUtils.drawCircle(a.getComponent(PositionComponent.class).position.add(new Vector3f(a.getComponent(DimensionComponent.class).dimension.x / 2, 0.8f, 0.0f)), 0.9f, 50);
+                }
             }
 
             DebugUtils.flush();
