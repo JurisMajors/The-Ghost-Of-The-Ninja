@@ -31,7 +31,7 @@ public class ConeVisionStateDecoder extends RayStateDecoder{
      * Initialize based on given settings
      * @param settings jsonObject of settings to load in this decoder
      */
-    public static void loadOnSettings(JSONObject settings) {
-
+    public static ConeVisionStateDecoder loadOnSettings(JSONObject settings) {
+        return null;
     }
 }
