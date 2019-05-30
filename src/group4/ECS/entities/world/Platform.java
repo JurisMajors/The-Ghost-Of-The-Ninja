@@ -36,7 +36,7 @@ public class Platform extends Entity {
     public Platform(Vector3f position, Vector3f dimension, Shader shader, Texture texture, float[] texCoords) {
         this(position, dimension);
         // create the graphics component with a vertex array repeating the texture over this platform
-        this.add(new GraphicsComponent(shader, texture, dimension, texCoords));
+        this.add(new GraphicsComponent(shader, texture, dimension, texCoords, false));
     }
 
     public Platform(Vector3f position, Vector3f dimension) {

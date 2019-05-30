@@ -130,7 +130,7 @@ public class Matrix4f {
             for (int col = 0; col < SIZE; col++) {
                 float sum = 0.0f;
                 for (int elem = 0; elem < SIZE; elem++) {
-                    sum += elements[row + elem * 4] * other.elements[elem * 4 + col];
+                    sum += elements[row + elem * 4] * other.elements[elem + col * 4];
                 }
                 result.elements[row + col * 4] = sum;
             }
@@ -143,7 +143,7 @@ public class Matrix4f {
      * Adds the current matrix to other. Returns the result.
      *
      * @param other
-     * @return this * other
+     * @return this + other
      */
     public Matrix4f add(Matrix4f other) {
         Matrix4f result = new Matrix4f();

@@ -26,7 +26,7 @@ public class Exit extends Entity {
     public Exit(Vector3f p, Vector3f d, Module m) {
         this.add(new PositionComponent(p));
         this.add(new DimensionComponent(d));
-        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.EXIT, d));
+        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.EXIT, d, false));
         this.add(new CollisionComponent(ExitCollision.getInstance()));
         this.add(new ExitComponent());
 
@@ -44,7 +44,7 @@ public class Exit extends Entity {
     public Exit(Vector3f p, Vector3f d, Module m, int targetModule) {
         this.add(new PositionComponent(p));
         this.add(new DimensionComponent(d));
-        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.WHITE, d));
+        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.WHITE, d, false));
         this.add(new CollisionComponent(ExitCollision.getInstance()));
         this.add(new ExitComponent());
 

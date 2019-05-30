@@ -25,7 +25,7 @@ public class ArtTile extends Entity {
     public ArtTile(Vector3f position, Vector3f dimension, Shader shader, Texture texture, float[] texCoords) {
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
-        this.add(new GraphicsComponent(shader, texture, dimension, texCoords));
+        this.add(new GraphicsComponent(shader, texture, dimension, texCoords, false));
     }
 
     public static String getName() {

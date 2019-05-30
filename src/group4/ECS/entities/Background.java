@@ -28,7 +28,7 @@ public class Background extends Entity {
         this.add(new DimensionComponent(dimension));
 
         // create basic graphics component covering the dimension of this block
-        this.add(new GraphicsComponent(shader, texture, dimension, Layer.BACKGROUND));
+        this.add(new GraphicsComponent(shader, texture, dimension, Layer.BACKGROUND, false));
     }
 
     public static String getName() {
