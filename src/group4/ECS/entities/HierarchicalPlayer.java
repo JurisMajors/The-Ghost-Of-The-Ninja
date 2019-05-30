@@ -4,6 +4,7 @@ import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.identities.AnimationComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.game.IKEndEffector;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
@@ -27,7 +28,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
      * Hierarchy of graphics components
      */
     public List<BodyPart> hierarchy = new ArrayList<>();
-
+    public List<IKEndEffector> IKHandles = new ArrayList<>();
     /**
      * Directly access the bodyparts in the hierarchy
      */
@@ -90,6 +91,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         rightLegLower = new BodyPart(rightLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, rightLegAngles[1], Texture.DEBUG);
         this.hierarchy.add(rightLegUpper);
         this.hierarchy.add(rightLegLower);
+        this.IKHandles.add(new IKEndEffector(rightLegUpper, rightLegLower, hipPosition, rightFootPosition, "foot_R"));
 
         // Set the position of the foot for the left leg
         Vector3f leftFootPosition = this.getComponent(PositionComponent.class).position
@@ -101,6 +103,8 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         leftLegLower = new BodyPart(leftLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, leftLegAngles[1], Texture.DEBUG);
         this.hierarchy.add(leftLegUpper);
         this.hierarchy.add(leftLegLower);
+        this.IKHandles.add(new IKEndEffector(leftLegUpper, leftLegLower, hipPosition, leftFootPosition, "foot_L"));
+
     }
 
 
@@ -122,7 +126,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
      *      and [1] is the angle of the second joint of the limb (e.g. knee)
      */
     // See {root}/images/limbAngles.jpg for a drawing of all angles, most are calculated using the cosine law
-    private float[] getLimbAngles(Vector3f bodySidePosition, Vector3f limbEndPosition,
+    public float[] getLimbAngles(Vector3f bodySidePosition, Vector3f limbEndPosition,
                                   float upperLimbLength, float lowerLimbLength) {
         // Array to store the calculated result angles
         float[] result = new float[2];
