@@ -24,10 +24,25 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
 
 
     /**
-     * hierarchy of graphics components
+     * Hierarchy of graphics components
      */
     public List<BodyPart> hierarchy = new ArrayList<>();
 
+    /**
+     * Directly access the bodyparts in the hierarchy
+     */
+    protected BodyPart torso;
+    protected BodyPart rightLegUpper;
+    protected BodyPart rightLegLower;
+    protected BodyPart leftLegUpper;
+    protected BodyPart leftLegLower;
+
+
+    /**
+     * Definition of body part dimensions
+     */
+    Vector3f upperLegDimension =  new Vector3f(0.15f, 0.5f, 0.0f);
+    Vector3f lowerLegDimension = new Vector3f(0.12f, 0.4f, 0.0f);
 
     /**
      * Creates a player
@@ -56,29 +71,36 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
      * Create the entities for the hierarchy
      */
     protected void createHierarchy() {
-        // Define the leg dimensions
-        Vector3f upperLegDimension =  new Vector3f(0.15f, 0.5f, 0.0f);
-        Vector3f lowerLegDimension = new Vector3f(0.12f, 0.4f, 0.0f);
-
         // Calculate and fix position of the hip
-        Vector3f HipPosition = this.getComponent(PositionComponent.class).position
+        Vector3f hipPosition = this.getComponent(PositionComponent.class).position
                 .add(new Vector3f(this.dimension.x / 2, 0.8f, 0.0f));
 
         // Draw torso to visualise hip position
         Vector3f TorsoDimension = new Vector3f(0.4f, 0.8f, 0.0f);
-        BodyPart torso = new BodyPart(this, HipPosition, TorsoDimension, 0, Texture.DEBUG);
+        torso = new BodyPart(this, hipPosition, TorsoDimension, 0, Texture.DEBUG);
         this.hierarchy.add(torso);
 
         // Set the position of the foot for the right leg
-        Vector3f RightFootPosition = this.getComponent(PositionComponent.class).position
+        Vector3f rightFootPosition = this.getComponent(PositionComponent.class).position
                 .add(new Vector3f(this.dimension.x / 3, 0.0f, 0.0f));
 
         // Draw the right leg
-        float[] rightLegAngles = this.getLimbAngles(HipPosition, RightFootPosition, upperLegDimension.y, lowerLegDimension.y);
-        BodyPart rLegUpper = new BodyPart(torso, new Vector3f(), upperLegDimension, rightLegAngles[0], Texture.DEBUG);
-        BodyPart rLegLower = new BodyPart(rLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, rightLegAngles[1], Texture.DEBUG);
-        this.hierarchy.add(rLegUpper);
-        this.hierarchy.add(rLegLower);
+        float[] rightLegAngles = this.getLimbAngles(hipPosition, rightFootPosition, upperLegDimension.y, lowerLegDimension.y);
+        rightLegUpper = new BodyPart(torso, new Vector3f(), upperLegDimension, rightLegAngles[0], Texture.DEBUG);
+        rightLegLower = new BodyPart(rightLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, rightLegAngles[1], Texture.DEBUG);
+        this.hierarchy.add(rightLegUpper);
+        this.hierarchy.add(rightLegLower);
+
+        // Set the position of the foot for the left leg
+        Vector3f leftFootPosition = this.getComponent(PositionComponent.class).position
+                .add(new Vector3f(this.dimension.x, 0.5f, 0.0f));
+
+        // Draw the left leg
+        float[] leftLegAngles = this.getLimbAngles(hipPosition, leftFootPosition, upperLegDimension.y, lowerLegDimension.y);
+        leftLegUpper = new BodyPart(torso, new Vector3f(), upperLegDimension, leftLegAngles[0], Texture.DEBUG);
+        leftLegLower = new BodyPart(leftLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, leftLegAngles[1], Texture.DEBUG);
+        this.hierarchy.add(leftLegUpper);
+        this.hierarchy.add(leftLegLower);
     }
 
 
