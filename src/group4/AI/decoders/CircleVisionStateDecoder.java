@@ -41,6 +41,8 @@ public class CircleVisionStateDecoder extends RayStateDecoder implements StateDe
      * @param settings jsonObject of settings to load in this decoder
      */
     public static CircleVisionStateDecoder loadOnSettings(JSONObject settings) {
-        return null;
+        int nrRays = settings.getInt("rays");
+        int gap = settings.getInt("gap");
+        return new CircleVisionStateDecoder(nrRays, gap);
     }
 }

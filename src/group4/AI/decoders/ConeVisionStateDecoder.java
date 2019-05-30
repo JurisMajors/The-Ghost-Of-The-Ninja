@@ -32,6 +32,8 @@ public class ConeVisionStateDecoder extends RayStateDecoder{
      * @param settings jsonObject of settings to load in this decoder
      */
     public static ConeVisionStateDecoder loadOnSettings(JSONObject settings) {
-        return null;
+        int nrRays = settings.getInt("rays");
+        int range = settings.getInt("range");
+        return new ConeVisionStateDecoder(nrRays, range);
     }
 }
