@@ -142,6 +142,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
                         / (2 * upperLimbLength * offsetLength)));
 
         // Calculate Alpha0, which is the angle for the bodySidePosition joint, so store it as well
+        // See {root}/images/limbAnglesCaseDistinction.jpg for a drawing of all below cases
         if (offset.x > 0) {
             if (offset.y < 0) {
                 result[0] = (float) (180 - alpha1 - alpha2);
