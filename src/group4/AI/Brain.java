@@ -80,9 +80,9 @@ public class Brain {
     /**
      * Loads a network and its settings from files
      * @param modelPath model file defined by deeplearning4j (the neural net)
-     * @param settings json file of settings of the brain, decoder etc.
      */
-    public Brain (String modelPath, String settings) {
+    public Brain (String modelPath) {
+        String settings = modelPath + "-settings.json"; // definition of settings path
         try {
             File f = new File(modelPath); // get path to model path
             // load the network model of the brain
