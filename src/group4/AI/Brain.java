@@ -18,6 +18,7 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
@@ -83,12 +84,12 @@ public class Brain {
      */
     public Brain (String modelPath, String settings) {
         try {
-            FileReader fileReader = new FileReader(settings);
-            // json object containing all necessary information about the brain
-            JSONObject brainInfo = new JSONObject(new JSONTokener(fileReader));
             File f = new File(modelPath); // get path to model path
             // load the network model of the brain
             this.nn = ModelSerializer.restoreMultiLayerNetwork(f);
+            FileReader fileReader = new FileReader(settings);
+            // json object containing all necessary information about the brain
+            JSONObject brainInfo = new JSONObject(new JSONTokener(fileReader));
             // load the state decoder
             this.setDecoder(brainInfo.getJSONObject("decoder"));
 
@@ -98,24 +99,33 @@ public class Brain {
     }
 
     void toFile(String filePath) throws IOException {
-        ModelSerializer.writeModel(this.nn, filePath, false);
+        // write the model
+        File modelFile = new File(filePath);
+        ModelSerializer.writeModel(this.nn, modelFile, false);
+        // write the settings of the model
+        String directory = modelFile.getParent(); // get the directory of filePath
+        String settingsPath = directory + modelFile.getName() + "-settings.json"; // declare name of the settings
+        JSONObject settings = new JSONObject();
+        // currently only storing decoder settings, if more, then multiple json objects should be appended
+        JSONObject decoderSettings = this.decoder.getSettings(); // write this brains settings to a json object
+        settings.put("decoder", decoderSettings);
+        // write it to file
+        settings.write(new FileWriter(settingsPath));
     }
 
     private void setDecoder(JSONObject info) throws IllegalStateException {
         String decoderClass = info.getString("name"); // get the name of the decoder
         // distinguish all possibilities and initialize according to the info
+        // TODO: Avoid if statements somehow?
         if (decoderClass.endsWith("CircleVisionStateDecoder")) {
-            int angleGap = info.getInt("gap");
-            int nrRays = info.getInt("rays");
-            this.decoder = new CircleVisionStateDecoder(nrRays, angleGap);
+            this.decoder = CircleVisionStateDecoder.loadOnSettings(info);
         } else if (decoderClass.endsWith("ConeVisionStateDecoder")) {
-            int angleRange = info.getInt("range");
-            int nrRays = info.getInt("rays");
-            this.decoder = new ConeVisionStateDecoder(nrRays, angleRange);
+            this.decoder = ConeVisionStateDecoder.loadOnSettings(info);
         } else {
             throw new IllegalStateException("Trying to load a unrecognized state decoder " + decoderClass);
         }
     }
+
 
     /**
      * Feed forward the game state through the brain to get a move
