@@ -99,6 +99,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
      * @return float[2] where [0] is the angle of the joint of the bodySidePosition (e.g. hip)
      *      and [1] is the angle of the second joint of the limb (e.g. knee)
      */
+    // See {root}/images/limbAngles.jpg for a drawing of all angles, most are calculated using the cosine law
     private float[] getLimbAngles(Vector3f bodySidePosition, Vector3f limbEndPosition,
                                   float upperLimbLength, float lowerLimbLength) {
         // Array to store the calculated result angles
