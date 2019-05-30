@@ -2,20 +2,22 @@ package group4.AI.decoders;
 
 import com.badlogic.ashley.core.Entity;
 import group4.maths.Vector3f;
+import org.json.JSONObject;
 
 /**
  * Casts rays around the ghost
  */
 public class CircleVisionStateDecoder extends RayStateDecoder implements StateDecoderInterface {
-    private float gap;
+
+    private int gap;
     /**
      * @param n number of rays to be casted
      * @param angleGap the gap in degrees between the first and the last ray
      *
      */
-    public CircleVisionStateDecoder(int n, float angleGap) {
+    public CircleVisionStateDecoder(int n, int angleGap) {
         super(n, 360.0f - angleGap);
-        this.gap = angleGap / 2.0f;
+        this.gap = angleGap / 2;
     }
 
     @Override
@@ -27,5 +29,18 @@ public class CircleVisionStateDecoder extends RayStateDecoder implements StateDe
         // normalize just for safety
         start.normalizei();
         return start;
+    }
+
+    @Override
+    public JSONObject getSettings() {
+        return null;
+    }
+
+    /**
+     * Initialize based on given settings
+     * @param settings jsonObject of settings to load in this decoder
+     */
+    public static void loadOnSettings(JSONObject settings) {
+
     }
 }

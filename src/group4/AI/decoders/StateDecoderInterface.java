@@ -27,10 +27,4 @@ public interface StateDecoderInterface {
      * @return json object representing the settings of the decoder instance
      */
     JSONObject getSettings();
-
-    /**
-     * Initialize based on given settings
-     * @param settings jsonObject of settings to load in this decoder
-     */
-    void loadOnSettings(JSONObject settings);
 }
