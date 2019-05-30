@@ -63,16 +63,12 @@ public class GraphicsComponent implements Component {
      * @param shader    Shader, the shader to apply during rendering
      * @param texture   Texture, the image to pass to the shader
      * @param dimension size of the graphics to be displayed.
+     * @param center    If this is true, the GC will be centered around midpoint the bottom edge
      */
-    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension) {
+    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, boolean center) {
         if (!Main.SHOULD_OPENGL) return;
         // Construct vertex array
-        float[] vertices = new float[]{
-                0, 0, 0,
-                0, dimension.y, 0,
-                dimension.x, dimension.y, 0,
-                dimension.x, 0, 0,
-        };
+        float[] vertices = generateVertices(dimension, center);
 
         // Construct index array (used for geometry mesh)
         byte[] indices = new byte[]{
@@ -103,16 +99,12 @@ public class GraphicsComponent implements Component {
      * @param shader    Shader, the shader to apply during rendering
      * @param texture   Texture, the image to pass to the shader
      * @param dimension size of the graphics to be displayed.
+     * @param center    If this is true, the GC will be centered around midpoint the bottom edge
      */
-    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, Layer layer) {
+    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, Layer layer, boolean center) {
         if (!Main.SHOULD_OPENGL) return;
         // Construct vertex array
-        float[] vertices = new float[]{
-                0, 0, 0,
-                0, dimension.y, 0,
-                dimension.x, dimension.y, 0,
-                dimension.x, 0, 0,
-        };
+        float[] vertices = generateVertices(dimension, center);
 
         // Construct index array (used for geometry mesh)
         byte[] indices = new byte[]{
@@ -145,16 +137,12 @@ public class GraphicsComponent implements Component {
      * @param texture   Texture, the image to pass to the shader
      * @param dimension Vector3f, size of the graphics to be displayed.
      * @param texCoords Float[], the texture coordinates of a tile within the given tilemap Texture.
+     * @param center    If this is true, the GC will be centered around midpoint the bottom edge
      */
-    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, float[] texCoords) {
+    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, float[] texCoords, boolean center) {
         if (!Main.SHOULD_OPENGL) return;
         // Construct vertex array
-        float[] vertices = new float[]{
-                0, 0, 0,
-                0, dimension.y, 0,
-                dimension.x, dimension.y, 0,
-                dimension.x, 0, 0,
-        };
+        float[] vertices = generateVertices(dimension, center);
 
         // Construct index array (used for geometry mesh)
         byte[] indices = new byte[]{
@@ -180,16 +168,12 @@ public class GraphicsComponent implements Component {
      * @param dimension Vector3f, size of the graphics to be displayed.
      * @param texCoords Float[], the texture coordinates of a tile within the given tilemap Texture.
      * @param layer     Enum, indicating on which specific layer this component should be drawn
+     * @param center    If this is true, the GC will be centered around midpoint the bottom edge
      */
-    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, float[] texCoords, Layer layer) {
+    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, float[] texCoords, Layer layer, boolean center) {
         if (!Main.SHOULD_OPENGL) return;
         // Construct vertex array
-        float[] vertices = new float[]{
-                0, 0, 0,
-                0, dimension.y, 0,
-                dimension.x, dimension.y, 0,
-                dimension.x, 0, 0,
-        };
+        float[] vertices = generateVertices(dimension, center);
 
         // Construct index array (used for geometry mesh)
         byte[] indices = new byte[]{
@@ -202,5 +186,30 @@ public class GraphicsComponent implements Component {
         this.texture = texture;
         this.geometry = new VertexArray(vertices, indices, texCoords);
         this.layer = layer;
+    }
+
+
+    /**
+     * Method to generate a vertex array given a dimension
+     * @param dimension the dimension of the bounding rectangle of the resulting vertex array
+     * @param center whether or not to center the vertices around the middle of the bottom edge
+     * @return
+     */
+    private float[] generateVertices(Vector3f dimension, boolean center) {
+        if (center) {
+            return new float[]{
+                    - dimension.x / 2, 0, 0,
+                    - dimension.x / 2, dimension.y, 0,
+                    dimension.x / 2, dimension.y, 0,
+                    dimension.x / 2, 0, 0,
+            };
+        } else {
+            return new float[]{
+                    0, 0, 0,
+                    0, dimension.y, 0,
+                    dimension.x, dimension.y, 0,
+                    dimension.x, 0, 0,
+            };
+        }
     }
 }

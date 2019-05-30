@@ -31,7 +31,7 @@ public class Ghost extends Player {
         this.remove(GraphicsComponent.class);
 
         //// add needed components
-        this.add(new GraphicsComponent(shader, texture, this.dimension));
+        this.add(new GraphicsComponent(shader, texture, this.dimension, false));
         this.add(new GhostComponent(brain));
     }
 
