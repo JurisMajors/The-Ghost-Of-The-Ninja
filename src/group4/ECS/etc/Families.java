@@ -29,9 +29,8 @@ public class Families {
             .all(MovementComponent.class, PositionComponent.class).get();
 
     // all entities which require animation
-    // TODO: for now this is the same as graphics, how to represent animation?
     public static final Family animationFamily = Family
-            .all(PositionComponent.class, GraphicsComponent.class).get();
+            .all(AnimationComponent.class).get();
 
     // all entities having some sort of audio
     public static final Family audioFamily = Family

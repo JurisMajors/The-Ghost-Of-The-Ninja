@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import group4.AI.Evolver;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.AnimationSystem;
 import group4.ECS.systems.CameraSystem;
 import group4.ECS.systems.RenderSystem;
 import group4.ECS.systems.ShootingSystem;
@@ -141,6 +142,7 @@ public class Main implements Runnable {
             engine.addSystem(new PlayerDyingSystem(true));
             engine.addSystem(new GhostDyingSystem(false));
             engine.addSystem(new MobDyingSystem());
+            engine.addSystem(new AnimationSystem());
 
             // Systems which are essentially observers of the changed gamestate
             engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem

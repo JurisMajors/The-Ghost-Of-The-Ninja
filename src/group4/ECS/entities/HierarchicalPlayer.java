@@ -1,6 +1,7 @@
 package group4.ECS.entities;
 
 import group4.ECS.components.GraphicsComponent;
+import group4.ECS.components.identities.AnimationComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.graphics.Shader;
@@ -39,10 +40,11 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         // Set the correct dimension component (will automatically remove the old one)
         this.add(new DimensionComponent(this.dimension));
 
-        // Remove the graphics component, as the container won't have one
-        this.remove(GraphicsComponent.class);
-
+        // Add a transparent GraphicsComponent to register this entity to the render system (will automatically remove the old one)
         this.add(new GraphicsComponent(Shader.SIMPLE, Texture.NOTHINGNESS, dimension, false));
+
+        // Add an animation component to register this entity to the AnimationSystem
+        this.add(new AnimationComponent());
 
         // Construct the hierarchy of the player
         this.createHierarchy();
