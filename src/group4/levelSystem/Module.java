@@ -200,7 +200,7 @@ public class Module {
             JSONObject pointInfo = data.getJSONObject(point);
             // get the coordinates for the control point
             float pointX = pointInfo.getFloat("x") / 32f;
-            float pointY = this.height - pointInfo.getFloat("y") / 32f;
+            float pointY = this.height - pointInfo.getFloat("y") / 32f + 1;
 
             String tileName = pointInfo.getString("name");
             // get the identification of the spline (first character in the string)
