@@ -1,4 +1,4 @@
-package group4.AI;
+        package group4.AI;
 
 import group4.AI.decoders.CircleVisionStateDecoder;
 import group4.AI.decoders.ConeVisionStateDecoder;
@@ -95,19 +95,21 @@ public class Brain {
         }
     }
 
-    void toFile(String filePath) throws IOException {
+    void toFile(String filePath, boolean saveSettings) throws IOException {
         // write the model
         File modelFile = new File(filePath);
         ModelSerializer.writeModel(this.nn, modelFile, false);
-        // write the settings of the model
-        String settingsPath = filePath + "-settings.json"; // declare name of the settings
-        JSONObject settings = new JSONObject();
-        // currently only storing decoder settings, if more, then multiple json objects should be appended
-        JSONObject decoderSettings = this.decoder.getSettings(); // write this brains settings to a json object
-        settings.put("decoder", decoderSettings.toMap());
-        // write it to file
-        Writer fw = settings.write(new FileWriter(settingsPath));
-        fw.flush();
+        if (saveSettings) {
+            // write the settings of the model
+            String settingsPath = filePath + "-settings.json"; // declare name of the settings
+            JSONObject settings = new JSONObject();
+            // currently only storing decoder settings, if more, then multiple json objects should be appended
+            JSONObject decoderSettings = this.decoder.getSettings(); // write this brains settings to a json object
+            settings.put("decoder", decoderSettings.toMap());
+            // write it to file
+            Writer fw = settings.write(new FileWriter(settingsPath));
+            fw.flush();
+        }
     }
 
     private void setDecoder(JSONObject info) throws IllegalStateException {
