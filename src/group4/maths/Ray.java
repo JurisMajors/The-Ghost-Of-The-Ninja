@@ -154,7 +154,7 @@ public class Ray {
             // if line segments dont intersect, skip
             if (!line.intersectsLine(rayAsLine)) continue;
             // otherwise calculate the intersection between the "infinite lines"
-            Vector3f inter = this.lineIntersection(new Vector3f((float) line.getX1(), (float) line.getY1(), 0),
+            Vector3f inter = this.lineIntersectionPoint(new Vector3f((float) line.getX1(), (float) line.getY1(), 0),
                     new Vector3f((float) line.getX2(), (float) line.getY2(), 0));
             if (inter == null) {
                 continue;
@@ -200,8 +200,8 @@ public class Ray {
                 b.x, b.y);
     }
 
-    private Vector3f lineIntersection(Vector3f a, Vector3f b) {
-        return Ray.lineIntersection(this.startPos, this.end, a, b);
+    private Vector3f lineIntersectionPoint(Vector3f a, Vector3f b) {
+        return Ray.lineIntersectionPoint(this.startPos, this.end, a, b);
     }
 
     /**
@@ -212,7 +212,7 @@ public class Ray {
      * @param b2 second point of line 2
      * @return null if lines parallel, otherwise the intersection point
      */
-    public static Vector3f lineIntersection(Vector3f a1, Vector3f a2, Vector3f b1, Vector3f b2) {
+    public static Vector3f lineIntersectionPoint(Vector3f a1, Vector3f a2, Vector3f b1, Vector3f b2) {
         // assumes infinite lines
         // https://gamedev.stackexchange.com/questions/111100/intersection-of-a-line-and-a-rectangle
         float A1 = a2.y - a1.y;
