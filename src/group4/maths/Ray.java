@@ -29,25 +29,48 @@ public class Ray {
      **/
     public Vector3f end;
     /**
-     * If an entity contains a component in this list, let the rays go through it
+     * If an entity contains a component in this collection, let the rays go through it
      */
     private Collection<Class<? extends Component>> ignorableComponents;
 
+    /**
+     * Creates a ray that can be casted
+     * @param startingPos starting pos of the ray
+     * @param dir the direction of the ray (doesnt have to be normalized)
+     * @param ignorableComponents entities containing these components are ignored
+     * @param length length of the ray
+     */
     public Ray(Vector3f startingPos, Vector3f dir, Collection<Class<? extends Component>> ignorableComponents, float length) {
-        this.startPos = startingPos;
-        this.dir = dir;
+        this.startPos = new Vector3f(startingPos);
+        this.dir = new Vector3f(dir);
         this.end = this.startPos.add(this.dir.normalized().scale(length));
         this.ignorableComponents = ignorableComponents;
     }
 
+    /**
+     * Creates ray of very large length
+     * @param startingPos starting pos of the ray
+     * @param dir the direction of the ray (doesnt have to be normalized)
+     * @param ignorableComponents entities containing these components are ignored
+     */
     public Ray(Vector3f startingPos, Vector3f dir, Collection<Class<? extends Component>> ignorableComponents) {
         this(startingPos, dir, ignorableComponents, 10000f);
     }
 
+    /**
+     * Creates ray with specified starting position, doesnt ignore any component entities
+     * @param startingPos starting pos of the ray
+     * @param dir the direction of the ray (doesnt have to be normalized)
+     * @param length , the length of the ray
+     */
     public Ray(Vector3f startingPos, Vector3f dir, float length) {
         this(startingPos, dir, new ArrayList<>(), length);
     }
-
+    /**
+     * Creates very large ray in specified direction
+     * @param startingPos starting pos of the ray
+     * @param dir the direction of the ray (doesnt have to be normalized)
+     */
     public Ray(Vector3f startingPos, Vector3f dir) {
         this(startingPos, dir, new ArrayList<>(), 10000f);
     }
