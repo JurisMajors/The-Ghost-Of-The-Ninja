@@ -49,7 +49,7 @@ public class PlayerMovementSystem extends IteratingSystem {
      * @param e entity to move
      * @param deltaTime frame speed
      */
-    private void move(Entity e, MovementComponent mc, PositionComponent pc, float deltaTime) {
+    protected void move(Entity e, MovementComponent mc, PositionComponent pc, float deltaTime) {
         Object ref = getMovementRef(e);
         // set velocity in the direction that keyboard asks for
         if (shouldRight(ref)) {

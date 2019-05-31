@@ -16,6 +16,9 @@ import group4.maths.Vector3f;
 public class Ghost extends Player {
     public boolean best; // whether has reached the exit
     public Player master = null;
+
+    private boolean blockMovement = false;
+
     /**
      * @param position center point of Ghost
      * @param level    the level that the Ghost is part of
@@ -53,5 +56,20 @@ public class Ghost extends Player {
 
     public static String getName() {
         return "Ghost";
+    }
+
+    /**
+     * Whether movement is blocked
+     */
+    public boolean isBlocked() {
+        return this.blockMovement;
+    }
+
+    /**
+     * Set whether or not movement should be blocked
+     * @param blocked new value for the movement block
+     */
+    public void setBlocked(boolean blocked) {
+        this.blockMovement = blocked;
     }
 }
