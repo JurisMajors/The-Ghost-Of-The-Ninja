@@ -19,19 +19,26 @@ public class AnimationSystem extends IteratingSystem {
                 handle.t += deltaTime / 200;
                 handle.t %= 2.0f * Math.PI; // Rotate in radians.
 
+                float upperLength = handle.upper.getComponent(DimensionComponent.class).dimension.y;
+                float lowerLength = handle.lower.getComponent(DimensionComponent.class).dimension.y;
+
                 Vector3f unitCircle;
+                float[] angles;
 
                 if (handle.label == "foot_L") {
                     unitCircle = new Vector3f((float) Math.cos(handle.t - 1) * 0.75f, (float) Math.sin(handle.t - 1) * 0.75f, 0.0f);
+                    handle.endPos = unitCircle.add(handle.startPos);
+                    angles = ((HierarchicalPlayer) entity).getLimbAngles(handle.startPos, handle.endPos, upperLength, lowerLength, true);
+                } else if (handle.label == "foot_R") {
+                    unitCircle = new Vector3f((float) Math.cos(handle.t) * 0.87f, (float) Math.sin(handle.t) * 0.87f, 0.0f);
+                    handle.endPos = unitCircle.add(handle.startPos);
+                    angles = ((HierarchicalPlayer) entity).getLimbAngles(handle.startPos, handle.endPos, upperLength, lowerLength, true);
                 } else {
-                    unitCircle = new Vector3f((float) Math.cos(handle.t) * 0.9f, (float) Math.sin(handle.t) * 0.9f, 0.0f);
+                    unitCircle = new Vector3f((float) Math.cos(handle.t - 1.75) * 0.87f, (float) Math.sin(handle.t - 1.75) * 0.87f, 0.0f);
+                    handle.endPos = unitCircle.add(handle.startPos);
+                    angles = ((HierarchicalPlayer) entity).getLimbAngles(handle.startPos, handle.endPos, upperLength, lowerLength, false);
                 }
 
-                handle.endPos = unitCircle.add(new Vector3f(entity.getComponent(DimensionComponent.class).dimension.x / 2, 0.8f, 0.0f));
-
-                float upperLength = handle.upper.getComponent(DimensionComponent.class).dimension.y;
-                float lowerLength = handle.lower.getComponent(DimensionComponent.class).dimension.y;;
-                float[] angles = ((HierarchicalPlayer) entity).getLimbAngles(handle.startPos, handle.endPos, upperLength, lowerLength);
                 handle.upper.rotation = angles[0];
                 handle.lower.rotation = angles[1];
             }
