@@ -27,16 +27,16 @@ public class AnimationSystem extends IteratingSystem {
 
                 if (handle.label == "foot_L") {
                     unitCircle = new Vector3f((float) Math.cos(handle.t - 1) * 0.75f, (float) Math.sin(handle.t - 1) * 0.75f, 0.0f);
-                    handle.endPos = unitCircle.add(handle.startPos);
-                    angles = ((HierarchicalPlayer) entity).getLimbAngles(handle.startPos, handle.endPos, upperLength, lowerLength, true);
+                    handle.endPos = unitCircle.add(((HierarchicalPlayer) entity).getHipOffset());
+                    angles = ((HierarchicalPlayer) entity).getLimbAngles(((HierarchicalPlayer) entity).getHipOffset(), handle.endPos, upperLength, lowerLength, true);
                 } else if (handle.label == "foot_R") {
                     unitCircle = new Vector3f((float) Math.cos(handle.t) * 0.87f, (float) Math.sin(handle.t) * 0.87f, 0.0f);
-                    handle.endPos = unitCircle.add(handle.startPos);
-                    angles = ((HierarchicalPlayer) entity).getLimbAngles(handle.startPos, handle.endPos, upperLength, lowerLength, true);
+                    handle.endPos = unitCircle.add(((HierarchicalPlayer) entity).getHipOffset());
+                    angles = ((HierarchicalPlayer) entity).getLimbAngles(((HierarchicalPlayer) entity).getHipOffset(), handle.endPos, upperLength, lowerLength, true);
                 } else {
                     unitCircle = new Vector3f((float) Math.cos(handle.t - 1.75) * 0.87f, (float) Math.sin(handle.t - 1.75) * 0.87f, 0.0f);
-                    handle.endPos = unitCircle.add(handle.startPos);
-                    angles = ((HierarchicalPlayer) entity).getLimbAngles(handle.startPos, handle.endPos, upperLength, lowerLength, false);
+                    handle.endPos = unitCircle.add(((HierarchicalPlayer) entity).getShoulderPosition());
+                    angles = ((HierarchicalPlayer) entity).getLimbAngles(((HierarchicalPlayer) entity).getShoulderPosition(), handle.endPos, upperLength, lowerLength, false);
                 }
 
                 handle.upper.rotation = angles[0];

@@ -15,6 +15,7 @@ import group4.utils.DebugUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Vector;
 
 
 public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
@@ -46,10 +47,18 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     /**
      * Definition of body part dimensions
      */
-    Vector3f upperLegDimension =  new Vector3f(0.15f, 0.5f, 0.0f);
+    Vector3f upperLegDimension = new Vector3f(0.15f, 0.5f, 0.0f);
     Vector3f lowerLegDimension = new Vector3f(0.12f, 0.4f, 0.0f);
     Vector3f upperArmDimension = new Vector3f(0.1f, 0.5f, 0.0f);
     Vector3f lowerArmDimension = new Vector3f( 0.08f, 0.4f, 0.0f);
+    Vector3f TorsoDimension = new Vector3f(0.4f, 0.8f, 0.0f);
+    Vector3f shoulderOffset = new Vector3f(0.0f, 0.6f, 0.0f);
+
+
+    /**
+     * The position of the hip of the player
+     */
+    Vector3f hipOffset = new Vector3f(this.dimension.x / 2, 0.8f, 0.0f);
 
     /**
      * Creates a player
@@ -78,11 +87,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
      * Create the entities for the hierarchy
      */
     protected void createHierarchy() {
-        // Calculate and fix position of the hip
-        Vector3f hipOffset = new Vector3f(this.dimension.x / 2, 0.8f, 0.0f);
-
         // Draw torso to visualise hip position
-        Vector3f TorsoDimension = new Vector3f(0.4f, 0.8f, 0.0f);
         torso = new BodyPart(this, hipOffset, TorsoDimension, 0, Texture.DEBUG);
         this.hierarchy.add(torso);
 
@@ -90,7 +95,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         Vector3f rightFootOffset = new Vector3f(this.dimension.x / 3, 0.0f, 0.0f);
 
         // Draw the right leg
-        float[] rightLegAngles = this.getLimbAngles(hipOffset, rightFootOffset, upperLegDimension.y, lowerLegDimension.y, true);
+        float[] rightLegAngles = this.getLimbAngles(this.getHipOffset(), rightFootOffset, upperLegDimension.y, lowerLegDimension.y, true);
         rightLegUpper = new BodyPart(torso, new Vector3f(), upperLegDimension, rightLegAngles[0], Texture.DEBUG);
         rightLegLower = new BodyPart(rightLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, rightLegAngles[1], Texture.DEBUG);
         this.hierarchy.add(rightLegUpper);
@@ -101,21 +106,18 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         Vector3f leftFootOffset = new Vector3f(this.dimension.x, 0.5f, 0.0f);
 
         // Draw the left leg
-        float[] leftLegAngles = this.getLimbAngles(hipOffset, leftFootOffset, upperLegDimension.y, lowerLegDimension.y, true);
+        float[] leftLegAngles = this.getLimbAngles(this.getHipOffset(), leftFootOffset, upperLegDimension.y, lowerLegDimension.y, true);
         leftLegUpper = new BodyPart(torso, new Vector3f(), upperLegDimension, leftLegAngles[0], Texture.DEBUG);
         leftLegLower = new BodyPart(leftLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, leftLegAngles[1], Texture.DEBUG);
         this.hierarchy.add(leftLegUpper);
         this.hierarchy.add(leftLegLower);
         this.IKHandles.add(new IKEndEffector(leftLegUpper, leftLegLower, hipOffset, leftFootOffset, "foot_L"));
 
-        // Calculate the shoulder offset
-        Vector3f shoulderOffset = new Vector3f(0.0f, 0.6f, 0.0f);
-
         // Set the right wrist position
         Vector3f rightWristOffset = new Vector3f(this.dimension.x, 1.5f, 0.0f);
 
         // Draw the right arm
-        float[] rightArmAngles = this.getLimbAngles(shoulderOffset.add(hipOffset), rightWristOffset, upperArmDimension.y, lowerArmDimension.y, false);
+        float[] rightArmAngles = this.getLimbAngles(this.getShoulderPosition(), rightWristOffset, upperArmDimension.y, lowerArmDimension.y, false);
         rightArmUpper = new BodyPart(torso, shoulderOffset, upperArmDimension, rightArmAngles[0], Texture.DEBUG);
         rightArmLower = new BodyPart(rightArmUpper, new Vector3f(0.0f, upperArmDimension.y, 0.0f), lowerArmDimension, rightArmAngles[1], Texture.DEBUG);
         this.hierarchy.add(rightArmUpper);
@@ -208,6 +210,30 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
 
         // Return the angle vector
         return result;
+    }
+
+
+    /**
+     * Set hip position relative to player bottom left position
+     */
+    public void setHipOffset(Vector3f newHipPosition) {
+        this.hipOffset = newHipPosition;
+    }
+
+
+    /**
+     * Get the hip position relative to player bottom left position
+     */
+    public Vector3f getHipOffset() {
+        return this.hipOffset;
+    }
+
+
+    /**
+     * Get the position of the shoulder relative to the player bottom left position
+     */
+    public Vector3f getShoulderPosition() {
+        return this.shoulderOffset.add(this.hipOffset);
     }
 
 
