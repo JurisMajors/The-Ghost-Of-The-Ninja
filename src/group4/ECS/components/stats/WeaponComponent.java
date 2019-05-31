@@ -1,23 +1,16 @@
 package group4.ECS.components.stats;
 
-import com.badlogic.ashley.core.Component;
-
-public class WeaponComponent implements Component {
+public class WeaponComponent extends ItemComponent {
 
     public int damage;
-    public float rateOfAttack;
-
-    /* cooldown of weapon in seconds */
-    public float cooldown;
 
     /**
      * @param damage
-     * @param rateOfAttack hits per second, see e.g. {@link group4.ECS.systems.combat.PlayerCombatSystem}
+     * @param cooldown the cooldown to which the item is set after usage
      */
-    public WeaponComponent(int damage, float rateOfAttack) {
+    public WeaponComponent(int damage, float cooldown) {
+        super(cooldown);
         this.damage = damage;
-        this.rateOfAttack = rateOfAttack;
-        this.cooldown = 0.0f;
     }
 
 }

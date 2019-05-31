@@ -10,7 +10,6 @@ import group4.ECS.components.identities.MobComponent;
 import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.*;
 import group4.ECS.components.stats.*;
-import group4.ECS.entities.Player;
 
 /**
  * Mappers retrieve components from entities in O(1) time
@@ -86,4 +85,7 @@ public class Mappers {
 
     public static final ComponentMapper<TimedComponent> timedMapper =
             ComponentMapper.getFor(TimedComponent.class);
+
+    public static final ComponentMapper<ItemComponent> itemMapper =
+            ComponentMapper.getFor(ItemComponent.class);
 }

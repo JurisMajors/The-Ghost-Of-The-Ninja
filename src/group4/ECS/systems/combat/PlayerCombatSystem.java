@@ -1,17 +1,16 @@
 package group4.ECS.systems.combat;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.ItemComponent;
 import group4.ECS.components.stats.MeleeWeaponComponent;
-import group4.ECS.components.stats.RangeWeaponComponent;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.MeleeArea;
 import group4.ECS.entities.Player;
-import group4.ECS.entities.items.Item;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
@@ -22,7 +21,6 @@ import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.maths.Vector3f;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -63,9 +61,9 @@ public class PlayerCombatSystem extends IteratingSystem {
         if (wc != null && MouseClicks.leftMouseDown()) {
 
             // if melee
-            if (wc.cooldown <= 0.0f) {
+            if (wc.currCooldown <= 0.0f) {
                 // set cooldown in accordance to rate of attack
-                wc.cooldown = 1 / wc.rateOfAttack;
+                wc.currCooldown = wc.cooldown;
 
                 // TODO: account for non-centric camera, e.g. pass on cam offset from display centre
                 // camera x in world position
@@ -78,7 +76,13 @@ public class PlayerCombatSystem extends IteratingSystem {
 
                 // if clicking right of player, hit right, else hit left
                 if (mouseWorldX < pc.position.x + dc.dimension.x / 2) {
-                    wc.hitboxOffset.x *= -1;
+                    if (wc.hitboxOffset.x >= 0) {
+                        wc.hitboxOffset.x *= -1;
+                    }
+                } else {
+                    if (wc.hitboxOffset.x < 0) {
+                        wc.hitboxOffset.x *= -1;
+                    }
                 }
 
                 // exclude ghost and player for the damage
@@ -86,7 +90,9 @@ public class PlayerCombatSystem extends IteratingSystem {
                 excluded.add(Player.class);
                 excluded.add(Ghost.class);
 
+                // take player position and add offset on top
                 Vector3f position = pc.position.add(wc.hitboxOffset);
+
                 new MeleeArea(position, wc.hitBox,
                         wc.damage, excluded);
             }
@@ -98,28 +104,33 @@ public class PlayerCombatSystem extends IteratingSystem {
      *
      * @param deltaTime time in between past and current tick
      * @param plc referencing the player
-     * TODO: add cooldown on weaponswitch
      */
-    private void cooldown(float deltaTime, PlayerComponent plc) {
-        for (Item item : plc.inventory) {
+    private void cooldown(float deltaTime, PlayerComponent plc) throws IllegalStateException {
+        for (Entity item : plc.inventory) {
             // if itemslot is not used
             if (item == null) {
                 continue;
             }
 
-            // get mappers
-            MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(item);
-
-            // if item is a meleeweapon
-            if (wc != null) {
-                // update cooldown
-                wc.cooldown = wc.cooldown - deltaTime;
-
-                // if there is no cooldown on weapon
-                if (wc.cooldown <= 0.0f) {
-                    // set cooldown to 0, i.e. weapon can be used
-                    wc.cooldown = 0.0f;
+            // hacky way to get the super component to itemcomponent
+            ItemComponent ic = null;
+            for (Component c : item.getComponents()) {
+                if (c instanceof ItemComponent) {
+                    ic = (ItemComponent) c;
                 }
+            }
+
+            System.out.println(ic);
+
+            // if item slot used, but not item, throw exception
+            if (ic == null) {
+                throw new IllegalStateException("Invalid object in inventory: " + item.getClass());
+            }
+
+            // if there is cooldown on the item
+            if (ic.currCooldown >= 0.0f) {
+                // update cooldown
+                ic.currCooldown -= deltaTime;
             }
         }
     }
@@ -148,6 +159,11 @@ public class PlayerCombatSystem extends IteratingSystem {
         } else if (KeyBoard.isKeyDown(GLFW_KEY_8)) {
             plc.activeItem = plc.inventory[7];
         }
+
+//        // on itemswitch, set current item cooldown to full cooldown to prevent fast hitting
+//        ItemComponent ic = Mappers.itemMapper.get(plc.activeItem);
+//        ic.currCooldown = ic.cooldown;
+
     }
 
 }
