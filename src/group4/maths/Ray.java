@@ -4,18 +4,15 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.SplineComponent;
-import group4.ECS.components.identities.ExitComponent;
-import group4.ECS.components.identities.GhostComponent;
-import group4.ECS.components.identities.MobComponent;
-import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
-import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.Mappers;
+import group4.utils.DebugUtils;
 
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Ray {
@@ -34,34 +31,35 @@ public class Ray {
     /**
      * If an entity contains a component in this list, let the rays go through it
      */
-    private List<Class<? extends Component>> ignorableComponents;
+    private Collection<Class<? extends Component>> ignorableComponents;
 
-    public Ray(Vector3f startingPos, Vector3f dir, List<Class<? extends Component>> ignorableComponents, float length) {
+    public Ray(Vector3f startingPos, Vector3f dir, Collection<Class<? extends Component>> ignorableComponents, float length) {
         this.startPos = startingPos;
         this.dir = dir;
         this.end = this.startPos.add(this.dir.normalized().scale(length));
         this.ignorableComponents = ignorableComponents;
     }
 
-    public Ray(Vector3f startingPos, Vector3f dir) {
-        List<Class<? extends Component>> defaultList = new ArrayList<>();
-        defaultList.add(GhostComponent.class);
-        defaultList.add(ExitComponent.class);
-        defaultList.add(PlayerComponent.class);
+    public Ray(Vector3f startingPos, Vector3f dir, Collection<Class<? extends Component>> ignorableComponents) {
+        this(startingPos, dir, ignorableComponents, 10000f);
+    }
 
-        this.startPos = startingPos;
-        this.dir = dir;
-        this.end = this.startPos.add(this.dir.normalized().scale(10000));
-        this.ignorableComponents = defaultList;
+    public Ray(Vector3f startingPos, Vector3f dir, float length) {
+        this(startingPos, dir, new ArrayList<>(), length);
+    }
+
+    public Ray(Vector3f startingPos, Vector3f dir) {
+        this(startingPos, dir, new ArrayList<>(), 10000f);
     }
 
     /**
      * Cast the ray to the given entities
      *
      * @param entities the entities that the ray might intersect
-     * @return position at first intersection of a bounding box
+     * @param debug whether to draw rays with debug utils
+     * @return IntersectionPair, containing intersection point and entity. Entity is null if no intersection occured.
      */
-    public IntersectionPair cast(ImmutableArray<Entity> entities) {
+    public IntersectionPair cast(ImmutableArray<Entity> entities, boolean debug) {
         Vector3f closestIntersection = null; // current closest intersection of the ray
         Entity intersectedEntity = null; // entity whose bounding box is intersected
         float curDist = Float.MAX_VALUE; // the distance to the intersection
@@ -92,9 +90,22 @@ public class Ray {
             }
         }
         if (closestIntersection == null) {
-            closestIntersection = this.end;
+            closestIntersection = new Vector3f(this.end);
+        }
+        if (debug) {
+            DebugUtils.drawLine(this.startPos, closestIntersection);
         }
         return new IntersectionPair(closestIntersection, intersectedEntity);
+    }
+
+    /**
+     * Cast ray without drawing
+     *
+     * @param entities the enttities to check for collisions with
+     * @return IntersectionPair, containing intersection point and entity. Entity is null if no intersection occured.
+     */
+    public IntersectionPair cast(ImmutableArray<Entity> entities) {
+        return this.cast(entities, false);
     }
 
     /**
