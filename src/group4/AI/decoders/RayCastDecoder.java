@@ -1,12 +1,19 @@
 package group4.AI.decoders;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
+import group4.ECS.components.identities.ExitComponent;
+import group4.ECS.components.identities.GhostComponent;
+import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.maths.IntersectionPair;
 import group4.maths.Ray;
 import group4.maths.Vector3f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RayCastDecoder {
     /**
@@ -50,11 +57,15 @@ public class RayCastDecoder {
         }
         // increments of the angle for the rays
         float deltaTheta = this.angleRange / this.nrRays;
+        List<Class<? extends Component>> ignorables = new ArrayList<>();
+        ignorables.add(GhostComponent.class);
+        ignorables.add(ExitComponent.class);
+        ignorables.add(PlayerComponent.class);
 
         for (int i = ghostFeatures.length; i < this.nrRays ; i+=2) {
             // create ray with appropriate direction
             // by rotating upwards from the start ray
-            Ray r = new Ray(ghostCenter, start.rotateXY((i - ghostFeatures.length) * deltaTheta));
+            Ray r = new Ray(ghostCenter, start.rotateXY((i - ghostFeatures.length) * deltaTheta), ignorables);
             // cast it
             IntersectionPair intersection = r.cast(entities);
 
