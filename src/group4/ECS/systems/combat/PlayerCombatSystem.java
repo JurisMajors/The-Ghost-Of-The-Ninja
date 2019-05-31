@@ -77,10 +77,9 @@ public class PlayerCombatSystem extends IteratingSystem {
                         (Main.SCREEN_WIDTH / Window.getWidth()) - Main.SCREEN_WIDTH / 2);
 
                 // if clicking right of player, hit right, else hit left
+                Vector3f trueOffset = new Vector3f(wc.hitboxOffset);
                 if (mouseWorldX < pc.position.x + dc.dimension.x / 2) {
-                    wc.hitboxOffset.x = -1 * Math.abs(wc.hitboxOffset.x);
-                } else {
-                    wc.hitboxOffset.x = Math.abs(wc.hitboxOffset.x);
+                    trueOffset.x = -1 * wc.hitboxOffset.x;
                 }
 
                 // exclude ghost and player for the damage
@@ -88,7 +87,7 @@ public class PlayerCombatSystem extends IteratingSystem {
                 excluded.add(Player.class);
                 excluded.add(Ghost.class);
 
-                Vector3f position = pc.position.add(wc.hitboxOffset);
+                Vector3f position = pc.position.add(trueOffset);
                 new MeleeArea(position, wc.hitBox,
                         wc.damage, excluded);
             }
