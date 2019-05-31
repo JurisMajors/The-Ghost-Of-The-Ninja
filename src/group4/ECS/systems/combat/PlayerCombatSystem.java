@@ -2,12 +2,10 @@ package group4.ECS.systems.combat;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MeleeWeaponComponent;
-import group4.ECS.components.stats.RangeWeaponComponent;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.MeleeArea;
 import group4.ECS.entities.Player;
@@ -22,7 +20,6 @@ import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.maths.Vector3f;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -81,6 +78,10 @@ public class PlayerCombatSystem extends IteratingSystem {
                 if (mouseWorldX < pc.position.x + dc.dimension.x / 2) {
                     trueOffset.x = -1 * wc.hitboxOffset.x;
                 }
+                // TODO:
+                // cast ray to the center of the hitbox
+                // see if it doesnt hit walls/static objects
+                // change offset accordingly
 
                 // exclude ghost and player for the damage
                 Set<Class<? extends Entity>> excluded = new HashSet<>();
