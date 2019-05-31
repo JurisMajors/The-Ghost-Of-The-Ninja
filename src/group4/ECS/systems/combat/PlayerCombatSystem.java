@@ -78,7 +78,9 @@ public class PlayerCombatSystem extends IteratingSystem {
 
                 // if clicking right of player, hit right, else hit left
                 if (mouseWorldX < pc.position.x + dc.dimension.x / 2) {
-                    wc.hitboxOffset.x *= -1;
+                    wc.hitboxOffset.x = -1 * Math.abs(wc.hitboxOffset.x);
+                } else {
+                    wc.hitboxOffset.x = Math.abs(wc.hitboxOffset.x);
                 }
 
                 // exclude ghost and player for the damage
