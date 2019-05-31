@@ -42,6 +42,7 @@ public class RenderSystem extends EntitySystem {
      * @param priority used for creating a systems pipeline (lowest prio gets executed first)
      */
     public RenderSystem(int priority) {
+        super(priority);
     }
 
     /**

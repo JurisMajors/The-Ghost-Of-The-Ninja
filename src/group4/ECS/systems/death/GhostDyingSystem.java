@@ -10,12 +10,12 @@ import group4.game.Main;
 
 public class GhostDyingSystem extends PlayerDyingSystem {
 
-    public GhostDyingSystem (boolean reset) {
-        super(Families.ghostFamily, reset);
+    public GhostDyingSystem (boolean reset, int priority) {
+        super(Families.ghostFamily, reset, priority);
     }
 
-    public GhostDyingSystem () {
-        super(Families.ghostFamily, false);
+    public GhostDyingSystem (int priority) {
+        super(Families.ghostFamily, false, priority);
     }
 
     @Override

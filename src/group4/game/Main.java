@@ -6,10 +6,12 @@ import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.CameraSystem;
 import group4.ECS.systems.RenderSystem;
-import group4.ECS.systems.ShootingSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
 import group4.ECS.systems.collision.UncollidingSystem;
+import group4.ECS.systems.collision.LastSystem;
+import group4.ECS.systems.combat.DamageSystem;
+import group4.ECS.systems.combat.PlayerCombatSystem;
 import group4.ECS.systems.death.GhostDyingSystem;
 import group4.ECS.systems.death.MobDyingSystem;
 import group4.ECS.systems.death.PlayerDyingSystem;
@@ -17,6 +19,7 @@ import group4.ECS.systems.movement.BulletMovementSystem;
 import group4.ECS.systems.movement.GhostMovementSystem;
 import group4.ECS.systems.movement.MobMovementSystem;
 import group4.ECS.systems.movement.PlayerMovementSystem;
+import group4.ECS.systems.timed.TimedEventSystem;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;
@@ -53,7 +56,6 @@ public class Main implements Runnable {
 
     public static final float SCREEN_WIDTH = 16.5f;
     public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
-
 
     /**
      * Creates a new thread on which it wel run() the game.
@@ -126,25 +128,26 @@ public class Main implements Runnable {
         // Initialize the engine
         engine = TheEngine.getInstance();
         if (!AI) {
-            // Set up all engine systems (NOTE: order is important here as we do not yet use ordering within the engine I believe)
+            // Set up all engine systems
             // Systems which change the gamestate
-            engine.addSystem(new PlayerMovementSystem());
-            engine.addSystem(new GhostMovementSystem());
-
-            engine.addSystem(new MobMovementSystem());
-
-            engine.addSystem(new ShootingSystem());
-            engine.addSystem(new BulletMovementSystem());
-            engine.addSystem(new CollisionSystem());
-            engine.addSystem(new CollisionEventSystem());
-            engine.addSystem(new UncollidingSystem());
-            engine.addSystem(new PlayerDyingSystem(true));
-            engine.addSystem(new GhostDyingSystem(false));
-            engine.addSystem(new MobDyingSystem());
+            engine.addSystem(new PlayerMovementSystem(0));
+            engine.addSystem(new GhostMovementSystem(1));
+            engine.addSystem(new MobMovementSystem(2));
+            engine.addSystem(new BulletMovementSystem(3));
+            engine.addSystem(new CollisionSystem(4));
+            engine.addSystem(new PlayerCombatSystem(5));
+            engine.addSystem(new DamageSystem(6));
+            engine.addSystem(new CollisionEventSystem(7));
+            engine.addSystem(new UncollidingSystem(8));
+            engine.addSystem(new PlayerDyingSystem(true, 9));
+            engine.addSystem(new GhostDyingSystem(false, 10));
+            engine.addSystem(new MobDyingSystem(11));
 
             // Systems which are essentially observers of the changed gamestate
-            engine.addSystem(new CameraSystem(Families.playerFamily)); // CameraSystem must be added BEFORE RenderSystem
-            engine.addSystem(new RenderSystem());
+            engine.addSystem(new CameraSystem(Families.playerFamily, 12));
+            engine.addSystem(new RenderSystem(13));
+            engine.addSystem(new TimedEventSystem(14));
+            engine.addSystem(new LastSystem(15));
             this.level = new FileLevel("./src/group4/res/maps/level_01");
 
         }
@@ -169,7 +172,9 @@ public class Main implements Runnable {
             long now = System.nanoTime();
             long updateLength = now - lastLoopTime;
             lastLoopTime = now;
-            double delta = updateLength / ((double) optimalTime);
+
+            // pass on delta in seconds
+            double delta = updateLength / 1e9;
 
             // update the frame counter
             lastFpsTime += updateLength;

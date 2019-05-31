@@ -7,8 +7,8 @@ import group4.ECS.etc.Families;
 
 public class GhostMovementSystem extends PlayerMovementSystem {
 
-    public GhostMovementSystem() {
-        super(Families.ghostFamily) ;
+    public GhostMovementSystem(int priority) {
+        super(Families.ghostFamily, priority) ;
     }
 
     @Override

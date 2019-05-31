@@ -14,17 +14,15 @@ import group4.maths.Vector3f;
  */
 public class UncollidingSystem extends IteratingSystem {
 
-    public UncollidingSystem() {
+    public UncollidingSystem(int priority) {
         // only process collisions for moving entities that are collidable
-        super(Families.collidableMovingFamily);
+        super(Families.collidableMovingFamily, priority);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(entity);
-
         uncollideEntity(entity, deltaTime, pc.position);
-
     }
 
     /**
@@ -36,13 +34,14 @@ public class UncollidingSystem extends IteratingSystem {
      */
     void uncollideEntity(Entity e, float deltaTime, Vector3f curPos) {
         MovementComponent mc = Mappers.movementMapper.get(e);
+
         // get all entities that i collide with
         CollisionComponent cc = Mappers.collisionMapper.get(e);
+
         int resolved = 0; // keep track of resolved collisions
 
         for (CollisionData cd : cc.collisions) {
-            // if there is a new position component in the collision it means its a spline collision and
-            // the new position of this entity should be at newpos
+            // deal with splines
             if (cd.newPos != null) {
                 // spline collision
                 uncollideSpline(cd, mc, curPos);
@@ -53,9 +52,6 @@ public class UncollidingSystem extends IteratingSystem {
 
             resolved++;
         }
-
-        // remove all collisions after fixing them all
-        cc.collisions.clear();
     }
 
     /**
@@ -79,9 +75,6 @@ public class UncollidingSystem extends IteratingSystem {
             // move along the spline tangent with the speed that the x velocity was
             mc.velocity = tangent.scale(mc.velocity.x);
         }
-
-
-
 
         curPos.setVector(cd.newPos);
     }
@@ -115,13 +108,18 @@ public class UncollidingSystem extends IteratingSystem {
         curPos.addi(trueDisplacement);
     }
 
-    private void handleVelocity(MovementComponent mc, Vector3f displacement) {
+    /**
+     * TODO: add javadoc
+     * @param mc
+     * @param displacement
+     */
+    private void handleVelocity (MovementComponent mc, Vector3f displacement) {
         if (displacement.y > 0) { // displacement from bottom
             if (mc.velocity.y <= 0) { // if falling down
                 mc.velocity.y = 0; // set velocity to zero
             }
-        } else if (displacement.y < 0) {  // displacement from top
-            mc.velocity.y *= -0.5; // go down when hit from top
+        } else if (displacement.y < 0){  // displacement from top
+            mc.velocity.y *= -0.3; // go down when hit from top
         }
 
         if (displacement.x != 0) {
@@ -129,7 +127,6 @@ public class UncollidingSystem extends IteratingSystem {
         }
         // cap the velocity (for safety)
         mc.velocity.capValuesi(mc.velocityRange);
-
     }
 
 }

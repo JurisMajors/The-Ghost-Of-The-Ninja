@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.utils.ImmutableArray;
-import group4.ECS.components.identities.GhostComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.entities.Ghost;
@@ -30,7 +29,6 @@ import group4.maths.Vector3f;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
@@ -147,15 +145,15 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         }
 
         if (Evolver.render) {
-            engine.addSystem(new CameraSystem(Families.ghostFamily));
+            engine.addSystem(new CameraSystem(Families.ghostFamily, 0));
         }
-        engine.addSystem(new GhostMovementSystem());
-        engine.addSystem(new CollisionSystem());
-        engine.addSystem(new CollisionEventSystem());
-        engine.addSystem(new UncollidingSystem());
-        engine.addSystem(new GhostDyingSystem());
+        engine.addSystem(new GhostMovementSystem(1));
+        engine.addSystem(new CollisionSystem(2));
+        engine.addSystem(new CollisionEventSystem(3));
+        engine.addSystem(new UncollidingSystem(4));
+        engine.addSystem(new GhostDyingSystem(5));
         if (Evolver.render) {
-            engine.addSystem(new RenderSystem());
+            engine.addSystem(new RenderSystem(6));
         }
     }
 

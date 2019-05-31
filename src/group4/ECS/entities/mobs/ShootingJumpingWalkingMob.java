@@ -1,6 +1,6 @@
 package group4.ECS.entities.mobs;
 
-import group4.ECS.components.ShootingComponent;
+import group4.ECS.components.stats.RangeWeaponComponent;
 import group4.ECS.components.identities.JumpingWalkingMobComponent;
 import group4.ECS.systems.movement.MovementHandlers.JumpingWalkingMobMovementHandler;
 import group4.levelSystem.Level;
@@ -14,7 +14,6 @@ public class ShootingJumpingWalkingMob extends Mob {
      */
     public ShootingJumpingWalkingMob(Vector3f position, Level l) {
         super(position, l, JumpingWalkingMobMovementHandler.getInstance());
-        this.add(new ShootingComponent(new Vector3f(0.5f, 2.0f, 0.0f), 150));
         this.add(new JumpingWalkingMobComponent());
     }
 
