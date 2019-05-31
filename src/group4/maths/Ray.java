@@ -175,7 +175,7 @@ public class Ray {
         return lines;
     }
 
-    private List<Line2D.Float> getBBLines(Entity entity) {
+    public static List<Line2D.Float> getBBLines(Entity entity) {
         List<Line2D.Float> lines = new ArrayList<>();
         PositionComponent posComp = Mappers.positionMapper.get(entity);
         DimensionComponent dimComp = Mappers.dimensionMapper.get(entity);
@@ -195,29 +195,41 @@ public class Ray {
         return lines;
     }
 
-    private Line2D.Float createLine(Vector3f a, Vector3f b) {
+    public static Line2D.Float createLine(Vector3f a, Vector3f b) {
         return new Line2D.Float(a.x, a.y,
                 b.x, b.y);
     }
 
     private Vector3f lineIntersection(Vector3f a, Vector3f b) {
+        return Ray.lineIntersection(this.startPos, this.end, a, b);
+    }
+
+    /**
+     * Given infinite lines, return intersection point
+     * @param a1 first point of line 1
+     * @param a2 second point of line 1
+     * @param b1 first point of line 2
+     * @param b2 second point of line 2
+     * @return null if lines parallel, otherwise the intersection point
+     */
+    public static Vector3f lineIntersection(Vector3f a1, Vector3f a2, Vector3f b1, Vector3f b2) {
         // assumes infinite lines
         // https://gamedev.stackexchange.com/questions/111100/intersection-of-a-line-and-a-rectangle
-        float A1 = this.end.y - this.startPos.y;
-        float B1 = this.startPos.x - this.end.x;
+        float A1 = a2.y - a1.y;
+        float B1 = a1.x - a2.x;
 
-        float A2 = a.y - b.y;
-        float B2 = b.x - a.x;
+        float A2 = b1.y - b2.y;
+        float B2 = b2.x - b1.x;
 
         float delta = A1 * B2 - A2 * B1;
         if (delta < 1e-6 && delta > -1 * 1e-6) {
             return null;
         }
 
-        float C2 = A2 * b.x + B2 * b.y;
-        float C1 = A1 * this.startPos.x + B1 * this.startPos.y;
+        float C2 = A2 * b2.x + B2 * b2.y;
+        float C1 = A1 * a1.x + B1 * a1.y;
 
         float invdelta = 1 / delta;
-        return new Vector3f((B2 * C1 - B1 * C2) * invdelta, (A1 * C2 - A2 * C1) * invdelta, this.startPos.z);
+        return new Vector3f((B2 * C1 - B1 * C2) * invdelta, (A1 * C2 - A2 * C1) * invdelta, a1.z);
     }
 }
