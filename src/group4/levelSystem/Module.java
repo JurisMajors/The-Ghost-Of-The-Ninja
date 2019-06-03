@@ -268,6 +268,8 @@ public class Module {
         for (Entity e : this.entities) {
             TheEngine.getInstance().removeEntity(e);
         }
+        // Set the player's spawned ghost to false, as the ghost was also automatically removed
+        this.getLevel().getPlayer().spawnedGhost = false;
     }
 
 
@@ -309,7 +311,9 @@ public class Module {
             throw new IllegalStateException("Adding ghost before initialized entities container");
         }
         if (this.ghostModel != null) {
-            TheEngine.getInstance().addEntity(new Ghost(this.level, this.ghostModel, master));
+            Ghost g = new Ghost(this.level, this.ghostModel, master);
+            this.addEntity(g);
+            TheEngine.getInstance().addEntity(g);
         } else {
             System.err.println("WARNING: Not loading ghost in module");
         }
