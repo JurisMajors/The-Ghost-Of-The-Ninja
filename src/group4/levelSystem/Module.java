@@ -6,6 +6,7 @@ import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
+import group4.ECS.entities.items.consumables.Coin;
 import group4.ECS.entities.world.ArtTile;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
@@ -85,7 +86,7 @@ public class Module {
     }
 
 
-    private void loadGhost (String loc) {
+    private void loadGhost(String loc) {
         this.ghostModel = new Brain(loc);
     }
 
@@ -149,6 +150,8 @@ public class Module {
                 parseMainLayer(layer);
             } else if (layerName.equals("SPLINES")) {
                 parseSplineLayer(layer);
+            } else if (layerName.equals("COINS")) {
+                parseCoinLayer(layer);
             } else if (layerName.equals("EXITS")) {
                 setupExits(layer);
             } else {
@@ -224,6 +227,38 @@ public class Module {
         for (List<Vector3f> cPoints : splineMap.values()) { // for each given control point
             addSpline(cPoints);
         }
+    }
+
+    private void parseCoinLayer(JSONObject layer) {
+        // Loop over the data grid
+        JSONArray data = layer.getJSONArray("objects");
+        for (int i = 0; i < data.length(); i++) {
+            // get information about the coin
+            JSONObject coinInfo = data.getJSONObject(i);
+            // get the world coordinates for the control coin
+            float coinX = coinInfo.getFloat("x") / 32f;
+            float coinY = this.height - coinInfo.getFloat("y") / 32f + 1;
+            Vector3f position = new Vector3f(coinX, coinY, 0);
+
+            // the coin value is stored as a string inside the name field
+            String coinValue = coinInfo.getString("name");
+
+            // create coin
+            Coin coin;
+            if (coinValue.equals("")) {
+                // default coin
+                coin = new Coin(position);
+            } else {
+                // custom coin
+                char size = coinValue.charAt(0);
+                Vector3f dimension = size == 's' ? Coin.SMALL_SIZE : Coin.LARGE_SIZE;
+                int value = Integer.parseInt(coinValue.substring(1));
+                coin = new Coin(position, dimension, value);
+            }
+
+            this.addEntity(coin);
+        }
+
     }
 
     /**
