@@ -242,7 +242,7 @@ public class Module {
                 "was given " + cPoints.size() + " control points instead!");
         Vector3f[] cPointsArr = cPoints.toArray(new Vector3f[0]);
         MultiSpline spline = new MultiSpline(cPointsArr);
-        SplinePlatform platform = new SplinePlatform(spline, Shader.SIMPLE, Texture.WHITE);
+        SplinePlatform platform = new SplinePlatform(spline, Shader.SIMPLE, Texture.SPLINE);
         this.addEntity(platform);
     }
 
