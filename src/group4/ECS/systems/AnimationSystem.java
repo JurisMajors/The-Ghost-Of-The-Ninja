@@ -10,7 +10,9 @@ import group4.maths.Vector3f;
 
 public class AnimationSystem extends IteratingSystem {
 
-    public AnimationSystem() { super(Families.animationFamily); }
+    public AnimationSystem(int priority) {
+        super(Families.animationFamily, priority);
+    }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
