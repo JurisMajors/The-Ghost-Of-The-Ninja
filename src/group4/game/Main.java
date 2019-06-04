@@ -148,7 +148,7 @@ public class Main implements Runnable {
             engine.addSystem(new RenderSystem(13));
             engine.addSystem(new TimedEventSystem(14));
             engine.addSystem(new LastSystem(15));
-            this.level = new FileLevel("./src/group4/res/maps/level_03");
+            this.level = new FileLevel("./src/group4/res/maps/level_02");
 
         }
         // Initialize the level
