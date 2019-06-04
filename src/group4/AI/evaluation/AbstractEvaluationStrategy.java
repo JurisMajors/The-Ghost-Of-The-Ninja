@@ -7,6 +7,9 @@ import group4.maths.Vector3f;
  * relative to the goal position.
  * If the strategy is natural, then a bigger evaluation is better.
  * It is preferable that the evaluation is in the bounds [0,1] (at least roughly)
+ *
+ * It is very important that this strategy always produces a non-negative evaluation, otherwise the training
+ * will stop.
  */
 public abstract class AbstractEvaluationStrategy {
     /**
