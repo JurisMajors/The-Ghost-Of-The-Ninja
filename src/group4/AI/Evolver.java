@@ -2,6 +2,9 @@ package group4.AI;
 
 import group4.AI.decoders.CircleVisionStateDecoder;
 import group4.AI.decoders.StateDecoderInterface;
+import group4.AI.evaluation.AbstractEvaluationStrategy;
+import group4.AI.evaluation.EuclideanStrategy;
+import group4.AI.evaluation.Evaluator;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.maths.random.Probability;
 import org.uncommons.watchmaker.framework.*;
@@ -63,6 +66,10 @@ public class Evolver {
      * Crossover
      **/
     private static AbstractBrainCrossover crossover = new StandardCrossover();
+    /**
+     * Evaluation strategy
+     */
+    static AbstractEvaluationStrategy evaluationStrat = new EuclideanStrategy();
     /** time limit for the module to train, after this time has reached, the ghost is killed **/
     public static double timelimit = 5.00;
     /** Path to save trained models**/
@@ -73,12 +80,9 @@ public class Evolver {
     public static int checkpoint = 2;
 
     /**
-     * whether to render
+     * Whether to render the training process
      */
     public static final boolean render = false;
-    /**
-     * Currently not supported for GA
-     */
     public static final boolean multiThreaded = true;
 
     /**
@@ -111,7 +115,6 @@ public class Evolver {
     }
 
     public static void train() {
-
         List<EvolutionaryOperator<Brain>> operators = new LinkedList<>();
         operators.add(mutator);
         operators.add(crossover);
@@ -121,7 +124,7 @@ public class Evolver {
 
         // factory of neural networks
         AbstractCandidateFactory<Brain> factory = new BrainFactory(Evolver.layerSizes);
-        FitnessEvaluator<Brain> fitnessEvaluator = new Evaluator();
+        FitnessEvaluator<Brain> fitnessEvaluator = new Evaluator(Evolver.evaluationStrat);
         SelectionStrategy<Object> selection = new RouletteWheelSelection();
         Random rng = new MersenneTwisterRNG();
 
@@ -189,6 +192,11 @@ public class Evolver {
         check.setRequired(false);
         options.addOption(settings);
 
+        Option evalStrat = new Option("eval", true, "Choose your evaluation strategy, " +
+                "default:euclid. [euclid, xcoord, ycoord, manh]");
+        check.setRequired(false);
+        options.addOption(evalStrat);
+
     }
 
     private static void setGivenOptions(CommandLine cmd) {
@@ -227,6 +235,9 @@ public class Evolver {
         }
         if (cmd.hasOption("settings")) {
             Evolver.saveSettingsOnce = false;
+        }
+        if (cmd.hasOption("eval")) {
+            Evolver.evaluationStrat = AbstractEvaluationStrategy.of(cmd.getOptionValue("eval"));
         }
     }
 }
