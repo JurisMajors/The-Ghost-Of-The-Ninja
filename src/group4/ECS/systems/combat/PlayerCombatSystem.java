@@ -3,9 +3,11 @@ package group4.ECS.systems.combat;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
+import group4.ECS.components.identities.GhostComponent;
 import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.ItemComponent;
 import group4.ECS.components.stats.MeleeWeaponComponent;
 import group4.ECS.entities.Ghost;
@@ -19,8 +21,10 @@ import group4.game.Window;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
+import group4.maths.Ray;
 import group4.maths.Vector3f;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -65,35 +69,56 @@ public class PlayerCombatSystem extends IteratingSystem {
                 // set cooldown in accordance to rate of attack
                 wc.currCooldown = wc.cooldown;
 
-                // TODO: account for non-centric camera, e.g. pass on cam offset from display centre
-                // camera x in world position
-                float camX = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0)
-                        .getComponent(PositionComponent.class).position.x;
-
-                // mouse x in world pos
-                float mouseWorldX = camX + ((float) MouseMovement.mouseX *
-                        (Main.SCREEN_WIDTH / Window.getWidth()) - Main.SCREEN_WIDTH / 2);
-
-                // if clicking right of player, hit right, else hit left
-                Vector3f trueOffset = new Vector3f(wc.hitboxOffset);
-                if (mouseWorldX < pc.position.x + dc.dimension.x / 2) {
-                    trueOffset.x = -1 * wc.hitboxOffset.x;
-                }
-                // TODO:
-                // cast ray to the center of the hitbox
-                // see if it doesnt hit walls/static objects
-                // change offset accordingly
-
-                // exclude ghost and player for the damage
-                Set<Class<? extends Entity>> excluded = new HashSet<>();
-                excluded.add(Player.class);
-                excluded.add(Ghost.class);
-
-                Vector3f position = pc.position.add(trueOffset);
-                new MeleeArea(position, wc.hitBox,
-                        wc.damage, excluded);
+                // attack and create damage hitbox
+                attack(pc, wc, dc);
             }
         }
+    }
+
+    private void attack(PositionComponent pc, MeleeWeaponComponent wc, DimensionComponent dc) {
+
+        // TODO: account for non-centric camera, e.g. pass on cam offset from display centre
+        // camera x in world position
+        float camX = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0)
+                .getComponent(PositionComponent.class).position.x;
+
+        // mouse x in world pos
+        float mouseWorldX = camX + ((float) MouseMovement.mouseX *
+                (Main.SCREEN_WIDTH / Window.getWidth()) - Main.SCREEN_WIDTH / 2);
+
+        // if clicking right of player, hit right, else hit left
+        Vector3f trueOffset = new Vector3f(wc.hitboxOffset);
+        if (mouseWorldX < pc.position.x + dc.dimension.x / 2) {
+            trueOffset.x = -1 * wc.hitboxOffset.x;
+        }
+
+        // lower left corner of hitbox from players perspective
+        Vector3f position = pc.position.add(trueOffset);
+
+        // end of ray
+        Vector3f rayEnd = position.add(new Vector3f(trueOffset.x, trueOffset.y / 2, trueOffset.z));
+        Vector3f rayStart = position.add(new Vector3f(0, wc.hitboxOffset.y + trueOffset.y / 2, 0));
+        Vector3f dir = rayEnd.sub(rayStart);
+
+        // ignore mobs, players, items, ghost, exits
+        ArrayList ignoreComponets = new ArrayList();
+        ignoreComponets.add(HealthComponent.class);
+        ignoreComponets.add(GhostComponent.class);
+        ignoreComponets.add(ItemComponent.class);
+
+        // cast ray from (center of player + y-component of hitboxoffset) to (playerpos + hitboxoffset)
+        Ray ray = new Ray(rayStart, dir, ignoreComponets, dir.length());
+
+        Vector3f intersection = ray.cast(TheEngine.getInstance().getEntitiesFor(Families.allCollidableFamily)).point;
+
+        // exclude ghost and player for the damage
+        Set<Class<? extends Entity>> excluded = new HashSet<>();
+        excluded.add(Player.class);
+        excluded.add(Ghost.class);
+
+        new MeleeArea(position, wc.hitBox,
+                wc.damage, excluded);
+
     }
 
     /**
