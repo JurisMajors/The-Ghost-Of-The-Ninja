@@ -194,33 +194,37 @@ public class Module {
     }
 
     private void parseSplineLayer(JSONObject layer) {
-        // Loop over the data grid
-        JSONArray data = layer.getJSONArray("objects");
-        for (int point = 0; point < data.length(); point++) {
-            // get information about the object
-            JSONObject pointInfo = data.getJSONObject(point);
-            // get the coordinates for the control point
-            float pointX = pointInfo.getFloat("x") / 32f;
-            float pointY = this.height - pointInfo.getFloat("y") / 32f + 1;
+        // only load in the splines if they are not loaded yet
+        if (splineMap.isEmpty()) {
+            // Loop over the data grid
+            JSONArray data = layer.getJSONArray("objects");
+            for (int point = 0; point < data.length(); point++) {
+                // get information about the object
+                JSONObject pointInfo = data.getJSONObject(point);
+                // get the coordinates for the control point
+                float pointX = pointInfo.getFloat("x") / 32f;
+                float pointY = this.height - pointInfo.getFloat("y") / 32f + 1;
 
-            String tileName = pointInfo.getString("name");
-            // get the identification of the spline (first character in the string)
-            char splineId = tileName.charAt(0);
-            // get the identification of the current point within the spline
-            int pointId = Integer.parseInt(tileName.substring(1));
+                String tileName = pointInfo.getString("name");
+                // get the identification of the spline (first character in the string)
+                char splineId = tileName.charAt(0);
+                // get the identification of the current point within the spline
+                int pointId = Integer.parseInt(tileName.substring(1));
 
-            if (!splineMap.containsKey(splineId)) { // create a new spline array if none exists for this spline
-                splineMap.put(splineId, new ArrayList<>(data.length()));
-            }
-            // add the control point to the spline
-            List<Vector3f> points = splineMap.get(splineId);
-            if (pointId >= points.size()) {
-                points.add(new Vector3f(pointX, pointY, 0));
-            } else {
-                points.add(pointId, new Vector3f(pointX, pointY, 0));
+                if (!splineMap.containsKey(splineId)) { // create a new spline array if none exists for this spline
+                    splineMap.put(splineId, new ArrayList<>(data.length()));
+                }
+                // add the control point to the spline
+                List<Vector3f> points = splineMap.get(splineId);
+                if (pointId >= points.size()) {
+                    points.add(new Vector3f(pointX, pointY, 0));
+                } else {
+                    points.add(pointId, new Vector3f(pointX, pointY, 0));
+                }
             }
         }
 
+        // add splines from our cached spline map
         for (List<Vector3f> cPoints : splineMap.values()) { // for each given control point
             addSpline(cPoints);
         }
