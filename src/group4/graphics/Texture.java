@@ -23,6 +23,7 @@ public class Texture {
     public static Texture BACKGROUND;
     public static Texture HITBOX;
     public static Texture NOTHINGNESS;
+    public static Texture SPLINE;
 
     // width and height of the texture
     private int width, height;
@@ -50,6 +51,7 @@ public class Texture {
         HITBOX = new Texture("src/group4/res/textures/hitbox.png");
         NOTHINGNESS = new Texture("src/group4/res/textures/FF4D00-0.png");
         PLAYER = new Texture("src/group4/res/textures/char1.png");
+        SPLINE = new Texture("src/group4/res/textures/spline.png");
     }
 
     /**
