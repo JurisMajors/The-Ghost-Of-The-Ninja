@@ -13,6 +13,12 @@ import group4.maths.Vector3f;
 
 public class Coin extends Item {
 
+    public static final Vector3f SMALL_SIZE = new Vector3f(0.25f, 0.25f, 0);
+    public static final Vector3f LARGE_SIZE = new Vector3f(0.5f, 0.5f, 0);
+
+    public static final int SMALL_VALUE = 50;
+    public static final int LARGE_VALUE = 100;
+
     /**
      * Creates a coin with score value value.
      *
@@ -25,7 +31,16 @@ public class Coin extends Item {
         this.add(new DimensionComponent(dimension));
         this.add(new CoinComponent(value));
         this.add(new CollisionComponent(CoinCollision.getInstance()));
-        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.AK47, dimension, false));
+        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.AK47, dimension, true));
+    }
+
+    /**
+     * Default coin with value 50 and size 0.25.
+     *
+     * @param position
+     */
+    public Coin(Vector3f position) {
+        this(position, SMALL_SIZE, SMALL_VALUE);
     }
 
 }
