@@ -80,12 +80,9 @@ public class Evolver {
     public static int checkpoint = 2;
 
     /**
-     * whether to render
+     * Whether to render the training process
      */
     public static final boolean render = false;
-    /**
-     * Currently not supported for GA
-     */
     public static final boolean multiThreaded = true;
 
     /**
@@ -118,7 +115,6 @@ public class Evolver {
     }
 
     public static void train() {
-
         List<EvolutionaryOperator<Brain>> operators = new LinkedList<>();
         operators.add(mutator);
         operators.add(crossover);
