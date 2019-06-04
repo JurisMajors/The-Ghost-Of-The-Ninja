@@ -114,7 +114,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
 
         }
         // calculate the fitness
-        float fitness = strategy.evaluate(ghostPos, startingPos, closestExit);
+        float fitness = brain.evaluate(ghostPos, startingPos, closestExit);
         if (ghost.best) {
             System.out.println("Got best ghost");
             fitness = 0;

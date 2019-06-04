@@ -26,4 +26,23 @@ public abstract class AbstractEvaluationStrategy {
      * @return true if bigger evaluation is better
      */
     public abstract boolean isNatural();
+
+    /**
+     * Get a strategy based on a string encoding
+     * @param name name of the strategy
+     * @return strategy linked to string name
+     */
+    public static AbstractEvaluationStrategy of(String name) throws IllegalArgumentException {
+        if (name.equals("euclid") || name.endsWith("EuclideanStrategy")) {
+            return new EuclideanStrategy();
+        } else if (name.equals("ycoord") || name.endsWith("YCoordStrategy")) {
+            return new YCoordStrategy();
+        } else if (name.equals("xcoord") || name.endsWith("XCoordStrategy")) {
+            return new XCoordStrategy();
+        } else if (name.equals("manh") || name.endsWith("ManhattanStrategy")) {
+            return new ManhattanStrategy();
+        } else {
+            throw new IllegalArgumentException("Trying to load unrecognized strategy by name " + name);
+        }
+    }
 }

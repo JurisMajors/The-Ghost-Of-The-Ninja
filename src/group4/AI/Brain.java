@@ -3,6 +3,8 @@
 import group4.AI.decoders.CircleVisionStateDecoder;
 import group4.AI.decoders.ConeVisionStateDecoder;
 import group4.AI.decoders.StateDecoderInterface;
+import group4.AI.evaluation.AbstractEvaluationStrategy;
+import group4.maths.Vector3f;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
@@ -27,6 +29,8 @@ public class Brain {
     MultiLayerNetwork nn;
     /** state decoder for this brain, by default: the current training decoder **/
     private StateDecoderInterface decoder = Evolver.decoder;
+    /** evaluator **/
+    private AbstractEvaluationStrategy evaluation = Evolver.evaluationStrat;
 
     /**
      * Given information about the layers, initialize a MLP
@@ -87,6 +91,7 @@ public class Brain {
             JSONObject brainInfo = new JSONObject(new JSONTokener(fileReader));
             // load the state decoder
             this.setDecoder(brainInfo.getJSONObject("decoder"));
+            this.evaluation = AbstractEvaluationStrategy.of(brainInfo.getString("evaluator"));
 
         } catch (IOException e) {
             System.err.println("IOException was thrown with path " + settings + " or " + modelPath);
@@ -105,6 +110,7 @@ public class Brain {
             JSONObject decoderSettings = this.decoder.getSettings(); // write this brains settings to a json object
             decoderSettings.put("name", this.decoder.getClass().getName());
             settings.put("decoder", decoderSettings.toMap());
+            settings.put("evaluator", this.evaluation.getClass().getName());
             // write it to file
             Writer fw = settings.write(new FileWriter(settingsPath));
             fw.flush();
@@ -151,5 +157,9 @@ public class Brain {
     public int think() {
         INDArray input = this.decoder.decode();
         return this.feedForward(input);
+    }
+
+    public float evaluate(Vector3f myPos, Vector3f startPos, Vector3f goalPos) {
+        return this.evaluation.evaluate(myPos, startPos, goalPos);
     }
 }

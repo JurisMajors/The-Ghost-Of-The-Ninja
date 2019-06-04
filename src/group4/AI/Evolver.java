@@ -68,7 +68,7 @@ public class Evolver {
     /**
      * Evaluation strategy
      */
-    private static AbstractEvaluationStrategy evaluation;
+    static AbstractEvaluationStrategy evaluationStrat;
     /** time limit for the module to train, after this time has reached, the ghost is killed **/
     public static double timelimit = 5.00;
     /** Path to save trained models**/
@@ -127,7 +127,7 @@ public class Evolver {
 
         // factory of neural networks
         AbstractCandidateFactory<Brain> factory = new BrainFactory(Evolver.layerSizes);
-        FitnessEvaluator<Brain> fitnessEvaluator = new Evaluator();
+        FitnessEvaluator<Brain> fitnessEvaluator = new Evaluator(Evolver.evaluationStrat);
         SelectionStrategy<Object> selection = new RouletteWheelSelection();
         Random rng = new MersenneTwisterRNG();
 
@@ -195,6 +195,11 @@ public class Evolver {
         check.setRequired(false);
         options.addOption(settings);
 
+        Option evalStrat = new Option("eval", true, "Choose your evaluation strategy, " +
+                "default:euclid. [euclid, xcoord, ycoord, manh]");
+        check.setRequired(false);
+        options.addOption(evalStrat);
+
     }
 
     private static void setGivenOptions(CommandLine cmd) {
@@ -233,6 +238,9 @@ public class Evolver {
         }
         if (cmd.hasOption("settings")) {
             Evolver.saveSettingsOnce = false;
+        }
+        if (cmd.hasOption("eval")) {
+            Evolver.evaluationStrat = AbstractEvaluationStrategy.of(cmd.getOptionValue("eval"));
         }
     }
 }
