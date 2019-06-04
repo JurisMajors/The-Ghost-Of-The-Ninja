@@ -105,6 +105,7 @@ public class Brain {
             JSONObject settings = new JSONObject();
             // currently only storing decoder settings, if more, then multiple json objects should be appended
             JSONObject decoderSettings = this.decoder.getSettings(); // write this brains settings to a json object
+            decoderSettings.put("name", this.decoder.getClass().getName());
             settings.put("decoder", decoderSettings.toMap());
             // write it to file
             Writer fw = settings.write(new FileWriter(settingsPath));
