@@ -31,9 +31,7 @@ public class Brain {
     /**
      * Given information about the layers, initialize a MLP
      */
-    Brain (int[] layerSizes, int seed) {
-        // TODO: FINALIZE NETWORK ARCHITECTURE
-
+    Brain (int[] layerSizes) {
         NeuralNetConfiguration.ListBuilder lb = new NeuralNetConfiguration.Builder()
                 .weightInit(WeightInit.XAVIER)
                 .list();
@@ -71,7 +69,7 @@ public class Brain {
     }
 
     Brain () {
-        this(Evolver.layerSizes, 1);
+        this(Evolver.layerSizes);
     }
 
     /**
