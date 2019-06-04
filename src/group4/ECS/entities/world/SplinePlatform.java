@@ -22,10 +22,10 @@ public class SplinePlatform extends Entity {
      * Creates a platform based on a spline.
      * Note that all the points of the spline argument MUST be inside the dimension vector.
      *
-     * @param position  left-bottom-back corner of the cuboid representing the platform
-     * @param spline    spline representing the actual walkable platform
-     * @param shader    shader for this platform
-     * @param texture   texture for this platform
+     * @param position left-bottom-back corner of the cuboid representing the platform
+     * @param spline   spline representing the actual walkable platform
+     * @param shader   shader for this platform
+     * @param texture  texture for this platform
      */
     public SplinePlatform(Vector3f position, MultiSpline spline, float thickness, Shader shader, Texture texture) {
         this.add(new PositionComponent(position));
@@ -110,11 +110,12 @@ public class SplinePlatform extends Entity {
         tcArray.add(new Vector3f());
         tcArray.add(new Vector3f());
         for (int k = 0; k < points.length - 1; k++) {
+            float t = k / (float) (points.length - 2);
             // add next vertex coordinates and texture coordinates
             vertexArray.add(tops[k + 1]);
             vertexArray.add(bots[k + 1]);
-            tcArray.add(new Vector3f());
-            tcArray.add(new Vector3f());
+            tcArray.add(new Vector3f(t, 1, 0));
+            tcArray.add(new Vector3f(t, 0, 0));
 
             // create a square with the previous top and bot and the current top and bot
             // first triangle (CW)

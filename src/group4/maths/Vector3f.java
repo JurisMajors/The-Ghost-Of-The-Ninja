@@ -194,6 +194,19 @@ public class Vector3f {
     }
 
     /**
+     * Calculates the manhattan distance between two vectors
+     * @param other the vector to calculate the distance to
+     * @return manhattan dist between this and other
+     */
+    public float manhDist(Vector3f other) {
+        Vector3f diff = this.sub(other);
+        diff.x = Math.abs(diff.x);
+        diff.y = Math.abs(diff.y);
+        diff.z = Math.abs(diff.z);
+        return diff.x + diff.y + diff.z;
+    }
+
+    /**
      * Rotates the vector in place according to the angle in the XY place
      *
      * @param angle the angle in degrees to rotate over in the XY plane

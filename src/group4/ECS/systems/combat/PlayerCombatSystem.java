@@ -9,7 +9,7 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.ItemComponent;
 import group4.ECS.components.stats.MeleeWeaponComponent;
 import group4.ECS.entities.Ghost;
-import group4.ECS.entities.MeleeArea;
+import group4.ECS.entities.damage.MeleeArea;
 import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
@@ -75,24 +75,21 @@ public class PlayerCombatSystem extends IteratingSystem {
                         (Main.SCREEN_WIDTH / Window.getWidth()) - Main.SCREEN_WIDTH / 2);
 
                 // if clicking right of player, hit right, else hit left
+                Vector3f trueOffset = new Vector3f(wc.hitboxOffset);
                 if (mouseWorldX < pc.position.x + dc.dimension.x / 2) {
-                    if (wc.hitboxOffset.x >= 0) {
-                        wc.hitboxOffset.x *= -1;
-                    }
-                } else {
-                    if (wc.hitboxOffset.x < 0) {
-                        wc.hitboxOffset.x *= -1;
-                    }
+                    trueOffset.x = -1 * wc.hitboxOffset.x;
                 }
+                // TODO:
+                // cast ray to the center of the hitbox
+                // see if it doesnt hit walls/static objects
+                // change offset accordingly
 
                 // exclude ghost and player for the damage
                 Set<Class<? extends Entity>> excluded = new HashSet<>();
                 excluded.add(Player.class);
                 excluded.add(Ghost.class);
 
-                // take player position and add offset on top
-                Vector3f position = pc.position.add(wc.hitboxOffset);
-
+                Vector3f position = pc.position.add(trueOffset);
                 new MeleeArea(position, wc.hitBox,
                         wc.damage, excluded);
             }
@@ -102,6 +99,7 @@ public class PlayerCombatSystem extends IteratingSystem {
     /**
      * This method manages all cooldowns for all items within the players inventory
      *
+     * @throws IllegalStateException if item in inventory does not have an {@link ItemComponent}
      * @param deltaTime time in between past and current tick
      * @param plc referencing the player
      */
@@ -137,6 +135,7 @@ public class PlayerCombatSystem extends IteratingSystem {
 
     /**
      * This method manages which weapon is currently active
+     * We assume items in the inventory to have an {@link ItemComponent}
      *
      * @param deltatime
      * @param plc
@@ -159,11 +158,6 @@ public class PlayerCombatSystem extends IteratingSystem {
         } else if (KeyBoard.isKeyDown(GLFW_KEY_8)) {
             plc.activeItem = plc.inventory[7];
         }
-
-//        // on itemswitch, set current item cooldown to full cooldown to prevent fast hitting
-//        ItemComponent ic = Mappers.itemMapper.get(plc.activeItem);
-//        ic.currCooldown = ic.cooldown;
-
     }
 
 }

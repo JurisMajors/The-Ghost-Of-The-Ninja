@@ -1,4 +1,4 @@
-package group4.ECS.entities;
+package group4.ECS.entities.damage;
 
 import group4.ECS.components.events.TimerComponent;
 import group4.ECS.systems.timed.AbstractTimedHandler;

@@ -2,7 +2,6 @@ package group4.ECS.systems.movement.MovementHandlers;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.components.SplineComponent;
 import group4.ECS.components.SplinePathComponent;
 import group4.ECS.components.identities.GhostComponent;
 import group4.ECS.components.identities.MobComponent;

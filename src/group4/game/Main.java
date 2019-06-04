@@ -134,8 +134,8 @@ public class Main implements Runnable {
             engine.addSystem(new GhostMovementSystem(1));
             engine.addSystem(new MobMovementSystem(2));
             engine.addSystem(new BulletMovementSystem(3));
-            engine.addSystem(new CollisionSystem(4));
-            engine.addSystem(new PlayerCombatSystem(5));
+            engine.addSystem(new PlayerCombatSystem(4));
+            engine.addSystem(new CollisionSystem(5));
             engine.addSystem(new DamageSystem(6));
             engine.addSystem(new CollisionEventSystem(7));
             engine.addSystem(new UncollidingSystem(8));
@@ -148,7 +148,7 @@ public class Main implements Runnable {
             engine.addSystem(new RenderSystem(13));
             engine.addSystem(new TimedEventSystem(14));
             engine.addSystem(new LastSystem(15));
-            this.level = new FileLevel("./src/group4/res/maps/level_01");
+            this.level = new FileLevel("./src/group4/res/maps/level_02");
 
         }
         // Initialize the level

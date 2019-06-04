@@ -4,8 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.components.stats.HealthComponent;
-import group4.ECS.entities.DamageArea;
+import group4.ECS.entities.damage.DamageArea;
 import group4.ECS.entities.mobs.Mob;
+import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.collision.CollisionData;
 
@@ -23,7 +24,7 @@ public class MeleeCollision extends AbstractCollisionHandler<DamageArea> {
         for (CollisionData cd : others) {
             Entity other = cd.entity;
 
-            if (other instanceof Mob) {
+            if (Mappers.mobMapper.get(other) != null) {
                 handleMob(dmgArea, (Mob) other);
             }
         }

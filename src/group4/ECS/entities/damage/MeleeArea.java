@@ -1,4 +1,4 @@
-package group4.ECS.entities;
+package group4.ECS.entities.damage;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.events.TickComponent;

@@ -37,7 +37,8 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
                     "Layers: " + Arrays.toString(Evolver.layerSizes) + "\n" +
                     "Population: " + Evolver.populationSize + "\n" +
                     "MutationProb: " + Evolver.mutationProbability + "\n" +
-                    "Rays: " + Evolver.rays);
+                    "Rays: " + Evolver.rays + "\n" +
+                    "Evaluation: " + Evolver.evaluationStrat.getClass().getName());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,7 +63,6 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
                 data.getGenerationNumber(), Evolver.genCount, data.getMeanFitness(),
                 data.getBestCandidateFitness(), data.getFitnessStandardDeviation());
 
-        System.out.println(log);
         if (this.filePath != null) {
             LOGGER.info(log);
         }
