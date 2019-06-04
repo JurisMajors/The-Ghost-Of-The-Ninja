@@ -10,6 +10,7 @@ import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.input.KeyBoard;
+import group4.input.MouseMovement;
 import group4.maths.Vector3f;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -22,12 +23,12 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class PlayerMovementSystem extends IteratingSystem {
 
-    public PlayerMovementSystem() {
-        super(Families.playerFamily);
+    public PlayerMovementSystem(int priority) {
+        super(Families.playerFamily, priority);
     }
 
-    public PlayerMovementSystem(Family f) {
-        super(f);
+    public PlayerMovementSystem(Family f, int priority) {
+        super(f, priority);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class PlayerMovementSystem extends IteratingSystem {
         MovementComponent mc = Mappers.movementMapper.get(entity);
         GravityComponent gc = Mappers.gravityMapper.get(entity);
         // process movement events
-        move(entity, deltaTime);
+        move(entity, mc, pc, deltaTime);
         // apply gravity
         doGravity(mc, gc);
         // move in the specified direction
@@ -48,14 +49,13 @@ public class PlayerMovementSystem extends IteratingSystem {
      * @param e entity to move
      * @param deltaTime frame speed
      */
-    private void move(Entity e, float deltaTime) {
-        MovementComponent mc = Mappers.movementMapper.get(e);
+    protected void move(Entity e, MovementComponent mc, PositionComponent pc, float deltaTime) {
         Object ref = getMovementRef(e);
         // set velocity in the direction that keyboard asks for
         if (shouldRight(ref)) {
-            moveRight(mc);
+            moveRight(mc, pc);
         } else if (shouldLeft(ref)) {
-            moveLeft(mc);
+            moveLeft(mc, pc);
         } else {
             // stay still if no keys are pressed
             mc.velocity.x = 0;
@@ -73,27 +73,33 @@ public class PlayerMovementSystem extends IteratingSystem {
         mc.velocity.capValuesi(mc.velocityRange);
     }
 
-    private void moveRight(MovementComponent mc) {
-        moveDirection(1, mc);
+    private void moveRight(MovementComponent mc, PositionComponent pc) {
+        moveDirection(1, mc, pc);
     }
 
-    private void moveLeft(MovementComponent mc) {
-        moveDirection(-1, mc);
+    private void moveLeft(MovementComponent mc, PositionComponent pc) {
+        moveDirection(-1, mc, pc);
     }
+
     /**
     * Moves along the x axis in the specified direction
-    * @param dir positive or negative direction, optionally with a multiplier.
     */
-    private void moveDirection(int dir, MovementComponent mc) {
+    private void moveDirection(int moveDir, MovementComponent mc, PositionComponent pc) {
+        // set orientation of player in accordance to mouse position
+        if (pc.position.x <= MouseMovement.mouseX) {
+            mc.orientation = MovementComponent.RIGHT;
+        } else {
+            mc.orientation = MovementComponent.LEFT;
+        }
+
         if (shouldSprint() && canSprint(mc.velocity)) {
-            mc.velocity.x = dir * getSprintingVel(mc);
-            mc.velocity.x += dir * mc.acceleration.x;
+            mc.velocity.x = moveDir * getSprintingVel(mc);
+            mc.velocity.x += moveDir * mc.acceleration.x;
         } else {
             // de-accelerate if necessary
-            mc.velocity.x = dir * getWalkingVel(mc);
+            mc.velocity.x = moveDir * getWalkingVel(mc);
         }
     }
-
 
     private float getSprintingVel(MovementComponent mc) {
         // provides with the "starting" or "current" sprinting velocity

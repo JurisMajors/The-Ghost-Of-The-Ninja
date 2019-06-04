@@ -3,12 +3,9 @@ package group4.ECS.etc;
 import com.badlogic.ashley.core.Family;
 import group4.ECS.components.*;
 import group4.ECS.components.identities.*;
-import group4.ECS.components.physics.CollisionComponent;
-import group4.ECS.components.physics.DimensionComponent;
-import group4.ECS.components.physics.PhysicsComponent;
-import group4.ECS.components.physics.PositionComponent;
-import group4.ECS.components.stats.HealthComponent;
-import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.components.physics.*;
+import group4.ECS.components.stats.*;
+import group4.ECS.components.events.*;
 
 /**
  * This class determines groups (families) of entities which share the same components
@@ -44,10 +41,6 @@ public class Families {
     public static final Family consumableFamily = Family
             .all(ConsumableComponent.class, PositionComponent.class).get();
 
-    // all enemies, the player and destructible objects
-    public static final Family combatFamily = Family
-            .all(PositionComponent.class, DimensionComponent.class, HealthComponent.class, GraphicsComponent.class).get();
-
     // all cameras
     public static final Family cameraFamily = Family
             .all(CameraComponent.class).get();
@@ -66,6 +59,9 @@ public class Families {
 
     public static final Family mobFamily = Family
             .all(MobComponent.class).get();
+
+    public static final Family bulletFamily = Family
+            .all(BulletComponent.class).get();
 
     // all walking mobs
     public static final Family walkingMobFamily = Family
@@ -89,11 +85,7 @@ public class Families {
 
     // all shooting entities
     public static final Family shootingFamily = Family
-            .all(ShootingComponent.class).get();
-
-    // all bullets
-    public static final Family bulletFamily = Family
-            .all(BulletComponent.class).get();
+            .all(RangeWeaponComponent.class).get();
 
     // player
     public static final Family playerFamily = Family
@@ -115,4 +107,20 @@ public class Families {
 
     public static final Family allCollidableFamily = Family
             .all(CollisionComponent.class).get();
+
+    // nonstatic damage inflicting entities (mobs, player, ghost..), static entities (traps..) excluded
+    // static objects don't have variable bb's
+    public static final Family dmgInflictingFamily = Family
+            .all(DamageComponent.class, CollisionComponent.class, DimensionComponent.class, PositionComponent.class)
+            .get();
+
+    // all objects who can receive damage, i.e. have health
+    public static final Family dmgReceivingFamily = Family
+            .all(HealthComponent.class, CollisionComponent.class, DimensionComponent.class,
+                    PositionComponent.class)
+            .get();
+
+    // all entities which react to a timed event
+    public static final Family timedEventFamily = Family.one(TickComponent.class, TimedComponent.class).get();
+
 }

@@ -7,8 +7,8 @@ import group4.ECS.etc.TheEngine;
 
 public abstract class AbstractDyingSystem extends IteratingSystem {
 
-    AbstractDyingSystem(Family f) {
-        super(f);
+    AbstractDyingSystem(Family f, int priority) {
+        super(f, priority);
     }
 
     @Override

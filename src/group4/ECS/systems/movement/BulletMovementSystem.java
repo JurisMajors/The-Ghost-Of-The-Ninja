@@ -9,8 +9,8 @@ import group4.ECS.etc.Mappers;
 
 public class BulletMovementSystem extends IteratingSystem {
 
-    public BulletMovementSystem() {
-        super(Families.bulletFamily);
+    public BulletMovementSystem(int priority) {
+        super(Families.bulletFamily, priority);
     }
 
     @Override

@@ -1,10 +1,10 @@
 package group4.ECS.entities.items.weapons;
 
-import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.entities.items.Item;
 import group4.maths.Vector3f;
 
-public class Gun extends Entity {
+public class Gun extends Item {
 
     // Construct vertex array
     protected float[] vertices = new float[] {

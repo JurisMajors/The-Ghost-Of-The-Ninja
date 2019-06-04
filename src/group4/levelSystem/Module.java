@@ -121,6 +121,7 @@ public class Module {
      */
     public void reset() {
         this.setup(this.level);
+        this.level.configExits();
     }
 
 
@@ -200,7 +201,7 @@ public class Module {
             JSONObject pointInfo = data.getJSONObject(point);
             // get the coordinates for the control point
             float pointX = pointInfo.getFloat("x") / 32f;
-            float pointY = this.height - pointInfo.getFloat("y") / 32f;
+            float pointY = this.height - pointInfo.getFloat("y") / 32f + 1;
 
             String tileName = pointInfo.getString("name");
             // get the identification of the spline (first character in the string)
@@ -267,6 +268,8 @@ public class Module {
         for (Entity e : this.entities) {
             TheEngine.getInstance().removeEntity(e);
         }
+        // Set the player's spawned ghost to false, as the ghost was also automatically removed
+        this.getLevel().getPlayer().spawnedGhost = false;
     }
 
 
@@ -308,7 +311,9 @@ public class Module {
             throw new IllegalStateException("Adding ghost before initialized entities container");
         }
         if (this.ghostModel != null) {
-            TheEngine.getInstance().addEntity(new Ghost(this.level, this.ghostModel, master));
+            Ghost g = new Ghost(this.level, this.ghostModel, master);
+            this.addEntity(g);
+            TheEngine.getInstance().addEntity(g);
         } else {
             System.err.println("WARNING: Not loading ghost in module");
         }

@@ -2,12 +2,15 @@ package group4.ECS.etc;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import group4.ECS.components.*;
+import group4.ECS.components.events.TickComponent;
+import group4.ECS.components.events.TimedComponent;
 import group4.ECS.components.identities.CameraComponent;
 import group4.ECS.components.identities.ConsumableComponent;
 import group4.ECS.components.identities.MobComponent;
+import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.*;
-import group4.ECS.components.stats.HealthComponent;
-import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.components.stats.*;
+import group4.ECS.entities.Player;
 
 /**
  * Mappers retrieve components from entities in O(1) time
@@ -48,8 +51,14 @@ public class Mappers {
     public static final ComponentMapper<RangeComponent> rangeMapper =
             ComponentMapper.getFor(RangeComponent.class);
 
-    public static final ComponentMapper<ShootingComponent> shootingMapper =
-            ComponentMapper.getFor(ShootingComponent.class);
+    public static final ComponentMapper<WeaponComponent> weaponMapper =
+            ComponentMapper.getFor(WeaponComponent.class);
+
+    public static final ComponentMapper<RangeWeaponComponent> rangeWeaponMapper =
+            ComponentMapper.getFor(RangeWeaponComponent.class);
+
+    public static final ComponentMapper<MeleeWeaponComponent> meleeWeaponMapper =
+            ComponentMapper.getFor(MeleeWeaponComponent.class);
 
     public static final ComponentMapper<CollisionComponent> collisionMapper =
             ComponentMapper.getFor(CollisionComponent.class);
@@ -62,4 +71,19 @@ public class Mappers {
 
     public static final ComponentMapper<MobComponent> mobMapper =
             ComponentMapper.getFor(MobComponent.class);
+
+    public static final ComponentMapper<DamageComponent> damageMapper =
+            ComponentMapper.getFor(DamageComponent.class);
+
+    public static final ComponentMapper<PlayerComponent> playerMapper =
+            ComponentMapper.getFor(PlayerComponent.class);
+
+    public static final ComponentMapper<HealthComponent> healthMapper =
+            ComponentMapper.getFor(HealthComponent.class);
+
+    public static final ComponentMapper<TickComponent> tickMapper =
+            ComponentMapper.getFor(TickComponent.class);
+
+    public static final ComponentMapper<TimedComponent> timedMapper =
+            ComponentMapper.getFor(TimedComponent.class);
 }

@@ -23,7 +23,8 @@ public class CameraSystem extends EntitySystem {
     private ImmutableArray<Entity> entities;
     private Family family;
 
-    public CameraSystem(Family f) {
+    public CameraSystem(Family f, int priority) {
+        super(priority);
         this.family = f;
     }
 
@@ -59,6 +60,9 @@ public class CameraSystem extends EntitySystem {
         // get mapper for O(1) component retrieval
         CameraComponent cc = Mappers.cameraMapper.get(mainCamera);
         PositionComponent pc = Mappers.positionMapper.get(player);
+
+        // update cam world pos
+        Mappers.positionMapper.get(mainCamera).position = pc.position;
 
         // Update the view matrix to be the player position
         // Note that player position vector should be inverted to center the view on the player
