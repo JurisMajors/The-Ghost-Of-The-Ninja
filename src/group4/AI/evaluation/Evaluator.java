@@ -1,9 +1,11 @@
-package group4.AI;
+package group4.AI.evaluation;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.utils.ImmutableArray;
+import group4.AI.Brain;
+import group4.AI.Evolver;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.entities.Ghost;
@@ -41,20 +43,15 @@ import static org.lwjgl.opengl.GL11.glClear;
  */
 public class Evaluator implements FitnessEvaluator<Brain> {
 
-    /** current Module to train AI on **/
-    //private Module currModule;
-
-    /** TODO: make timer singleton **/
+    /** timer for determining the time passed during game **/
     private Timer timer;
+    /** evaluation strategy for individuals **/
+    private AbstractEvaluationStrategy strategy;
 
-    /** the level (temporary) **/
-    //public Level level;
-
-    public Evaluator() {
-        // init module
+    public Evaluator(AbstractEvaluationStrategy strategy) {
         this.timer = new Timer();
-        // register systems to engine
-        // initSystems(TheEngine.getInstance());
+        this.strategy = strategy;
+        // load shaders if necessary
         if (Main.SHOULD_OPENGL) {
             Shader.loadAllShaders();
             Texture.loadAllTextures();
@@ -116,12 +113,13 @@ public class Evaluator implements FitnessEvaluator<Brain> {
             }
 
         }
-        // fitness = if no exits exist, simply take x coordinate, otherwise the distance traveled in the direction of closest exit
-        float fitness = ghostPos.euclidDist(closestExit) / startingPos.euclidDist(closestExit);
+        // calculate the fitness
+        float fitness = strategy.evaluate(ghostPos, startingPos, closestExit);
         if (ghost.best) {
             System.out.println("Got best ghost");
             fitness = 0;
         }
+        // unload the module for next evaluation in this thread
         currModule.unload();
         return fitness;
     }
@@ -131,7 +129,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
      */
     @Override
     public boolean isNatural() {
-        return false;
+        return this.strategy.isNatural();
     }
 
     /**

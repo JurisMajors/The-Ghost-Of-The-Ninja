@@ -2,6 +2,8 @@ package group4.AI;
 
 import group4.AI.decoders.CircleVisionStateDecoder;
 import group4.AI.decoders.StateDecoderInterface;
+import group4.AI.evaluation.AbstractEvaluationStrategy;
+import group4.AI.evaluation.Evaluator;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.maths.random.Probability;
 import org.uncommons.watchmaker.framework.*;
@@ -63,6 +65,10 @@ public class Evolver {
      * Crossover
      **/
     private static AbstractBrainCrossover crossover = new StandardCrossover();
+    /**
+     * Evaluation strategy
+     */
+    private static AbstractEvaluationStrategy evaluation;
     /** time limit for the module to train, after this time has reached, the ghost is killed **/
     public static double timelimit = 5.00;
     /** Path to save trained models**/
