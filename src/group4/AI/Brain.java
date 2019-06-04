@@ -91,7 +91,9 @@ public class Brain {
             JSONObject brainInfo = new JSONObject(new JSONTokener(fileReader));
             // load the state decoder
             this.setDecoder(brainInfo.getJSONObject("decoder"));
-            this.evaluation = AbstractEvaluationStrategy.of(brainInfo.getString("evaluator"));
+            if (brainInfo.has("evaluator")) { // if the evaluator is set (for older versions)
+                this.evaluation = AbstractEvaluationStrategy.of(brainInfo.getString("evaluator"));
+            } // use default otherwise (euclid dist)
 
         } catch (IOException e) {
             System.err.println("IOException was thrown with path " + settings + " or " + modelPath);
