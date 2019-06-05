@@ -64,7 +64,7 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
     @Override
     public void populationUpdate(PopulationData<? extends Brain> data) {
         String log = String.format("Current generation: %d / %d \n Mean Fitness: %f \n Best Fitness: %f \n STD fitness: %f",
-                data.getGenerationNumber(), Evolver.genCount, data.getMeanFitness(),
+                data.getGenerationNumber() + 1, Evolver.genCount, data.getMeanFitness(),
                 data.getBestCandidateFitness(), data.getFitnessStandardDeviation());
 
         if (this.filePath != null) {
@@ -75,6 +75,9 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
         !data.isNaturalFitness() && bestFitness > data.getBestCandidateFitness()) { // found better fitness than before
             bestFitness = data.getBestCandidateFitness(); // save it in the variable
             forceSave = true; // and save the model
+        }
+        if (data.getGenerationNumber() + 1 == Evolver.genCount) {
+            forceSave = true;
         }
 
         // save best candidate every number of generations
