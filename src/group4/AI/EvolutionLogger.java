@@ -15,8 +15,12 @@ import java.util.logging.SimpleFormatter;
 public class EvolutionLogger implements EvolutionObserver<Brain> {
     /** every genToSave best individual is saved **/
     private int genToSave;
+
     /** directory where to save the best individuals **/
     String filePath;
+
+    /** best fitness in the whole training process **/
+    double bestFitness = -1;
 
     private final static Logger LOGGER = Logger.getLogger("EvolutionLog"); // used for logging to file
 
@@ -60,17 +64,26 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
     @Override
     public void populationUpdate(PopulationData<? extends Brain> data) {
         String log = String.format("Current generation: %d / %d \n Mean Fitness: %f \n Best Fitness: %f \n STD fitness: %f",
-                data.getGenerationNumber(), Evolver.genCount, data.getMeanFitness(),
+                data.getGenerationNumber() + 1, Evolver.genCount, data.getMeanFitness(),
                 data.getBestCandidateFitness(), data.getFitnessStandardDeviation());
 
         if (this.filePath != null) {
             LOGGER.info(log);
         }
+        boolean forceSave = false; // whether to save the model if other conditions dont suffice
+        if ((data.isNaturalFitness() && bestFitness < data.getBestCandidateFitness()) ||
+        !data.isNaturalFitness() && bestFitness > data.getBestCandidateFitness()) { // found better fitness than before
+            bestFitness = data.getBestCandidateFitness(); // save it in the variable
+            forceSave = true; // and save the model
+        }
+        if (data.getGenerationNumber() + 1 == Evolver.genCount) {
+            forceSave = true;
+        }
 
         // save best candidate every number of generations
-        if (this.filePath != null &&
-                data.getGenerationNumber() % genToSave == 0
-                && data.getGenerationNumber() != 0) {
+        if ((this.filePath != null &&
+                data.getGenerationNumber() % genToSave == 0)
+                || forceSave) {
 
             Brain best = data.getBestCandidate();
             try {
