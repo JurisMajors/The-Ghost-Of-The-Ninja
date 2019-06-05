@@ -6,6 +6,7 @@ import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.etc.EntityState;
 import group4.ECS.systems.animation.AnimationSet;
+import group4.ECS.systems.animation.DelayedAnimationSet;
 import group4.ECS.systems.animation.IKEndEffector;
 import group4.ECS.systems.animation.SplineAnimation;
 import group4.graphics.Shader;
@@ -16,6 +17,7 @@ import group4.maths.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Delayed;
 
 
 public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
@@ -265,22 +267,28 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     }
 
     private void createAnimations() {
-        AnimationComponent ac = this.getComponent(AnimationComponent.class);
 
         // Create an animation set for the walking animation
-        AnimationSet walkingAnimationSet = new AnimationSet();
+        AnimationSet walkingAnimationSet = this.generateWalkCycle();
+        DelayedAnimationSet jumpingAnimationSet = this.generateJumpAnimation();
 
+        // Register the animations within the AnimationComponent
+        AnimationComponent ac = this.getComponent(AnimationComponent.class);
+        ac.addAnimation(EntityState.PLAYER_WALKING, walkingAnimationSet);
+        ac.addAnimation(EntityState.PLAYER_JUMPING, jumpingAnimationSet);
+    }
+
+    private AnimationSet generateWalkCycle() {
         // Animate the hip bounce during walking
         SplineAnimation hipCycle = new SplineAnimation(
                 this.torso, 0.0f,
-                new Vector3f[] {
+                new Vector3f[]{
                         new Vector3f(0.0f, 0.050f, 0.0f),
                         new Vector3f(0.0f, -.083f, 0.0f),
                         new Vector3f(0.0f, -.083f, 0.0f),
                         new Vector3f(0.0f, 0.050f, 0.0f)
                 }
         );
-        walkingAnimationSet.add(hipCycle);
 
         // Add right leg animation
         SplineAnimation walkCycle = new SplineAnimation(
@@ -295,10 +303,45 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
                         new Vector3f(0.5f, 0.0f, 0.0f),
                         new Vector3f(0.0f, 0.0f, 0.0f)
                 });
+
+        // Add the cycles to an animation set and return
+        AnimationSet walkingAnimationSet = new AnimationSet();
+        walkingAnimationSet.add(hipCycle);
         walkingAnimationSet.add(walkCycle);
-
-
-        // Register the walking animation to PLAYER_WALKING
-        ac.addAnimation(EntityState.PLAYER_WALKING, walkingAnimationSet);
+        return walkingAnimationSet;
     }
+
+    private DelayedAnimationSet generateJumpAnimation() {
+        // Animate the hip bounce during walking
+        SplineAnimation hipCycle = new SplineAnimation(
+                this.torso, 0.0f,
+                new Vector3f[]{
+                        new Vector3f( 0.050f, 0.0f, 0.0f),
+                        new Vector3f( -.083f, 0.0f, 0.0f),
+                        new Vector3f( -.083f, 0.0f, 0.0f),
+                        new Vector3f( 0.050f, 0.0f, 0.0f)
+                }
+        );
+
+//        // Add right leg animation
+//        SplineAnimation walkCycle = new SplineAnimation(
+//                this.IKHandles.get(0), 0.0f,
+//                new Vector3f[]{
+//                        new Vector3f(0.0f, 0.0f, 0.0f),
+//                        new Vector3f(-.5f, 0.0f, 0.0f),
+//                        new Vector3f(-2.f, 0.0f, 0.0f),
+//                        new Vector3f(-.1f, 0.2f, 0.0f),
+//                        new Vector3f(0.1f, 0.2f, 0.0f),
+//                        new Vector3f(0.7f, 0.0f, 0.0f),
+//                        new Vector3f(0.5f, 0.0f, 0.0f),
+//                        new Vector3f(0.0f, 0.0f, 0.0f)
+//                });
+
+        // Add the cycles to an animation set and return
+        DelayedAnimationSet jumpingAnimationSet = new DelayedAnimationSet(0.1f);
+        jumpingAnimationSet.add(hipCycle);
+//        walkingAnimationSet.add(walkCycle);
+        return jumpingAnimationSet;
+    }
+
 }
