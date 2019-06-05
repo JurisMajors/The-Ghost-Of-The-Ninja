@@ -1,10 +1,10 @@
 package group4.ECS.entities.mobs;
 
-import group4.ECS.components.SplinePathComponent;
 import group4.ECS.components.identities.FlyingMobComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.etc.Mappers;
 import group4.ECS.systems.movement.MovementHandlers.FlyingMobMovementHandler;
+import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.maths.Vector3f;
 import group4.maths.spline.MultiSpline;
@@ -34,6 +34,14 @@ public class FlyingMob extends Mob {
 
         // uncomment this and put a flying mob in the level to see spline pathing in action
 //        this.add(new SplinePathComponent(spline, new Vector3f(3, 3, 0), new Vector3f(3, 2, 0), 0, 100));
+    }
+
+    public FlyingMob(Vector3f position, Level l, Texture texture, float[] texCoords) {
+        super(position, l, texture, texCoords, FlyingMobMovementHandler.getInstance());
+        // limit the velocity of the flying mob to prevent shaking of the texture
+        MovementComponent mc = Mappers.movementMapper.get(this);
+        mc.velocityRange = new Vector3f(0.03f, 0.03f, 0);
+        this.add(new FlyingMobComponent());
     }
 
     public static String getName() {

@@ -5,12 +5,14 @@ import group4.AI.Brain;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
+import group4.ECS.entities.mobs.*;
 import group4.ECS.entities.items.consumables.Coin;
 import group4.ECS.entities.world.ArtTile;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
 import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.movement.MovementHandlers.JumpingWalkingMobMovementHandler;
 import group4.game.Main;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -21,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import javax.xml.soap.Text;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -214,6 +217,8 @@ public class Module {
                 this.addArtTile(tileGridX, tileGridY, tileId);
             } else if (entityId.equals(Player.getName())) {
                 this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
+            } else if (entityId.endsWith(Mob.getName())) {
+                this.addMob(tileGridX, tileGridY, tileId, entityId);
             } else {
                 System.err.println("Some tiles not drawing!");
                 continue;
@@ -387,6 +392,21 @@ public class Module {
         this.addEntity(p);
     }
 
+    private void addMob(int x, int y, int i, String mobName) {
+        Vector3f tempPosition = new Vector3f(x, y, 0.0f);
+        Mob m = null;
+        if (mobName.equals(JumpingWalkingMob.getName())) {
+            m = new JumpingWalkingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        } else if (mobName.equals(WalkingMob.getName())) {
+            m = new WalkingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        } else if (mobName.equals(FlyingMob.getName())) {
+            m = new FlyingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        } else if (mobName.equals(FlappingMob.getName())) {
+            m = new FlappingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        }
+        this.addEntity(m);
+    }
+
     /**
      * Adds a platform entity to the module
      *
@@ -489,6 +509,10 @@ public class Module {
         int[] platforms = new int[]{0, 1, 2, 5, 6, 8, 9, 10, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 32, 33, 34, 35};
         int[] artTiles = new int[]{3, 4, 11, 12};
         int[] players = new int[]{7};
+        int jumpingwalkingmob = 36;
+        int flappingmob = 42;
+        int walkingmob = 40;
+        int flyingmob = 41;
         int coin = 13;
 
         moduleTileMap = new HashMap<Integer, String>();
@@ -503,6 +527,12 @@ public class Module {
         for (int i : players) {
             moduleTileMap.put(i, Player.getName());
         }
+
+        moduleTileMap.put(jumpingwalkingmob, JumpingWalkingMob.getName());
+        moduleTileMap.put(flappingmob, FlappingMob.getName());
+        moduleTileMap.put(walkingmob, WalkingMob.getName());
+        moduleTileMap.put(flyingmob, FlyingMob.getName());
+
 
         moduleTileMap.put(coin, Coin.getName());
     }
