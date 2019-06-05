@@ -9,6 +9,7 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
+import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.input.KeyBoard;
@@ -82,6 +83,11 @@ public class PlayerMovementSystem extends IteratingSystem {
             }
         }
 
+        // Check if player is falling to animate a fall
+        if (mc.velocity.y < 1e-3) {
+            this.initiateFallAnimation((HierarchicalPlayer) e));
+        }
+
 
         if (shouldSpawnGhost(ref) && !((Player) e).spawnedGhost) {
             ((Player) e).spawnedGhost = true;
@@ -92,11 +98,17 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     private void initiateJumpSequence(HierarchicalPlayer player) {
-        player.setState(PlayerStates.JUMPING);
+        player.setState(EntityState.JUMPING);
         AnimationComponent ac = Mappers.animationMapper.get(player);
-        ac.setAnimationState(ac.animations.get(Playerstates.JUMPING));
+        ac.setAnimationState(ac.animations.get(EntityState.JUMPING));
         jumpDelay = JUMPANIM.delay;
         jumpInProgress = true;
+    }
+
+    private void initiateFallAnimation(HierarchicalPlayer player) {
+        player.setState(EntityState.JUMPING);
+        AnimationComponent ac = Mappers.animationMapper.get(player);
+        ac.setAnimationState(ac.animations.get(EntityState.FALLING));
     }
 
     private void moveRight(MovementComponent mc, PositionComponent pc) {
