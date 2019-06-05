@@ -217,7 +217,7 @@ public class Module {
                 this.addArtTile(tileGridX, tileGridY, tileId);
             } else if (entityId.equals(Player.getName())) {
                 this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
-            } else if (entityId.endsWith(Mob.getName())) {
+            } else if (entityId.endsWith(Mob.getName()) && !Main.AI) {
                 this.addMob(tileGridX, tileGridY, tileId, entityId);
             } else {
                 System.err.println("Some tiles not drawing!");
