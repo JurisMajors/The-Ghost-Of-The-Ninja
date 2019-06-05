@@ -29,7 +29,7 @@ public class AnimationComponent implements Component {
 
     public void setAnimation(EntityState state) {
         if (animations.containsKey(state)) {
-            setAnimation(state);
+            currentAnimation = animations.get(state);
         } else {
             System.err.println("[WARNING] Animation not found.");
         }

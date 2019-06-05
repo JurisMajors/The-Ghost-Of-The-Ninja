@@ -4,7 +4,9 @@ import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.identities.AnimationComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.etc.EntityState;
 import group4.ECS.systems.animation.IKEndEffector;
+import group4.ECS.systems.animation.SplineAnimation;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
@@ -47,7 +49,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     Vector3f upperLegDimension = new Vector3f(0.15f, 0.5f, 0.0f);
     Vector3f lowerLegDimension = new Vector3f(0.12f, 0.4f, 0.0f);
     Vector3f upperArmDimension = new Vector3f(0.1f, 0.5f, 0.0f);
-    Vector3f lowerArmDimension = new Vector3f( 0.08f, 0.4f, 0.0f);
+    Vector3f lowerArmDimension = new Vector3f(0.08f, 0.4f, 0.0f);
     Vector3f TorsoDimension = new Vector3f(0.4f, 0.8f, 0.0f);
     Vector3f shoulderOffset = new Vector3f(0.0f, 0.6f, 0.0f);
 
@@ -66,6 +68,9 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     public HierarchicalPlayer(Vector3f position, Level level) {
         super(position, level);
 
+        // TODO: For testing purposes set default anim here! Works until movementsystem is updated.
+        this.state = EntityState.PLAYER_WALKING;
+
         // Set the correct dimension component (will automatically remove the old one)
         this.add(new DimensionComponent(this.dimension));
 
@@ -77,6 +82,9 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
 
         // Construct the hierarchy of the player
         this.createHierarchy();
+
+        // Add the animations
+        this.createAnimations();
     }
 
 
@@ -119,7 +127,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         rightArmLower = new BodyPart(rightArmUpper, new Vector3f(0.0f, upperArmDimension.y, 0.0f), lowerArmDimension, rightArmAngles[1], Texture.DEBUG);
         this.hierarchy.add(rightArmUpper);
         this.hierarchy.add(rightArmLower);
-        this.IKHandles.add(new IKEndEffector(rightArmUpper, rightArmLower, shoulderOffset.add(hipOffset), rightWristOffset, "arm_R"));
+        this.IKHandles.add(new IKEndEffector(rightArmUpper, rightArmLower, rightWristOffset, "arm_R"));
     }
 
 
@@ -135,16 +143,16 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
      * Calculate the angles of two joints for e.g. a leg or arm based on two set positions and lengths of limb parts
      *
      * @param bodySidePosition the position of the limb on the body side (e.g. the hip position)
-     * @param limbEndPosition the position of the other end of the limb (e.g. the ankle)
-     * @param upperLimbLength the length of the first part of the limb seen from the body (e.g. upper leg)
-     * @param lowerLimbLength the length of the second part of the limb seen from the body (e.g. lower leg)
-     * @param bendForward whether the limb should bend forward or backward (e.g. knee bends in a forward manner)
+     * @param limbEndPosition  the position of the other end of the limb (e.g. the ankle)
+     * @param upperLimbLength  the length of the first part of the limb seen from the body (e.g. upper leg)
+     * @param lowerLimbLength  the length of the second part of the limb seen from the body (e.g. lower leg)
+     * @param bendForward      whether the limb should bend forward or backward (e.g. knee bends in a forward manner)
      * @return float[2] where [0] is the angle of the joint of the bodySidePosition (e.g. hip)
      * and [1] is the angle of the second joint of the limb (e.g. knee)
      */
     // See {root}/images/limbAngles.jpg for a drawing of all angles, most are calculated using the cosine law
     public float[] getLimbAngles(Vector3f bodySidePosition, Vector3f limbEndPosition,
-                                  float upperLimbLength, float lowerLimbLength, boolean bendForward) {
+                                 float upperLimbLength, float lowerLimbLength, boolean bendForward) {
         // Array to store the calculated result angles
         float[] result = new float[2];
 
@@ -246,5 +254,21 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         return this.shoulderOffset.add(this.hipOffset);
     }
 
+    private void createAnimations() {
+        AnimationComponent ac = this.getComponent(AnimationComponent.class);
 
+        SplineAnimation walkCycle = new SplineAnimation(
+                this.IKHandles.get(0), 0.0f,
+                new Vector3f[]{
+                        new Vector3f(0.0f, 0.0f, 0.0f),
+                        new Vector3f(-.5f, 0.0f, 0.0f),
+                        new Vector3f(-2.f, 0.0f, 0.0f),
+                        new Vector3f(-.1f, 0.2f, 0.0f),
+                        new Vector3f(0.1f, 0.2f, 0.0f),
+                        new Vector3f(0.7f, 0.0f, 0.0f),
+                        new Vector3f(0.5f, 0.0f, 0.0f),
+                        new Vector3f(0.0f, 0.0f, 0.0f)
+                });
+        ac.addAnimation(EntityState.PLAYER_WALKING, walkCycle);
+    }
 }

@@ -12,6 +12,7 @@ import group4.ECS.entities.Player;
 import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
+import group4.ECS.systems.animation.DelayedAnimation;
 import group4.input.KeyBoard;
 import group4.input.MouseMovement;
 import group4.maths.Vector3f;
@@ -85,7 +86,7 @@ public class PlayerMovementSystem extends IteratingSystem {
 
         // Check if player is falling to animate a fall
         if (mc.velocity.y < 1e-3) {
-            this.initiateFallAnimation((HierarchicalPlayer) e));
+            this.initiateFallAnimation((HierarchicalPlayer) e);
         }
 
 
@@ -101,7 +102,7 @@ public class PlayerMovementSystem extends IteratingSystem {
         player.setState(EntityState.PLAYER_JUMPING);
         AnimationComponent ac = Mappers.animationMapper.get(player);
         ac.setAnimation(EntityState.PLAYER_JUMPING);
-        jumpDelay = ac.getCurrentAnimation().getDelay();
+        jumpDelay = ((DelayedAnimation) ac.getCurrentAnimation()).getDelay();
         jumpInProgress = true;
     }
 

@@ -49,7 +49,7 @@ public class Player extends Entity {
     /**
      * Variable to keep track of state of entity
      */
-    protected EntityState state = EntityState.IS_IDLE;
+    protected EntityState state = EntityState.PLAYER_IDLE;
 
     /**
      * Creates a player
