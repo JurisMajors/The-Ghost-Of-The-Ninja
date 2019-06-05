@@ -6,6 +6,7 @@ import group4.maths.Vector3f;
 public class PositionComponent implements Component {
 
     public Vector3f position;
+    public boolean onPlatform = false;
 
     /**
      * default constructor
