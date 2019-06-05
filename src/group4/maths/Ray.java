@@ -4,18 +4,15 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.SplineComponent;
-import group4.ECS.components.identities.ExitComponent;
-import group4.ECS.components.identities.GhostComponent;
-import group4.ECS.components.identities.MobComponent;
-import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
-import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.Mappers;
+import group4.utils.DebugUtils;
 
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Ray {
@@ -32,36 +29,60 @@ public class Ray {
      **/
     public Vector3f end;
     /**
-     * If an entity contains a component in this list, let the rays go through it
+     * If an entity contains a component in this collection, let the rays go through it
      */
-    private List<Class<? extends Component>> ignorableComponents;
+    private Collection<Class<? extends Component>> ignorableComponents;
 
-    public Ray(Vector3f startingPos, Vector3f dir, List<Class<? extends Component>> ignorableComponents, float length) {
-        this.startPos = startingPos;
-        this.dir = dir;
+    /**
+     * Creates a ray that can be casted
+     * @param startingPos starting pos of the ray
+     * @param dir the direction of the ray (doesnt have to be normalized)
+     * @param ignorableComponents entities containing these components are ignored
+     * @param length length of the ray
+     */
+    public Ray(Vector3f startingPos, Vector3f dir, Collection<Class<? extends Component>> ignorableComponents, float length) {
+        this.startPos = new Vector3f(startingPos);
+        this.dir = new Vector3f(dir);
         this.end = this.startPos.add(this.dir.normalized().scale(length));
         this.ignorableComponents = ignorableComponents;
     }
 
-    public Ray(Vector3f startingPos, Vector3f dir) {
-        List<Class<? extends Component>> defaultList = new ArrayList<>();
-        defaultList.add(GhostComponent.class);
-        defaultList.add(ExitComponent.class);
-        defaultList.add(PlayerComponent.class);
+    /**
+     * Creates ray of very large length
+     * @param startingPos starting pos of the ray
+     * @param dir the direction of the ray (doesnt have to be normalized)
+     * @param ignorableComponents entities containing these components are ignored
+     */
+    public Ray(Vector3f startingPos, Vector3f dir, Collection<Class<? extends Component>> ignorableComponents) {
+        this(startingPos, dir, ignorableComponents, 10000f);
+    }
 
-        this.startPos = startingPos;
-        this.dir = dir;
-        this.end = this.startPos.add(this.dir.normalized().scale(10000));
-        this.ignorableComponents = defaultList;
+    /**
+     * Creates ray with specified starting position, doesnt ignore any component entities
+     * @param startingPos starting pos of the ray
+     * @param dir the direction of the ray (doesnt have to be normalized)
+     * @param length , the length of the ray
+     */
+    public Ray(Vector3f startingPos, Vector3f dir, float length) {
+        this(startingPos, dir, new ArrayList<>(), length);
+    }
+    /**
+     * Creates very large ray in specified direction
+     * @param startingPos starting pos of the ray
+     * @param dir the direction of the ray (doesnt have to be normalized)
+     */
+    public Ray(Vector3f startingPos, Vector3f dir) {
+        this(startingPos, dir, new ArrayList<>(), 10000f);
     }
 
     /**
      * Cast the ray to the given entities
      *
      * @param entities the entities that the ray might intersect
-     * @return position at first intersection of a bounding box
+     * @param debug whether to draw rays with debug utils
+     * @return IntersectionPair, containing intersection point and entity. Entity is null if no intersection occured.
      */
-    public IntersectionPair cast(ImmutableArray<Entity> entities) {
+    public IntersectionPair cast(ImmutableArray<Entity> entities, boolean debug) {
         Vector3f closestIntersection = null; // current closest intersection of the ray
         Entity intersectedEntity = null; // entity whose bounding box is intersected
         float curDist = Float.MAX_VALUE; // the distance to the intersection
@@ -92,9 +113,22 @@ public class Ray {
             }
         }
         if (closestIntersection == null) {
-            closestIntersection = this.end;
+            closestIntersection = new Vector3f(this.end);
+        }
+        if (debug) {
+            DebugUtils.drawLine(this.startPos, closestIntersection);
         }
         return new IntersectionPair(closestIntersection, intersectedEntity);
+    }
+
+    /**
+     * Cast ray without drawing
+     *
+     * @param entities the enttities to check for collisions with
+     * @return IntersectionPair, containing intersection point and entity. Entity is null if no intersection occured.
+     */
+    public IntersectionPair cast(ImmutableArray<Entity> entities) {
+        return this.cast(entities, false);
     }
 
     /**
@@ -120,7 +154,7 @@ public class Ray {
             // if line segments dont intersect, skip
             if (!line.intersectsLine(rayAsLine)) continue;
             // otherwise calculate the intersection between the "infinite lines"
-            Vector3f inter = this.lineIntersection(new Vector3f((float) line.getX1(), (float) line.getY1(), 0),
+            Vector3f inter = this.lineIntersectionPoint(new Vector3f((float) line.getX1(), (float) line.getY1(), 0),
                     new Vector3f((float) line.getX2(), (float) line.getY2(), 0));
             if (inter == null) {
                 continue;
@@ -141,7 +175,7 @@ public class Ray {
         return lines;
     }
 
-    private List<Line2D.Float> getBBLines(Entity entity) {
+    public static List<Line2D.Float> getBBLines(Entity entity) {
         List<Line2D.Float> lines = new ArrayList<>();
         PositionComponent posComp = Mappers.positionMapper.get(entity);
         DimensionComponent dimComp = Mappers.dimensionMapper.get(entity);
@@ -161,29 +195,41 @@ public class Ray {
         return lines;
     }
 
-    private Line2D.Float createLine(Vector3f a, Vector3f b) {
+    public static Line2D.Float createLine(Vector3f a, Vector3f b) {
         return new Line2D.Float(a.x, a.y,
                 b.x, b.y);
     }
 
-    private Vector3f lineIntersection(Vector3f a, Vector3f b) {
+    private Vector3f lineIntersectionPoint(Vector3f a, Vector3f b) {
+        return Ray.lineIntersectionPoint(this.startPos, this.end, a, b);
+    }
+
+    /**
+     * Given infinite lines, return intersection point
+     * @param a1 first point of line 1
+     * @param a2 second point of line 1
+     * @param b1 first point of line 2
+     * @param b2 second point of line 2
+     * @return null if lines parallel, otherwise the intersection point
+     */
+    public static Vector3f lineIntersectionPoint(Vector3f a1, Vector3f a2, Vector3f b1, Vector3f b2) {
         // assumes infinite lines
         // https://gamedev.stackexchange.com/questions/111100/intersection-of-a-line-and-a-rectangle
-        float A1 = this.end.y - this.startPos.y;
-        float B1 = this.startPos.x - this.end.x;
+        float A1 = a2.y - a1.y;
+        float B1 = a1.x - a2.x;
 
-        float A2 = a.y - b.y;
-        float B2 = b.x - a.x;
+        float A2 = b1.y - b2.y;
+        float B2 = b2.x - b1.x;
 
         float delta = A1 * B2 - A2 * B1;
         if (delta < 1e-6 && delta > -1 * 1e-6) {
             return null;
         }
 
-        float C2 = A2 * b.x + B2 * b.y;
-        float C1 = A1 * this.startPos.x + B1 * this.startPos.y;
+        float C2 = A2 * b2.x + B2 * b2.y;
+        float C1 = A1 * a1.x + B1 * a1.y;
 
         float invdelta = 1 / delta;
-        return new Vector3f((B2 * C1 - B1 * C2) * invdelta, (A1 * C2 - A2 * C1) * invdelta, this.startPos.z);
+        return new Vector3f((B2 * C1 - B1 * C2) * invdelta, (A1 * C2 - A2 * C1) * invdelta, a1.z);
     }
 }
