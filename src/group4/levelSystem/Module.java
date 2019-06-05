@@ -132,10 +132,6 @@ public class Module {
      * Populates @code{this.entities} with default entities for the module
      */
     protected void constructModule() {
-        // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.
-        Camera camera = new Camera();
-        this.addEntity(camera); // Adding the camera to the module (which adds it to the engine?)
-
         // First, we set the height and width of the module
         this.height = this.tiledData.getInt("height");
         this.width = this.tiledData.getInt("width");
@@ -210,7 +206,6 @@ public class Module {
 
             String entityId = moduleTileMap.get(tileId);
 
-            // TODO: Can't use switch with static function as comparison. i.e. case Platform.getName() is not possible. Something better?
             if (entityId == null) {
                 continue;
             } else if (entityId.equals(Platform.getName())) {
