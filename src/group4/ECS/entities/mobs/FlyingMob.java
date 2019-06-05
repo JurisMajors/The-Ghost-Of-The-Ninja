@@ -1,6 +1,5 @@
 package group4.ECS.entities.mobs;
 
-import group4.ECS.components.SplinePathComponent;
 import group4.ECS.components.identities.FlyingMobComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.etc.Mappers;
