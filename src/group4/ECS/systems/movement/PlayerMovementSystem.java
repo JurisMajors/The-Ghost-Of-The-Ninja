@@ -3,7 +3,6 @@ package group4.ECS.systems.movement;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import group4.ECS.components.identities.AnimationComponent;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
@@ -12,8 +11,6 @@ import group4.ECS.entities.Player;
 import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
-import group4.ECS.systems.animation.DelayedAnimation;
-import group4.ECS.systems.animation.DelayedAnimationSet;
 import group4.input.KeyBoard;
 import group4.input.MouseMovement;
 import group4.maths.Vector3f;
@@ -74,15 +71,15 @@ public class PlayerMovementSystem extends IteratingSystem {
             initiateJumpSequence((HierarchicalPlayer) e);
         }
 
-        if (jumpInProgress) {
-            jumpDelay -= deltaTime;
+        // Catch if we have transitioned to the actual jump phase of our jump
+        if (!jumpInProgress && ((Player) e).getState() == EntityState.PLAYER_JUMPING) {
+            jump(mc);
+            jumpInProgress = true;
+        }
 
-            // JUMP DELAY for animation purposes.
-            if (jumpDelay <= 0) {
-                jump(mc);
-                jumpDelay = 0;
-                jumpInProgress = false;
-            }
+        // If we're tracking the jump is in progress, but it obviously isn't, toggle it off.
+        if (jumpInProgress && ((Player) e).getState() != EntityState.PLAYER_JUMPING) {
+            jumpInProgress = false;
         }
 
         // Check if player is falling to animate a fall
@@ -105,10 +102,7 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     private void initiateJumpSequence(HierarchicalPlayer player) {
-        player.setState(EntityState.PLAYER_JUMPING);
-        AnimationComponent ac = Mappers.animationMapper.get(player);
-        jumpDelay = ((DelayedAnimationSet) ac.getAnimation(player.getState())).getDelay();
-        jumpInProgress = true;
+        player.setState(EntityState.PLAYER_PREJUMP);
     }
 
     private void initiateFallAnimation(HierarchicalPlayer player) {
@@ -116,7 +110,7 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     private void initiateFallRecoveryAnimation(HierarchicalPlayer player) {
-        player.setState(EntityState.PLAYER_FALLRECOVERING);
+        player.setState(EntityState.PLAYER_POSTFALL);
         // TODO: somehow switch to the default state after this is finished, probably using some kind of delay
     }
 
