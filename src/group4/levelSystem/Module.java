@@ -2,7 +2,6 @@ package group4.levelSystem;
 
 import com.badlogic.ashley.core.Entity;
 import group4.AI.Brain;
-import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
@@ -24,7 +23,10 @@ import org.json.JSONTokener;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class defines the interface for modules that can be used to create levels
@@ -162,6 +164,35 @@ public class Module {
         }
     }
 
+    private void parseCoinLayer(JSONObject layer) {
+        // Get height and width of layer
+        int layerHeight = layer.getInt("height");
+        int layerWidth = layer.getInt("width");
+
+        // Loop over the data grid
+        JSONArray data = layer.getJSONArray("data");
+        for (int tile = 0; tile < data.length(); tile++) {
+            // Get the grid position of the tile
+            int tileGridX = tile % layerWidth;
+            int tileGridY = layerHeight - tile / layerWidth;
+
+            // Get the type of the tile
+            int tileId = data.getInt(tile) - 1;
+
+            String entityId = moduleTileMap.get(tileId);
+
+            if (entityId == null) {
+                continue;
+            } else if (entityId.equals(Coin.getName())) {
+                addCoin(new Vector3f(tileGridX, tileGridY, 0), tileId);
+            } else {
+                System.err.println("Some tiles not drawing!");
+                continue;
+            }
+        }
+
+    }
+
     private void parseMainLayer(JSONObject layer) {
         // Get height and width of layer
         int layerHeight = layer.getInt("height");
@@ -196,6 +227,11 @@ public class Module {
 
     }
 
+    private void addCoin(Vector3f position, int i) {
+        Coin c = new Coin(position, Coin.LARGE_SIZE, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i), Coin.LARGE_VALUE);
+        this.addEntity(c);
+    }
+
     private void parseSplineLayer(JSONObject layer) {
         // Loop over the data grid
         JSONArray data = layer.getJSONArray("objects");
@@ -227,38 +263,6 @@ public class Module {
         for (List<Vector3f> cPoints : splineMap.values()) { // for each given control point
             addSpline(cPoints);
         }
-    }
-
-    private void parseCoinLayer(JSONObject layer) {
-        // Loop over the data grid
-        JSONArray data = layer.getJSONArray("objects");
-        for (int i = 0; i < data.length(); i++) {
-            // get information about the coin
-            JSONObject coinInfo = data.getJSONObject(i);
-            // get the world coordinates for the control coin
-            float coinX = coinInfo.getFloat("x") / 32f;
-            float coinY = this.height - coinInfo.getFloat("y") / 32f + 1;
-            Vector3f position = new Vector3f(coinX, coinY, 0);
-
-            // the coin value is stored as a string inside the name field
-            String coinValue = coinInfo.getString("name");
-
-            // create coin
-            Coin coin;
-            if (coinValue.equals("")) {
-                // default coin
-                coin = new Coin(position);
-            } else {
-                // custom coin
-                char size = coinValue.charAt(0);
-                Vector3f dimension = size == 's' ? Coin.SMALL_SIZE : Coin.LARGE_SIZE;
-                int value = Integer.parseInt(coinValue.substring(1));
-                coin = new Coin(position, dimension, value);
-            }
-
-            this.addEntity(coin);
-        }
-
     }
 
     /**
@@ -486,6 +490,7 @@ public class Module {
         int[] platforms = new int[]{0, 1, 2, 5, 6, 8, 9, 10, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 32, 33, 34, 35};
         int[] artTiles = new int[]{3, 4, 11, 12};
         int[] players = new int[]{7};
+        int coin = 13;
 
         moduleTileMap = new HashMap<Integer, String>();
         for (int i : platforms) {
@@ -499,5 +504,7 @@ public class Module {
         for (int i : players) {
             moduleTileMap.put(i, Player.getName());
         }
+
+        moduleTileMap.put(coin, Coin.getName());
     }
 }
