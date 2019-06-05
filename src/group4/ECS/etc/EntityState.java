@@ -1,10 +1,10 @@
 package group4.ECS.etc;
 
 public enum EntityState {
-    DEFAULT,
-    IDLE,
-    WALKING,
-    RUNNING,
-    JUMPING,
-    FALLING
+    NONE,
+    PLAYER_IDLE,
+    PLAYER_WALKING,
+    PLAYER_RUNNING,
+    PLAYER_JUMPING,
+    PLAYER_FALLING
 }
