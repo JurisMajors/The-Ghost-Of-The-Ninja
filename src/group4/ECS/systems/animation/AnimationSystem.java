@@ -16,6 +16,7 @@ import javafx.geometry.Pos;
 
 public class AnimationSystem extends IteratingSystem {
     float deltaTime;
+
     public AnimationSystem(int priority) {
         super(Families.animationFamily, priority);
     }
@@ -31,46 +32,16 @@ public class AnimationSystem extends IteratingSystem {
 
     private void animatePlayer(HierarchicalPlayer player) {
         AnimationComponent ac = Mappers.animationMapper.get(player);
-//        System.out.println(ac);
+
+        // Update the active animation to match the current state of the player
         ac.setAnimation(player.getState());
+
+        // Update the positions according to the animation that is currently active
         ac.getCurrentAnimation().update(this.deltaTime);
-//        Vector3f[] walkSplinePoints = new Vector3f[]{
-//                new Vector3f(0.0f, 0.0f, 0.0f),
-//                new Vector3f(-.5f, 0.0f, 0.0f),
-//                new Vector3f(-2.f, 0.0f, 0.0f),
-//                new Vector3f(-.1f, 0.2f, 0.0f),
-//                new Vector3f(0.1f, 0.2f, 0.0f),
-//                new Vector3f(0.7f, 0.0f, 0.0f),
-//                new Vector3f(0.5f, 0.0f, 0.0f),
-//                new Vector3f(0.0f, 0.0f, 0.0f)
-//        };
-//        MultiSpline walkSpline = new MultiSpline(walkSplinePoints);
 
-//            for (int i = 0; i < walkSplinePoints.length; i++) {
-//                walkSplinePoints[i].addi(
-//                        entity.getComponent(PositionComponent.class).position.add(
-//                                new Vector3f(
-//                                        entity.getComponent(DimensionComponent.class).dimension.x / 2,
-//                                        0.0f,
-//                                        0.0f)
-//
-//                        )
-//                );
-//            }
-
-//        DebugUtils.drawSpline(walkSplinePoints);
-
-        for (IKEndEffector handle : player.IKHandles.values()) {
-//            handle.t += deltaTime;
-//            handle.t %= 1.0f; //2.0f * Math.PI; // Rotate in radians.
-//
-//            Vector3f unitCircle;
-//
-//            if (handle.label == "foot_L") {
-//                unitCircle = walkSpline.getPoint((handle.t + 0.5f) % 1.0f);//new Vector3f((float) Math.cos(handle.t) * 0.75f, (float) Math.sin(handle.t) * 0.75f, 0.0f);
-//            } else { // "foot_R"
-//                unitCircle = walkSpline.getPoint(handle.t);//new Vector3f((float) Math.cos(handle.t) * 0.9f, (float) Math.sin(handle.t) * 0.9f, 0.0f);
-//            }
+        // Handle the IK logic for determining final limb rotations. Animations only update key positions, such as those of the IKEndEffector(s)
+        for (String handleName : player.IKHandles.keySet()){
+            IKEndEffector handle = player.IKHandles.get(handleName);
 
             // Move handle.endPos to be relative of the player position
             PositionComponent pc = Mappers.positionMapper.get(handle);
@@ -80,12 +51,12 @@ public class AnimationSystem extends IteratingSystem {
             float lowerLength = handle.lower.getComponent(DimensionComponent.class).dimension.y;
 
             // Calculate and set the new rotations for the limbs based on the start and endpoints of the IK chain
-            float[] angles = player.getLimbAngles(player.getHipPosition(), pc.position, upperLength, lowerLength, true);
+            boolean bendForward = handleName.startsWith("foot");
+            float[] angles = player.getLimbAngles(player.getHipPosition(), pc.position, upperLength, lowerLength, bendForward);
             handle.upper.rotation = angles[0];
             handle.lower.rotation = angles[1];
         }
-
-
+        
         // Temp thing to animate the hip bounce during walking
         player.setHipPosition(player.getTorso().getComponent(PositionComponent.class).position.add(player.hipOffset));
         player.getTorso().relativePosition = player.getHipPosition();
