@@ -13,6 +13,7 @@ import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.systems.animation.DelayedAnimation;
+import group4.ECS.systems.animation.DelayedAnimationSet;
 import group4.input.KeyBoard;
 import group4.input.MouseMovement;
 import group4.maths.Vector3f;
@@ -106,7 +107,7 @@ public class PlayerMovementSystem extends IteratingSystem {
     private void initiateJumpSequence(HierarchicalPlayer player) {
         player.setState(EntityState.PLAYER_JUMPING);
         AnimationComponent ac = Mappers.animationMapper.get(player);
-        jumpDelay = ((DelayedAnimation) ac.getCurrentAnimation()).getDelay();
+        jumpDelay = ((DelayedAnimationSet) ac.getAnimation(player.getState())).getDelay();
         jumpInProgress = true;
     }
 
