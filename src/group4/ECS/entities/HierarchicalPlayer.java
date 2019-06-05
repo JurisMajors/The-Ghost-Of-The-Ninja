@@ -16,7 +16,9 @@ import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Delayed;
 
 
@@ -32,7 +34,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
      * Hierarchy of graphics components
      */
     public List<BodyPart> hierarchy = new ArrayList<>();
-    public List<IKEndEffector> IKHandles = new ArrayList<>();
+    public Map<String, IKEndEffector> IKHandles = new HashMap<>();
 
     /**
      * Directly access the bodyparts in the hierarchy
@@ -44,6 +46,8 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     protected BodyPart leftLegLower;
     protected BodyPart rightArmUpper;
     protected BodyPart rightArmLower;
+    protected BodyPart leftArmUpper;
+    protected BodyPart leftArmLower;
 
 
     /**
@@ -109,18 +113,18 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         rightLegLower = new BodyPart(rightLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, rightLegAngles[1], Texture.DEBUG);
         this.hierarchy.add(rightLegUpper);
         this.hierarchy.add(rightLegLower);
-        this.IKHandles.add(new IKEndEffector(rightLegUpper, rightLegLower, rightFootOffset, "foot_R"));
+        this.IKHandles.put("foot_R", new IKEndEffector(rightLegUpper, rightLegLower, rightFootOffset, "foot_R"));
 
         // Set the position of the foot for the left leg
         Vector3f leftFootOffset = new Vector3f(this.dimension.x, 0.5f, 0.0f);
 
         // Draw the left leg
         float[] leftLegAngles = this.getLimbAngles(this.getHipPosition(), leftFootOffset, upperLegDimension.y, lowerLegDimension.y, true);
-        leftLegUpper = new BodyPart(torso, new Vector3f(), upperLegDimension, leftLegAngles[0], Texture.DEBUG);
-        leftLegLower = new BodyPart(leftLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, leftLegAngles[1], Texture.DEBUG);
+        leftLegUpper = new BodyPart(torso, new Vector3f(), upperLegDimension, leftLegAngles[0], Texture.WHITE);
+        leftLegLower = new BodyPart(leftLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, leftLegAngles[1], Texture.WHITE);
         this.hierarchy.add(leftLegUpper);
         this.hierarchy.add(leftLegLower);
-        this.IKHandles.add(new IKEndEffector(leftLegUpper, leftLegLower, leftFootOffset, "foot_L"));
+        this.IKHandles.put("foot_L", new IKEndEffector(leftLegUpper, leftLegLower, leftFootOffset, "foot_L"));
 
         // Set the right wrist position
         Vector3f rightWristOffset = new Vector3f(this.dimension.x, 1.5f, 0.0f);
@@ -131,7 +135,18 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         rightArmLower = new BodyPart(rightArmUpper, new Vector3f(0.0f, upperArmDimension.y, 0.0f), lowerArmDimension, rightArmAngles[1], Texture.DEBUG);
         this.hierarchy.add(rightArmUpper);
         this.hierarchy.add(rightArmLower);
-        this.IKHandles.add(new IKEndEffector(rightArmUpper, rightArmLower, rightWristOffset, "arm_R"));
+        this.IKHandles.put("hand_R", new IKEndEffector(rightArmUpper, rightArmLower, rightWristOffset, "hand_R"));
+
+        // Set the left wrist position
+        Vector3f leftWristOffset = new Vector3f(this.dimension.x, 1.5f, 0.0f);
+
+        // Draw the right arm
+        float[] leftArmAngles = this.getLimbAngles(this.getShoulderPosition(), rightWristOffset, upperArmDimension.y, lowerArmDimension.y, false);
+        leftArmUpper = new BodyPart(torso, shoulderOffset, upperArmDimension, leftArmAngles[0], Texture.WHITE);
+        leftArmLower = new BodyPart(rightArmUpper, new Vector3f(0.0f, upperArmDimension.y, 0.0f), lowerArmDimension, leftArmAngles[1], Texture.WHITE);
+        this.hierarchy.add(leftArmUpper);
+        this.hierarchy.add(leftArmLower);
+        this.IKHandles.put("hand_L", new IKEndEffector(leftArmUpper, leftArmLower, leftWristOffset, "arm_L"));
     }
 
 
@@ -292,7 +307,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
 
         // Add right leg animation
         SplineAnimation walkCycle = new SplineAnimation(
-                this.IKHandles.get(0), 0.0f,
+                this.IKHandles.get("foot_R"), 0.0f,
                 new Vector3f[]{
                         new Vector3f(0.0f, 0.0f, 0.0f),
                         new Vector3f(-.5f, 0.0f, 0.0f),

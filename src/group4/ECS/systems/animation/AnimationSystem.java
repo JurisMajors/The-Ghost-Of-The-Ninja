@@ -60,7 +60,7 @@ public class AnimationSystem extends IteratingSystem {
 
 //        DebugUtils.drawSpline(walkSplinePoints);
 
-        for (IKEndEffector handle : player.IKHandles) {
+        for (IKEndEffector handle : player.IKHandles.values()) {
 //            handle.t += deltaTime;
 //            handle.t %= 1.0f; //2.0f * Math.PI; // Rotate in radians.
 //
