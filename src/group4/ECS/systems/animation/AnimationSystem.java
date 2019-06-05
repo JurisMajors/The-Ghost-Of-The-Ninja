@@ -31,7 +31,7 @@ public class AnimationSystem extends IteratingSystem {
 
     private void animatePlayer(HierarchicalPlayer player) {
         AnimationComponent ac = Mappers.animationMapper.get(player);
-        System.out.println(ac);
+//        System.out.println(ac);
         ac.setAnimation(player.getState());
         ac.getCurrentAnimation().update(this.deltaTime);
 //        Vector3f[] walkSplinePoints = new Vector3f[]{

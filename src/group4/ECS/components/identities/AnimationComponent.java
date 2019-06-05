@@ -13,6 +13,7 @@ import java.util.Map;
 public class AnimationComponent implements Component {
     private Map<EntityState, Animation> animations;
     private Animation currentAnimation;
+    private EntityState currentState;
     /**
      * Default constructor which creates the component. No data is currently associated with being animatable.
      */
@@ -21,6 +22,7 @@ public class AnimationComponent implements Component {
         animations = new HashMap<>();
         addAnimation(EntityState.NONE, null);
         setAnimation(EntityState.NONE);
+        this.currentState = EntityState.NONE;
     }
 
     public void addAnimation(EntityState state, Animation anim) {
@@ -28,16 +30,18 @@ public class AnimationComponent implements Component {
     }
 
     public void setAnimation(EntityState state) {
-        for (EntityState name: this.animations.keySet()){
-            Animation value = this.animations.get(name);
-            System.out.println(name + " : " + value);
-        }
-
-        System.out.println(state);
-        if (animations.containsKey(state)) {
-            currentAnimation = animations.get(state);
-        } else {
-            System.err.println("[WARNING] Animation '" + state + "' not found.");
+        if (state != this.currentState) {
+            //        for (EntityState name: this.animations.keySet()){
+//            Animation value = this.animations.get(name);
+//            System.out.println(name + " : " + value);
+//        }
+            this.currentState = state;
+            System.out.println("[INFO] Setting " + state);
+            if (animations.containsKey(state)) {
+                currentAnimation = animations.get(state);
+            } else {
+                System.err.println("[WARNING] Animation '" + state + "' not found.");
+            }
         }
     }
 
