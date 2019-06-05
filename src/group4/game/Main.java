@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import group4.AI.Evolver;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.AnimationSystem;
 import group4.ECS.systems.CameraSystem;
 import group4.ECS.systems.RenderSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
@@ -142,12 +143,13 @@ public class Main implements Runnable {
             engine.addSystem(new PlayerDyingSystem(true, 9));
             engine.addSystem(new GhostDyingSystem(false, 10));
             engine.addSystem(new MobDyingSystem(11));
+            engine.addSystem(new AnimationSystem(12));
 
             // Systems which are essentially observers of the changed gamestate
-            engine.addSystem(new CameraSystem(Families.playerFamily, 12));
-            engine.addSystem(new RenderSystem(13));
-            engine.addSystem(new TimedEventSystem(14));
-            engine.addSystem(new LastSystem(15));
+            engine.addSystem(new CameraSystem(Families.playerFamily, 13));
+            engine.addSystem(new RenderSystem(14));
+            engine.addSystem(new TimedEventSystem(15));
+            engine.addSystem(new LastSystem(16));
             this.level = new FileLevel("./src/group4/res/maps/level_02");
 
         }

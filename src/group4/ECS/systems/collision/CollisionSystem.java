@@ -29,9 +29,16 @@ public class CollisionSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+        setOnPlatform(entity, false);
+
         // detect and store all collisions
         detectCollisions(entity);
         detectSplineCollisions(entity);
+    }
+
+    private void setOnPlatform(Entity e, boolean bool) {
+        PositionComponent pc = Mappers.positionMapper.get(e);
+        pc.onPlatform = bool;
     }
 
     /**
@@ -72,6 +79,10 @@ public class CollisionSystem extends IteratingSystem {
 
             // Get displacement vector
             Vector3f displacement = processCollision(e, other);
+
+            if (displacement.y > 0) {
+                setOnPlatform(e, true);
+            }
 
             CollisionComponent occ = Mappers.collisionMapper.get(other);
             // add the collision to both entities
@@ -157,6 +168,11 @@ public class CollisionSystem extends IteratingSystem {
         Vector3f closestPoint = new Vector3f();
         Vector3f closestNormal = new Vector3f();
         int smallestCode = getClosestPoint(corners, closestPoints, closestNormals, discard, closestPoint, closestNormal);
+
+        // manage on platform
+        if (closestNormal.y > 0) {
+            setOnPlatform(e, true);
+        }
 
         // the target corner should be moved towards this position (on the edge of the spline)
         Vector3f newPos = closestPoint.add(closestNormal.scale(0.5f * sc.thickness));

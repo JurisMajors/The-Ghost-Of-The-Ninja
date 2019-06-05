@@ -1,12 +1,19 @@
 package group4.AI.decoders;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
+import group4.ECS.components.identities.ExitComponent;
+import group4.ECS.components.identities.GhostComponent;
+import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.maths.IntersectionPair;
 import group4.maths.Ray;
 import group4.maths.Vector3f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RayCastDecoder {
     /**
@@ -22,10 +29,13 @@ public class RayCastDecoder {
      **/
     private IntersectionDecoder decoder;
 
-    RayCastDecoder(float angleRange, int n, IntersectionDecoder id) {
+    private int rayLength;
+
+    RayCastDecoder(float angleRange, int n, IntersectionDecoder id, int length) {
         this.angleRange = angleRange;
         this.nrRays = n;
         this.decoder = id;
+        this.rayLength = length;
     }
 
     /**
@@ -45,16 +55,18 @@ public class RayCastDecoder {
         // define the length of the features array
         float[] features = new float[ghostFeatures.length + this.nrRays * decoder.nrFeatures()];
         // copy the ghost features
-        for (int i = 0; i < ghostFeatures.length; i++) {
-            features[i] = ghostFeatures[i];
-        }
+        System.arraycopy(ghostFeatures, 0, features, 0, ghostFeatures.length);
         // increments of the angle for the rays
         float deltaTheta = this.angleRange / this.nrRays;
+        List<Class<? extends Component>> ignorables = new ArrayList<>();
+        ignorables.add(GhostComponent.class);
+        ignorables.add(ExitComponent.class);
+        ignorables.add(PlayerComponent.class);
 
         for (int i = ghostFeatures.length; i < this.nrRays ; i+=2) {
             // create ray with appropriate direction
             // by rotating upwards from the start ray
-            Ray r = new Ray(ghostCenter, start.rotateXY((i - ghostFeatures.length) * deltaTheta));
+            Ray r = new Ray(ghostCenter, start.rotateXY((i - ghostFeatures.length) * deltaTheta), ignorables, this.rayLength);
             // cast it
             IntersectionPair intersection = r.cast(entities);
 

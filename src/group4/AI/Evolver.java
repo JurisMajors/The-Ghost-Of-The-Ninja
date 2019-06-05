@@ -53,7 +53,7 @@ public class Evolver {
     /**
      * decoder of gamestates
      **/
-    public static StateDecoderInterface decoder = new CircleVisionStateDecoder(Evolver.rays, 10);
+    public static StateDecoderInterface decoder = new CircleVisionStateDecoder(Evolver.rays, 10, 10);
     /**
      * probability to completely change a weight of nn
      **/
@@ -221,7 +221,7 @@ public class Evolver {
         }
         if (cmd.hasOption("rays")) {
             Evolver.rays = Integer.parseInt(cmd.getOptionValue("rays"));
-            Evolver.decoder = new CircleVisionStateDecoder(Evolver.rays, 10);
+            Evolver.decoder = new CircleVisionStateDecoder(Evolver.rays, 10, 10);
         }
         if (cmd.hasOption("layers")) {
             String[] sizes = cmd.getOptionValue("layers").split(",");

@@ -1,28 +1,51 @@
 package group4.ECS.systems;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.ashley.systems.IteratingSystem;
+import group4.ECS.components.physics.DimensionComponent;
+import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.etc.Families;
+import group4.ECS.etc.Mappers;
+import group4.game.IKEndEffector;
+import group4.maths.Vector3f;
 
-public class AnimationSystem extends EntitySystem {
-    private ImmutableArray<Entity> entities;
+public class AnimationSystem extends IteratingSystem {
 
-    public AnimationSystem() {}
-
-    public AnimationSystem(int priority) {}
-
-    public void addedToEngine(Engine engine) {
-        entities = engine.getEntitiesFor(Families.animationFamily);
+    public AnimationSystem(int priority) {
+        super(Families.animationFamily, priority);
     }
 
-    public void removedFromEngine(Engine engine) {}
+    @Override
+    protected void processEntity(Entity entity, float deltaTime) {
+        if (entity instanceof HierarchicalPlayer) {
+            for (IKEndEffector handle : ((HierarchicalPlayer) entity).IKHandles) {
+                handle.t += deltaTime / 200;
+                handle.t %= 2.0f * Math.PI; // Rotate in radians.
 
-    public void update(float deltaTime) {}
+                float upperLength = handle.upper.getComponent(DimensionComponent.class).dimension.y;
+                float lowerLength = handle.lower.getComponent(DimensionComponent.class).dimension.y;
 
-    public boolean checkProcessing() { return false; }
+                Vector3f unitCircle;
+                float[] angles;
 
-    public void setProcessing(boolean processing) {}
+                if (handle.label == "foot_L") {
+                    unitCircle = new Vector3f((float) Math.cos(handle.t - 1) * 0.75f, (float) Math.sin(handle.t - 1) * 0.75f, 0.0f);
+                    handle.endPos = unitCircle.add(((HierarchicalPlayer) entity).getHipOffset());
+                    angles = ((HierarchicalPlayer) entity).getLimbAngles(((HierarchicalPlayer) entity).getHipOffset(), handle.endPos, upperLength, lowerLength, true);
+                } else if (handle.label == "foot_R") {
+                    unitCircle = new Vector3f((float) Math.cos(handle.t) * 0.87f, (float) Math.sin(handle.t) * 0.87f, 0.0f);
+                    handle.endPos = unitCircle.add(((HierarchicalPlayer) entity).getHipOffset());
+                    angles = ((HierarchicalPlayer) entity).getLimbAngles(((HierarchicalPlayer) entity).getHipOffset(), handle.endPos, upperLength, lowerLength, true);
+                } else {
+                    unitCircle = new Vector3f((float) Math.cos(handle.t - 1.75) * 0.87f, (float) Math.sin(handle.t - 1.75) * 0.87f, 0.0f);
+                    handle.endPos = unitCircle.add(((HierarchicalPlayer) entity).getShoulderPosition());
+                    angles = ((HierarchicalPlayer) entity).getLimbAngles(((HierarchicalPlayer) entity).getShoulderPosition(), handle.endPos, upperLength, lowerLength, false);
+                }
 
+                handle.upper.rotation = angles[0];
+                handle.lower.rotation = angles[1];
+            }
+        }
+    }
 }
