@@ -6,7 +6,7 @@ import java.util.List;
 public class AnimationSet extends Animation {
 
     // Store all Animations that belong to this AnimationSet
-    List<Animation> animations;
+    protected List<Animation> animations;
 
     /**
      * Construct an empty animation set
