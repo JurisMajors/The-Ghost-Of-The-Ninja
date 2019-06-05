@@ -29,10 +29,13 @@ public class RayCastDecoder {
      **/
     private IntersectionDecoder decoder;
 
-    RayCastDecoder(float angleRange, int n, IntersectionDecoder id) {
+    private int rayLength;
+
+    RayCastDecoder(float angleRange, int n, IntersectionDecoder id, int length) {
         this.angleRange = angleRange;
         this.nrRays = n;
         this.decoder = id;
+        this.rayLength = length;
     }
 
     /**
@@ -65,9 +68,9 @@ public class RayCastDecoder {
         for (int i = ghostFeatures.length; i < this.nrRays ; i+=2) {
             // create ray with appropriate direction
             // by rotating upwards from the start ray
-            Ray r = new Ray(ghostCenter, start.rotateXY((i - ghostFeatures.length) * deltaTheta), ignorables);
+            Ray r = new Ray(ghostCenter, start.rotateXY((i - ghostFeatures.length) * deltaTheta), ignorables, this.rayLength);
             // cast it
-            IntersectionPair intersection = r.cast(entities);
+            IntersectionPair intersection = r.cast(entities, true);
 
             // add the features to the result
             float[] interFeatures = this.decoder.getFeatures(r, intersection, ghost);

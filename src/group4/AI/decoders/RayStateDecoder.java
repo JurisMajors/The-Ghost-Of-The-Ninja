@@ -35,7 +35,7 @@ public abstract class RayStateDecoder implements StateDecoderInterface {
         this.rayLength = length;
         this.nrRays = n;
         this.angleRange = angleRange;
-        this.rayDecoder = new RayCastDecoder(this.angleRange, this.nrRays, new StandardIntersectionDecoder());
+        this.rayDecoder = new RayCastDecoder(this.angleRange, this.nrRays, new StandardIntersectionDecoder(), length);
     }
 
     @Override
