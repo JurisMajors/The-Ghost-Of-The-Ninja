@@ -15,7 +15,7 @@ public class Sword extends Entity {
         int dmg = 10;
         float cooldown = 0.5f;
         Vector3f hitBox = new Vector3f(1.0f, 1.0f, 0.0f);
-        Vector3f hitboxOffset = new Vector3f(1.3f, 0.3f, 0.0f);
+        Vector3f hitboxOffset = new Vector3f(0.3f, 0.3f, 0.0f);
 
         // graphics stats
 

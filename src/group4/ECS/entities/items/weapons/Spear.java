@@ -15,7 +15,7 @@ public class Spear extends Entity {
         int dmg = 15;
         float cooldown = 0.65f;
         Vector3f hitBox = new Vector3f(1.4f, 0.4f, 0.0f);
-        Vector3f hitboxOffset = new Vector3f(2.0f, 0.4f, 0.0f);
+        Vector3f hitboxOffset = new Vector3f(1.0f, 0.4f, 0.0f);
 
         // graphics stats
 

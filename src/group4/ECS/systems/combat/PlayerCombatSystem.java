@@ -88,16 +88,21 @@ public class PlayerCombatSystem extends IteratingSystem {
 
         // if clicking right of player, hit right, else hit left
         Vector3f trueOffset = new Vector3f(wc.hitboxOffset);
+        Vector3f trueHitbox = new Vector3f(wc.hitBox);
         if (mouseWorldX < pc.position.x + dc.dimension.x / 2) {
             trueOffset.x = -1 * wc.hitboxOffset.x;
+            trueHitbox.x = -1 * wc.hitBox.x;
+        } else {
+            trueOffset.x = wc.hitboxOffset.x + dc.dimension.x;
         }
 
-        // lower left corner of hitbox from players perspective
-        Vector3f position = pc.position.add(trueOffset);
+        // corner of hitbox nearest to player
+        Vector3f hitboxCorner = pc.position.add(trueOffset);
 
-        // end of ray
-        Vector3f rayEnd = position.add(new Vector3f(trueOffset.x, trueOffset.y / 2, trueOffset.z));
-        Vector3f rayStart = position.add(new Vector3f(0, wc.hitboxOffset.y + trueOffset.y / 2, 0));
+        // start and end of ray
+        Vector3f rayStart = pc.position
+                .add(new Vector3f(dc.dimension.x / 2, trueOffset.y + trueHitbox.y / 2, 0.0f));
+        Vector3f rayEnd = hitboxCorner.add(new Vector3f(trueHitbox.x, trueHitbox.y / 2, trueHitbox.z));
         Vector3f dir = rayEnd.sub(rayStart);
 
         // ignore mobs, players, items, ghost, exits
@@ -111,12 +116,14 @@ public class PlayerCombatSystem extends IteratingSystem {
 
         Vector3f intersection = ray.cast(TheEngine.getInstance().getEntitiesFor(Families.allCollidableFamily)).point;
 
+        // distinguish three cases
+
         // exclude ghost and player for the damage
         Set<Class<? extends Entity>> excluded = new HashSet<>();
         excluded.add(Player.class);
         excluded.add(Ghost.class);
 
-        new MeleeArea(position, wc.hitBox,
+        new MeleeArea(hitboxCorner, trueHitbox,
                 wc.damage, excluded);
 
     }
