@@ -5,6 +5,7 @@ import group4.ECS.components.identities.AnimationComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.etc.EntityState;
+import group4.ECS.systems.animation.AnimationSet;
 import group4.ECS.systems.animation.IKEndEffector;
 import group4.ECS.systems.animation.SplineAnimation;
 import group4.graphics.Shader;
@@ -46,18 +47,18 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     /**
      * Definition of body part dimensions
      */
-    Vector3f upperLegDimension = new Vector3f(0.15f, 0.5f, 0.0f);
-    Vector3f lowerLegDimension = new Vector3f(0.12f, 0.4f, 0.0f);
-    Vector3f upperArmDimension = new Vector3f(0.1f, 0.5f, 0.0f);
-    Vector3f lowerArmDimension = new Vector3f(0.08f, 0.4f, 0.0f);
-    Vector3f TorsoDimension = new Vector3f(0.4f, 0.8f, 0.0f);
-    Vector3f shoulderOffset = new Vector3f(0.0f, 0.6f, 0.0f);
-
+    public final Vector3f upperLegDimension = new Vector3f(0.15f, 0.5f, 0.0f);
+    public final Vector3f lowerLegDimension = new Vector3f(0.12f, 0.4f, 0.0f);
+    public final Vector3f upperArmDimension = new Vector3f(0.1f, 0.5f, 0.0f);
+    public final Vector3f lowerArmDimension = new Vector3f(0.08f, 0.4f, 0.0f);
+    public final Vector3f TorsoDimension = new Vector3f(0.4f, 0.8f, 0.0f);
+    public final Vector3f shoulderOffset = new Vector3f(0.0f, 0.6f, 0.0f);
+    public final Vector3f hipOffset = new Vector3f(this.dimension.x / 2, 0.8f, 0.0f);
 
     /**
-     * The position of the hip of the player
+     * The position of hip of the player (a.k.a. the bottom center position of the player)
      */
-    Vector3f hipOffset = new Vector3f(this.dimension.x / 2, 0.8f, 0.0f);
+    Vector3f hipPosition = new Vector3f(hipOffset);
 
     /**
      * Creates a player
@@ -93,14 +94,15 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
      */
     protected void createHierarchy() {
         // Draw torso to visualise hip position
-        torso = new BodyPart(this, hipOffset, TorsoDimension, 0, Texture.DEBUG);
+        torso = new BodyPart(this, this.getHipPosition(), TorsoDimension, 0, Texture.DEBUG);
+        torso.add(new PositionComponent(new Vector3f())); // Add position component for the animation
         this.hierarchy.add(torso);
 
         // Set the position of the foot for the right leg
         Vector3f rightFootOffset = new Vector3f(this.dimension.x / 3, 0.0f, 0.0f);
 
         // Draw the right leg
-        float[] rightLegAngles = this.getLimbAngles(this.getHipOffset(), rightFootOffset, upperLegDimension.y, lowerLegDimension.y, true);
+        float[] rightLegAngles = this.getLimbAngles(this.getHipPosition(), rightFootOffset, upperLegDimension.y, lowerLegDimension.y, true);
         rightLegUpper = new BodyPart(torso, new Vector3f(), upperLegDimension, rightLegAngles[0], Texture.DEBUG);
         rightLegLower = new BodyPart(rightLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, rightLegAngles[1], Texture.DEBUG);
         this.hierarchy.add(rightLegUpper);
@@ -111,7 +113,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         Vector3f leftFootOffset = new Vector3f(this.dimension.x, 0.5f, 0.0f);
 
         // Draw the left leg
-        float[] leftLegAngles = this.getLimbAngles(this.getHipOffset(), leftFootOffset, upperLegDimension.y, lowerLegDimension.y, true);
+        float[] leftLegAngles = this.getLimbAngles(this.getHipPosition(), leftFootOffset, upperLegDimension.y, lowerLegDimension.y, true);
         leftLegUpper = new BodyPart(torso, new Vector3f(), upperLegDimension, leftLegAngles[0], Texture.DEBUG);
         leftLegLower = new BodyPart(leftLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, leftLegAngles[1], Texture.DEBUG);
         this.hierarchy.add(leftLegUpper);
@@ -234,16 +236,24 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     /**
      * Set hip position relative to player bottom left position
      */
-    public void setHipOffset(Vector3f newHipPosition) {
-        this.hipOffset = newHipPosition;
+    public void setHipPosition(Vector3f newHipPosition) {
+        this.hipPosition = newHipPosition;
     }
 
 
     /**
      * Get the hip position relative to player bottom left position
      */
-    public Vector3f getHipOffset() {
-        return this.hipOffset;
+    public Vector3f getHipPosition() {
+        return this.hipPosition;
+    }
+
+
+    /**
+     * Get the torso object of the player
+     */
+    public BodyPart getTorso() {
+        return this.torso;
     }
 
 
@@ -257,6 +267,22 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     private void createAnimations() {
         AnimationComponent ac = this.getComponent(AnimationComponent.class);
 
+        // Create an animation set for the walking animation
+        AnimationSet walkingAnimationSet = new AnimationSet();
+
+        // Animate the hip bounce during walking
+        SplineAnimation hipCycle = new SplineAnimation(
+                this.torso, 0.0f,
+                new Vector3f[] {
+                        new Vector3f(0.0f, 0.050f, 0.0f),
+                        new Vector3f(0.0f, -.083f, 0.0f),
+                        new Vector3f(0.0f, -.083f, 0.0f),
+                        new Vector3f(0.0f, 0.050f, 0.0f)
+                }
+        );
+        walkingAnimationSet.add(hipCycle);
+
+        // Add right leg animation
         SplineAnimation walkCycle = new SplineAnimation(
                 this.IKHandles.get(0), 0.0f,
                 new Vector3f[]{
@@ -269,7 +295,10 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
                         new Vector3f(0.5f, 0.0f, 0.0f),
                         new Vector3f(0.0f, 0.0f, 0.0f)
                 });
-        ac.addAnimation(EntityState.PLAYER_WALKING, walkCycle);
-        System.out.println(ac);
+        walkingAnimationSet.add(walkCycle);
+
+
+        // Register the walking animation to PLAYER_WALKING
+        ac.addAnimation(EntityState.PLAYER_WALKING, walkingAnimationSet);
     }
 }

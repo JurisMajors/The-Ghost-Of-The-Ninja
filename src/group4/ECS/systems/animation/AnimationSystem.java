@@ -12,6 +12,7 @@ import group4.ECS.etc.Mappers;
 import group4.maths.Vector3f;
 import group4.maths.spline.MultiSpline;
 import group4.utils.DebugUtils;
+import javafx.geometry.Pos;
 
 public class AnimationSystem extends IteratingSystem {
     float deltaTime;
@@ -79,9 +80,16 @@ public class AnimationSystem extends IteratingSystem {
             float lowerLength = handle.lower.getComponent(DimensionComponent.class).dimension.y;
 
             // Calculate and set the new rotations for the limbs based on the start and endpoints of the IK chain
-            float[] angles = player.getLimbAngles(player.getHipOffset(), pc.position, upperLength, lowerLength, true);
+            float[] angles = player.getLimbAngles(player.getHipPosition(), pc.position, upperLength, lowerLength, true);
             handle.upper.rotation = angles[0];
             handle.lower.rotation = angles[1];
         }
+
+
+        // Temp thing to animate the hip bounce during walking
+        player.setHipPosition(player.getTorso().getComponent(PositionComponent.class).position.add(player.hipOffset));
+        player.getTorso().relativePosition = player.getHipPosition();
+
+
     }
 }
