@@ -9,6 +9,7 @@ import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.etc.EntityState;
 import group4.ECS.systems.collision.CollisionHandlers.PlayerCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -46,6 +47,11 @@ public class Player extends Entity {
     public boolean spawnedGhost;
 
     /**
+     * Variable to keep track of state of entity
+     */
+    protected EntityState state = EntityState.IS_IDLE;
+
+    /**
      * Creates a player
      *
      * @param position center point of player
@@ -76,5 +82,20 @@ public class Player extends Entity {
 
     public static String getName() {
         return "Player";
+    }
+
+    /**
+     * Set the state of the entity
+     * @param s The new state of the entity
+     */
+    public void setState(EntityState s) {
+        this.state = s;
+    }
+
+    /**
+     * Get the current state of the entity
+     */
+    public EntityState getState() {
+        return this.state;
     }
 }

@@ -83,6 +83,11 @@ public class PlayerMovementSystem extends IteratingSystem {
             }
         }
 
+        // Check if player is falling to animate a fall
+        if (mc.velocity.y < 1e-3) {
+            this.initiateFallAnimation((HierarchicalPlayer) e));
+        }
+
 
         if (shouldSpawnGhost(ref) && !((Player) e).spawnedGhost) {
             ((Player) e).spawnedGhost = true;
@@ -98,6 +103,12 @@ public class PlayerMovementSystem extends IteratingSystem {
         ac.setAnimation(EntityState.PLAYER_JUMPING);
         jumpDelay = JUMPANIM.delay;
         jumpInProgress = true;
+    }
+
+    private void initiateFallAnimation(HierarchicalPlayer player) {
+        player.setState(EntityState.JUMPING);
+        AnimationComponent ac = Mappers.animationMapper.get(player);
+        ac.setAnimationState(ac.animations.get(EntityState.FALLING));
     }
 
     private void moveRight(MovementComponent mc, PositionComponent pc) {
