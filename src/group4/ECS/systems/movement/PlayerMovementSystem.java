@@ -9,6 +9,7 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
+import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.input.KeyBoard;
@@ -92,9 +93,9 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     private void initiateJumpSequence(HierarchicalPlayer player) {
-        player.setState(PlayerStates.JUMPING);
+        player.setState(EntityState.PLAYER_JUMPING);
         AnimationComponent ac = Mappers.animationMapper.get(player);
-        ac.setAnimationState(ac.animations.get(Playerstates.JUMPING));
+        ac.setAnimation(EntityState.PLAYER_JUMPING);
         jumpDelay = JUMPANIM.delay;
         jumpInProgress = true;
     }
