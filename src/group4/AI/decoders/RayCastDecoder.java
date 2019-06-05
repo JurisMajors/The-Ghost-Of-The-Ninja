@@ -55,9 +55,7 @@ public class RayCastDecoder {
         // define the length of the features array
         float[] features = new float[ghostFeatures.length + this.nrRays * decoder.nrFeatures()];
         // copy the ghost features
-        for (int i = 0; i < ghostFeatures.length; i++) {
-            features[i] = ghostFeatures[i];
-        }
+        System.arraycopy(ghostFeatures, 0, features, 0, ghostFeatures.length);
         // increments of the angle for the rays
         float deltaTheta = this.angleRange / this.nrRays;
         List<Class<? extends Component>> ignorables = new ArrayList<>();
@@ -70,7 +68,7 @@ public class RayCastDecoder {
             // by rotating upwards from the start ray
             Ray r = new Ray(ghostCenter, start.rotateXY((i - ghostFeatures.length) * deltaTheta), ignorables, this.rayLength);
             // cast it
-            IntersectionPair intersection = r.cast(entities, true);
+            IntersectionPair intersection = r.cast(entities);
 
             // add the features to the result
             float[] interFeatures = this.decoder.getFeatures(r, intersection, ghost);
