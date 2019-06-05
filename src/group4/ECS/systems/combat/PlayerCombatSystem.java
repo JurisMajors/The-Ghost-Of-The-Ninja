@@ -13,6 +13,7 @@ import group4.ECS.entities.items.Item;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
+import group4.audio.Sound;
 import group4.game.Main;
 import group4.game.Window;
 import group4.input.KeyBoard;
@@ -88,6 +89,8 @@ public class PlayerCombatSystem extends IteratingSystem {
                 excluded.add(Player.class);
                 excluded.add(Ghost.class);
 
+                // play the slash sound
+                Sound.SLASH.play();
                 Vector3f position = pc.position.add(trueOffset);
                 new MeleeArea(position, wc.hitBox,
                         wc.damage, excluded);
