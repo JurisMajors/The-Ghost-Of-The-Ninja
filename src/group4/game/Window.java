@@ -8,8 +8,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
     private long window;
-    private static int width = 1980;
-    private static int height = 1280;
+    private static int width = 1280;
+    private static int height = 720;
 
     public Window() {
         // Configure GLFW
