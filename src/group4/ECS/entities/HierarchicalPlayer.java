@@ -301,6 +301,10 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
                         new Vector3f(0.0f, 0.050f, 0.0f),
                         new Vector3f(0.0f, -.083f, 0.0f),
                         new Vector3f(0.0f, -.083f, 0.0f),
+                        new Vector3f(0.0f, 0.050f, 0.0f),
+                        new Vector3f(0.0f, 0.050f, 0.0f),
+                        new Vector3f(0.0f, -.083f, 0.0f),
+                        new Vector3f(0.0f, -.083f, 0.0f),
                         new Vector3f(0.0f, 0.050f, 0.0f)
                 }
         );
@@ -320,16 +324,18 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         SplineAnimation foot_R = new SplineAnimation(this.IKHandles.get("foot_R"), 0.0f, footPath);
 
         // Add hand animations
+        float vShift = 0.1f;
         Vector3f[] handPath = new Vector3f[]{
-                new Vector3f(0.0f, 0.4f, 0.0f),
-                new Vector3f(-.5f, 0.4f, 0.0f),
-                new Vector3f(-2.f, 0.4f, 0.0f),
-                new Vector3f(-.1f, 0.4f, 0.0f),
-                new Vector3f(0.1f, 0.4f, 0.0f),
-                new Vector3f(0.7f, 0.4f, 0.0f),
-                new Vector3f(0.5f, 0.4f, 0.0f),
-                new Vector3f(0.0f, 0.4f, 0.0f)
+                new Vector3f(-0.789f,	-0.025687f + vShift,	0.0f),
+                new Vector3f(-0.826588f,	0.00997323f + vShift, 0.0f),
+                new Vector3f(-0.250242f,	-0.228083f + vShift,	0.0f),
+                new Vector3f(0.399352f,	0.332843f + vShift,	0.0f),
+                new Vector3f(0.593074f,	0.183455f + vShift,	0.0f),
+                new Vector3f(0.390678f,	-0.223264f + vShift,	0.0f),
+                new Vector3f(-0.609735f,	-0.148088f + vShift,	0.0f),
+                new Vector3f(-0.789f,	-0.025687f + vShift,	0.0f),
         };
+
         SplineAnimation hand_L = new SplineAnimation(this.IKHandles.get("hand_L"), 0.0f, handPath);
         SplineAnimation hand_R = new SplineAnimation(this.IKHandles.get("hand_R"), 0.5f, handPath);
 
