@@ -28,6 +28,7 @@ public class Sound {
      */
     public static Sound BACKGROUND;
     public static Sound BEEP;
+    public static Sound SLASH;
 
     private static ArrayList<Sound> allSounds;
 
@@ -39,9 +40,11 @@ public class Sound {
 
         BACKGROUND = new Sound("background.ogg", true, 0.5f);
         BEEP = new Sound("fire.ogg", false);
+        SLASH = new Sound("slash.ogg", false);
 
         allSounds.add(BACKGROUND);
         allSounds.add(BEEP);
+        allSounds.add(SLASH);
     }
 
     /**
