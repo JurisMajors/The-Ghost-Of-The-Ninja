@@ -23,6 +23,8 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class PlayerMovementSystem extends IteratingSystem {
 
+    private boolean wasSpaceDown = false;
+
     public PlayerMovementSystem(int priority) {
         super(Families.playerFamily, priority);
     }
@@ -159,7 +161,17 @@ public class PlayerMovementSystem extends IteratingSystem {
      * @return whether to move entity to the right
      */
     protected boolean shouldJump (Object ref) {
-        return KeyBoard.isKeyDown(GLFW_KEY_SPACE);
+        boolean spaceDown = KeyBoard.isKeyDown(GLFW_KEY_SPACE); // Get current space bar status
+
+        if (wasSpaceDown && !spaceDown) { // Space bar up, and was down, so update wasSpaceDown, and return not to jump
+            wasSpaceDown = false;
+            return false;
+        } else if (!wasSpaceDown && spaceDown) { // Space bar was not down, now it's down, so update wasSpaceDown and jump
+            wasSpaceDown = true;
+            return true;
+        }
+
+        return false; // In all other cases, we do not jump or update
     }
 
     protected boolean shouldSpawnGhost (Object ref) {
