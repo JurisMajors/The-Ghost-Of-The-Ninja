@@ -1,4 +1,4 @@
-package group4.levelSystem.levels;
+package group4.levelSystem;
 
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;

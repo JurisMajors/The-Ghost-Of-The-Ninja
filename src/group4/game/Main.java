@@ -28,7 +28,7 @@ import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
-import group4.levelSystem.levels.FileLevel;
+import group4.levelSystem.FileLevel;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
