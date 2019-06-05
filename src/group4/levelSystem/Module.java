@@ -2,11 +2,11 @@ package group4.levelSystem;
 
 import com.badlogic.ashley.core.Entity;
 import group4.AI.Brain;
-import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.mobs.*;
+import group4.ECS.entities.items.consumables.Coin;
 import group4.ECS.entities.world.ArtTile;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
@@ -26,7 +26,10 @@ import org.json.JSONTokener;
 import javax.xml.soap.Text;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class defines the interface for modules that can be used to create levels
@@ -88,7 +91,7 @@ public class Module {
     }
 
 
-    private void loadGhost (String loc) {
+    private void loadGhost(String loc) {
         this.ghostModel = new Brain(loc);
     }
 
@@ -132,10 +135,6 @@ public class Module {
      * Populates @code{this.entities} with default entities for the module
      */
     protected void constructModule() {
-        // TODO: This is a bad spot for this, but it demonstrates the functionality. Please move.
-        Camera camera = new Camera();
-        this.addEntity(camera); // Adding the camera to the module (which adds it to the engine?)
-
         // First, we set the height and width of the module
         this.height = this.tiledData.getInt("height");
         this.width = this.tiledData.getInt("width");
@@ -152,6 +151,8 @@ public class Module {
                 parseMainLayer(layer);
             } else if (layerName.equals("SPLINES")) {
                 parseSplineLayer(layer);
+            } else if (layerName.equals("COINS")) {
+                parseCoinLayer(layer);
             } else if (layerName.equals("EXITS")) {
                 setupExits(layer);
             } else {
@@ -160,6 +161,35 @@ public class Module {
                 setupExits(layer);
             }
         }
+    }
+
+    private void parseCoinLayer(JSONObject layer) {
+        // Get height and width of layer
+        int layerHeight = layer.getInt("height");
+        int layerWidth = layer.getInt("width");
+
+        // Loop over the data grid
+        JSONArray data = layer.getJSONArray("data");
+        for (int tile = 0; tile < data.length(); tile++) {
+            // Get the grid position of the tile
+            int tileGridX = tile % layerWidth;
+            int tileGridY = layerHeight - tile / layerWidth;
+
+            // Get the type of the tile
+            int tileId = data.getInt(tile) - 1;
+
+            String entityId = moduleTileMap.get(tileId);
+
+            if (entityId == null) {
+                continue;
+            } else if (entityId.equals(Coin.getName())) {
+                addCoin(new Vector3f(tileGridX, tileGridY, 0), tileId);
+            } else {
+                System.err.println("Some tiles not drawing!");
+                continue;
+            }
+        }
+
     }
 
     private void parseMainLayer(JSONObject layer) {
@@ -179,7 +209,6 @@ public class Module {
 
             String entityId = moduleTileMap.get(tileId);
 
-            // TODO: Can't use switch with static function as comparison. i.e. case Platform.getName() is not possible. Something better?
             if (entityId == null) {
                 continue;
             } else if (entityId.equals(Platform.getName())) {
@@ -196,6 +225,11 @@ public class Module {
             }
         }
 
+    }
+
+    private void addCoin(Vector3f position, int i) {
+        Coin c = new Coin(position, Coin.LARGE_SIZE, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i), Coin.LARGE_VALUE);
+        this.addEntity(c);
     }
 
     private void parseSplineLayer(JSONObject layer) {
@@ -479,6 +513,7 @@ public class Module {
         int flappingmob = 42;
         int walkingmob = 40;
         int flyingmob = 41;
+        int coin = 13;
 
         moduleTileMap = new HashMap<Integer, String>();
         for (int i : platforms) {
@@ -498,5 +533,7 @@ public class Module {
         moduleTileMap.put(walkingmob, WalkingMob.getName());
         moduleTileMap.put(flyingmob, FlyingMob.getName());
 
+
+        moduleTileMap.put(coin, Coin.getName());
     }
 }

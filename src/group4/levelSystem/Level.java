@@ -1,8 +1,6 @@
 package group4.levelSystem;
 
-import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.physics.PositionComponent;
-import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.etc.TheEngine;
@@ -52,7 +50,7 @@ public abstract class Level {
         TheEngine.getInstance().addEntity(this.player);     // Register the level wide player instance to the engine
 
         this.switchModule(this.rootModule);                 // Switch the current module to the root module
-                                                            // Also takes care of positioning the player entity etc.
+        // Also takes care of positioning the player entity etc.
 
         this.exitActions = new HashMap<>();                 // Initialize the exit action list
 
@@ -94,6 +92,7 @@ public abstract class Level {
 
     /**
      * Checks the sanity of the level
+     *
      * @Throws IllegalStateException if the level is not sane
      */
     private final void checkSanity() {
@@ -132,6 +131,7 @@ public abstract class Level {
 
     /**
      * This method adds a module to this level
+     *
      * @param m The module to add to this level
      */
     protected final void addModule(Module m) {
@@ -155,7 +155,8 @@ public abstract class Level {
      * Switches the level to the next module
      */
     public final void switchModule(Module m) {
-        if (!this.modules.contains(m)) throw new IllegalArgumentException("Level: you cannot switch to a module that is not part of the Level");
+        if (!this.modules.contains(m))
+            throw new IllegalArgumentException("Level: you cannot switch to a module that is not part of the Level");
 
         // Unload the old module (if there is an old module)
         if (this.currentModule != null) {
@@ -191,6 +192,7 @@ public abstract class Level {
 
     /**
      * Set the exit action for a certain exit
+     *
      * @param e The exit
      * @param a The exit action
      */
@@ -212,6 +214,7 @@ public abstract class Level {
 
     /**
      * Let the level react to an exit being reached
+     *
      * @param e The exit that was reached
      */
     public void handleExit(Exit e) {

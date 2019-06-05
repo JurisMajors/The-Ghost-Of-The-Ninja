@@ -2,6 +2,7 @@ package group4.game;
 
 import com.badlogic.ashley.core.Engine;
 import group4.AI.Evolver;
+import group4.ECS.entities.Camera;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.AnimationSystem;
@@ -21,6 +22,7 @@ import group4.ECS.systems.movement.GhostMovementSystem;
 import group4.ECS.systems.movement.MobMovementSystem;
 import group4.ECS.systems.movement.PlayerMovementSystem;
 import group4.ECS.systems.timed.TimedEventSystem;
+import group4.audio.Sound;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;
@@ -28,13 +30,28 @@ import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
-import group4.levelSystem.levels.FileLevel;
+import group4.levelSystem.FileLevel;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.ALCCapabilities;
+import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
+
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.openal.AL10.*;
+import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.stb.STBVorbis.stb_vorbis_decode_filename;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.jemalloc.JEmalloc.Functions.free;
+import static org.lwjgl.system.libc.LibCStdlib.free;
+import static sun.audio.AudioDevice.device;
 
 
 public class Main implements Runnable {
@@ -49,11 +66,13 @@ public class Main implements Runnable {
     public static final boolean SHOULD_OPENGL = !Main.AI || Evolver.render;
 
     private Window win;
-    public static long window; // The id of the window
+    public long window; // The id of the window
 
-    private Timer timer;
+    private Audio audio;
+  
     private Level level;
     private Engine engine;
+    private Camera camera;
 
     public static final float SCREEN_WIDTH = 16.5f;
     public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
@@ -62,8 +81,8 @@ public class Main implements Runnable {
      * Creates a new thread on which it wel run() the game.
      */
     public void start() {
-        thread = new Thread(this, "Game");
-        thread.start(); // This implicitly calls run(), given that this class implements Runnable
+        this.thread = new Thread(this, "Game");
+        this.thread.start(); // This implicitly calls run(), given that this class implements Runnable
     }
 
     /**
@@ -89,6 +108,15 @@ public class Main implements Runnable {
             glfwTerminate();
             glfwSetErrorCallback(null).free();
         }
+        //Terminate OpenAL
+        // delete one audio thing
+//        alDeleteSources(sourcePointer);
+//        alDeleteBuffers(bufferPointer);
+
+        // delete context
+        alcDestroyContext(audio.audioContext);
+        alcCloseDevice(audio.audio);
+
     }
 
     /**
@@ -106,15 +134,15 @@ public class Main implements Runnable {
             throw new IllegalStateException("Unable to initialize GLFW");
 
         // Create the window
-        win = new Window();
-        window = win.getWindowId();
+        this.win = new Window();
+        this.window = win.getWindowId();
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(window, new KeyBoard());
+        glfwSetKeyCallback(this.window, new KeyBoard());
         // Setup mouse button callback. It will be called when a button is pressed on the mouse.
-        glfwSetMouseButtonCallback(window, new MouseClicks());
+        glfwSetMouseButtonCallback(this.window, new MouseClicks());
         // Setup mouse movement callback. It will be called when the mouse moves.
-        glfwSetCursorPosCallback(window, new MouseMovement());
+        glfwSetCursorPosCallback(this.window, new MouseMovement());
 
         // Some additional OpenGL configuration
         GL.createCapabilities(); // Enable OpenGL bindings for usage by GLFW. Critical!
@@ -122,38 +150,50 @@ public class Main implements Runnable {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        // Load all required resources for the game
         Shader.loadAllShaders();
         Texture.loadAllTextures();
         TileMapping.loadAllTileMappings();
 
+        // load audio
+        audio = new Audio();
+        Sound.loadAllSounds();
+
+        // play background sound
+        Sound.BACKGROUND.play();
+
         // Initialize the engine
-        engine = TheEngine.getInstance();
+        this.engine = TheEngine.getInstance();
         if (!AI) {
             // Set up all engine systems
             // Systems which change the gamestate
-            engine.addSystem(new PlayerMovementSystem(0));
-            engine.addSystem(new GhostMovementSystem(1));
-            engine.addSystem(new MobMovementSystem(2));
-            engine.addSystem(new BulletMovementSystem(3));
-            engine.addSystem(new CollisionSystem(4));
-            engine.addSystem(new PlayerCombatSystem(5));
-            engine.addSystem(new DamageSystem(6));
-            engine.addSystem(new CollisionEventSystem(7));
-            engine.addSystem(new UncollidingSystem(8));
-            engine.addSystem(new PlayerDyingSystem(true, 9));
-            engine.addSystem(new GhostDyingSystem(false, 10));
-            engine.addSystem(new MobDyingSystem(11));
-            engine.addSystem(new AnimationSystem(12));
+            this.engine.addSystem(new PlayerMovementSystem(0));
+            this.engine.addSystem(new GhostMovementSystem(1));
+            this.engine.addSystem(new MobMovementSystem(2));
+            this.engine.addSystem(new BulletMovementSystem(3));
+            this.engine.addSystem(new CollisionSystem(4));
+            this.engine.addSystem(new PlayerCombatSystem(5));
+            this.engine.addSystem(new DamageSystem(6));
+            this.engine.addSystem(new CollisionEventSystem(7));
+            this.engine.addSystem(new UncollidingSystem(8));
+            this.engine.addSystem(new PlayerDyingSystem(true, 9));
+            this.engine.addSystem(new GhostDyingSystem(false, 10));
+            this.engine.addSystem(new MobDyingSystem(11));
+            this.engine.addSystem(new AnimationSystem(12));
 
             // Systems which are essentially observers of the changed gamestate
-            engine.addSystem(new CameraSystem(Families.playerFamily, 13));
-            engine.addSystem(new RenderSystem(14));
-            engine.addSystem(new TimedEventSystem(15));
-            engine.addSystem(new LastSystem(16));
+            this.engine.addSystem(new CameraSystem(Families.playerFamily, 13));
+            this.engine.addSystem(new RenderSystem(14));
+            this.engine.addSystem(new TimedEventSystem(15));
+            this.engine.addSystem(new LastSystem(16));
+
+            // Initialize the level
             this.level = new FileLevel("./src/group4/res/maps/level_02");
 
+            // Set up a camera for our game
+            this.camera = new Camera();
+            this.engine.addEntity(camera); // Adding the camera to the module (which adds it to the engine?)
         }
-        // Initialize the level
     }
 
     /**
@@ -185,16 +225,16 @@ public class Main implements Runnable {
             // update our FPS counter if a second has passed since
             // we last recorded
             if (lastFpsTime >= (long) 1e9) {
-                win.setWindowTitle("(FPS: " + fps + ")");
+                this.win.setWindowTitle("(FPS: " + fps + ")");
                 lastFpsTime = 0;
                 fps = 0;
             }
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            TheEngine.getInstance().update((float) delta); // Update the gamestate
+            this.engine.update((float) delta); // Update the gamestate
 
-            glfwSwapBuffers(window); // swap the color buffers
+            glfwSwapBuffers(this.window); // swap the color buffers
 
             // Poll for window events. The key callback above will only be
             // invoked during this call.
@@ -202,7 +242,7 @@ public class Main implements Runnable {
 
             // check if the user wants to exit the game
             if (KeyBoard.isKeyDown(GLFW_KEY_ESCAPE)) {
-                glfwSetWindowShouldClose(window, true);
+                glfwSetWindowShouldClose(this.window, true);
             }
             // we want each frame to take 10 milliseconds, to do this
             // we've recorded when we started the frame. We add 10 milliseconds
