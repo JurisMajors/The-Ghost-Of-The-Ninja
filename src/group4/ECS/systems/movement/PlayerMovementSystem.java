@@ -101,7 +101,7 @@ public class PlayerMovementSystem extends IteratingSystem {
         player.setState(EntityState.PLAYER_JUMPING);
         AnimationComponent ac = Mappers.animationMapper.get(player);
         ac.setAnimation(EntityState.PLAYER_JUMPING);
-        jumpDelay = JUMPANIM.delay;
+        jumpDelay = ac.getCurrentAnimation().getDelay();
         jumpInProgress = true;
     }
 
