@@ -97,7 +97,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         rightLegLower = new BodyPart(rightLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, rightLegAngles[1], Texture.DEBUG);
         this.hierarchy.add(rightLegUpper);
         this.hierarchy.add(rightLegLower);
-        this.IKHandles.add(new IKEndEffector(rightLegUpper, rightLegLower, hipOffset, rightFootOffset, "foot_R"));
+        this.IKHandles.add(new IKEndEffector(rightLegUpper, rightLegLower, rightFootOffset, "foot_R"));
 
         // Set the position of the foot for the left leg
         Vector3f leftFootOffset = new Vector3f(this.dimension.x, 0.5f, 0.0f);
@@ -108,7 +108,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         leftLegLower = new BodyPart(leftLegUpper, new Vector3f(0.0f, upperLegDimension.y, 0.0f), lowerLegDimension, leftLegAngles[1], Texture.DEBUG);
         this.hierarchy.add(leftLegUpper);
         this.hierarchy.add(leftLegLower);
-        this.IKHandles.add(new IKEndEffector(leftLegUpper, leftLegLower, hipOffset, leftFootOffset, "foot_L"));
+        this.IKHandles.add(new IKEndEffector(leftLegUpper, leftLegLower, leftFootOffset, "foot_L"));
 
         // Set the right wrist position
         Vector3f rightWristOffset = new Vector3f(this.dimension.x, 1.5f, 0.0f);
