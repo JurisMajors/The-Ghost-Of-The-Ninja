@@ -3,6 +3,7 @@ package group4.ECS.systems.animation;
 public class DelayedAnimationSet extends AnimationSet {
     private int frames;
     private int currentFrame;
+
     /**
      * Construct an empty animation set
      */
@@ -18,7 +19,7 @@ public class DelayedAnimationSet extends AnimationSet {
     @Override
     public boolean update(float deltaTime) {
         for (Animation a : this.animations) {
-            a.update(1.0f / this.frames * this.currentFrame);
+            a.update(this.currentFrame / this.frames);
         }
 
         // Move to next timestep for this animation
