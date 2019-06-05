@@ -6,8 +6,7 @@ import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
-import group4.ECS.entities.mobs.JumpingWalkingMob;
-import group4.ECS.entities.mobs.Mob;
+import group4.ECS.entities.mobs.*;
 import group4.ECS.entities.world.ArtTile;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
@@ -24,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import javax.xml.soap.Text;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
@@ -189,7 +189,7 @@ public class Module {
             } else if (entityId.equals(Player.getName())) {
                 this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
             } else if (entityId.endsWith(Mob.getName())) {
-                this.addMob(tileGridX, tileGridY, tileId);
+                this.addMob(tileGridX, tileGridY, tileId, entityId);
             } else {
                 System.err.println("Some tiles not drawing!");
                 continue;
@@ -358,9 +358,18 @@ public class Module {
         this.addEntity(p);
     }
 
-    private void addMob(int x, int y, int i) {
+    private void addMob(int x, int y, int i, String mobName) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
-        Mob m = new JumpingWalkingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        Mob m = null;
+        if (mobName.equals(JumpingWalkingMob.getName())) {
+            m = new JumpingWalkingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        } else if (mobName.equals(WalkingMob.getName())) {
+            m = new WalkingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        } else if (mobName.equals(FlyingMob.getName())) {
+            m = new FlyingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        } else if (mobName.equals(FlappingMob.getName())) {
+            m = new FlappingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        }
         this.addEntity(m);
     }
 
@@ -466,7 +475,10 @@ public class Module {
         int[] platforms = new int[]{0, 1, 2, 5, 6, 8, 9, 10, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 32, 33, 34, 35};
         int[] artTiles = new int[]{3, 4, 11, 12};
         int[] players = new int[]{7};
-        int[] mobs = new int[]{36};
+        int jumpingwalkingmob = 36;
+        int flappingmob = 42;
+        int walkingmob = 40;
+        int flyingmob = 41;
 
         moduleTileMap = new HashMap<Integer, String>();
         for (int i : platforms) {
@@ -481,8 +493,10 @@ public class Module {
             moduleTileMap.put(i, Player.getName());
         }
 
-        for (int i : mobs) {
-            moduleTileMap.put(i, Mob.getName());
-        }
+        moduleTileMap.put(jumpingwalkingmob, JumpingWalkingMob.getName());
+        moduleTileMap.put(flappingmob, FlappingMob.getName());
+        moduleTileMap.put(walkingmob, WalkingMob.getName());
+        moduleTileMap.put(flyingmob, FlyingMob.getName());
+
     }
 }
