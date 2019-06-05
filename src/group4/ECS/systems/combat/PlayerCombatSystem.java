@@ -59,11 +59,10 @@ public class PlayerCombatSystem extends IteratingSystem {
         // if active item is a weapon and when player hits enter, attack
         MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(plc.activeItem);
         if (wc != null && MouseClicks.leftMouseDown()) {
-
             // if melee
             if (wc.cooldown <= 0.0f) {
                 // set cooldown in accordance to rate of attack
-                wc.cooldown = 1 / wc.rateOfAttack;
+                wc.cooldown = wc.rateOfAttack == 0 ? 0 :1 / wc.rateOfAttack;
 
                 // TODO: account for non-centric camera, e.g. pass on cam offset from display centre
                 // camera x in world position

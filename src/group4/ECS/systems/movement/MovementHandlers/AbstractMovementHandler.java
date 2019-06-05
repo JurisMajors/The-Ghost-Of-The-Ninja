@@ -97,7 +97,7 @@ public abstract class AbstractMovementHandler<T extends Mob> {
         doGravity(mc, gc);
 
         // update position
-        pc.position.addi(mc.velocity.scale(deltaTime));
+        pc.position.addi(mc.velocity);
     }
 
     protected void move(Entity e, Vector3f targetPosition, float deltaTime) {
