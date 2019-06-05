@@ -2,7 +2,6 @@ package group4.levelSystem;
 
 import com.badlogic.ashley.core.Entity;
 import group4.AI.Brain;
-import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
@@ -85,7 +84,7 @@ public class Module {
     }
 
 
-    private void loadGhost (String loc) {
+    private void loadGhost(String loc) {
         this.ghostModel = new Brain(loc);
     }
 

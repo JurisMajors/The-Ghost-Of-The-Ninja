@@ -3,10 +3,6 @@ package group4.levelSystem;
 import group4.AI.Evolver;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.world.Exit;
-import group4.game.Main;
-import group4.levelSystem.ExitAction;
-import group4.levelSystem.Level;
-import group4.levelSystem.Module;
 import group4.maths.Vector3f;
 
 /**
@@ -15,6 +11,7 @@ import group4.maths.Vector3f;
  */
 public class AILevel extends Level {
     private final static String modulePath = Evolver.modulePath;
+
     @Override
     protected Module createRoot() {
         if (modulePath == null) throw new IllegalStateException("Module Path is not set for AI level");
