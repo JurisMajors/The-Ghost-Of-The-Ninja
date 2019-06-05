@@ -251,7 +251,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
      * Get the position of the shoulder relative to the player bottom left position
      */
     public Vector3f getShoulderPosition() {
-        return this.shoulderOffset.add(this.hipOffset);
+        return this.hipOffset.add(this.shoulderOffset.rotateXY(-this.torso.rotation));
     }
 
     private void createAnimations() {
