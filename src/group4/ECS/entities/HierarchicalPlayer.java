@@ -306,8 +306,22 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         );
 
         // Add right leg animation
-        SplineAnimation walkCycle = new SplineAnimation(
+        SplineAnimation foot_R = new SplineAnimation(
                 this.IKHandles.get("foot_R"), 0.0f,
+                new Vector3f[]{
+                        new Vector3f(0.0f, 0.0f, 0.0f),
+                        new Vector3f(-.5f, 0.0f, 0.0f),
+                        new Vector3f(-2.f, 0.0f, 0.0f),
+                        new Vector3f(-.1f, 0.2f, 0.0f),
+                        new Vector3f(0.1f, 0.2f, 0.0f),
+                        new Vector3f(0.7f, 0.0f, 0.0f),
+                        new Vector3f(0.5f, 0.0f, 0.0f),
+                        new Vector3f(0.0f, 0.0f, 0.0f)
+                });
+
+        // Add right leg animation
+        SplineAnimation foot_L = new SplineAnimation(
+                this.IKHandles.get("foot_L"), 0.5f,
                 new Vector3f[]{
                         new Vector3f(0.0f, 0.0f, 0.0f),
                         new Vector3f(-.5f, 0.0f, 0.0f),
@@ -322,7 +336,8 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         // Add the cycles to an animation set and return
         AnimationSet walkingAnimationSet = new AnimationSet();
         walkingAnimationSet.add(hipCycle);
-        walkingAnimationSet.add(walkCycle);
+        walkingAnimationSet.add(foot_L);
+        walkingAnimationSet.add(foot_R);
         return walkingAnimationSet;
     }
 

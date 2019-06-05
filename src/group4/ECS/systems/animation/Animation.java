@@ -9,7 +9,7 @@ public abstract class Animation {
 
 
     public Animation(Entity target, float offsetT) {
-        this.currentT = 0.0f;
+        this.currentT = offsetT;
         this.offsetT = offsetT;
         this.target = target;
     }
