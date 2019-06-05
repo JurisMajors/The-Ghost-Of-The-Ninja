@@ -15,8 +15,12 @@ import java.util.logging.SimpleFormatter;
 public class EvolutionLogger implements EvolutionObserver<Brain> {
     /** every genToSave best individual is saved **/
     private int genToSave;
+
     /** directory where to save the best individuals **/
     String filePath;
+
+    /** best fitness in the whole training process **/
+    double bestFitness = -1;
 
     private final static Logger LOGGER = Logger.getLogger("EvolutionLog"); // used for logging to file
 
@@ -66,11 +70,16 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
         if (this.filePath != null) {
             LOGGER.info(log);
         }
+        boolean forceSave = false;
+        if (bestFitness < data.getBestCandidateFitness()) { // found better fitness than before
+            bestFitness = data.getBestCandidateFitness(); // save it in the variable
+            forceSave = true; // and save the model
+        }
 
         // save best candidate every number of generations
-        if (this.filePath != null &&
-                data.getGenerationNumber() % genToSave == 0
-                && data.getGenerationNumber() != 0) {
+        if ((this.filePath != null &&
+                data.getGenerationNumber() % genToSave == 0)
+                || forceSave) {
 
             Brain best = data.getBestCandidate();
             try {
