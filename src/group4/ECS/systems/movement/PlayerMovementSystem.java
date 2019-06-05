@@ -89,6 +89,11 @@ public class PlayerMovementSystem extends IteratingSystem {
             this.initiateFallAnimation((HierarchicalPlayer) e);
         }
 
+        // Check if player has landed on a platform for animation
+        if (((Player) e).getState() == EntityState.PLAYER_FALLING && pc.onPlatform) {
+            this.initiateFallRecoveryAnimation((HierarchicalPlayer) e);
+        }
+
 
         if (shouldSpawnGhost(ref) && !((Player) e).spawnedGhost) {
             ((Player) e).spawnedGhost = true;
@@ -107,6 +112,11 @@ public class PlayerMovementSystem extends IteratingSystem {
 
     private void initiateFallAnimation(HierarchicalPlayer player) {
         player.setState(EntityState.PLAYER_FALLING);
+    }
+
+    private void initiateFallRecoveryAnimation(HierarchicalPlayer player) {
+        player.setState(EntityState.PLAYER_FALLRECOVERING);
+        // TODO: somehow switch to the default state after this is finished, probably using some kind of delay
     }
 
     private void moveRight(MovementComponent mc, PositionComponent pc) {
