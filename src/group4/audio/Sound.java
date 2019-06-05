@@ -29,6 +29,9 @@ public class Sound {
     public static Sound BACKGROUND;
     public static Sound BEEP;
     public static Sound SLASH;
+    public static Sound COIN;
+    public static Sound DIE;
+    public static Sound MOBDIE;
 
     private static ArrayList<Sound> allSounds;
 
@@ -41,10 +44,16 @@ public class Sound {
         BACKGROUND = new Sound("background.ogg", true, 0.5f);
         BEEP = new Sound("fire.ogg", false);
         SLASH = new Sound("slash.ogg", false);
+        COIN = new Sound("coin.ogg", false);
+        DIE = new Sound("die.ogg", false);
+        MOBDIE = new Sound("mobdie.ogg", false);
 
         allSounds.add(BACKGROUND);
         allSounds.add(BEEP);
         allSounds.add(SLASH);
+        allSounds.add(COIN);
+        allSounds.add(DIE);
+        allSounds.add(MOBDIE);
     }
 
     /**
