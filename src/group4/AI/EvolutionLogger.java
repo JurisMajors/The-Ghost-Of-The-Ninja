@@ -70,8 +70,9 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
         if (this.filePath != null) {
             LOGGER.info(log);
         }
-        boolean forceSave = false;
-        if (bestFitness < data.getBestCandidateFitness()) { // found better fitness than before
+        boolean forceSave = false; // whether to save the model if other conditions dont suffice
+        if ((data.isNaturalFitness() && bestFitness < data.getBestCandidateFitness()) ||
+        !data.isNaturalFitness() && bestFitness > data.getBestCandidateFitness()) { // found better fitness than before
             bestFitness = data.getBestCandidateFitness(); // save it in the variable
             forceSave = true; // and save the model
         }
