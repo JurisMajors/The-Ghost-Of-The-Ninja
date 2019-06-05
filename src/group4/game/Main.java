@@ -155,16 +155,14 @@ public class Main implements Runnable {
         Texture.loadAllTextures();
         TileMapping.loadAllTileMappings();
 
-        // load audio
-        audio = new Audio();
-        Sound.loadAllSounds();
-
-        // play background sound
-        Sound.BACKGROUND.play();
-
         // Initialize the engine
         this.engine = TheEngine.getInstance();
         if (!AI) {
+            // load audio
+            audio = new Audio();
+            Sound.loadAllSounds();
+            // play background sound
+            Sound.BACKGROUND.play();
             // Set up all engine systems
             // Systems which change the gamestate
             this.engine.addSystem(new PlayerMovementSystem(0));
@@ -190,10 +188,10 @@ public class Main implements Runnable {
             // Initialize the level
             this.level = new FileLevel("./src/group4/res/maps/level_02");
 
-            // Set up a camera for our game
-            this.camera = new Camera();
-            this.engine.addEntity(camera); // Adding the camera to the module (which adds it to the engine?)
         }
+        // Set up a camera for our game
+        this.camera = new Camera();
+        this.engine.addEntity(camera); // Adding the camera to the module (which adds it to the engine?)
     }
 
     /**
