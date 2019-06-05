@@ -148,7 +148,7 @@ public class Module {
                 parseMainLayer(layer);
             } else if (layerName.equals("SPLINES")) {
                 parseSplineLayer(layer);
-            } else if (layerName.equals("COINS")) {
+            } else if (layerName.equals("COINS") && !Main.AI) {
                 parseCoinLayer(layer);
             } else if (layerName.equals("EXITS")) {
                 setupExits(layer);
