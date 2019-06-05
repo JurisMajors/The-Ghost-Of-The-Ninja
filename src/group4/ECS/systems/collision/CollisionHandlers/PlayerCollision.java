@@ -2,15 +2,18 @@ package group4.ECS.systems.collision.CollisionHandlers;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import group4.ECS.components.identities.CoinComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.components.stats.HealthComponent;
+import group4.ECS.components.stats.ScoreComponent;
 import group4.ECS.entities.DamageArea;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
+import group4.ECS.entities.items.consumables.Coin;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
@@ -53,7 +56,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
                 Vector3f ghostPosition = player.getComponent(PositionComponent.class).position;
 
                 if (!(ghostPosition.x <= mainCameraPosition.x + Main.SCREEN_WIDTH / 2 && ghostPosition.x >= mainCameraPosition.x - Main.SCREEN_WIDTH / 2
-                    && ghostPosition.y <= mainCameraPosition.y + Main.SCREEN_HEIGHT / 2 && ghostPosition.y >= mainCameraPosition.y - Main.SCREEN_HEIGHT / 2)) {
+                        && ghostPosition.y <= mainCameraPosition.y + Main.SCREEN_HEIGHT / 2 && ghostPosition.y >= mainCameraPosition.y - Main.SCREEN_HEIGHT / 2)) {
                     // Ghost is on a platform and not visible on the screen of the user, so let it wait
                     ((Ghost) player).setBlocked(true);
                 } else {
@@ -82,6 +85,9 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
                 removables.add(cd);
             } else if (other instanceof DamageArea) { // TODO: super janky, damageArea does not apply to player whatsoever
                 removables.add(cd);
+            } else if (other instanceof Coin) {
+                handleCoin(player, (Coin) other);
+                removables.add(cd);
             }
         }
 
@@ -93,6 +99,18 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
 
     public static AbstractCollisionHandler getInstance() {
         return me;
+    }
+
+    private void handleCoin(Player player, Coin c) {
+        ScoreComponent playerScore = Mappers.scoreMapper.get(player);
+        CoinComponent coinComponent = Mappers.coinMapper.get(c);
+
+        // update score
+        playerScore.addScore(coinComponent.value);
+
+        // remove coin from the module and the engine
+        TheEngine.getInstance().removeEntity(c);
+        player.level.getCurrentModule().removeEntity(c);
     }
 
     private static void handleMob(Player player, Mob mob) {
@@ -111,7 +129,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
     private static void handleExit(Player player, Exit exit) {
         if (Main.AI && player instanceof Ghost) { // kill ghost if has reached exit
             player.getComponent(HealthComponent.class).health = 0;
-        } else if (player instanceof  Ghost) {
+        } else if (player instanceof Ghost) {
             return;
         }
         exit.module.getLevel().handleExit(exit);

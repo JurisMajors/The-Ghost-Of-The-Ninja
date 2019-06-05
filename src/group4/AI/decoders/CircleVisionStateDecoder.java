@@ -15,8 +15,8 @@ public class CircleVisionStateDecoder extends RayStateDecoder implements StateDe
      * @param angleGap the gap in degrees between the first and the last ray
      *
      */
-    public CircleVisionStateDecoder(int n, int angleGap) {
-        super(n, 360.0f - angleGap);
+    public CircleVisionStateDecoder(int n, int angleGap, int length) {
+        super(n, 360.0f - angleGap, length);
         this.gap = angleGap / 2;
     }
 
@@ -35,7 +35,8 @@ public class CircleVisionStateDecoder extends RayStateDecoder implements StateDe
     public JSONObject getSettings() {
         JSONObject settings = new JSONObject();
         settings.put("rays", this.nrRays);
-        settings.put("gap", this.gap);
+        settings.put("raylength", this.rayLength);
+        settings.put("gap", this.gap * 2);
         return settings;
     }
 
@@ -46,6 +47,7 @@ public class CircleVisionStateDecoder extends RayStateDecoder implements StateDe
     public static CircleVisionStateDecoder loadOnSettings(JSONObject settings) {
         int nrRays = settings.getInt("rays");
         int gap = settings.getInt("gap");
-        return new CircleVisionStateDecoder(nrRays, gap);
+        int lngth = settings.has("raylength") ? settings.getInt("raylength") : 10000;
+        return new CircleVisionStateDecoder(nrRays, gap, lngth);
     }
 }

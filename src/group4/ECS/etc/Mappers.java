@@ -4,10 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import group4.ECS.components.*;
 import group4.ECS.components.events.TickComponent;
 import group4.ECS.components.events.TimedComponent;
-import group4.ECS.components.identities.CameraComponent;
-import group4.ECS.components.identities.ConsumableComponent;
-import group4.ECS.components.identities.MobComponent;
-import group4.ECS.components.identities.PlayerComponent;
+import group4.ECS.components.identities.*;
 import group4.ECS.components.physics.*;
 import group4.ECS.components.stats.*;
 import group4.ECS.entities.Player;
@@ -86,4 +83,10 @@ public class Mappers {
 
     public static final ComponentMapper<TimedComponent> timedMapper =
             ComponentMapper.getFor(TimedComponent.class);
+
+    public static final ComponentMapper<CoinComponent> coinMapper =
+            ComponentMapper.getFor(CoinComponent.class);
+
+    public static final ComponentMapper<ScoreComponent> scoreMapper =
+            ComponentMapper.getFor(ScoreComponent.class);
 }
