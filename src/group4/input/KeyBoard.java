@@ -14,6 +14,10 @@ public class KeyBoard extends GLFWKeyCallback {
      */
     @Override
     public void invoke(long window, int key, int scancode, int action, int mods) {
+        // fn f11 xd
+        if (key == -1) {
+            return;
+        }
         // only turn on if the button is not released
         keys[key] = action != GLFW_RELEASE;
     }
