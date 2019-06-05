@@ -1,14 +1,22 @@
 package group4.ECS.systems.animation;
 
-import javax.swing.text.html.parser.Entity;
+import com.badlogic.ashley.core.Entity;
 
 public abstract class Animation {
-    float currentT;
+    float currentT; // Implicitly always between
     Entity target;
     float offsetT;
-    public Animation() {
+
+    public Animation(Entity target, float offsetT) {
         this.currentT = 0.0f;
+        this.offsetT = offsetT;
+        this.target = target;
     }
 
-    public abstract void update(float deltaTime);
+    public final void update(float deltaTime) {
+        this.currentT = (this.currentT + deltaTime) % 1.0f;
+        this.stepAnimation();
+    }
+
+    protected abstract void stepAnimation();
 }
