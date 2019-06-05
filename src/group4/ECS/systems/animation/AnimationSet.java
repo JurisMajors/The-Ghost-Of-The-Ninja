@@ -34,10 +34,11 @@ public class AnimationSet extends Animation {
      * Update all animations in this set
      */
     @Override
-    public void update(float deltaTime) {
+    public boolean update(float deltaTime) {
         for (Animation a : this.animations) {
             a.update(deltaTime);
         }
+        return true;
     }
 
 

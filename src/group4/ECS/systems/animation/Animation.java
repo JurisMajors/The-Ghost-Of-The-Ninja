@@ -15,9 +15,10 @@ public abstract class Animation {
     }
 
 
-    public void update(float deltaTime) {
+    public boolean update(float deltaTime) {
         this.currentT = (this.currentT + deltaTime) % 1.0f;
         this.stepAnimation();
+        return true;
     }
 
 
