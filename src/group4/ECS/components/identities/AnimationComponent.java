@@ -17,17 +17,21 @@ public class AnimationComponent implements Component {
      * Default constructor which creates the component. No data is currently associated with being animatable.
      */
     public AnimationComponent() {
+        // Initialize animations and set it to the NONE animation, which is NULL
         animations = new HashMap<>();
-        currentAnimation = EntityState.DEFAULT:
+        addAnimation(EntityState.NONE, null);
+        setAnimation(EntityState.NONE);
     }
 
     public void addAnimation(EntityState state, Animation anim) {
         animations.put(state, anim);
-    };
+    }
 
     public void setAnimation(EntityState state) {
         if (animations.containsKey(state)) {
-
+            setAnimation(state);
+        } else {
+            System.err.println("[WARNING] Animation not found.");
         }
     }
 
