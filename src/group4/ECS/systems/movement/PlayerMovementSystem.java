@@ -101,15 +101,12 @@ public class PlayerMovementSystem extends IteratingSystem {
     private void initiateJumpSequence(HierarchicalPlayer player) {
         player.setState(EntityState.PLAYER_JUMPING);
         AnimationComponent ac = Mappers.animationMapper.get(player);
-        ac.setAnimation(EntityState.PLAYER_JUMPING);
         jumpDelay = ((DelayedAnimation) ac.getCurrentAnimation()).getDelay();
         jumpInProgress = true;
     }
 
     private void initiateFallAnimation(HierarchicalPlayer player) {
         player.setState(EntityState.PLAYER_FALLING);
-        AnimationComponent ac = Mappers.animationMapper.get(player);
-        ac.setAnimation(EntityState.PLAYER_FALLING);
     }
 
     private void moveRight(MovementComponent mc, PositionComponent pc) {
