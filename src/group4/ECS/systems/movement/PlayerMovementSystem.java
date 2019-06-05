@@ -106,9 +106,9 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     private void initiateFallAnimation(HierarchicalPlayer player) {
-        player.setState(EntityState.JUMPING);
+        player.setState(EntityState.PLAYER_FALLING);
         AnimationComponent ac = Mappers.animationMapper.get(player);
-        ac.setAnimationState(ac.animations.get(EntityState.FALLING));
+        ac.setAnimation(EntityState.PLAYER_FALLING);
     }
 
     private void moveRight(MovementComponent mc, PositionComponent pc) {
