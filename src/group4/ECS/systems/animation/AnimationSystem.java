@@ -39,13 +39,18 @@ public class AnimationSystem extends IteratingSystem {
         // Update the positions according to the animation that is currently active
         ac.getCurrentAnimation().update(this.deltaTime);
 
+        // Temp thing to animate the hip bounce during walking
+        player.setHipPosition(player.getTorso().getComponent(PositionComponent.class).position.add(player.hipOffset));
+        player.getTorso().relativePosition = player.getHipPosition();
+
         // Handle the IK logic for determining final limb rotations. Animations only update key positions, such as those of the IKEndEffector(s)
         for (String handleName : player.IKHandles.keySet()){
             IKEndEffector handle = player.IKHandles.get(handleName);
 
             // Move handle.endPos to be relative of the player position
             PositionComponent pc = Mappers.positionMapper.get(handle);
-            pc.position.add(new Vector3f(player.getComponent(DimensionComponent.class).dimension.x / 2, 0.0f, 0.0f));
+            DebugUtils.drawCircle(pc.position.add(player.getComponent(PositionComponent.class).position).add(new Vector3f(player.getComponent(DimensionComponent.class).dimension.x / 2, 0.0f, 0.0f)), .05f, 30);
+            pc.position = pc.position.add(new Vector3f(player.getComponent(DimensionComponent.class).dimension.x / 2, 0.0f, 0.0f));
             // Get the length of the body parts involved in the IK system
             float upperLength = handle.upper.getComponent(DimensionComponent.class).dimension.y;
             float lowerLength = handle.lower.getComponent(DimensionComponent.class).dimension.y;
@@ -57,9 +62,7 @@ public class AnimationSystem extends IteratingSystem {
             handle.lower.rotation = angles[1];
         }
         
-        // Temp thing to animate the hip bounce during walking
-        player.setHipPosition(player.getTorso().getComponent(PositionComponent.class).position.add(player.hipOffset));
-        player.getTorso().relativePosition = player.getHipPosition();
+
 
 
     }
