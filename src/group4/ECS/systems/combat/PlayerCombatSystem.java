@@ -117,6 +117,18 @@ public class PlayerCombatSystem extends IteratingSystem {
         Vector3f intersection = ray.cast(TheEngine.getInstance().getEntitiesFor(Families.allCollidableFamily)).point;
 
         // distinguish three cases
+        // if hitbox fully behind wall, don't create hitbox
+        if ((trueOffset.x >= 0 && intersection.x <= hitboxCorner.x) ||
+                (trueOffset.x < 0 && intersection.x > hitboxCorner.x)) {
+            return;
+        }
+
+        // if hitbox partially in wall, shrink hitbox
+        if (trueOffset.x >= 0 && intersection.x < rayEnd.x) {
+            trueHitbox.x = trueHitbox.x - (rayEnd.x - intersection.x);
+        } else if (trueOffset.x < 0 && intersection.x > rayEnd.x) {
+            trueHitbox.x = trueHitbox.x + (intersection.x - rayEnd.x);
+        }
 
         // exclude ghost and player for the damage
         Set<Class<? extends Entity>> excluded = new HashSet<>();
