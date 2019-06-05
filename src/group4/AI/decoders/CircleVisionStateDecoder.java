@@ -35,7 +35,7 @@ public class CircleVisionStateDecoder extends RayStateDecoder implements StateDe
     public JSONObject getSettings() {
         JSONObject settings = new JSONObject();
         settings.put("rays", this.nrRays);
-        settings.put("gap", this.gap);
+        settings.put("gap", this.gap * 2);
         return settings;
     }
 
