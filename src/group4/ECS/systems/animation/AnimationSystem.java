@@ -32,12 +32,24 @@ public class AnimationSystem extends IteratingSystem {
 
     private void animatePlayer(HierarchicalPlayer player) {
         AnimationComponent ac = Mappers.animationMapper.get(player);
+        EntityState playerState = player.getState();
 
         // Update the active animation to match the current state of the player
         ac.setAnimation(player.getState());
 
         // Update the positions according to the animation that is currently active
-        ac.getCurrentAnimation().update(this.deltaTime);
+        boolean done = ac.getCurrentAnimation().update(this.deltaTime);
+
+        // Check if we have to handle a DelayedAnimation(Set) transition
+        if (ac.getCurrentAnimation() instanceof DelayedAnimationSet && done) {
+            if (playerState == EntityState.PLAYER_PREJUMP) {
+                player.setState(EntityState.PLAYER_JUMPING);
+            } else if (playerState == EntityState.PLAYER_POSTFALL) {
+                player.setState(EntityState.PLAYER_IDLE);
+            } else {
+                System.err.println("[WARNING] Unhandled DelayedAnimation(Set) transition.");
+            }
+        }
 
         // Temp thing to animate the hip bounce during walking
         player.setHipPosition(player.getTorso().getComponent(PositionComponent.class).position.add(player.hipOffset));
