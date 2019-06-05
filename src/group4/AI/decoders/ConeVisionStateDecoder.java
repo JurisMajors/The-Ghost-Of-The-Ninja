@@ -10,8 +10,8 @@ import org.json.JSONObject;
  */
 public class ConeVisionStateDecoder extends RayStateDecoder{
 
-    public ConeVisionStateDecoder(int n, float angleRange) {
-        super(n, angleRange);
+    public ConeVisionStateDecoder(int n, float angleRange, int length) {
+        super(n, angleRange, length);
     }
 
     @Override
@@ -27,6 +27,7 @@ public class ConeVisionStateDecoder extends RayStateDecoder{
         JSONObject settings = new JSONObject();
         settings.put("rays", this.nrRays);
         settings.put("range", this.angleRange);
+        settings.put("raylength", this.rayLength);
         return settings;
     }
 
@@ -37,6 +38,7 @@ public class ConeVisionStateDecoder extends RayStateDecoder{
     public static ConeVisionStateDecoder loadOnSettings(JSONObject settings) {
         int nrRays = settings.getInt("rays");
         int range = settings.getInt("range");
-        return new ConeVisionStateDecoder(nrRays, range);
+        int lngth = settings.has("raylength") ? settings.getInt("raylength") : 10000;
+        return new ConeVisionStateDecoder(nrRays, range, lngth);
     }
 }
