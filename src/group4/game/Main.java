@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import group4.AI.Evolver;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.AnimationSystem;
+import group4.ECS.systems.animation.AnimationSystem;
 import group4.ECS.systems.CameraSystem;
 import group4.ECS.systems.RenderSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;

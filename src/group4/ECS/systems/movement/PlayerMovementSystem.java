@@ -3,9 +3,11 @@ package group4.ECS.systems.movement;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import group4.ECS.components.identities.AnimationComponent;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
@@ -24,6 +26,8 @@ import static org.lwjgl.glfw.GLFW.*;
 public class PlayerMovementSystem extends IteratingSystem {
 
     private boolean wasSpaceDown = false;
+    private boolean jumpInProgress = false;
+    private float jumpDelay;
 
     public PlayerMovementSystem(int priority) {
         super(Families.playerFamily, priority);
@@ -64,8 +68,20 @@ public class PlayerMovementSystem extends IteratingSystem {
         }
         // jump if space is pressed and if canJump is satisfied
         if (shouldJump(ref) && canJump(mc.velocity)) {
-            jump(mc);
+            initiateJumpSequence((HierarchicalPlayer) e);
         }
+
+        if (jumpInProgress) {
+            jumpDelay -= deltaTime;
+
+            // JUMP DELAY for animation purposes.
+            if (jumpDelay <= 0) {
+                jump(mc);
+                jumpDelay = 0;
+                jumpInProgress = false;
+            }
+        }
+
 
         if (shouldSpawnGhost(ref) && !((Player) e).spawnedGhost) {
             ((Player) e).spawnedGhost = true;
@@ -73,6 +89,14 @@ public class PlayerMovementSystem extends IteratingSystem {
         }
 
         mc.velocity.capValuesi(mc.velocityRange);
+    }
+
+    private void initiateJumpSequence(HierarchicalPlayer player) {
+        player.setState(PlayerStates.JUMPING);
+        AnimationComponent ac = Mappers.animationMapper.get(player);
+        ac.setAnimationState(ac.animations.get(Playerstates.JUMPING));
+        jumpDelay = JUMPANIM.delay;
+        jumpInProgress = true;
     }
 
     private void moveRight(MovementComponent mc, PositionComponent pc) {

@@ -4,18 +4,15 @@ import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.identities.AnimationComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
-import group4.game.IKEndEffector;
+import group4.ECS.systems.animation.IKEndEffector;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
-import group4.utils.DebugUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 
 
 public class HierarchicalPlayer extends Player implements GraphicsHierarchy {

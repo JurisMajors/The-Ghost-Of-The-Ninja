@@ -1,4 +1,4 @@
-package group4.game;
+package group4.ECS.systems.animation;
 
 import group4.ECS.entities.BodyPart;
 import group4.maths.Vector3f;
