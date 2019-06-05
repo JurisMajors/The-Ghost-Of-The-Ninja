@@ -270,5 +270,6 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
                         new Vector3f(0.0f, 0.0f, 0.0f)
                 });
         ac.addAnimation(EntityState.PLAYER_WALKING, walkCycle);
+        System.out.println(ac);
     }
 }

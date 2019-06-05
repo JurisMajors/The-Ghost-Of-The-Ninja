@@ -85,7 +85,7 @@ public class PlayerMovementSystem extends IteratingSystem {
         }
 
         // Check if player is falling to animate a fall
-        if (mc.velocity.y < 1e-3) {
+        if (mc.velocity.y < -1e-3) {
             this.initiateFallAnimation((HierarchicalPlayer) e);
         }
 

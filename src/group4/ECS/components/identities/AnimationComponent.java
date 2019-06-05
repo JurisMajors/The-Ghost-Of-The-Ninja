@@ -28,6 +28,12 @@ public class AnimationComponent implements Component {
     }
 
     public void setAnimation(EntityState state) {
+        for (EntityState name: this.animations.keySet()){
+            Animation value = this.animations.get(name);
+            System.out.println(name + " : " + value);
+        }
+
+        System.out.println(state);
         if (animations.containsKey(state)) {
             currentAnimation = animations.get(state);
         } else {

@@ -30,7 +30,8 @@ public class AnimationSystem extends IteratingSystem {
 
     private void animatePlayer(HierarchicalPlayer player) {
         AnimationComponent ac = Mappers.animationMapper.get(player);
-        ac.setAnimation(EntityState.PLAYER_WALKING);
+        System.out.println(ac);
+        ac.setAnimation(player.getState());
         ac.getCurrentAnimation().update(this.deltaTime);
 //        Vector3f[] walkSplinePoints = new Vector3f[]{
 //                new Vector3f(0.0f, 0.0f, 0.0f),
@@ -71,15 +72,14 @@ public class AnimationSystem extends IteratingSystem {
 //            }
 
             // Move handle.endPos to be relative of the player position
-            PositionComponent handlePos = Mappers.positionMapper.get(handle);
-            handlePos.position = handlePos.position.add(new Vector3f(player.getComponent(DimensionComponent.class).dimension.x / 2, 0.0f, 0.0f));
-
+            PositionComponent pc = Mappers.positionMapper.get(handle);
+            pc.position.add(new Vector3f(player.getComponent(DimensionComponent.class).dimension.x / 2, 0.0f, 0.0f));
             // Get the length of the body parts involved in the IK system
             float upperLength = handle.upper.getComponent(DimensionComponent.class).dimension.y;
             float lowerLength = handle.lower.getComponent(DimensionComponent.class).dimension.y;
 
             // Calculate and set the new rotations for the limbs based on the start and endpoints of the IK chain
-            float[] angles = player.getLimbAngles(player.getHipOffset(), handlePos.position, upperLength, lowerLength, true);
+            float[] angles = player.getLimbAngles(player.getHipOffset(), pc.position, upperLength, lowerLength, true);
             handle.upper.rotation = angles[0];
             handle.lower.rotation = angles[1];
         }
