@@ -4,6 +4,8 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.etc.TheEngine;
+import group4.game.GameState;
+import group4.game.Main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,6 +59,7 @@ public abstract class Level {
         this.configExits();                                 // Configure the exits
 
         this.checkSanity();                                 // Check that the level was created appropriately
+        Main.setState(GameState.PLAYING);                   // Ensure the system knows the game is playing.
     }
 
     /**
