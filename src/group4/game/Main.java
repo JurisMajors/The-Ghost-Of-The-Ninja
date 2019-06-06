@@ -59,7 +59,7 @@ public class Main implements Runnable {
     /**
      * enable this if you want to run the genetic algorithm, instead of playing urself
      **/
-    public static final boolean AI = false;
+    public static final boolean AI = true;
     /**
      * whether should do calls to OPENGL
      **/
