@@ -12,6 +12,8 @@ import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
 
+import java.util.Set;
+
 public class DamageArea extends Entity {
 
     /**
@@ -20,12 +22,12 @@ public class DamageArea extends Entity {
      * @param dimension dimension field of effect
      * @param damage damage inflicted on colliding entity (HealthComponent needed)
      */
-    public DamageArea(Vector3f position, Vector3f dimension, int damage) {
+    public DamageArea(Vector3f position, Vector3f dimension, int damage, Set<Class<? extends Entity>> excluded) {
 
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
         this.add(new CollisionComponent(MeleeCollision.getInstance()));
-        this.add(new DamageComponent(damage));
+        this.add(new DamageComponent(damage, excluded));
 
         // Construct vertex array
         float[] vertices = new float[] {

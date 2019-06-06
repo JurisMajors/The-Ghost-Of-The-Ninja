@@ -97,11 +97,12 @@ public class Families {
     //All entities with which collision is possible
     public static final Family collidableFamily = Family
             .all(CollisionComponent.class).exclude(MovementComponent.class, SplineComponent.class).get();
-    //All entities with which collision is possible
+
+    // All moving collidable entities
     public static final Family collidableMovingFamily = Family
             .all(CollisionComponent.class, MovementComponent.class).get();
 
-    //All entities with spline collision
+    // All entities with spline collision
     public static final Family collidableSplineFamily = Family
             .all(SplineComponent.class, CollisionComponent.class).exclude(SplinePathComponent.class).get();
 

@@ -162,8 +162,6 @@ public class PlayerCombatSystem extends IteratingSystem {
                 }
             }
 
-            System.out.println(ic);
-
             // if item slot used, but not item, throw exception
             if (ic == null) {
                 throw new IllegalStateException("Invalid object in inventory: " + item.getClass());

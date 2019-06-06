@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Family;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
+import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.etc.Families;
@@ -63,13 +64,16 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
 
         // If auto reset is enabled, reset the module to its original state
         // and reposition the player, while giving it new health
+        // TODO: kill player properly
         if (this.autoReset) {
             ((Player) entity).level.getCurrentModule().unload();
             ((Player) entity).level.getCurrentModule().reset();
             ((Player) entity).level.getCurrentModule().load();
             ((Player) entity).getComponent(PositionComponent.class).position =
                     ((Player) entity).level.getCurrentModule().getPlayerInitialPosition();
+            // TODO: set to player init health and not hardcoded 100
             ((Player) entity).getComponent(HealthComponent.class).health = 100;
+            ((Player) entity).getComponent(MovementComponent.class).velocity = new Vector3f();
         }
 
         // Level should take care of removing a player from the engine if that is necessary

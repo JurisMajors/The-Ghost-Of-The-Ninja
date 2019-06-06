@@ -137,7 +137,7 @@ public class Main implements Runnable {
             engine.addSystem(new BulletMovementSystem(3));
             engine.addSystem(new PlayerCombatSystem(4));
             engine.addSystem(new CollisionSystem(5));
-            engine.addSystem(new DamageSystem(6));
+//            engine.addSystem(new DamageSystem(6));
             engine.addSystem(new CollisionEventSystem(7));
             engine.addSystem(new UncollidingSystem(8));
             engine.addSystem(new PlayerDyingSystem(true, 9));
