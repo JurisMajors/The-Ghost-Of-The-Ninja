@@ -35,7 +35,7 @@ public class StandardMutation extends AbstractBrainMutation{
         while (iter.hasNext()) { // while there are values to iterate
             long[] nextIndex = iter.next(); // get index
             if ((this.mutationProb.nextValue()).nextEvent(rng)) { // if should mutate by the probability
-                double r = rng.nextDouble();
+                float r = rng.nextFloat();
                 w = w.putScalar(nextIndex, r); // generate new double for the weight
             }
         }
