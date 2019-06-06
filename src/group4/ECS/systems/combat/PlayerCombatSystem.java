@@ -15,7 +15,7 @@ import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.audio.Sound;
 import group4.game.Main;
-import group4.game.Window;
+import group4.UI.Window;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;

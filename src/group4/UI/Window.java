@@ -1,6 +1,7 @@
-package group4.game;
+package group4.UI;
 
 import group4.AI.Evolver;
+import group4.game.Main;
 import org.lwjgl.glfw.GLFWVidMode;
 
 import static org.lwjgl.glfw.GLFW.*;

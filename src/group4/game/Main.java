@@ -22,6 +22,7 @@ import group4.ECS.systems.movement.GhostMovementSystem;
 import group4.ECS.systems.movement.MobMovementSystem;
 import group4.ECS.systems.movement.PlayerMovementSystem;
 import group4.ECS.systems.timed.TimedEventSystem;
+import group4.UI.Window;
 import group4.audio.Sound;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -32,26 +33,14 @@ import group4.input.MouseMovement;
 import group4.levelSystem.Level;
 import group4.levelSystem.FileLevel;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.ALC;
-import org.lwjgl.openal.ALCCapabilities;
-import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryStack;
-
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.stb.STBVorbis.stb_vorbis_decode_filename;
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.jemalloc.JEmalloc.Functions.free;
 import static org.lwjgl.system.libc.LibCStdlib.free;
-import static sun.audio.AudioDevice.device;
 
 
 public class Main implements Runnable {
