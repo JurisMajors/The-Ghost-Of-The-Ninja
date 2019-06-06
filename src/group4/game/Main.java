@@ -22,6 +22,7 @@ import group4.ECS.systems.movement.GhostMovementSystem;
 import group4.ECS.systems.movement.MobMovementSystem;
 import group4.ECS.systems.movement.PlayerMovementSystem;
 import group4.ECS.systems.timed.TimedEventSystem;
+import group4.UI.StartScreen;
 import group4.UI.Window;
 import group4.audio.Sound;
 import group4.graphics.Shader;
@@ -62,6 +63,7 @@ public class Main implements Runnable {
     private Level level;
     private Engine engine;
     private Camera camera;
+    private StartScreen startScreen;
 
     public static final float SCREEN_WIDTH = 16.5f;
     public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
@@ -174,9 +176,11 @@ public class Main implements Runnable {
             this.engine.addSystem(new TimedEventSystem(15));
             this.engine.addSystem(new LastSystem(16));
 
+            // Initialize the StartScreen
+            this.startScreen = new StartScreen();
+
             // Initialize the level
             this.level = new FileLevel("./src/group4/res/maps/level_02");
-
         }
         // Set up a camera for our game
         this.camera = new Camera();
