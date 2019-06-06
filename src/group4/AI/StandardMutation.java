@@ -6,6 +6,7 @@ import org.uncommons.maths.number.ConstantGenerator;
 import org.uncommons.maths.number.NumberGenerator;
 import org.uncommons.maths.random.Probability;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -34,7 +35,8 @@ public class StandardMutation extends AbstractBrainMutation{
         while (iter.hasNext()) { // while there are values to iterate
             long[] nextIndex = iter.next(); // get index
             if ((this.mutationProb.nextValue()).nextEvent(rng)) { // if should mutate by the probability
-                w.putScalar(nextIndex, rng.nextDouble()); // generate new double for the weight
+                double r = rng.nextDouble();
+                w = w.putScalar(nextIndex, r); // generate new double for the weight
             }
         }
 
