@@ -224,7 +224,12 @@ public class Main implements Runnable {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            this.engine.update((float) delta); // Update the gamestate
+            if (STATE == GameState.PLAYING || STATE == GameState.STARTSCREEN) {
+                if (STATE == GameState.STARTSCREEN) {
+                    this.startScreen.update(); // Allows for the startscreen logic to update.. Should perhaps be an entity? But this works.
+                }
+                this.engine.update((float) delta); // Update the gamestate
+            }
 
             glfwSwapBuffers(this.window); // swap the color buffers
 

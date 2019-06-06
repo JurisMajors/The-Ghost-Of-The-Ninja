@@ -91,6 +91,7 @@ public abstract class Level {
         this.configExits();                                 // Configure the exits
 
         this.checkSanity();                                 // Check that the level was created appropriately
+        Main.setState(GameState.PLAYING);
     }
 
     /**
