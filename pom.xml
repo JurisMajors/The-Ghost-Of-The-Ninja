@@ -1,4 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project [
+        <!ELEMENT project (modelVersion|groupId|artifactId|version|build|repositories|properties|profiles|dependencies)*>
+        <!ATTLIST project
+                xmlns CDATA #REQUIRED
+                xmlns:xsi CDATA #REQUIRED
+                xsi:schemaLocation CDATA #REQUIRED>
+        <!ELEMENT modelVersion (#PCDATA)>
+        <!ELEMENT groupId (#PCDATA)>
+        <!ELEMENT artifactId (#PCDATA)>
+        <!ELEMENT version (#PCDATA)>
+        <!ELEMENT build (plugins)*>
+        <!ELEMENT plugins (plugin)*>
+        <!ELEMENT plugin (groupId|artifactId|configuration|version|executions)*>
+        <!ELEMENT configuration (source|target|nativesTargetDir|separateDirs)*>
+        <!ELEMENT source (#PCDATA)>
+        <!ELEMENT target (#PCDATA)>
+        <!ELEMENT executions (execution)*>
+        <!ELEMENT execution (id|phase|goals)*>
+        <!ELEMENT id (#PCDATA)>
+        <!ELEMENT phase (#PCDATA)>
+        <!ELEMENT goals (goal)*>
+        <!ELEMENT goal (#PCDATA)>
+        <!ELEMENT nativesTargetDir (#PCDATA)>
+        <!ELEMENT separateDirs (#PCDATA)>
+        <!ELEMENT repositories (repository)*>
+        <!ELEMENT repository (id|name|url)*>
+        <!ELEMENT name (#PCDATA)>
+        <!ELEMENT url (#PCDATA)>
+        <!ELEMENT properties (lwjgl.version|lwjgl.natives)*>
+        <!ELEMENT lwjgl.version (#PCDATA)>
+        <!ELEMENT profiles (profile)*>
+        <!ELEMENT profile (id|activation|properties)*>
+        <!ELEMENT activation (os)*>
+        <!ELEMENT os (family)*>
+        <!ELEMENT family (#PCDATA)>
+        <!ELEMENT lwjgl.natives (#PCDATA)>
+        <!ELEMENT dependencies (dependency)*>
+        <!ELEMENT dependency (groupId|artifactId|version|classifier)*>
+        <!ELEMENT classifier (#PCDATA)>
+        ]>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
