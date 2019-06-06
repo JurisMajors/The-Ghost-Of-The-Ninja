@@ -25,6 +25,12 @@ public class Texture {
     public static Texture NOTHINGNESS;
     public static Texture SPLINE;
 
+    // GAME UI / OVERLAYS
+    public static Texture START_BG;
+    public static Texture VIGNETTE_OVERLAY;
+    public static Texture NOISE_OVERLAY;
+    public static Texture PRESS_ENTER;
+
     // width and height of the texture
     private int width, height;
     // internal opengl id for this texture
@@ -52,6 +58,11 @@ public class Texture {
         NOTHINGNESS = new Texture("src/group4/res/textures/FF4D00-0.png");
         PLAYER = new Texture("src/group4/res/textures/char1.png");
         SPLINE = new Texture("src/group4/res/textures/spline.png");
+
+        START_BG = new Texture("src/group4/res/textures/start-bg.png");
+        VIGNETTE_OVERLAY = new Texture("src/group4/res/textures/vignette-overlay.png");
+        NOISE_OVERLAY = new Texture("src/group4/res/textures/noise-overlay.png");
+        PRESS_ENTER = new Texture("src/group4/res/textures/press-enter.png");
     }
 
     /**
