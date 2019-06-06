@@ -81,7 +81,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
                 handleExit(player, (Exit) other);
                 // after player exit interaction we dont want to fix their positions (we are just going to execute the exit action)
                 removables.add(cd);
-            } else if (other instanceof DamageArea) { // TODO: super janky, damageArea does not apply to player whatsoever
+            } else if (other instanceof DamageArea) {
                 removables.add(cd);
             }
         }

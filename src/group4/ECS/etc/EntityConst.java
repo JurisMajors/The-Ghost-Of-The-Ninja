@@ -30,4 +30,9 @@ public class EntityConst {
         MACHINEGUN,
     }
 
+    public enum EntityState {
+        DEFAULT,
+        IMMUNE
+    }
+
 }

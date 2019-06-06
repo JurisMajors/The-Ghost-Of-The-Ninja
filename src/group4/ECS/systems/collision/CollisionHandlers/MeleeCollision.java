@@ -2,9 +2,11 @@ package group4.ECS.systems.collision.CollisionHandlers;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.physics.CollisionComponent;
+import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.etc.EntityConst;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.collision.CollisionData;
@@ -44,16 +46,21 @@ public class MeleeCollision extends AbstractCollisionHandler<Entity> {
         HealthComponent hc = other.getComponent(HealthComponent.class);
         DamageComponent dmg = entity.getComponent(DamageComponent.class);
 
-        System.out.println(hc.health);
+        // if entity immune to dmg, skip
+        if (hc.state == EntityConst.EntityState.IMMUNE) {
+            return;
+        }
 
         // deal Dmg
         hc.health -= dmg.damage;
+        System.out.println(hc.health);
+
+        // make immune for one tick (see LastSystem)
+        hc.state = EntityConst.EntityState.IMMUNE;
     }
 
     private void handleKnockback(Entity entity, Entity other) {
         MovementComponent mc = Mappers.movementMapper.get(other);
-
-        System.out.println("here");
 
         // min knockback velocity
         float minKnockBack = 2.0f;
@@ -66,8 +73,11 @@ public class MeleeCollision extends AbstractCollisionHandler<Entity> {
                 boost = minKnockBack / mc.velocity.length();
             }
 
-            System.out.println(mc.velocity);
-            mc.velocity = mc.velocity.scale(-boost);
+            if (mc.velocity.y < 0) {
+                boost *= -1;
+            }
+
+            mc.velocity = mc.velocity.scale(boost);
         }
     }
 
