@@ -10,6 +10,7 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.etc.EntityState;
+import group4.ECS.components.stats.ScoreComponent;
 import group4.ECS.systems.collision.CollisionHandlers.PlayerCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -78,6 +79,7 @@ public class Player extends Entity {
         this.add(new HealthComponent(100));
         this.add(new PlayerComponent());
         this.add(new CollisionComponent(PlayerCollision.getInstance()));
+        this.add(new ScoreComponent());
     }
 
     public static String getName() {

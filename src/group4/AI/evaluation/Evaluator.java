@@ -17,6 +17,7 @@ import group4.ECS.systems.CameraSystem;
 import group4.ECS.systems.RenderSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
+import group4.ECS.systems.collision.LastSystem;
 import group4.ECS.systems.collision.UncollidingSystem;
 import group4.ECS.systems.death.GhostDyingSystem;
 import group4.ECS.systems.movement.GhostMovementSystem;
@@ -26,7 +27,7 @@ import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
-import group4.levelSystem.levels.AILevel;
+import group4.levelSystem.AILevel;
 import group4.maths.Vector3f;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 
@@ -149,10 +150,11 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         engine.addSystem(new CollisionSystem(2));
         engine.addSystem(new CollisionEventSystem(3));
         engine.addSystem(new UncollidingSystem(4));
-        engine.addSystem(new GhostDyingSystem(5));
+        engine.addSystem(new GhostDyingSystem(false,5));
         if (Evolver.render) {
             engine.addSystem(new RenderSystem(6));
         }
+        engine.addSystem(new LastSystem(7));
     }
 
     private void clearPlayers(Engine engine, Module cur) {

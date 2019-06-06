@@ -35,7 +35,7 @@ public class GhostDyingSystem extends PlayerDyingSystem {
         // if best move has more than 50 calls, but there are still
         // two moves with zero, this individual is dumb :)
         boolean tooDumb = (moveFreq[argMax] > 80 && zerosCount >= 2);
-        return super.shouldDie(entity, deltaTime) || (!Main.AI && tooDumb);
+        return super.shouldDie(entity, deltaTime) || (Main.AI && tooDumb);
     }
 
     @Override

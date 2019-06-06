@@ -13,6 +13,7 @@ import group4.ECS.entities.items.Item;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
+import group4.audio.Sound;
 import group4.game.Main;
 import group4.game.Window;
 import group4.input.KeyBoard;
@@ -58,11 +59,10 @@ public class PlayerCombatSystem extends IteratingSystem {
         // if active item is a weapon and when player hits enter, attack
         MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(plc.activeItem);
         if (wc != null && MouseClicks.leftMouseDown()) {
-
             // if melee
             if (wc.cooldown <= 0.0f) {
                 // set cooldown in accordance to rate of attack
-                wc.cooldown = 1 / wc.rateOfAttack;
+                wc.cooldown = wc.rateOfAttack == 0 ? 0 :1 / wc.rateOfAttack;
 
                 // TODO: account for non-centric camera, e.g. pass on cam offset from display centre
                 // camera x in world position
@@ -88,6 +88,8 @@ public class PlayerCombatSystem extends IteratingSystem {
                 excluded.add(Player.class);
                 excluded.add(Ghost.class);
 
+                // play the slash sound
+                Sound.SLASH.play();
                 Vector3f position = pc.position.add(trueOffset);
                 new MeleeArea(position, wc.hitBox,
                         wc.damage, excluded);

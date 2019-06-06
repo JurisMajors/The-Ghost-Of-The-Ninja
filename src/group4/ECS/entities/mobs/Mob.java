@@ -40,6 +40,13 @@ public class Mob extends Entity {
         this.add(new MobComponent(handler));
     }
 
+    public Mob(Vector3f position, Level l, Texture tex, float[] texCoord, AbstractMovementHandler handler) {
+        this (position, l, handler);
+        this.remove(GraphicsComponent.class);
+        this.add(new GraphicsComponent(Shader.SIMPLE, tex, dimension, texCoord, false));
+
+    }
+
     public static String getName() {
         return "Mob";
     }

@@ -17,6 +17,8 @@ public abstract class AbstractDyingSystem extends IteratingSystem {
             boolean shouldRemove = die(entity, deltaTime);
             if (shouldRemove) {
                 TheEngine.getInstance().removeEntity(entity);
+                // TODO: remove from module entity list too
+                // requires global module..
             }
         }
     }
