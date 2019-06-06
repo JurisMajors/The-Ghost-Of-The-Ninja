@@ -4,5 +4,7 @@ public enum RenderLayer {
     BACKGROUND,
     MAIN,
     FOREGROUND,
-    FX
+    FX,
+    VIGNETTE,
+    NOISE
 }

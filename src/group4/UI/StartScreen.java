@@ -2,6 +2,7 @@ package group4.UI;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.entities.world.ArtTile;
+import group4.ECS.etc.TheEngine;
 import group4.game.GameState;
 import group4.game.Main;
 import group4.graphics.RenderLayer;
@@ -26,6 +27,29 @@ public class StartScreen {
                 )
         );
 
+        this.entities.add(
+                new ArtTile(
+                        Texture.VIGNETTE_OVERLAY,
+                        RenderLayer.VIGNETTE
+                )
+        );
+
+        this.entities.add(
+                new ArtTile(
+                        Texture.NOISE_OVERLAY,
+                        RenderLayer.NOISE
+                )
+        );
+
+        this.entities.add(
+                new ArtTile(
+                        Texture.PRESS_ENTER,
+                        RenderLayer.MAIN
+                )
+        );
+
+        this.load();
+
         // And finally update the gamestate
         Main.setState(GameState.STARTSCREEN);
     }
@@ -39,6 +63,18 @@ public class StartScreen {
     public void update() {
         if (KeyBoard.isKeyDown(GLFW_KEY_ENTER)) {
             this.playGame();
+        }
+    }
+
+    private void load() {
+        for (Entity entity : this.entities) {
+            TheEngine.getInstance().addEntity(entity);
+        }
+    }
+
+    private void unload() {
+        for (Entity entity : this.entities) {
+            TheEngine.getInstance().removeEntity(entity);
         }
     }
 }

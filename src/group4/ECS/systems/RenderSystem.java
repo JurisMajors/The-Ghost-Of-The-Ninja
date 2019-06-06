@@ -32,7 +32,7 @@ import static org.lwjgl.opengl.GL41.*;
  * position as well as a graphics component
  */
 public class RenderSystem extends EntitySystem {
-    private boolean DEBUG = true;
+    private boolean DEBUG = false;
     // array of registered entities in the graphicsFamily
     private ImmutableArray<Entity> entities;
 

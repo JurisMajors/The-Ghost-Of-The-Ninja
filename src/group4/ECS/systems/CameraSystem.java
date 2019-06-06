@@ -67,7 +67,7 @@ public class CameraSystem extends EntitySystem {
             newPosition = strictTargetFollow();
         } else {
             // Static for now
-            newPosition = new Vector3f();
+            newPosition = new Vector3f(-8.0f, -4.5f, 0.0f);
         }
 
         // update cam world pos
