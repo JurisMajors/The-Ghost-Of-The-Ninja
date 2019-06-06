@@ -58,6 +58,13 @@ public class StartScreen {
                 )
         );
 
+        this.entities.add(
+                new ArtTile(
+                        Texture.LOGO_FULLSCREEN,
+                        RenderLayer.MAIN
+                )
+        );
+
         this.load();
 
         // PRESS_ENTER should initially be hidden
