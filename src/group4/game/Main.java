@@ -66,7 +66,7 @@ public class Main implements Runnable {
     public static final boolean SHOULD_OPENGL = !Main.AI || Evolver.render;
 
     private Window win;
-    public long window; // The id of the window
+    public static long window; // The id of the window
 
     private Audio audio;
   
