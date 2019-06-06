@@ -18,9 +18,24 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER;
 
 public class StartScreen {
     private List<Entity> entities;
+    private int currentFrame;
+    private int pressEnterCycle;
+    private boolean pressEnterVisible;
 
     public StartScreen() {
+        this.currentFrame = -120; // Dirty hack to create an initial delay like this
+        this.pressEnterCycle = 60;
+        this.pressEnterVisible = false;
+
         this.entities = new ArrayList<>();
+
+        // PRESS_ENTER must be the LAST entity to be added. Because of hacky workaround that saves me time :*)
+        this.entities.add(
+                new ArtTile(
+                        Texture.PRESS_ENTER,
+                        RenderLayer.MAIN
+                )
+        );
 
         this.entities.add(
                 new ArtTile(
@@ -43,14 +58,12 @@ public class StartScreen {
                 )
         );
 
-        this.entities.add(
-                new ArtTile(
-                        Texture.PRESS_ENTER,
-                        RenderLayer.MAIN
-                )
-        );
-
         this.load();
+
+        // PRESS_ENTER should initially be hidden
+        TheEngine.getInstance().removeEntity(
+                this.entities.get(0) // The dirty timesaving thing
+        );
 
         // And finally update the gamestate
         Main.setState(GameState.STARTSCREEN);
@@ -67,6 +80,23 @@ public class StartScreen {
     public void update() {
         if (KeyBoard.isKeyDown(GLFW_KEY_ENTER)) {
             this.playGame();
+        }
+
+        // Logic for the blinking PRESS ENTER text
+        this.currentFrame++;
+        if (this.currentFrame >= this.pressEnterCycle) {
+            this.currentFrame = 0;
+            this.pressEnterVisible = !this.pressEnterVisible;
+
+            if (this.pressEnterVisible) { // If it should be visible, add it!
+                TheEngine.getInstance().addEntity(
+                        this.entities.get(0) // The dirty timesaving thing
+                );
+            } else { // Otherwise remove it again
+                TheEngine.getInstance().removeEntity(
+                        this.entities.get(0) // The dirty timesaving thing
+                );
+            }
         }
     }
 
