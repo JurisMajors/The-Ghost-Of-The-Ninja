@@ -24,10 +24,8 @@ import static org.lwjgl.glfw.GLFW.*;
  * See {@link GhostMovementSystem} as an example for such an extension
  */
 public class PlayerMovementSystem extends IteratingSystem {
-
     private boolean wasSpaceDown = false;
     private boolean jumpInProgress = false;
-    private float jumpDelay;
 
     public PlayerMovementSystem(int priority) {
         super(Families.playerFamily, priority);

@@ -36,7 +36,7 @@ public class AnimationComponent implements Component {
 //            System.out.println(name + " : " + value);
 //        }
             this.currentState = state;
-            System.out.println("[INFO] Setting " + state);
+//            System.out.println("[INFO] Setting " + state);
             if (animations.containsKey(state)) {
                 currentAnimation = animations.get(state);
             } else {
