@@ -52,11 +52,16 @@ public class PlayerMovementSystem extends IteratingSystem {
 
     /**
      * Adjusts velocity according to the input rules
-     * @param e entity to move
+     *
+     * @param e         entity to move
      * @param deltaTime frame speed
      */
     protected void move(Entity e, MovementComponent mc, PositionComponent pc, float deltaTime) {
+        // Get and "unpack" some much used objects
         Object ref = getMovementRef(e);
+        HierarchicalPlayer player = (HierarchicalPlayer) e;
+        EntityState playerState = player.getState();
+
         // set velocity in the direction that keyboard asks for
         if (shouldRight(ref)) {
             moveRight(mc, pc);
@@ -66,52 +71,54 @@ public class PlayerMovementSystem extends IteratingSystem {
             // stay still if no keys are pressed
             mc.velocity.x = 0;
         }
+
+        // If we are NOT in the jump or landing sequence, AND we ARE on a platform, then we are idle/walking/running.
+        boolean wandering = playerState != EntityState.PLAYER_POSTFALL && playerState != EntityState.PLAYER_PREJUMP && pc.onPlatform;
+        if (wandering) {
+            if (Math.abs(mc.velocity.x) > 1e-3) {
+                if (shouldSprint()) {
+                    player.setState(EntityState.PLAYER_RUNNING);
+                } else {
+                    player.setState(EntityState.PLAYER_WALKING);
+                }
+            } else {
+                player.setState(EntityState.PLAYER_IDLE);
+            }
+        }
+
         // jump if space is pressed and if canJump is satisfied
-        if (shouldJump(ref) && canJump(mc.velocity)) {
-            initiateJumpSequence((HierarchicalPlayer) e);
+        if (shouldJump(ref) && canJump(mc.velocity) && pc.onPlatform) {
+            player.setState(EntityState.PLAYER_PREJUMP);
         }
 
         // Catch if we have transitioned to the actual jump phase of our jump
-        if (!jumpInProgress && ((Player) e).getState() == EntityState.PLAYER_JUMPING) {
+        if (!jumpInProgress && playerState == EntityState.PLAYER_JUMPING) {
             jump(mc);
             jumpInProgress = true;
         }
 
         // If we're tracking the jump is in progress, but it obviously isn't, toggle it off.
-        if (jumpInProgress && ((Player) e).getState() != EntityState.PLAYER_JUMPING) {
+        if (jumpInProgress && playerState != EntityState.PLAYER_JUMPING) {
             jumpInProgress = false;
         }
 
         // Check if player is falling to animate a fall
         if (mc.velocity.y < -1e-3) {
-            this.initiateFallAnimation((HierarchicalPlayer) e);
+            player.setState(EntityState.PLAYER_FALLING);
         }
 
         // Check if player has landed on a platform for animation
         if (((Player) e).getState() == EntityState.PLAYER_FALLING && pc.onPlatform) {
-            this.initiateFallRecoveryAnimation((HierarchicalPlayer) e);
+            player.setState(EntityState.PLAYER_POSTFALL);
         }
-
 
         if (shouldSpawnGhost(ref) && !((Player) e).spawnedGhost) {
             ((Player) e).spawnedGhost = true;
             ((Player) e).level.getCurrentModule().addGhost((Player) e);
         }
 
+        // Finally limit the velocity vector
         mc.velocity.capValuesi(mc.velocityRange);
-    }
-
-    private void initiateJumpSequence(HierarchicalPlayer player) {
-        player.setState(EntityState.PLAYER_PREJUMP);
-    }
-
-    private void initiateFallAnimation(HierarchicalPlayer player) {
-        player.setState(EntityState.PLAYER_FALLING);
-    }
-
-    private void initiateFallRecoveryAnimation(HierarchicalPlayer player) {
-        player.setState(EntityState.PLAYER_POSTFALL);
-        // TODO: somehow switch to the default state after this is finished, probably using some kind of delay
     }
 
     private void moveRight(MovementComponent mc, PositionComponent pc) {
@@ -123,8 +130,8 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     /**
-    * Moves along the x axis in the specified direction
-    */
+     * Moves along the x axis in the specified direction
+     */
     private void moveDirection(int moveDir, MovementComponent mc, PositionComponent pc) {
         // set orientation of player in accordance to mouse position
         if (pc.position.x <= MouseMovement.mouseX) {
@@ -147,7 +154,7 @@ public class PlayerMovementSystem extends IteratingSystem {
         return Math.max(mc.velocityRange.x * Player.walkingRatio, Math.abs(mc.velocity.x));
     }
 
-    private float getWalkingVel (MovementComponent mc) {
+    private float getWalkingVel(MovementComponent mc) {
         return Math.max(mc.velocityRange.x * Player.walkingRatio, Math.abs(mc.velocity.x) - mc.acceleration.x);
     }
 
@@ -178,28 +185,31 @@ public class PlayerMovementSystem extends IteratingSystem {
 
     /**
      * Input condition for determining whether to move left
+     *
      * @param ref optionally reference object to use for determining this condition
      * @return whether to move entity to the left
      */
-    protected boolean shouldLeft (Object ref) {
+    protected boolean shouldLeft(Object ref) {
         return KeyBoard.isKeyDown(GLFW_KEY_A);
     }
 
     /**
      * Input condition for determining whether to move right.
+     *
      * @param ref optionally reference object to use for determining this condition
      * @return whether to move entity to the right
      */
-    protected boolean shouldRight (Object ref) {
+    protected boolean shouldRight(Object ref) {
         return KeyBoard.isKeyDown(GLFW_KEY_D);
     }
 
     /**
      * Input condition for determining whether to jump.
+     *
      * @param ref optionally reference object to use for determining this condition
      * @return whether to move entity to the right
      */
-    protected boolean shouldJump (Object ref) {
+    protected boolean shouldJump(Object ref) {
         boolean spaceDown = KeyBoard.isKeyDown(GLFW_KEY_SPACE); // Get current space bar status
 
         if (wasSpaceDown && !spaceDown) { // Space bar up, and was down, so update wasSpaceDown, and return not to jump
@@ -213,13 +223,14 @@ public class PlayerMovementSystem extends IteratingSystem {
         return false; // In all other cases, we do not jump or update
     }
 
-    protected boolean shouldSpawnGhost (Object ref) {
+    protected boolean shouldSpawnGhost(Object ref) {
         return KeyBoard.isKeyDown(GLFW_KEY_G);
     }
 
     /**
      * Provides a reference object, if one needed for determining
      * the moving conditions of the entity.
+     *
      * @param e the entity currently processed
      * @return reference object used to determine how to move
      */
