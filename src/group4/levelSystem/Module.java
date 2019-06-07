@@ -7,6 +7,7 @@ import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.mobs.*;
 import group4.ECS.entities.items.consumables.Coin;
+import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.world.ArtTile;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
@@ -153,6 +154,8 @@ public class Module {
                 parseSplineLayer(layer);
             } else if (layerName.equals("COINS") && !Main.AI) {
                 parseCoinLayer(layer);
+            }else if (layerName.equals("TOTEMS")) {
+                parseTotemLayer(layer);
             } else if (layerName.equals("EXITS")) {
                 setupExits(layer);
             } else {
@@ -230,6 +233,20 @@ public class Module {
     private void addCoin(Vector3f position, int i) {
         Coin c = new Coin(position, Coin.LARGE_SIZE, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i), Coin.LARGE_VALUE);
         this.addEntity(c);
+    }
+
+    private void parseTotemLayer(JSONObject layer) {
+        JSONArray data = layer.getJSONArray("objects");
+        for (int point = 0; point < data.length(); point++) {
+            // get information about the object
+            JSONObject pointInfo = data.getJSONObject(point);
+            // get the coordinates for the control point
+            float pointX = pointInfo.getFloat("x") / 32f;
+            float pointY = this.height - pointInfo.getFloat("y") / 32f + 1;
+            String tileName = pointInfo.getString("name");
+            Vector3f position = new Vector3f(pointX, pointY, 0);
+            this.addEntity(new Totem(position, tileName, this.level));
+        }
     }
 
     private void parseSplineLayer(JSONObject layer) {
@@ -514,6 +531,8 @@ public class Module {
         int walkingmob = 40;
         int flyingmob = 41;
         int coin = 13;
+        int totemStart = 21;
+        int totemEnd = 29;
 
         moduleTileMap = new HashMap<Integer, String>();
         for (int i : platforms) {
@@ -535,5 +554,8 @@ public class Module {
 
 
         moduleTileMap.put(coin, Coin.getName());
+
+        moduleTileMap.put(totemStart, Totem.getStartName());
+        moduleTileMap.put(totemEnd, Totem.getEndName());
     }
 }
