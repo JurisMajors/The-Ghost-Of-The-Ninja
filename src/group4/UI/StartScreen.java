@@ -18,9 +18,12 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER;
 
 public class StartScreen {
     private List<Entity> entities;
-    private int currentFrame;
-    private int pressEnterCycle;
-    private boolean pressEnterVisible;
+
+    // Section of vars to keep track of the state of the PRESS_ENTER thingy; so it can blink!
+    private int currentFrame;   // Keep track of the current frame since cycling
+    private int pressEnterCycle; // How many frames the pressEnter text should be visible or invisible. Cycle length.
+    private boolean pressEnterVisible; // Is it currently visible?
+    private Entity pressEnterArtTile; // Store the entity
 
     public StartScreen() {
         this.currentFrame = -120; // Dirty hack to create an initial delay like this
@@ -29,13 +32,12 @@ public class StartScreen {
 
         this.entities = new ArrayList<>();
 
-        // PRESS_ENTER must be the LAST entity to be added. Because of hacky workaround that saves me time :*)
-        this.entities.add(
-                new ArtTile(
-                        Texture.PRESS_ENTER,
-                        RenderLayer.MAIN
-                )
+        // PRESS_ENTER is animated in an ad-hoc way, hence we must keep track of it.
+        pressEnterArtTile = new ArtTile(
+                Texture.PRESS_ENTER,
+                RenderLayer.MAIN
         );
+        this.entities.add(pressEnterArtTile);
 
         this.entities.add(
                 new ArtTile(
@@ -67,9 +69,10 @@ public class StartScreen {
 
         this.load();
 
-        // PRESS_ENTER should initially be hidden
+        // PRESS_ENTER should initially be hidden, but the default load() behaviour adds ALL entities in this class.
+        // Hence we remove it; part of the ad-hoc animation approach here in this class.
         TheEngine.getInstance().removeEntity(
-                this.entities.get(0) // The dirty timesaving thing
+                this.pressEnterArtTile
         );
 
         // And finally update the gamestate
@@ -79,7 +82,7 @@ public class StartScreen {
     private void playGame() {
         System.out.println("PLAYGAME!");
 
-        // Immediately unload this startscreen and initialize the level
+        // Immediately unload this Startscreen and initialize the level
         this.unload();
         new FileLevel("./src/group4/res/maps/level_02");
     }
@@ -89,7 +92,7 @@ public class StartScreen {
             this.playGame();
         }
 
-        // Logic for the blinking PRESS ENTER text
+        // Logic for the blinking PRESS ENTER text. Ad-hoc way of animating...
         this.currentFrame++;
         if (this.currentFrame >= this.pressEnterCycle) {
             this.currentFrame = 0;
@@ -97,11 +100,11 @@ public class StartScreen {
 
             if (this.pressEnterVisible) { // If it should be visible, add it!
                 TheEngine.getInstance().addEntity(
-                        this.entities.get(0) // The dirty timesaving thing
+                        this.pressEnterArtTile
                 );
             } else { // Otherwise remove it again
                 TheEngine.getInstance().removeEntity(
-                        this.entities.get(0) // The dirty timesaving thing
+                        this.pressEnterArtTile
                 );
             }
         }
