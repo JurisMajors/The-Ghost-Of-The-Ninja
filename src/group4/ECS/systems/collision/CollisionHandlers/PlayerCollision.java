@@ -3,6 +3,8 @@ package group4.ECS.systems.collision.CollisionHandlers;
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.identities.CoinComponent;
 import group4.ECS.components.physics.CollisionComponent;
+import group4.ECS.components.physics.DimensionComponent;
+import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.ScoreComponent;
 import group4.ECS.entities.DamageArea;
@@ -18,6 +20,7 @@ import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.collision.CollisionData;
 import group4.game.Main;
+import group4.maths.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,7 +134,12 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
 
     private void ghostHandleTotem(Ghost ghost, Totem totem) {
         if (!totem.isEnd() || ghost.endTotem != totem.getID()) return;
-        ghost.getComponent(HealthComponent.class).health = 0;
+        Vector3f gPos = ghost.getComponent(PositionComponent.class).position;
+        Vector3f tPos = totem.getComponent(PositionComponent.class).position;
+        Vector3f tDim = totem.getComponent(DimensionComponent.class).dimension;
+        if (gPos.x >= tPos.add(tDim.scale(0.5f)).x) {
+            ghost.getComponent(HealthComponent.class).health = 0;
+        }
     }
 
     private static void handleMob(Player player, Mob mob) {
