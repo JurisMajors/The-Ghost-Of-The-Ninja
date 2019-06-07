@@ -51,18 +51,18 @@ public class MeleeCollision extends AbstractCollisionHandler<Entity> {
         }
 
         // if entity immune to dmg, skip
-        System.out.println(hc.state);
+//        System.out.println(hc.state);
         if (hc.state.contains(EntityConst.EntityState.IMMUNE)) {
             return;
         }
 
         // deal Dmg
         hc.health -= dmg.damage;
-        System.out.println(hc.health);
+//        System.out.println(hc.health);
 
         // make immune for one tick (see LastSystem)
         hc.state.add(EntityConst.EntityState.IMMUNE);
-        System.out.println(hc.state);
+//        System.out.println(hc.state);
     }
 
     private void handleKnockback(Entity entity, Entity other) {
@@ -78,7 +78,7 @@ public class MeleeCollision extends AbstractCollisionHandler<Entity> {
         // behaviour of hazardous entities
         if (entity instanceof Spikes) {
 
-            System.out.println(hc.state);
+//            System.out.println(hc.state);
             if (hc.state.contains(EntityConst.EntityState.KNOCKED)) {
                 return;
             }
@@ -101,11 +101,11 @@ public class MeleeCollision extends AbstractCollisionHandler<Entity> {
 //                mc.velocity.x *= -1;
 //            }
 
-            System.out.println(mc.velocity);
+//            System.out.println(mc.velocity);
             mc.velocity = mc.velocity.scale(-boost);
-            System.out.println(mc.velocity);
+//            System.out.println(mc.velocity);
             hc.state.add(EntityConst.EntityState.KNOCKED);
-            System.out.println(hc.state);
+//            System.out.println(hc.state);
         }
 
         if (entity instanceof DamageArea) {

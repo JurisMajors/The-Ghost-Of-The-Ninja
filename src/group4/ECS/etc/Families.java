@@ -122,6 +122,6 @@ public class Families {
             .get();
 
     // all entities which react to a timed event
-    public static final Family timedEventFamily = Family.one(TickComponent.class, TimedComponent.class).get();
+    public static final Family timedEventFamily = Family.all(EventComponent.class).get();
 
 }

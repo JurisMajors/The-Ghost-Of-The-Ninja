@@ -2,8 +2,7 @@ package group4.ECS.etc;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import group4.ECS.components.*;
-import group4.ECS.components.events.TickComponent;
-import group4.ECS.components.events.TimedComponent;
+import group4.ECS.components.events.EventComponent;
 import group4.ECS.components.identities.CameraComponent;
 import group4.ECS.components.identities.ConsumableComponent;
 import group4.ECS.components.identities.MobComponent;
@@ -80,11 +79,11 @@ public class Mappers {
     public static final ComponentMapper<HealthComponent> healthMapper =
             ComponentMapper.getFor(HealthComponent.class);
 
-    public static final ComponentMapper<TickComponent> tickMapper =
-            ComponentMapper.getFor(TickComponent.class);
+    public static final ComponentMapper<EventComponent> tickMapper =
+            ComponentMapper.getFor(EventComponent.class);
 
-    public static final ComponentMapper<TimedComponent> timedMapper =
-            ComponentMapper.getFor(TimedComponent.class);
+    public static final ComponentMapper<EventComponent> eventMapper =
+            ComponentMapper.getFor(EventComponent.class);
 
     public static final ComponentMapper<ItemComponent> itemMapper =
             ComponentMapper.getFor(ItemComponent.class);

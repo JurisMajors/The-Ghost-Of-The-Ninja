@@ -136,7 +136,7 @@ public class PlayerCombatSystem extends IteratingSystem {
         excluded.add(Ghost.class);
 
         new MeleeArea(hitboxCorner, trueHitbox,
-                wc.damage, excluded);
+                wc.damage, excluded, 1);
 
     }
 

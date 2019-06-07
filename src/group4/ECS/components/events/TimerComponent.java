@@ -1,6 +1,8 @@
 package group4.ECS.components.events;
 
-public class TimerComponent extends TimedComponent {
+import com.badlogic.ashley.core.Component;
+
+public class TimerComponent implements Component {
 
     // subtract delta-time from this
     public float timer;

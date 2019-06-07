@@ -131,23 +131,23 @@ public class Main implements Runnable {
         if (!AI) {
             // Set up all engine systems
             // Systems which change the gamestate
-            engine.addSystem(new PlayerMovementSystem(0));
-            engine.addSystem(new GhostMovementSystem(1));
-            engine.addSystem(new MobMovementSystem(2));
-            engine.addSystem(new BulletMovementSystem(3));
-            engine.addSystem(new PlayerCombatSystem(4));
-            engine.addSystem(new CollisionSystem(5));
-            engine.addSystem(new CollisionEventSystem(6));
-            engine.addSystem(new UncollidingSystem(7));
-            engine.addSystem(new PlayerDyingSystem(true, 8));
-            engine.addSystem(new GhostDyingSystem(false, 9));
-            engine.addSystem(new MobDyingSystem(10));
-            engine.addSystem(new AnimationSystem(11));
+            engine.addSystem(new TimedEventSystem(0));
+            engine.addSystem(new PlayerMovementSystem(1));
+            engine.addSystem(new GhostMovementSystem(2));
+            engine.addSystem(new MobMovementSystem(3));
+            engine.addSystem(new BulletMovementSystem(4));
+            engine.addSystem(new PlayerCombatSystem(5));
+            engine.addSystem(new CollisionSystem(6));
+            engine.addSystem(new CollisionEventSystem(7));
+            engine.addSystem(new UncollidingSystem(8));
+            engine.addSystem(new PlayerDyingSystem(true, 9));
+            engine.addSystem(new GhostDyingSystem(false, 10));
+            engine.addSystem(new MobDyingSystem(11));
+            engine.addSystem(new AnimationSystem(12));
 
             // Systems which are essentially observers of the changed gamestate
-            engine.addSystem(new CameraSystem(Families.playerFamily, 12));
-            engine.addSystem(new RenderSystem(13));
-            engine.addSystem(new TimedEventSystem(14));
+            engine.addSystem(new CameraSystem(Families.playerFamily, 13));
+            engine.addSystem(new RenderSystem(14));
             engine.addSystem(new LastSystem(15));
             this.level = new FileLevel("./src/group4/res/maps/level_02");
 

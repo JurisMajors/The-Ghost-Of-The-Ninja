@@ -1,16 +1,22 @@
 package group4.ECS.components.events;
 
-public class TickComponent extends TimedComponent {
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.Entity;
+
+public class EventComponent implements Component {
 
     public int duration;
+    public int passed;
 
     /**
      * This component holds information about the time it takes for an timed entity to expire
      *
      * @param duration the duration (in ticks) it takes for this event to expire
      */
-    public TickComponent(int duration) {
+    public EventComponent(int duration) {
         this.duration = duration;
+        // time passed from invoking this Event
+        this.passed = 0;
     }
 
 }
