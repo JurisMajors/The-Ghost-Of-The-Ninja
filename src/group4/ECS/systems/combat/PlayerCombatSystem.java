@@ -72,7 +72,13 @@ public class PlayerCombatSystem extends IteratingSystem {
                 // mouse x in world pos
                 float mouseWorldX = camX + ((float) MouseMovement.mouseX *
                         (Main.SCREEN_WIDTH / Window.getWidth()) - Main.SCREEN_WIDTH / 2);
-
+                System.out.print(MouseMovement.mouseX);
+                System.out.print(" : ");
+                System.out.print(camX);
+                System.out.print(" : ");
+                System.out.print((Main.SCREEN_WIDTH / Window.getWidth()) - Main.SCREEN_WIDTH / 2);
+                System.out.print(" : ");
+                System.out.println(mouseWorldX);
                 // if clicking right of player, hit right, else hit left
                 Vector3f trueOffset = new Vector3f(wc.hitboxOffset);
                 if (mouseWorldX < pc.position.x + dc.dimension.x / 2) {
