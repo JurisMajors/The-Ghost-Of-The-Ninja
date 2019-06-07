@@ -11,6 +11,7 @@ import org.uncommons.watchmaker.framework.*;
 import org.uncommons.watchmaker.framework.factories.AbstractCandidateFactory;
 import org.uncommons.watchmaker.framework.operators.EvolutionPipeline;
 import org.uncommons.watchmaker.framework.selection.RouletteWheelSelection;
+import org.uncommons.watchmaker.framework.selection.StochasticUniversalSampling;
 import org.uncommons.watchmaker.framework.termination.GenerationCount;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
 import org.apache.commons.cli.*;
@@ -125,7 +126,7 @@ public class Evolver {
         // factory of neural networks
         AbstractCandidateFactory<Brain> factory = new BrainFactory(Evolver.layerSizes);
         FitnessEvaluator<Brain> fitnessEvaluator = new Evaluator(Evolver.evaluationStrat);
-        SelectionStrategy<Object> selection = new RouletteWheelSelection();
+        SelectionStrategy<Object> selection = new StochasticUniversalSampling();
         Random rng = new MersenneTwisterRNG();
 
         AbstractEvolutionEngine<Brain> engine = new GenerationalEvolutionEngine<>(factory, pipeline,

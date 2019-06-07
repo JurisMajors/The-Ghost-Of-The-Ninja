@@ -227,4 +227,33 @@ public abstract class Level {
 
         this.exitActions.get(e).exit();
     }
+
+
+    /**
+     * Reset the level to initial state
+     */
+    public void reset() {
+        // Unload current module
+        this.currentModule.unload();
+
+        // Reset all modules
+        for (Module m : this.modules) {
+            m.reset();
+        }
+
+        // Set the root module as the current module
+        this.currentModule = this.rootModule;
+
+        // Configure the exits correctly
+        this.configExits();
+
+        // Create a new player and set it to correct position
+        TheEngine.getInstance().removeEntity(this.player);
+        this.player = this.createPlayer();
+        TheEngine.getInstance().addEntity(this.player);
+        this.player.getComponent(PositionComponent.class).position = this.currentModule.getPlayerInitialPosition();
+
+        // Load the module
+        this.currentModule.load();
+    }
 }
