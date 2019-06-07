@@ -93,7 +93,7 @@ public class Player extends Entity {
     public void setState(EntityState s) {
         if (this.state != s) {
             this.state = s;
-            System.out.println(s);
+//            System.out.println(s); // Uncomment for state change logging
         }
     }
 
