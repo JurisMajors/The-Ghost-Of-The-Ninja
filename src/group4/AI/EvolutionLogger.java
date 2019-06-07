@@ -20,7 +20,7 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
     String filePath;
 
     /** best fitness in the whole training process **/
-    double bestFitness = -1;
+    double bestFitness = Evolver.evaluationStrat.isNatural() ? -1 : 1;
 
     private final static Logger LOGGER = Logger.getLogger("EvolutionLog"); // used for logging to file
 
@@ -71,8 +71,8 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
             LOGGER.info(log);
         }
         boolean forceSave = false; // whether to save the model if other conditions dont suffice
-        if ((data.isNaturalFitness() && bestFitness > data.getBestCandidateFitness()) ||
-        !data.isNaturalFitness() && bestFitness < data.getBestCandidateFitness()) { // found better fitness than before
+        if ((data.isNaturalFitness() && bestFitness < data.getBestCandidateFitness()) ||
+        !data.isNaturalFitness() && bestFitness > data.getBestCandidateFitness()) { // found better fitness than before
             bestFitness = data.getBestCandidateFitness(); // save it in the variable
             forceSave = true; // and save the model
         }
