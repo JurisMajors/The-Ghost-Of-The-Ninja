@@ -21,19 +21,19 @@
                 {
                  "height":0,
                  "id":3,
-                 "name":"s1",
+                 "name":"s0",
                  "point":true,
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":384,
+                 "x":352,
                  "y":87
                 }, 
                 {
                  "height":0,
                  "id":4,
-                 "name":"e1",
+                 "name":"e0",
                  "point":true,
                  "rotation":0,
                  "type":"",
