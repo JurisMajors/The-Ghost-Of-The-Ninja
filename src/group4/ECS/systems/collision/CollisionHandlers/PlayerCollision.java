@@ -138,7 +138,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
     }
 
     private void ghostHandleTotem(Ghost ghost, Totem totem) {
-        if (!totem.isEnd() || ghost.endTotem.getID() != totem.getID()) return;
+        if (!totem.isEnd() || ghost.endTotem != totem.getID()) return;
         ghost.getComponent(HealthComponent.class).health = 0;
     }
 
