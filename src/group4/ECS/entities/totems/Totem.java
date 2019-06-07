@@ -32,9 +32,7 @@ public class Totem extends Entity {
     }
 
     private GraphicsComponent getGraphicsComponent() {
-        Shader shader = Shader.SIMPLE;
-        // JORIS TODO: correct shader!!
-//        shader = Shader.TOTEM;
+        Shader shader = Shader.TOTEM;
         if (isEnd()) {
             return new GraphicsComponent(shader, Texture.TOTEM_END, dimension, false);
         } else {
@@ -60,7 +58,32 @@ public class Totem extends Entity {
 
     private void setRbgMask() {
         // use the ID to create a unique colour mask
-        rgbMask = new Vector3f(0f, 1f, 0.25f);
+        switch (getID()) {
+            case 0:
+                rgbMask = new Vector3f(0.5f, 0f, 0f);
+                break;
+            case 1:
+                rgbMask = new Vector3f(0f, 0.5f, 0f);
+                break;
+            case 2:
+                rgbMask = new Vector3f(0f, 0f, 0.5f);
+                break;
+            case 3:
+                rgbMask = new Vector3f(0.25f, 0.25f, 0f);
+                break;
+            case 4:
+                rgbMask = new Vector3f(0.25f, 0f, 0.25f);
+                break;
+            case 5:
+                rgbMask = new Vector3f(0f, 0.25f, 0.25f);
+                break;
+            case 6:
+                rgbMask = new Vector3f(1f, 0f, 0f);
+                break;
+            default:
+                rgbMask = new Vector3f(0f, 0f, 0f);
+                break;
+        }
     }
 
     public Vector3f getRbgMask() {
