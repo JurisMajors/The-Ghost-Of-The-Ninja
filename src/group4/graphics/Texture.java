@@ -19,11 +19,18 @@ public class Texture {
     public static Texture BLACK;
     public static Texture WHITE;
     public static Texture MAIN_TILES;
-    public static Texture PLAYER;
     public static Texture BACKGROUND;
     public static Texture HITBOX;
     public static Texture NOTHINGNESS;
     public static Texture SPLINE;
+
+    // Storing all player related textures
+    public static Texture PLAYER_TORSO;
+    public static Texture PLAYER_HEAD;
+    public static Texture PLAYER_DARK_LEG_UPPER;
+    public static Texture PLAYER_DARK_LEG_LOWER;
+    public static Texture PLAYER_LIGHT_LEG_UPPER;
+    public static Texture PLAYER_LIGHT_LEG_LOWER;
 
     // width and height of the texture
     private int width, height;
@@ -50,8 +57,14 @@ public class Texture {
         WHITE = new Texture("src/group4/res/textures/white.png");
         HITBOX = new Texture("src/group4/res/textures/hitbox.png");
         NOTHINGNESS = new Texture("src/group4/res/textures/FF4D00-0.png");
-        PLAYER = new Texture("src/group4/res/textures/char1.png");
         SPLINE = new Texture("src/group4/res/textures/spline.png");
+
+        PLAYER_TORSO = new Texture("src/group4/res/textures/player/ninja3withlayers_0008_body.png");
+        PLAYER_HEAD = new Texture("src/group4/res/textures/player/ninja3withlayers_0009_head.png");
+        PLAYER_DARK_LEG_LOWER = new Texture("src/group4/res/textures/player/ninja3withlayers_0002_lowerfurtherleg.png");
+        PLAYER_DARK_LEG_UPPER = new Texture("src/group4/res/textures/player/ninja3withlayers_0003_upperfurtherleg.png");
+        PLAYER_LIGHT_LEG_LOWER = new Texture("src/group4/res/textures/player/ninja3withlayers_0000_lowerfurtherleg.png");
+        PLAYER_LIGHT_LEG_UPPER = new Texture("src/group4/res/textures/player/ninja3withlayers_0001_uppercloserleg.png");
     }
 
     /**

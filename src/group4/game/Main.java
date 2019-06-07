@@ -177,7 +177,7 @@ public class Main implements Runnable {
             this.engine.addSystem(new PlayerDyingSystem(true, 9));
             this.engine.addSystem(new GhostDyingSystem(false, 10));
             this.engine.addSystem(new MobDyingSystem(11));
-            this.engine.addSystem(new AnimationSystem(12));
+            //this.engine.addSystem(new AnimationSystem(12));
 
             // Systems which are essentially observers of the changed gamestate
             this.engine.addSystem(new CameraSystem(Families.playerFamily, 13));
@@ -227,7 +227,7 @@ public class Main implements Runnable {
                 lastFpsTime = 0;
                 fps = 0;
             }
-
+            glClearColor(255,255,255, 1);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
             this.engine.update((float) delta); // Update the gamestate
