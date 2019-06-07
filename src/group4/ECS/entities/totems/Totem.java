@@ -5,7 +5,6 @@ import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
-import group4.ECS.systems.collision.CollisionHandlers.TotemCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
@@ -26,7 +25,7 @@ public abstract class Totem extends Entity {
         this.level = level;
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
-        this.add(new CollisionComponent(TotemCollision.getInstance()));
+        this.add(new CollisionComponent(null));
         this.add(getGraphicsComponent());
         setRbgMask();
     }
@@ -45,6 +44,7 @@ public abstract class Totem extends Entity {
     }
 
     public abstract boolean isEnd();
+
     public static boolean isEnd(String name) {
         return name.charAt(0) == 'e';
     }

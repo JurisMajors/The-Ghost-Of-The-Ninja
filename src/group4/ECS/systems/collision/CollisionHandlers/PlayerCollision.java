@@ -15,6 +15,7 @@ import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.entities.items.consumables.Coin;
 import group4.ECS.entities.mobs.Mob;
+import group4.ECS.entities.totems.StartTotem;
 import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
@@ -124,21 +125,20 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
     }
 
     private void resetTotem(Player player) {
-        player.totemStatus = -1;
+        player.totemStatus = null;
     }
 
     private void playerHandleTotem(Player player, Totem totem) {
         if (totem.isEnd()) {
             // end totem, player cannot do a lot here
-
         } else {
             // starting totem
-            player.totemStatus = totem.getID();
+            player.totemStatus = (StartTotem) totem;
         }
     }
 
     private void ghostHandleTotem(Ghost ghost, Totem totem) {
-        if (!totem.isEnd()) return;
+        if (!totem.isEnd() || ghost.endTotem.getID() != totem.getID()) return;
         ghost.getComponent(HealthComponent.class).health = 0;
     }
 

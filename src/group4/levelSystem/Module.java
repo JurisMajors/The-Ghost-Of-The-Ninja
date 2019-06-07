@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import javax.xml.soap.Text;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class Module {
 
     // ghost model
     private Brain ghostModel = null;
+    private String ghostModelDir;
 
     // Keeps track of the initial player position
     private Vector3f initialPlayerPos;
@@ -95,6 +97,8 @@ public class Module {
 
 
     private void loadGhost(String loc) {
+        File f = new File(loc);
+        this.ghostModelDir = f.getParent() + "/";
         this.ghostModel = new Brain(loc);
     }
 
@@ -251,7 +255,7 @@ public class Module {
             if (Totem.isEnd(tileName)) {
                 totem = new EndingTotem(position, tileName, level);
             } else {
-                totem = new StartTotem(position, tileName, level, "");
+                totem = new StartTotem(position, tileName, level, this.ghostModelDir);
             }
             this.addEntity(totem);
         }

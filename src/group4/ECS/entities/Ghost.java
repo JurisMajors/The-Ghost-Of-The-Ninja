@@ -4,6 +4,8 @@ import group4.AI.Brain;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.identities.GhostComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.entities.totems.EndingTotem;
+import group4.ECS.entities.totems.Totem;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
@@ -16,7 +18,7 @@ import group4.maths.Vector3f;
 public class Ghost extends Player {
     public boolean best; // whether has reached the exit
     public Player master = null;
-    String endTotem;
+    public EndingTotem endTotem;
 
     private boolean blockMovement = false;
 
@@ -50,7 +52,12 @@ public class Ghost extends Player {
      * @param master the player which spawned the ghost
      */
     public Ghost (Level level, Brain brain, Player master) {
-        this(new Vector3f(master.getComponent(PositionComponent.class).position)
+        this(master.getComponent(PositionComponent.class).position,
+                level, brain);
+        this.master = master;
+    }
+    public Ghost (Vector3f pos, Level level, Brain brain, Player master) {
+        this(new Vector3f(pos)
                 , level, brain);
         this.master = master;
     }
