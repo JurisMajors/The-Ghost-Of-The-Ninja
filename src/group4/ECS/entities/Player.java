@@ -46,7 +46,11 @@ public class Player extends Entity {
 
     public boolean spawnedGhost;
 
-    public boolean onTotem;
+    /**
+     * -1 if not on a totem
+     * else the id of the totem player is on
+     */
+    public int totemStatus;
 
     /**
      * Creates a player
@@ -55,7 +59,7 @@ public class Player extends Entity {
      * @param level the level that the player is part of
      */
     public Player(Vector3f position, Level level) {
-        onTotem = false;
+        totemStatus = -1;
 
         // shader
         Shader shader = Shader.SIMPLE;
