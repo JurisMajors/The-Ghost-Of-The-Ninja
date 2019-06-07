@@ -24,8 +24,10 @@ public class StartTotem extends Totem {
     }
 
     public Ghost getGhost(Player master) {
-        return new Ghost(this.getComponent(PositionComponent.class).position,
+        Ghost g = new Ghost(this.getComponent(PositionComponent.class).position,
                 level, this.ghostBrain, master);
+        g.endTotem = this.getID();
+        return g;
     }
 
     @Override

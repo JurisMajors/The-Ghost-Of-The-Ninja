@@ -18,7 +18,7 @@ import group4.maths.Vector3f;
 public class Ghost extends Player {
     public boolean best; // whether has reached the exit
     public Player master = null;
-    public EndingTotem endTotem;
+    public int endTotem;
 
     private boolean blockMovement = false;
 
@@ -80,4 +80,5 @@ public class Ghost extends Player {
     public void setBlocked(boolean blocked) {
         this.blockMovement = blocked;
     }
+
 }
