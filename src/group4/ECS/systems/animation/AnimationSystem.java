@@ -10,9 +10,7 @@ import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.maths.Vector3f;
-import group4.maths.spline.MultiSpline;
 import group4.utils.DebugUtils;
-import javafx.geometry.Pos;
 
 public class AnimationSystem extends IteratingSystem {
     float deltaTime;
