@@ -88,11 +88,15 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
                 removables.add(cd);
             } else if (other instanceof DamageArea) { // TODO: super janky, damageArea does not apply to player whatsoever
                 removables.add(cd);
-            } else if (other instanceof Coin) {
+            } else if (other instanceof Coin && !(player instanceof Ghost)) {
                 handleCoin(player, (Coin) other);
                 removables.add(cd);
             } else if (other instanceof Totem) {
-                handleTotem(player, (Totem) other);
+                if (player instanceof Ghost) {
+                    ghostHandleTotem((Ghost) player, (Totem) other);
+                } else {
+                    playerHandleTotem(player, (Totem) other);
+                }
                 removables.add(cd);
             }
         }
@@ -123,7 +127,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
         player.totemStatus = -1;
     }
 
-    private void handleTotem(Player player, Totem totem) {
+    private void playerHandleTotem(Player player, Totem totem) {
         if (totem.isEnd()) {
             // end totem, player cannot do a lot here
 
@@ -131,6 +135,11 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
             // starting totem
             player.totemStatus = totem.getID();
         }
+    }
+
+    private void ghostHandleTotem(Ghost ghost, Totem totem) {
+        if (!totem.isEnd()) return;
+        ghost.getComponent(HealthComponent.class).health = 0;
     }
 
     private static void handleMob(Player player, Mob mob) {
