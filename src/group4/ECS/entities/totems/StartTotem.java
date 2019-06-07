@@ -14,4 +14,14 @@ public class StartTotem extends Totem {
 
     private void setGhost(String dir) {
     }
+
+    @Override
+    public boolean isEnd() {
+        return false;
+    }
+
+    public static String getName() {
+        return "totemStart";
+    }
+
 }

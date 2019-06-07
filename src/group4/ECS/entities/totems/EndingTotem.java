@@ -13,4 +13,8 @@ public class EndingTotem extends Totem {
     public boolean isEnd() {
         return true;
     }
+
+    public static String getName() {
+        return "totemEnd";
+    }
 }

@@ -11,7 +11,7 @@ import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.maths.Vector3f;
 
-public class Totem extends Entity {
+public abstract class Totem extends Entity {
 
     private Vector3f dimension = new Vector3f(1.0f, 2f, 0);
 
@@ -44,16 +44,9 @@ public class Totem extends Entity {
         return Integer.parseInt(this.name.substring(1));
     }
 
-    public boolean isEnd() {
-        return this.name.charAt(0) == 'e';
-    }
-
-    public static String getStartName() {
-        return "totemStart";
-    }
-
-    public static String getEndName() {
-        return "totemEnd";
+    public abstract boolean isEnd();
+    public boolean isEnd(String name) {
+        return name.charAt(0) == 'e';
     }
 
     private void setRbgMask() {
