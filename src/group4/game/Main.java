@@ -179,10 +179,8 @@ public class Main implements Runnable {
 
             // Initialize the StartScreen, this will load the level
             this.startScreen = new StartScreen();
-        } else {
-            // Immediately initialize the level
-            this.level = new FileLevel("./src/group4/res/maps/level_02");
         }
+
         // Set up a camera for our game
         this.camera = new Camera();
         this.engine.addEntity(camera); // Adding the camera to the module (which adds it to the engine?)
