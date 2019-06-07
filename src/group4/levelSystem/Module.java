@@ -7,6 +7,8 @@ import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.mobs.*;
 import group4.ECS.entities.items.consumables.Coin;
+import group4.ECS.entities.totems.EndingTotem;
+import group4.ECS.entities.totems.StartTotem;
 import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.world.ArtTile;
 import group4.ECS.entities.world.Exit;
@@ -245,7 +247,13 @@ public class Module {
             float pointY = this.height - pointInfo.getFloat("y") / 32f + 1;
             String tileName = pointInfo.getString("name");
             Vector3f position = new Vector3f(pointX, pointY, 0);
-            this.addEntity(new Totem(position, tileName, this.level));
+            Totem totem;
+            if (Totem.isEnd(tileName)) {
+                totem = new EndingTotem(position, tileName, level);
+            } else {
+                totem = new StartTotem(position, tileName, level, "");
+            }
+            this.addEntity(totem);
         }
     }
 
@@ -552,10 +560,9 @@ public class Module {
         moduleTileMap.put(walkingmob, WalkingMob.getName());
         moduleTileMap.put(flyingmob, FlyingMob.getName());
 
-
         moduleTileMap.put(coin, Coin.getName());
 
-        moduleTileMap.put(totemStart, Totem.getStartName());
-        moduleTileMap.put(totemEnd, Totem.getEndName());
+        moduleTileMap.put(totemStart, StartTotem.getName());
+        moduleTileMap.put(totemEnd, EndingTotem.getName());
     }
 }

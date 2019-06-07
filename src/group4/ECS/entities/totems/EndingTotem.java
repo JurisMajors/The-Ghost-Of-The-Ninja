@@ -5,7 +5,7 @@ import group4.maths.Vector3f;
 
 public class EndingTotem extends Totem {
 
-    EndingTotem(Vector3f position, String name, Level level) {
+    public EndingTotem(Vector3f position, String name, Level level) {
         super(position, name, level);
     }
 

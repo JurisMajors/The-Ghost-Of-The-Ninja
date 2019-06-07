@@ -7,7 +7,7 @@ import group4.maths.Vector3f;
 public class StartTotem extends Totem {
     private Ghost ghost;
 
-    StartTotem(Vector3f position, String name, Level level, String ghostDir) {
+    public StartTotem(Vector3f position, String name, Level level, String ghostDir) {
         super(position, name, level);
         setGhost(ghostDir);
     }

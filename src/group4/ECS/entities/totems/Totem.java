@@ -45,7 +45,7 @@ public abstract class Totem extends Entity {
     }
 
     public abstract boolean isEnd();
-    public boolean isEnd(String name) {
+    public static boolean isEnd(String name) {
         return name.charAt(0) == 'e';
     }
 
