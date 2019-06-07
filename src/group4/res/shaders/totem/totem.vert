@@ -6,7 +6,6 @@ layout (location = 1) in vec2 tc;
 uniform mat4 pr_matrix;
 uniform mat4 vw_matrix;
 uniform mat4 md_matrix;
-uniform vec4 color_mask;
 
 out DATA
 {
