@@ -472,7 +472,7 @@ public class Module {
         int[] platforms = new int[]{0, 1, 2, 5, 6, 8, 9, 10, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 32, 33, 34, 35};
         int[] artTiles = new int[]{3, 4, 11, 12};
         int[] players = new int[]{7};
-        int[] hazards = new int[]{40};
+        int[] hazards = new int[]{40, 41, 42, 43};
 
         moduleTileMap = new HashMap<Integer, String>();
         for (int i : platforms) {

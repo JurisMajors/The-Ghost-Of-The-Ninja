@@ -16,6 +16,12 @@ import java.util.Set;
 
 public class Spikes extends Entity {
 
+    /**
+     * @param position
+     * @param shader
+     * @param texture
+     * @param texCoords
+     */
     public Spikes(Vector3f position, Shader shader, Texture texture, float[] texCoords) {
 
         int damage = 10;
@@ -24,8 +30,8 @@ public class Spikes extends Entity {
         // Construct vertex array
         float[] vertices = new float[] {
                 0, 0, 0,
-                0, 0.4f, 0,
-                1.0f, 0.4f, 0,
+                0, 1.0f, 0,
+                1.0f, 1.0f, 0,
                 1.0f, 0, 0,
         };
 

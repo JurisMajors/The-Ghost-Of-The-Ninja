@@ -31,8 +31,8 @@ public class EntityConst {
     }
 
     public enum EntityState {
-        DEFAULT,
-        IMMUNE
+        IMMUNE,
+        KNOCKED
     }
 
 }

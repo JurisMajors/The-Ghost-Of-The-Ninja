@@ -24,9 +24,13 @@ public class LastSystem extends IteratingSystem {
 
         // reset state of entity
         if (Mappers.healthMapper.get(entity) != null) {
-            Mappers.healthMapper.get(entity).state = EntityConst.EntityState.DEFAULT;
+            Mappers.healthMapper.get(entity).state.clear();
         }
 
+        // reset state of entity
+        if (Mappers.movementMapper.get(entity) != null) {
+            System.out.println(Mappers.movementMapper.get(entity).velocity);
+        }
     }
 
 }

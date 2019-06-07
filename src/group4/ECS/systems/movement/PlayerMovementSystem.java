@@ -58,7 +58,7 @@ public class PlayerMovementSystem extends IteratingSystem {
             moveLeft(mc, pc);
         } else {
             // stay still if no keys are pressed
-            mc.velocity.x = 0;
+//            mc.velocity.x = 0;
         }
         // jump if space is pressed and if canJump is satisfied
         if (shouldJump(ref) && canJump(mc.velocity)) {
