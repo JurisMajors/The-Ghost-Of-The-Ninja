@@ -59,7 +59,7 @@ public class Main implements Runnable {
     /**
      * enable this if you want to run the genetic algorithm, instead of playing urself
      **/
-    public static final boolean AI = true;
+    public static final boolean AI = false;
     /**
      * whether should do calls to OPENGL
      **/
@@ -186,7 +186,7 @@ public class Main implements Runnable {
             this.engine.addSystem(new LastSystem(16));
 
             // Initialize the level
-            this.level = new FileLevel("./src/group4/res/maps/level_03");
+            this.level = new FileLevel("./src/group4/res/maps/level_02");
 
         }
         // Set up a camera for our game

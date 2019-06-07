@@ -6,9 +6,11 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
+import group4.ECS.etc.TheEngine;
 import group4.input.KeyBoard;
 import group4.input.MouseMovement;
 import group4.maths.Vector3f;
@@ -64,10 +66,14 @@ public class PlayerMovementSystem extends IteratingSystem {
         if (shouldJump(ref) && canJump(mc.velocity)) {
             jump(mc);
         }
-
-        if (shouldSpawnGhost(ref) && !((Player) e).spawnedGhost && ((Player) e).totemStatus != -1) {
-            ((Player) e).spawnedGhost = true;
-            ((Player) e).level.getCurrentModule().addGhost((Player) e);
+        Player player = (Player) e;
+        // if the entity shoudlspawnghost and its previous ghost is not alive and it is on a start totem
+        if (shouldSpawnGhost(ref) && !player.spawnedGhost && player.totemStatus != null) {
+            player.spawnedGhost = true; // spawn the ghost
+            Ghost newGhost = player.totemStatus.getGhost(player); // get a ghost from the totem
+            // add it to engine an module
+            player.level.getCurrentModule().addEntity(newGhost);
+            TheEngine.getInstance().addEntity(newGhost);
         }
 
         mc.velocity.capValuesi(mc.velocityRange);
