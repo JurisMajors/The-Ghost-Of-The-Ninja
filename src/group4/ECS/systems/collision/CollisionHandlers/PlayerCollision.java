@@ -127,12 +127,11 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
 //    }
 
     private static void handleExit(Player player, Exit exit) {
-        if (Main.AI && player instanceof Ghost) { // kill ghost if has reached exit
+        if (player instanceof Ghost) { // kill ghost if has reached exit
             player.getComponent(HealthComponent.class).health = 0;
-        } else if (player instanceof Ghost) {
-            return;
+        } else {
+            exit.module.getLevel().handleExit(exit);
         }
-        exit.module.getLevel().handleExit(exit);
     }
 
 
