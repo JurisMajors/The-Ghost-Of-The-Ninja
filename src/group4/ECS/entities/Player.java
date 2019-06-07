@@ -91,7 +91,10 @@ public class Player extends Entity {
      * @param s The new state of the entity
      */
     public void setState(EntityState s) {
-        this.state = s;
+        if (this.state != s) {
+            this.state = s;
+            System.out.println(s);
+        }
     }
 
     /**
