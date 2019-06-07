@@ -46,6 +46,8 @@ public class Player extends Entity {
 
     public boolean spawnedGhost;
 
+    public boolean onTotem;
+
     /**
      * Creates a player
      *
@@ -53,6 +55,7 @@ public class Player extends Entity {
      * @param level the level that the player is part of
      */
     public Player(Vector3f position, Level level) {
+        onTotem = false;
 
         // shader
         Shader shader = Shader.SIMPLE;

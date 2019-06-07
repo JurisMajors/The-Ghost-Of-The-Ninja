@@ -27,7 +27,6 @@ public class Totem extends Entity {
         this.setGhost(ghostDir);
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
-        // TODO: add collision component
         this.add(new CollisionComponent(TotemCollision.getInstance()));
         this.add(new GraphicsComponent(Shader.SIMPLE, Texture.DEBUG, dimension, false));
     }
