@@ -52,29 +52,29 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
             Entity other = cd.entity;
 
             // Ghost on platform/spline detection (while not training)
-            if (player instanceof Ghost && (other instanceof Platform || Families.collidableSplineFamily.matches(other)) && !Main.AI) {
-                Entity mainCamera = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0);
+//            if (player instanceof Ghost && (other instanceof Platform || Families.collidableSplineFamily.matches(other)) && !Main.AI) {
+//                Entity mainCamera = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0);
 
-                // Check whether the ghost is off screen
-                Vector3f mainCameraPosition = mainCamera.getComponent(PositionComponent.class).position;
-                Vector3f ghostPosition = player.getComponent(PositionComponent.class).position;
+//                // Check whether the ghost is off screen
+//                Vector3f mainCameraPosition = mainCamera.getComponent(PositionComponent.class).position;
+//                Vector3f ghostPosition = player.getComponent(PositionComponent.class).position;
 
-                if (!(ghostPosition.x <= mainCameraPosition.x + Main.SCREEN_WIDTH / 2 && ghostPosition.x >= mainCameraPosition.x - Main.SCREEN_WIDTH / 2
-                        && ghostPosition.y <= mainCameraPosition.y + Main.SCREEN_HEIGHT / 2 && ghostPosition.y >= mainCameraPosition.y - Main.SCREEN_HEIGHT / 2)) {
-                    // Ghost is on a platform and not visible on the screen of the user, so let it wait
-                    ((Ghost) player).setBlocked(true);
-                } else {
-                    // Ghost is on a platform and visible on the screen of the user, check if is is blocked
-                    if (((Ghost) player).isBlocked()) {
-                        // Ghost is indeed blocked, wait until it is sufficiently visible on the screen and then continue moving the ghost
-                        Vector3f ghostDimension = player.getComponent(DimensionComponent.class).dimension;
-                        if (ghostPosition.x <= mainCameraPosition.x + Main.SCREEN_WIDTH / 2 - 2 * ghostDimension.x) {
-                            ((Ghost) player).setBlocked(false);
-                        }
-                    }
-                }
+//                if (!(ghostPosition.x <= mainCameraPosition.x + Main.SCREEN_WIDTH / 2 && ghostPosition.x >= mainCameraPosition.x - Main.SCREEN_WIDTH / 2
+//                        && ghostPosition.y <= mainCameraPosition.y + Main.SCREEN_HEIGHT / 2 && ghostPosition.y >= mainCameraPosition.y - Main.SCREEN_HEIGHT / 2)) {
+//                    // Ghost is on a platform and not visible on the screen of the user, so let it wait
+//                    ((Ghost) player).setBlocked(true);
+//                } else {
+//                    // Ghost is on a platform and visible on the screen of the user, check if is is blocked
+//                    if (((Ghost) player).isBlocked()) {
+//                        // Ghost is indeed blocked, wait until it is sufficiently visible on the screen and then continue moving the ghost
+//                        Vector3f ghostDimension = player.getComponent(DimensionComponent.class).dimension;
+//                        if (ghostPosition.x <= mainCameraPosition.x + Main.SCREEN_WIDTH / 2 - 2 * ghostDimension.x) {
+//                            ((Ghost) player).setBlocked(false);
+//                        }
+//                    }
+//                }
 
-            }
+//            }
 
             // example
             if (other instanceof Mob) {
