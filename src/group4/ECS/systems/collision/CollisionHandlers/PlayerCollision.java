@@ -15,6 +15,7 @@ import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.entities.items.consumables.Coin;
 import group4.ECS.entities.mobs.Mob;
+import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
 import group4.ECS.etc.Families;
@@ -42,6 +43,8 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
     public void collision(Player player, CollisionComponent cc) {
         Set<CollisionData> others = cc.collisions;
         List<CollisionData> removables = new ArrayList<>();
+
+        resetTotem(player);
 
         // loop through all collisions and handle them accordingly
         for (CollisionData cd : others) {
@@ -88,6 +91,9 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
             } else if (other instanceof Coin) {
                 handleCoin(player, (Coin) other);
                 removables.add(cd);
+            } else if (other instanceof Totem) {
+                handleTotem(player, (Totem) other);
+                removables.add(cd);
             }
         }
 
@@ -111,6 +117,20 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
         // remove coin from the module and the engine
         TheEngine.getInstance().removeEntity(c);
         player.level.getCurrentModule().removeEntity(c);
+    }
+
+    private void resetTotem(Player player) {
+        player.totemStatus = -1;
+    }
+
+    private void handleTotem(Player player, Totem totem) {
+        if (totem.isEnd()) {
+            // end totem, player cannot do a lot here
+
+        } else {
+            // starting totem
+            player.totemStatus = totem.getID();
+        }
     }
 
     private static void handleMob(Player player, Mob mob) {

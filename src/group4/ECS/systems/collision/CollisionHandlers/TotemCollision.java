@@ -11,6 +11,11 @@ public class TotemCollision extends AbstractCollisionHandler<Totem> {
 
     @Override
     public void collision(Totem e, CollisionComponent cc) {
+        // Totem is not a moving entity so this collision handler will never be used
+        // sucks but I put the functionality inside the PlayerCollision
+
+
+        /*
         boolean collideWPlayer = false;
         for (CollisionData cd : cc.collisions) {
             if (cd.entity instanceof Player && !(cd.entity instanceof Ghost)) {
@@ -23,6 +28,7 @@ public class TotemCollision extends AbstractCollisionHandler<Totem> {
         }
         e.level.getPlayer().onTotem = collideWPlayer;
         cc.collisions.clear();
+         */
     }
 
     public static AbstractCollisionHandler getInstance() {
