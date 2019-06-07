@@ -1,4 +1,4 @@
-package group4.ECS.entities;
+package group4.ECS.entities.totems;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphicsComponent;
@@ -17,34 +17,22 @@ public class Totem extends Entity {
 
     private String name;
 
-    private Ghost ghost;
-
     public Level level;
 
-    Totem(Vector3f position, String name, String ghostDir, Level level) {
+    Totem(Vector3f position, String name, Level level) {
         this.name = name;
         this.level = level;
-        this.setGhost(ghostDir);
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
         this.add(new CollisionComponent(TotemCollision.getInstance()));
         this.add(new GraphicsComponent(Shader.SIMPLE, Texture.DEBUG, dimension, false));
     }
 
-    private void setGhost(String dir) {
-        this.ghost = new Ghost(this.getComponent(PositionComponent.class).position,
-                this.level, dir + getID());
-    }
-
-    public Ghost getGhost() {
-        return this.ghost;
+    public int getID() {
+        return Integer.parseInt(this.name.substring(1));
     }
 
     public boolean isEnd() {
-        return this.name.charAt(0) == 'e';
-    }
-
-    public int getID() {
-        return Integer.parseInt(this.name.substring(1));
+        return false;
     }
 }

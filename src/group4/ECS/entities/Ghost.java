@@ -16,6 +16,7 @@ import group4.maths.Vector3f;
 public class Ghost extends Player {
     public boolean best; // whether has reached the exit
     public Player master = null;
+    String endTotem;
 
     private boolean blockMovement = false;
 
