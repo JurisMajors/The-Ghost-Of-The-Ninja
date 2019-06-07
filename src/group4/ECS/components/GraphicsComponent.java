@@ -1,7 +1,6 @@
 package group4.ECS.components;
 
 import com.badlogic.ashley.core.Component;
-import group4.AI.Evolver;
 import group4.game.Main;
 import group4.graphics.RenderLayer.Layer;
 import group4.graphics.Shader;

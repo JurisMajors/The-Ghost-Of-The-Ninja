@@ -10,12 +10,9 @@ import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
-import group4.utils.DebugUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 
 
 public class HierarchicalPlayer extends Player implements GraphicsHierarchy {

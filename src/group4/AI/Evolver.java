@@ -5,16 +5,15 @@ import group4.AI.decoders.StateDecoderInterface;
 import group4.AI.evaluation.AbstractEvaluationStrategy;
 import group4.AI.evaluation.EuclideanStrategy;
 import group4.AI.evaluation.Evaluator;
+import org.apache.commons.cli.*;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.maths.random.Probability;
 import org.uncommons.watchmaker.framework.*;
 import org.uncommons.watchmaker.framework.factories.AbstractCandidateFactory;
 import org.uncommons.watchmaker.framework.operators.EvolutionPipeline;
-import org.uncommons.watchmaker.framework.selection.RouletteWheelSelection;
 import org.uncommons.watchmaker.framework.selection.StochasticUniversalSampling;
 import org.uncommons.watchmaker.framework.termination.GenerationCount;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
-import org.apache.commons.cli.*;
 
 import java.io.IOException;
 import java.util.LinkedList;

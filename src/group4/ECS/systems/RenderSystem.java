@@ -11,8 +11,6 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.BodyPart;
 import group4.ECS.entities.HierarchicalPlayer;
-import group4.ECS.entities.Player;
-import group4.ECS.entities.mobs.FlappingMob;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.Totem;
 import group4.ECS.etc.Families;
@@ -24,7 +22,10 @@ import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 import group4.utils.DebugUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL41.*;
 

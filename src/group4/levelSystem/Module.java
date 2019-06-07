@@ -2,11 +2,10 @@ package group4.levelSystem;
 
 import com.badlogic.ashley.core.Entity;
 import group4.AI.Brain;
-import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
-import group4.ECS.entities.mobs.*;
 import group4.ECS.entities.items.consumables.Coin;
+import group4.ECS.entities.mobs.*;
 import group4.ECS.entities.totems.EndingTotem;
 import group4.ECS.entities.totems.StartTotem;
 import group4.ECS.entities.totems.Totem;
@@ -15,7 +14,6 @@ import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
 import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.movement.MovementHandlers.JumpingWalkingMobMovementHandler;
 import group4.game.Main;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -26,7 +24,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import javax.xml.soap.Text;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;

@@ -1,12 +1,8 @@
 package group4.ECS.systems.collision.CollisionHandlers;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
 import group4.ECS.components.identities.CoinComponent;
 import group4.ECS.components.physics.CollisionComponent;
-import group4.ECS.components.physics.DimensionComponent;
-import group4.ECS.components.physics.PositionComponent;
-import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.ScoreComponent;
 import group4.ECS.entities.DamageArea;
@@ -18,17 +14,12 @@ import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.StartTotem;
 import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.world.Exit;
-import group4.ECS.entities.world.Platform;
-import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.collision.CollisionData;
 import group4.game.Main;
-import group4.maths.Matrix4f;
-import group4.maths.Vector3f;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -134,6 +125,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
         } else {
             // starting totem
             player.totemStatus = (StartTotem) totem;
+            // TODO: Draw help
         }
     }
 

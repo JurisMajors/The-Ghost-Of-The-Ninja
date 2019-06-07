@@ -25,9 +25,9 @@ import group4.game.Main;
 import group4.game.Timer;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
+import group4.levelSystem.AILevel;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
-import group4.levelSystem.AILevel;
 import group4.maths.Vector3f;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 
