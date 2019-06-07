@@ -59,7 +59,7 @@ public class Main implements Runnable {
     /**
      * enable this if you want to run the genetic algorithm, instead of playing urself
      **/
-    public static final boolean AI = false;
+    public static final boolean AI = true;
     /**
      * whether should do calls to OPENGL
      **/
@@ -186,7 +186,7 @@ public class Main implements Runnable {
             this.engine.addSystem(new LastSystem(16));
 
             // Initialize the level
-            this.level = new FileLevel("./src/group4/res/maps/level_02");
+            this.level = new FileLevel("./src/group4/res/maps/level_03");
 
         }
         // Set up a camera for our game
@@ -224,6 +224,7 @@ public class Main implements Runnable {
             // we last recorded
             if (lastFpsTime >= (long) 1e9) {
                 this.win.setWindowTitle("(FPS: " + fps + ")");
+                System.out.println(fps);
                 lastFpsTime = 0;
                 fps = 0;
             }
