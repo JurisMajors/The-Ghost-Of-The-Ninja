@@ -5,6 +5,7 @@ import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
@@ -12,7 +13,7 @@ import group4.maths.Vector3f;
 
 public abstract class Totem extends Entity {
 
-    private Vector3f dimension = new Vector3f(1.0f, 2f, 0);
+    private Vector3f dimension = new Vector3f(2f, 2f, 0);
 
     private String name;
 
@@ -33,9 +34,9 @@ public abstract class Totem extends Entity {
     private GraphicsComponent getGraphicsComponent() {
         Shader shader = Shader.TOTEM;
         if (isEnd()) {
-            return new GraphicsComponent(shader, Texture.TOTEM_END, dimension, false);
+            return new GraphicsComponent(shader, Texture.TOTEM_END,dimension, RenderLayer.Layer.BACKGROUND, false);
         } else {
-            return new GraphicsComponent(shader, Texture.TOTEM_START, dimension, false);
+            return new GraphicsComponent(shader, Texture.TOTEM_START, dimension, RenderLayer.Layer.BACKGROUND, false);
         }
     }
 
