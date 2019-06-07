@@ -75,7 +75,7 @@ public abstract class Totem extends Entity {
                 rgbMask = new Vector3f(1f, 0f, 0f);
                 break;
             default:
-                rgbMask = new Vector3f(0f, 0f, 0f);
+                rgbMask = new Vector3f(1f, 1f, 1f);
                 break;
         }
     }
