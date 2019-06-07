@@ -67,7 +67,7 @@ public class CameraSystem extends EntitySystem {
             newPosition = strictTargetFollow();
         } else {
             // Static for now
-            newPosition = new Vector3f(-8.0f, -4.5f, 0.0f);
+            newPosition = new Vector3f(8.0f, 4.5f, 0.0f);
         }
 
         // update cam world pos
@@ -75,13 +75,13 @@ public class CameraSystem extends EntitySystem {
 
         // Update the view matrix to be the player position
         // Note that player position vector should be inverted to center the view on the player
-        cc.viewMatrix = Matrix4f.translate(newPosition);
+        cc.viewMatrix = Matrix4f.translate(newPosition.scale(-1.0f));
     }
 
     private Vector3f strictTargetFollow() {
         Entity player = TheEngine.getInstance().getEntitiesFor(family).get(0);
         PositionComponent pc = Mappers.positionMapper.get(player);
-        return pc.position.scale(-1.0f);
+        return pc.position;
     }
     /**
      * @return whether this system is active or not
