@@ -74,9 +74,6 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     public HierarchicalPlayer(Vector3f position, Level level) {
         super(position, level);
 
-        // TODO: For testing purposes set default anim here! Works until movementsystem is updated.
-        this.state = EntityState.PLAYER_WALKING;
-
         // Set the correct dimension component (will automatically remove the old one)
         this.add(new DimensionComponent(this.dimension));
 
