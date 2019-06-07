@@ -65,7 +65,7 @@ public class PlayerMovementSystem extends IteratingSystem {
             jump(mc);
         }
 
-        if (shouldSpawnGhost(ref) && !((Player) e).spawnedGhost) {
+        if (shouldSpawnGhost(ref) && !((Player) e).spawnedGhost && ((Player) e).totemStatus != -1) {
             ((Player) e).spawnedGhost = true;
             ((Player) e).level.getCurrentModule().addGhost((Player) e);
         }
