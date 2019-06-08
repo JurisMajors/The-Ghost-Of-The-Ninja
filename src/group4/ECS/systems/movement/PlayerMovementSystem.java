@@ -85,6 +85,7 @@ public class PlayerMovementSystem extends IteratingSystem {
     * Moves along the x axis in the specified direction
     */
     private void moveDirection(int moveDir, MovementComponent mc, PositionComponent pc) {
+        // TODO: play step sound
         // set orientation of player in accordance to mouse position
         if (pc.position.x <= MouseMovement.mouseX) {
             mc.orientation = MovementComponent.RIGHT;
@@ -111,6 +112,7 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     private void jump(MovementComponent mc) {
+        // TODO: Play jump sound
         mc.velocity.y = mc.velocityRange.y;
     }
 
