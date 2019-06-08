@@ -15,6 +15,7 @@ public abstract class AbstractDyingSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         if (shouldDie(entity, deltaTime)) {
             boolean shouldRemove = die(entity, deltaTime);
+            sound();
             if (shouldRemove) {
                 TheEngine.getInstance().removeEntity(entity);
                 // TODO: remove from module entity list too
@@ -38,5 +39,12 @@ public abstract class AbstractDyingSystem extends IteratingSystem {
      * @return whether to remove the entity from the engine
      */
     protected abstract boolean die(Entity entity, float deltaTime);
+
+    /**
+     * Play sound after death
+     */
+    protected void sound() {
+        // no sound by default
+    }
 
 }

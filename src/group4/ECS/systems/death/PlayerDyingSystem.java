@@ -61,9 +61,6 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
     @Override
     protected boolean die(Entity entity, float deltaTime) {
         entity.getComponent(HealthComponent.class).health = 0;
-
-        Sound.DIE.play();
-
         // If auto reset is enabled, reset the module to its original state
         // and reposition the player, while giving it new health
         if (this.autoReset) {
@@ -76,4 +73,9 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
         return false;
     }
 
+    @Override
+    protected void sound() {
+        super.sound();
+        Sound.DIE.play();
+    }
 }
