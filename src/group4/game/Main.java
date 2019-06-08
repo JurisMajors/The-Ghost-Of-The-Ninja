@@ -171,7 +171,6 @@ public class Main implements Runnable {
             engine.addSystem(new CameraSystem(Families.playerFamily, 13));
             engine.addSystem(new RenderSystem(14));
             engine.addSystem(new LastSystem(15));
-            this.level = new FileLevel("./src/group4/res/maps/level_02");
 
             // Initialize the StartScreen, this will load the level
             this.startScreen = new StartScreen();
