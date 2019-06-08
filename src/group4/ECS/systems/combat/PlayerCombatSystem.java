@@ -16,8 +16,9 @@ import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
+import group4.audio.Sound;
 import group4.game.Main;
-import group4.game.Window;
+import group4.UI.Window;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
@@ -134,6 +135,9 @@ public class PlayerCombatSystem extends IteratingSystem {
         Set<Class<? extends Entity>> excluded = new HashSet<>();
         excluded.add(Player.class);
         excluded.add(Ghost.class);
+
+        // play the slash sound
+        Sound.SLASH.play();
 
         new DamageArea(hitboxCorner, trueHitbox,
                 wc.damage, excluded, 0);

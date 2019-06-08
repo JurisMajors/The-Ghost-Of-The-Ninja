@@ -96,7 +96,7 @@ public abstract class AbstractMovementHandler<T extends Mob> {
         doGravity(mc, gc);
 
         // update position
-        pc.position.addi(mc.velocity.scale(deltaTime));
+        pc.position.addi(mc.velocity);
     }
 
     protected void move(Entity e, Vector3f targetPosition, float deltaTime) {
@@ -207,16 +207,25 @@ public abstract class AbstractMovementHandler<T extends Mob> {
 
         // center of the mob
         Vector3f center = pc.position.add(dc.dimension.scale(0.5f));
+
+        // only cast rays when the player is close enough to the mob
+        float distance = getPlayerPosition().euclidDist(center);
+        if (distance > viewRange + 1) {
+            return false;
+        }
+
         // get the corners of the mob
         Vector3f[] mobCorners = getCorners(pc.position, dc.dimension);
 
         // the mob can see from all its corners and its center
-        Vector3f[] mobEyes = new Vector3f[5];
+        Vector3f[] mobEyes = new Vector3f[1];
         mobEyes[0] = center;
+        /*
         // add the corners
         for (int i = 0; i < 4; i++) {
             mobEyes[i + 1] = mobCorners[i];
         }
+         */
 
         // we want to look at all player corners
         Vector3f[] playerCorners = getCorners(getPlayerPosition(), getPlayerDimension());

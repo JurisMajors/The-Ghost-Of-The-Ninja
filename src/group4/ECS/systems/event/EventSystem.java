@@ -28,8 +28,6 @@ public class EventSystem extends IteratingSystem {
             ec = Mappers.eventMapper.get(entity);
 
             // if expired, remove from the engine
-            System.out.println(entity);
-            System.out.println(ec.duration + " " + ec.passed);
             if (ec.duration <= ec.passed) {
                 ((Event) entity).invoke();
                 TheEngine.getInstance().removeEntity(entity);

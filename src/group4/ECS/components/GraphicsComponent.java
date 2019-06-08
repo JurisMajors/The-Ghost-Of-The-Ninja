@@ -1,9 +1,8 @@
 package group4.ECS.components;
 
 import com.badlogic.ashley.core.Component;
-import group4.AI.Evolver;
 import group4.game.Main;
-import group4.graphics.RenderLayer.Layer;
+import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.VertexArray;
@@ -16,7 +15,7 @@ public class GraphicsComponent implements Component {
     public Texture texture;
 
     // Layer/depth at which to render the component.
-    public Layer layer;
+    public RenderLayer layer;
 
     /**
      * Constructor which constructs a VertexArray object and stores the given shader and texture for rendering. Gives
@@ -33,7 +32,7 @@ public class GraphicsComponent implements Component {
         this.shader = shader;
         this.texture = texture;
         this.geometry = new VertexArray(vertices, indices, tcs);
-        this.layer = Layer.MAIN;
+        this.layer = RenderLayer.MAIN;
     }
 
     /**
@@ -47,7 +46,7 @@ public class GraphicsComponent implements Component {
      * @param tcs      Float[], a uv/st-coordinate for every vertex.
      * @param layer    Integer, specifying the layer depth at which the component should be rendered.
      */
-    public GraphicsComponent(Shader shader, Texture texture, float[] vertices, byte[] indices, float[] tcs, Layer layer) {
+    public GraphicsComponent(Shader shader, Texture texture, float[] vertices, byte[] indices, float[] tcs, RenderLayer layer) {
         if (!Main.SHOULD_OPENGL) return;
         this.shader = shader;
         this.texture = texture;
@@ -88,7 +87,43 @@ public class GraphicsComponent implements Component {
         this.shader = shader;
         this.texture = texture;
         this.geometry = new VertexArray(vertices, indices, tcs);
-        this.layer = Layer.MAIN;
+        this.layer = RenderLayer.MAIN;
+    }
+
+    /**
+     * Constructs a VertexArray object and stores the shader and texture for rendering.
+     * The vertexArray is created from (0,0,0) till (dimension.x, dimension.y, 0) and is covered fully by the texture.
+     * This means the texture will be stretched or shrunk to fit the dimension.
+     *
+     * @param shader    Shader, the shader to apply during rendering
+     * @param texture   Texture, the image to pass to the shader
+     * @param dimension size of the graphics to be displayed.
+     * @param layer     On what layer to draw
+     */
+    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, RenderLayer layer) {
+        if (!Main.SHOULD_OPENGL) return;
+        // Construct vertex array
+        float[] vertices = generateVertices(dimension, false);
+
+        // Construct index array (used for geometry mesh)
+        byte[] indices = new byte[]{
+                0, 1, 2,
+                2, 3, 0
+        };
+
+        // Construct texture coords covering the full texture
+        float[] tcs = new float[]{
+                0, 1,
+                0, 0,
+                1, 0,
+                1, 1
+        };
+
+        // set instance variables
+        this.shader = shader;
+        this.texture = texture;
+        this.geometry = new VertexArray(vertices, indices, tcs);
+        this.layer = layer;
     }
 
     /**
@@ -101,7 +136,7 @@ public class GraphicsComponent implements Component {
      * @param dimension size of the graphics to be displayed.
      * @param center    If this is true, the GC will be centered around midpoint the bottom edge
      */
-    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, Layer layer, boolean center) {
+    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, RenderLayer layer, boolean center) {
         if (!Main.SHOULD_OPENGL) return;
         // Construct vertex array
         float[] vertices = generateVertices(dimension, center);
@@ -154,7 +189,7 @@ public class GraphicsComponent implements Component {
         this.shader = shader;
         this.texture = texture;
         this.geometry = new VertexArray(vertices, indices, texCoords);
-        this.layer = Layer.MAIN;
+        this.layer = RenderLayer.MAIN;
     }
 
     /**
@@ -170,7 +205,7 @@ public class GraphicsComponent implements Component {
      * @param layer     Enum, indicating on which specific layer this component should be drawn
      * @param center    If this is true, the GC will be centered around midpoint the bottom edge
      */
-    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, float[] texCoords, Layer layer, boolean center) {
+    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, float[] texCoords, RenderLayer layer, boolean center) {
         if (!Main.SHOULD_OPENGL) return;
         // Construct vertex array
         float[] vertices = generateVertices(dimension, center);

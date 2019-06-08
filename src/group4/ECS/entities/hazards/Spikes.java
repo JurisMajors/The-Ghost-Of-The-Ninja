@@ -29,10 +29,10 @@ public class Spikes extends Entity {
 
         // Construct vertex array
         float[] vertices = new float[] {
-                0, 0, 0,
-                0, 1.0f, 0,
-                1.0f, 1.0f, 0,
-                1.0f, 0, 0,
+                -0.15f, -0.15f, 0,
+                -0.15f, 0.85f, 0,
+                0.85f, 0.85f, 0,
+                0.85f, -0.15f, 0,
         };
 
         // Construct index array (used for geometry mesh)
@@ -41,11 +41,11 @@ public class Spikes extends Entity {
                 2, 3, 0
         };
 
-        this.add(new PositionComponent(position));
+        this.add(new PositionComponent(position.add(new Vector3f(0.15f, 0.15f, 0.0f))));
         this.add(new CollisionComponent(MeleeCollision.getInstance()));
         this.add(new DamageComponent(damage, excluded));
         this.add(new GraphicsComponent(shader, texture, vertices, indices, texCoords));
-        this.add(new DimensionComponent());
+        this.add(new DimensionComponent(new Vector3f(0.7f, 0.7f, 0.0f)));
     }
 
     public static String getName() {

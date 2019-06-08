@@ -2,6 +2,7 @@ package group4.ECS.entities.mobs;
 
 import group4.ECS.components.identities.JumpingWalkingMobComponent;
 import group4.ECS.systems.movement.MovementHandlers.JumpingWalkingMobMovementHandler;
+import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.maths.Vector3f;
 
@@ -14,6 +15,11 @@ public class JumpingWalkingMob extends Mob {
      */
     public JumpingWalkingMob(Vector3f position, Level l) {
         super(position, l, JumpingWalkingMobMovementHandler.getInstance());
+        this.add(new JumpingWalkingMobComponent());
+    }
+
+    public JumpingWalkingMob(Vector3f pos, Level l, Texture tex, float[] texCoords) {
+        super(pos, l, tex, texCoords, JumpingWalkingMobMovementHandler.getInstance());
         this.add(new JumpingWalkingMobComponent());
     }
 

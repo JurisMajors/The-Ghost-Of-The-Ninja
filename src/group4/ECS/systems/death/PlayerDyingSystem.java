@@ -5,10 +5,10 @@ import com.badlogic.ashley.core.Family;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
-import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.etc.Families;
+import group4.audio.Sound;
 import group4.levelSystem.Module;
 import group4.maths.Vector3f;
 
@@ -62,18 +62,13 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
     protected boolean die(Entity entity, float deltaTime) {
         entity.getComponent(HealthComponent.class).health = 0;
 
+        Sound.DIE.play();
+
         // If auto reset is enabled, reset the module to its original state
         // and reposition the player, while giving it new health
-        // TODO: kill player properly
         if (this.autoReset) {
-            ((Player) entity).level.getCurrentModule().unload();
-            ((Player) entity).level.getCurrentModule().reset();
-            ((Player) entity).level.getCurrentModule().load();
-            ((Player) entity).getComponent(PositionComponent.class).position =
-                    ((Player) entity).level.getCurrentModule().getPlayerInitialPosition();
-            // TODO: set to player init health and not hardcoded 100
-            ((Player) entity).getComponent(HealthComponent.class).health = 100;
-            ((Player) entity).getComponent(MovementComponent.class).velocity = new Vector3f();
+            ((Player) entity).level.reset();
+            // TODO: trigger the 'you died splash screen'
         }
 
         // Level should take care of removing a player from the engine if that is necessary

@@ -1,11 +1,8 @@
-package group4.levelSystem.levels;
+package group4.levelSystem;
 
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.world.Exit;
-import group4.levelSystem.ExitAction;
-import group4.levelSystem.Level;
-import group4.levelSystem.Module;
 import group4.maths.Vector3f;
 
 import java.io.File;
