@@ -2,6 +2,7 @@ package group4.ECS.systems.death;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
@@ -61,6 +62,7 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
     @Override
     protected boolean die(Entity entity, float deltaTime) {
         entity.getComponent(HealthComponent.class).health = 0;
+        GraphicsComponent.clearGlobalColorMask();
         // If auto reset is enabled, reset the module to its original state
         // and reposition the player, while giving it new health
         if (this.autoReset) {

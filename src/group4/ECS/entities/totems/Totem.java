@@ -5,6 +5,7 @@ import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.etc.Mappers;
 import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -19,7 +20,7 @@ public abstract class Totem extends Entity {
 
     public Level level;
 
-    public Vector3f rgbMask;
+    //public Vector3f rgbMask;
 
     public Totem(Vector3f position, String name, Level level) {
         this.name = name;
@@ -32,9 +33,9 @@ public abstract class Totem extends Entity {
     }
 
     private GraphicsComponent getGraphicsComponent() {
-        Shader shader = Shader.TOTEM;
+        Shader shader = Shader.SIMPLE;
         if (isEnd()) {
-            return new GraphicsComponent(shader, Texture.TOTEM_END,dimension, RenderLayer.BACKGROUND, false);
+            return new GraphicsComponent(shader, Texture.TOTEM_END, dimension, RenderLayer.BACKGROUND, false);
         } else {
             return new GraphicsComponent(shader, Texture.TOTEM_START, dimension, RenderLayer.BACKGROUND, false);
         }
@@ -51,6 +52,8 @@ public abstract class Totem extends Entity {
     }
 
     private void setRbgMask() {
+        GraphicsComponent gc = Mappers.graphicsMapper.get(this);
+        Vector3f rgbMask;
         // use the ID to create a unique colour mask
         switch (getID()) {
             case 0:
@@ -78,9 +81,8 @@ public abstract class Totem extends Entity {
                 rgbMask = new Vector3f(1f, 1f, 1f);
                 break;
         }
+        // set the color mask
+        gc.setColorMask(rgbMask);
     }
 
-    public Vector3f getRbgMask() {
-        return rgbMask;
-    }
 }

@@ -3,6 +3,7 @@ package group4.ECS.systems.movement;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
@@ -145,6 +146,11 @@ public class PlayerMovementSystem extends IteratingSystem {
         if (shouldSpawnGhost(ref) && !player.spawnedGhost && player.totemStatus != null) {
             player.spawnedGhost = true; // spawn the ghost
             Ghost newGhost = player.totemStatus.getGhost(player); // get a ghost from the totem
+
+            // set a background color while in the 'ghost' world
+            // TODO: this color should be chosen by someone artistic
+            GraphicsComponent.setGlobalColorMask(new Vector3f(0.2f, 0f, 0f));
+
             // add it to engine an module
             player.level.getCurrentModule().addEntity(newGhost);
             TheEngine.getInstance().addEntity(newGhost);
