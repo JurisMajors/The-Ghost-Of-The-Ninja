@@ -11,7 +11,8 @@ import java.util.Map;
  */
 public class TileMapping {
     public static Map<Integer, float[]> MAIN; // For now only 1. This class would make the game skinnable as well :-)
-    public static int MAIN_SIZE = 8 * 7; // Important! Update this when the MAIN tilemap changes its dimensions.
+    public static int WIDTH = 16, HEIGHT = 12;
+    public static int MAIN_SIZE = WIDTH * HEIGHT; // Important! Update this when the MAIN tilemap changes its dimensions.
     /**
      * Loads all TileMapping objects we need as statics into this holder class.
      *
@@ -21,7 +22,7 @@ public class TileMapping {
         // MAIN is currently 8 x 7
         MAIN = new HashMap<>();
         for (int i = 0; i < 64; i++) {
-            MAIN.put(i, generateTexCoords(8, 7, i));
+            MAIN.put(i, generateTexCoords(WIDTH, HEIGHT, i));
         }
     }
 

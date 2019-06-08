@@ -155,6 +155,8 @@ public class Module {
                 parseCoinLayer(layer);
             } else if (layerName.equals("EXITS")) {
                 setupExits(layer);
+            } else if (layerName.equals("BG")) {
+                parseBackgroundLayer(layer);
             } else {
                 // In case the layer is not MAIN or EXITS
                 System.err.println("Unrecognized layer name: " + layer.getString("name"));
@@ -190,6 +192,40 @@ public class Module {
             }
         }
 
+    }
+
+    private void parseBackgroundLayer(JSONObject layer) {
+        // Get height and width of layer
+        int layerHeight = layer.getInt("height");
+        int layerWidth = layer.getInt("width");
+
+        // Loop over the data grid
+        JSONArray data = layer.getJSONArray("data");
+        for (int tile = 0; tile < data.length(); tile++) {
+            // Get the grid position of the tile
+            int tileGridX = tile % layerWidth;
+            int tileGridY = layerHeight - tile / layerWidth;
+
+            // Get the type of the tile
+            int tileId = data.getInt(tile) - 1;
+
+            String entityId = moduleTileMap.get(tileId);
+
+            if (entityId == null) {
+                continue;
+            } else if (entityId.equals(Platform.getName())) {
+                this.addPlatform(tileGridX, tileGridY, tileId);
+            } else if (entityId.equals(ArtTile.getName())) {
+                this.addArtTile(tileGridX, tileGridY, tileId);
+            } else if (entityId.equals(Player.getName())) {
+                this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
+            } else if (entityId.endsWith(Mob.getName()) && !Main.AI) {
+                this.addMob(tileGridX, tileGridY, tileId, entityId);
+            } else {
+                System.err.println("Some tiles not drawing!");
+                continue;
+            }
+        }
     }
 
     private void parseMainLayer(JSONObject layer) {
