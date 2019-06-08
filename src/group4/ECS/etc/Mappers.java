@@ -88,4 +88,7 @@ public class Mappers {
 
     public static final ComponentMapper<ScoreComponent> scoreMapper =
             ComponentMapper.getFor(ScoreComponent.class);
+
+    public static final ComponentMapper<AnimationComponent> animationMapper =
+            ComponentMapper.getFor(AnimationComponent.class);
 }

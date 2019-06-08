@@ -9,6 +9,7 @@ import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.etc.EntityState;
 import group4.ECS.components.stats.ScoreComponent;
 import group4.ECS.entities.totems.StartTotem;
 import group4.ECS.systems.collision.CollisionHandlers.PlayerCollision;
@@ -55,6 +56,10 @@ public class Player extends Entity {
      * Null if not touching
      */
     public StartTotem totemStatus;
+    /*
+     * Variable to keep track of state of entity
+     */
+    protected EntityState state = EntityState.PLAYER_IDLE;
 
     /**
      * Creates a player
@@ -89,5 +94,23 @@ public class Player extends Entity {
 
     public static String getName() {
         return "Player";
+    }
+
+    /**
+     * Set the state of the entity
+     * @param s The new state of the entity
+     */
+    public void setState(EntityState s) {
+        if (this.state != s) {
+            this.state = s;
+//            System.out.println(s); // Uncomment for state change logging
+        }
+    }
+
+    /**
+     * Get the current state of the entity
+     */
+    public EntityState getState() {
+        return this.state;
     }
 }

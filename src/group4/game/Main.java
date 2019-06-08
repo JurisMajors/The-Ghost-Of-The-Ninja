@@ -5,7 +5,7 @@ import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.AnimationSystem;
+import group4.ECS.systems.animation.AnimationSystem;
 import group4.ECS.systems.CameraSystem;
 import group4.ECS.systems.RenderSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
@@ -43,9 +43,6 @@ import static org.lwjgl.openal.ALC10.alcDestroyContext;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.stb.STBVorbis.stb_vorbis_decode_filename;
-import static org.lwjgl.system.libc.LibCStdlib.free;
-
 
 public class Main implements Runnable {
     private Thread thread;
