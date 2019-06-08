@@ -6,11 +6,13 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.entities.Ghost;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
 import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
+import group4.ECS.etc.TheEngine;
 import group4.audio.Sound;
 import group4.game.Main;
 import group4.input.KeyBoard;
@@ -87,7 +89,7 @@ public class PlayerMovementSystem extends IteratingSystem {
             }
 
             // jump if space is pressed and if canJump is satisfied
-            if (shouldJump(ref) && canJump(mc.velocity) && pc.onPlatform) {
+            if (shouldJump(ref) && canJump(pc)) {
                 nextState = EntityState.PLAYER_PREJUMP;
             }
         } else {
@@ -139,10 +141,13 @@ public class PlayerMovementSystem extends IteratingSystem {
         if (jumpInProgress && playerState != EntityState.PLAYER_JUMPING) {
             jumpInProgress = false;
         }
-
-        if (shouldSpawnGhost(ref) && !((Player) e).spawnedGhost) {
-            ((Player) e).spawnedGhost = true;
-            ((Player) e).level.getCurrentModule().addGhost((Player) e);
+        // if the entity shoudlspawnghost and its previous ghost is not alive and it is on a start totem
+        if (shouldSpawnGhost(ref) && !player.spawnedGhost && player.totemStatus != null) {
+            player.spawnedGhost = true; // spawn the ghost
+            Ghost newGhost = player.totemStatus.getGhost(player); // get a ghost from the totem
+            // add it to engine an module
+            player.level.getCurrentModule().addEntity(newGhost);
+            TheEngine.getInstance().addEntity(newGhost);
         }
 
         // Finally limit the velocity vector
@@ -161,7 +166,7 @@ public class PlayerMovementSystem extends IteratingSystem {
      * Moves along the x axis in the specified direction
      */
     private void moveDirection(int moveDir, MovementComponent mc, PositionComponent pc) {
-        if (!Main.AI && !Sound.isPlaying(Sound.STEP) && canJump(mc.velocity)) {
+        if (!Main.AI && !Sound.isPlaying(Sound.STEP) && canJump(pc)) {
             Sound.playRandom(Sound.STEP);
         }
         // set orientation of player in accordance to mouse position
@@ -194,9 +199,8 @@ public class PlayerMovementSystem extends IteratingSystem {
         mc.velocity.y = mc.velocityRange.y;
     }
 
-    private boolean canJump(Vector3f velocity) {
-        // velocity has to be close to zero (avoid double jumping)
-        return velocity.y <= 1e-3 && velocity.y >= -1e-3;
+    private boolean canJump(PositionComponent pos) {
+        return pos.onPlatform;
     }
 
     private boolean canSprint(Vector3f velocity) {

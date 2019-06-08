@@ -1,12 +1,10 @@
 package group4.ECS.systems.collision.CollisionHandlers;
 
 import group4.ECS.components.physics.CollisionComponent;
-import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.systems.collision.CollisionData;
-import group4.maths.Vector3f;
 
 public class ExitCollision extends AbstractCollisionHandler<Exit> {
 

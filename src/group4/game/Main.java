@@ -10,8 +10,8 @@ import group4.ECS.systems.CameraSystem;
 import group4.ECS.systems.RenderSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
-import group4.ECS.systems.collision.UncollidingSystem;
 import group4.ECS.systems.collision.LastSystem;
+import group4.ECS.systems.collision.UncollidingSystem;
 import group4.ECS.systems.combat.DamageSystem;
 import group4.ECS.systems.combat.PlayerCombatSystem;
 import group4.ECS.systems.death.GhostDyingSystem;
@@ -31,13 +31,16 @@ import group4.graphics.TileMapping;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
-import group4.levelSystem.Level;
 import group4.levelSystem.FileLevel;
+import group4.levelSystem.Level;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.openal.ALC10.alcCloseDevice;
+import static org.lwjgl.openal.ALC10.alcDestroyContext;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 

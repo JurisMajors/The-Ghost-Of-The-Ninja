@@ -1,7 +1,6 @@
 package group4.ECS.components.stats;
 
 import com.badlogic.ashley.core.Component;
-import freemarker.template.utility.RichObjectWrapper;
 import group4.maths.Vector3f;
 
 public class MovementComponent implements Component {

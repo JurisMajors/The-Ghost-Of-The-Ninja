@@ -8,8 +8,6 @@ import group4.graphics.Texture;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 
-import java.util.Arrays;
-
 public class BodyPart extends Entity implements GraphicsHierarchy {
 
     /**
