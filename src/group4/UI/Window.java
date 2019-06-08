@@ -1,6 +1,7 @@
-package group4.game;
+package group4.UI;
 
 import group4.AI.Evolver;
+import group4.game.Main;
 import org.lwjgl.glfw.GLFWVidMode;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -8,8 +9,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
     private long window;
-    private static int width = 1980;
-    private static int height = 1280;
+    private static int width = 1280;
+    private static int height = 720;
 
     public Window() {
         // Configure GLFW
@@ -31,6 +32,11 @@ public class Window {
         glfwMakeContextCurrent(window);
         glfwSwapInterval(1); // Enable v-sync
         if (!(!Evolver.render && Main.AI)) { // show the window if not training the AI or if Evolver.render is on
+            // Create and set the custom cursor
+            Cursor cursor = new Cursor("src/group4/res/textures/cursor32.png");
+            glfwSetCursor(window, cursor.getCursorId());
+
+            // Fiiiinally, show the window!
             glfwShowWindow(window);
         }
     }

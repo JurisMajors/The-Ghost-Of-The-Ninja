@@ -13,7 +13,7 @@ import group4.maths.Vector3f;
 /**
  * The helper Ghost
  */
-public class Ghost extends Player {
+public class Ghost extends HierarchicalPlayer {
     public boolean best; // whether has reached the exit
     public Player master = null;
 

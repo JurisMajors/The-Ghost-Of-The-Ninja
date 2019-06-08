@@ -17,4 +17,10 @@ public class PositionComponent implements Component {
         this.position = position;
     }
 
+    /**
+     * Default constructor for giving it a (0, 0, 0) position.
+     */
+    public PositionComponent() {
+        this.position = new Vector3f();
+    }
 }
