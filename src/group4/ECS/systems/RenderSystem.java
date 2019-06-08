@@ -124,7 +124,6 @@ public class RenderSystem extends EntitySystem {
 
                     // Totems have a mask to make them different colours
                     if (entity instanceof Totem) {
-                        // JORIS TODO!!!!
                         gc.shader.setUniform3f("color_mask", ((Totem) entity).getRbgMask());
                     }
 
