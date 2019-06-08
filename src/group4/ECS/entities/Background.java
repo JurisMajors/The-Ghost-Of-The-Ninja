@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
-import group4.graphics.RenderLayer.Layer;
+import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
@@ -28,7 +28,7 @@ public class Background extends Entity {
         this.add(new DimensionComponent(dimension));
 
         // create basic graphics component covering the dimension of this block
-        this.add(new GraphicsComponent(shader, texture, dimension, Layer.BACKGROUND, false));
+        this.add(new GraphicsComponent(shader, texture, dimension, RenderLayer.BACKGROUND, false));
     }
 
     public static String getName() {

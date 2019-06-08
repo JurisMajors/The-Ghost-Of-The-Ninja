@@ -17,7 +17,7 @@ import group4.ECS.entities.mobs.Mob;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
-import group4.graphics.RenderLayer.Layer;
+import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
@@ -32,7 +32,7 @@ import static org.lwjgl.opengl.GL41.*;
  * position as well as a graphics component
  */
 public class RenderSystem extends EntitySystem {
-    private boolean DEBUG = true;
+    private boolean DEBUG = false;
     // array of registered entities in the graphicsFamily
     private ImmutableArray<Entity> entities;
 
@@ -71,7 +71,7 @@ public class RenderSystem extends EntitySystem {
      */
     public void update(float deltaTime) {
         // Match objects to RenderLayers so we can draw layer by layer
-        Map<Layer, List<Entity>> entityLayers = sortEntitiesByLayer();
+        Map<RenderLayer, List<Entity>> entityLayers = sortEntitiesByLayer();
 
         // Get the camera and its main component from the engine
         Entity camera = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0); // There should only be one camera currently
@@ -86,7 +86,7 @@ public class RenderSystem extends EntitySystem {
 
         PositionComponent pc;
         GraphicsComponent gc;
-        for (Layer layer : Layer.values()) {
+        for (RenderLayer layer : RenderLayer.values()) {
             glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
             for (Entity entity : entityLayers.get(layer)) {
                 if (entity instanceof HierarchicalPlayer) {
@@ -197,10 +197,10 @@ public class RenderSystem extends EntitySystem {
      *
      * @return Map<Layer, List < Entity>>, the entities sorted by layer
      */
-    private Map<Layer, List<Entity>> sortEntitiesByLayer() {
+    private Map<RenderLayer, List<Entity>> sortEntitiesByLayer() {
         // Construct an empty hashmap and create a key for each layer
-        Map<Layer, List<Entity>> entityLayers = new HashMap<>();
-        for (Layer layer : Layer.values()) {
+        Map<RenderLayer, List<Entity>> entityLayers = new HashMap<>();
+        for (RenderLayer layer : RenderLayer.values()) {
             entityLayers.put(layer, new ArrayList<>());
         }
 
