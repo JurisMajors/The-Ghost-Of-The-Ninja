@@ -219,7 +219,6 @@ public class Main implements Runnable {
             // we last recorded
             if (lastFpsTime >= (long) 1e9) {
                 this.win.setWindowTitle("(FPS: " + fps + ")");
-                System.out.println(fps);
                 lastFpsTime = 0;
                 fps = 0;
             }
