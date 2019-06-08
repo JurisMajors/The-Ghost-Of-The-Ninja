@@ -147,6 +147,8 @@ public class PlayerMovementSystem extends IteratingSystem {
             player.spawnedGhost = true; // spawn the ghost
             Ghost newGhost = player.totemStatus.getGhost(player); // get a ghost from the totem
 
+            // set a background color while in the 'ghost' world
+            // TODO: this color should be chosen by someone artistic
             GraphicsComponent.setGlobalColorMask(new Vector3f(0.2f, 0f, 0f));
 
             // add it to engine an module

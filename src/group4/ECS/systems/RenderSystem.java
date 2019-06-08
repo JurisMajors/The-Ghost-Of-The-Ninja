@@ -128,13 +128,6 @@ public class RenderSystem extends EntitySystem {
                     // create color overlay over textures
                     handleColorMask(gc);
 
-                    // Totems have a mask to make them different colours
-                    /*
-                    if (entity instanceof Totem) {
-                        gc.shader.setUniform3f("color_mask", ((Totem) entity).getRbgMask());
-                    }
-                     */
-
                     // Set uniforms
                     gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers
                     gc.shader.setUniform1f("tex", gc.texture.getTextureID()); // Specify which texture slot to use
@@ -191,6 +184,13 @@ public class RenderSystem extends EntitySystem {
         }
     }
 
+    /**
+     * Adds a color on top of the texture of a graphics component.
+     * If the graphics component has a personal color that takes priority.
+     * Else we look at the global color mask in GraphicsComponent.GLOBAL_COLOR_MASK.
+     * If neither are set we have a color mask of 0 which does nothing.
+     * @param gc graphics component
+     */
     private void handleColorMask(GraphicsComponent gc) {
         if (gc.hasMask) { // per texture mask has priority
             gc.shader.setUniform3f("color_mask", gc.colorMask);

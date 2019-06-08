@@ -35,7 +35,7 @@ public abstract class Totem extends Entity {
     private GraphicsComponent getGraphicsComponent() {
         Shader shader = Shader.SIMPLE;
         if (isEnd()) {
-            return new GraphicsComponent(shader, Texture.TOTEM_END,dimension, RenderLayer.BACKGROUND, false);
+            return new GraphicsComponent(shader, Texture.TOTEM_END, dimension, RenderLayer.BACKGROUND, false);
         } else {
             return new GraphicsComponent(shader, Texture.TOTEM_START, dimension, RenderLayer.BACKGROUND, false);
         }
@@ -85,9 +85,4 @@ public abstract class Totem extends Entity {
         gc.setColorMask(rgbMask);
     }
 
-    /*
-    public Vector3f getRbgMask() {
-        return rgbMask;
-    }
-     */
 }
