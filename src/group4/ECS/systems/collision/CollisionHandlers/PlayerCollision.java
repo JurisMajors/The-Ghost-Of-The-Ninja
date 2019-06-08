@@ -19,6 +19,7 @@ import group4.ECS.entities.world.Exit;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.collision.CollisionData;
+import group4.audio.Sound;
 import group4.game.Main;
 import group4.maths.Vector3f;
 
@@ -112,6 +113,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
 
         // update score
         playerScore.addScore(coinComponent.value);
+        Sound.COIN.play();
 
         // remove coin from the module and the engine
         TheEngine.getInstance().removeEntity(c);

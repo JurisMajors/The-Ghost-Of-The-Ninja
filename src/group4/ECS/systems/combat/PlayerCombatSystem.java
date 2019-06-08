@@ -89,7 +89,7 @@ public class PlayerCombatSystem extends IteratingSystem {
                 excluded.add(Ghost.class);
 
                 // play the slash sound
-                Sound.SLASH.play();
+                Sound.playRandom(Sound.SLASH);
                 Vector3f position = pc.position.add(trueOffset);
                 new MeleeArea(position, wc.hitBox,
                         wc.damage, excluded);
