@@ -11,7 +11,7 @@ import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.ItemComponent;
 import group4.ECS.components.stats.MeleeWeaponComponent;
 import group4.ECS.entities.Ghost;
-import group4.ECS.entities.damage.MeleeArea;
+import group4.ECS.entities.damage.DamageArea;
 import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
@@ -135,8 +135,8 @@ public class PlayerCombatSystem extends IteratingSystem {
         excluded.add(Player.class);
         excluded.add(Ghost.class);
 
-        new MeleeArea(hitboxCorner, trueHitbox,
-                wc.damage, excluded, 1);
+        new DamageArea(hitboxCorner, trueHitbox,
+                wc.damage, excluded, 0);
 
     }
 

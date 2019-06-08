@@ -1,6 +1,7 @@
 package group4.ECS.components.events;
 
 import com.badlogic.ashley.core.Entity;
+import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 
 public class Event extends Entity {
@@ -16,7 +17,6 @@ public class Event extends Entity {
     public Event(Entity subject, int duration, Function fct) {
         this.subject = subject;
         this.fct = fct;
-        System.out.println(fct);
         this.add(new EventComponent(duration));
         TheEngine.getInstance().addEntity(this);
     }
@@ -25,8 +25,9 @@ public class Event extends Entity {
      * will get called
      */
     public void invoke() {
-        System.out.println("herhe");
-        fct.invoke(subject);
+        int duration = Mappers.eventMapper.get(this).duration;
+        int passed = Mappers.eventMapper.get(this).passed;
+        fct.invoke(subject, duration, passed);
     };
 
 }

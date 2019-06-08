@@ -7,6 +7,7 @@ import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.Player;
+import group4.ECS.etc.EntityConst;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.input.KeyBoard;
@@ -56,10 +57,11 @@ public class PlayerMovementSystem extends IteratingSystem {
             moveRight(mc, pc);
         } else if (shouldLeft(ref)) {
             moveLeft(mc, pc);
-        } else {
+        } else if (!Mappers.healthMapper.get(e).state.contains(EntityConst.EntityState.KNOCKED)) {
             // stay still if no keys are pressed
 //            mc.velocity.x = 0;
         }
+
         // jump if space is pressed and if canJump is satisfied
         if (shouldJump(ref) && canJump(mc.velocity)) {
             jump(mc);

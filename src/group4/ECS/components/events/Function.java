@@ -5,6 +5,6 @@ import com.badlogic.ashley.core.Entity;
 @FunctionalInterface
 public interface Function {
 
-    void invoke(Entity entity);
+    void invoke(Entity entity, int duration, int passed);
 
 }

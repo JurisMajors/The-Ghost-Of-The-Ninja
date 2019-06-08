@@ -22,17 +22,18 @@ public class TimedEventSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         EventComponent ec;
-        System.out.println(entity);
 
         // if entity expires on ticks
         if (Mappers.eventMapper.get(entity) != null) {
             ec = Mappers.eventMapper.get(entity);
 
             // if expired, remove from the engine
-            if (ec.duration == ec.passed) {
+            System.out.println(entity);
+            System.out.println(ec.duration + " " + ec.passed);
+            if (ec.duration <= ec.passed) {
+                ((Event) entity).invoke();
                 TheEngine.getInstance().removeEntity(entity);
             } else {    // else tick--
-                System.out.println("111111111111");
                 ((Event) entity).invoke();
                 ec.passed += 1;
             }

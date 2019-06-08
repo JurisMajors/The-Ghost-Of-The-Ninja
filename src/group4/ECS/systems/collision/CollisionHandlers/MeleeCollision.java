@@ -1,6 +1,7 @@
 package group4.ECS.systems.collision.CollisionHandlers;
 
 import com.badlogic.ashley.core.Entity;
+import group4.ECS.components.events.Event;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.components.stats.HealthComponent;
@@ -45,24 +46,27 @@ public class MeleeCollision extends AbstractCollisionHandler<Entity> {
         HealthComponent hc = other.getComponent(HealthComponent.class);
         DamageComponent dmg = entity.getComponent(DamageComponent.class);
 
-        // if other does not have health
-        if (hc == null) {
-            return;
-        }
-
         // if entity immune to dmg, skip
-//        System.out.println(hc.state);
         if (hc.state.contains(EntityConst.EntityState.IMMUNE)) {
             return;
         }
 
         // deal Dmg
         hc.health -= dmg.damage;
-//        System.out.println(hc.health);
 
-        // make immune for one tick (see LastSystem)
-        hc.state.add(EntityConst.EntityState.IMMUNE);
-//        System.out.println(hc.state);
+        Event immune = new Event(other, 10,
+                (subject, dur, passed) -> {
+                    if (passed == 0) {
+                        Mappers.healthMapper.get(subject).state.add(EntityConst.EntityState.IMMUNE);
+                        return;
+                    }
+
+                    if (passed == dur) {
+                        Mappers.healthMapper.get(subject).state.remove(EntityConst.EntityState.IMMUNE);
+                    }
+                });
+        immune.invoke();
+
     }
 
     private void handleKnockback(Entity entity, Entity other) {
@@ -78,13 +82,13 @@ public class MeleeCollision extends AbstractCollisionHandler<Entity> {
         // behaviour of hazardous entities
         if (entity instanceof Spikes) {
 
-//            System.out.println(hc.state);
+            System.out.println(mc.velocity);
             if (hc.state.contains(EntityConst.EntityState.KNOCKED)) {
                 return;
             }
 
             // min knockback velocity
-            float minKnockBack = 0.15f;
+            float minKnockBack = 2.15f;
 
             // if incoming velocity too low, set outgoing vector to minimum knockback
             float boost = 1.0f;
@@ -92,20 +96,23 @@ public class MeleeCollision extends AbstractCollisionHandler<Entity> {
                 boost = minKnockBack / mc.velocity.length();
             }
 
-//            // TODO: this works only for top and bottom spikes
-//            if (mc.velocity.y < 0) {
-//                mc.velocity.y *= -1;
-//            }
-//
-//            if (mc.velocity.x < 0) {
-//                mc.velocity.x *= -1;
-//            }
-
-//            System.out.println(mc.velocity);
+            System.out.println(mc.velocity);
             mc.velocity = mc.velocity.scale(-boost);
-//            System.out.println(mc.velocity);
-            hc.state.add(EntityConst.EntityState.KNOCKED);
-//            System.out.println(hc.state);
+            System.out.println(mc.velocity);
+
+            Event knockback = new Event(other, 40,
+                    (subject, dur, passed) -> {
+                        if (passed == 0) {
+                            Mappers.healthMapper.get(subject).state.add(EntityConst.EntityState.KNOCKED);
+                            return;
+                        }
+
+                        if (passed == dur) {
+                            Mappers.healthMapper.get(subject).state.remove(EntityConst.EntityState.KNOCKED);
+                        }
+                    });
+            knockback.invoke();
+
         }
 
         if (entity instanceof DamageArea) {

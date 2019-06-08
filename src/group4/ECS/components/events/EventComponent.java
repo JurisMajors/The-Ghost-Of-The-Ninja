@@ -1,7 +1,6 @@
 package group4.ECS.components.events;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.ashley.core.Entity;
 
 public class EventComponent implements Component {
 

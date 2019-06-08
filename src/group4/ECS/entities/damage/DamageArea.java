@@ -2,6 +2,7 @@ package group4.ECS.entities.damage;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphicsComponent;
+import group4.ECS.components.events.Event;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
@@ -16,14 +17,19 @@ import java.util.Set;
 
 public class DamageArea extends Entity {
 
-    /**
-     *
-     * @param position position of the damage area
-     * @param dimension dimension field of effect
-     * @param damage damage inflicted on colliding entity (HealthComponent needed)
-     */
-    public DamageArea(Vector3f position, Vector3f dimension, int damage, Set<Class<? extends Entity>> excluded) {
+    public Event event;
 
+    /**
+     * This is a damage area specifically for melee, which takes the origin of damage
+     * to prevent self hitting
+     *
+     * @param position  position of the damage area
+     * @param dimension dimension field of effect
+     * @param damage    damage inflicted on colliding entity (HealthComponent needed)
+     * @param excluded  exclude for damage
+     */
+    public DamageArea(Vector3f position, Vector3f dimension, int damage, Set<Class<? extends Entity>> excluded,
+                      int duration) {
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
         this.add(new CollisionComponent(MeleeCollision.getInstance()));
@@ -58,6 +64,9 @@ public class DamageArea extends Entity {
 
         // add entity to engine on construction
         TheEngine.getInstance().addEntity(this);
+
+         event = new Event(this, duration,
+                 (entity, dur, passed) -> TheEngine.getInstance().removeEntity(entity));
 
     }
 
