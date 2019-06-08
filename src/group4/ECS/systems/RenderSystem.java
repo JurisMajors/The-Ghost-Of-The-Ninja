@@ -102,6 +102,9 @@ public class RenderSystem extends EntitySystem {
                         // Bind shader
                         gc.shader.bind();
 
+                        // create color overlay over textures
+                        handleColorMask(gc);
+
                         // Set uniforms
                         gc.shader.setUniformMat4f("md_matrix", bp.getModelMatrix()); // Tmp fix for giving correct positions to vertices in the vertexbuffers
                         gc.shader.setUniform1f("tex", gc.texture.getTextureID()); // Specify which texture slot to use
@@ -122,10 +125,8 @@ public class RenderSystem extends EntitySystem {
                     // Bind shader
                     gc.shader.bind();
 
-                    // Totems have a mask to make them different colours
-                    if (entity instanceof Totem) {
-                        gc.shader.setUniform3f("color_mask", ((Totem) entity).getRbgMask());
-                    }
+                    // create color overlay over textures
+                    handleColorMask(gc);
 
                     // Set uniforms
                     gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers
@@ -147,7 +148,7 @@ public class RenderSystem extends EntitySystem {
             Shader.DEBUG.bind();
 //            DebugUtils.drawGrid(1.0f);
 
-            for (Entity e: entities) {
+            for (Entity e : entities) {
                 // draw spline paths during debug
                 if (Mappers.splinePathMapper.get(e) != null) {
                     DebugUtils.drawSpline(Mappers.splinePathMapper.get(e).points);
@@ -162,7 +163,7 @@ public class RenderSystem extends EntitySystem {
 
             // Temporary example for drawing lines or boxes.
             // NOTE: Uncomment to see the effect
-            for (Entity a: entities) { // For all A, for all B...  N^2 loop
+            for (Entity a : entities) { // For all A, for all B...  N^2 loop
                 PositionComponent pca = Mappers.positionMapper.get(a);
                 DimensionComponent dca = Mappers.dimensionMapper.get(a);
                 DebugUtils.drawBox(pca.position, pca.position.add(dca.dimension));
@@ -180,6 +181,23 @@ public class RenderSystem extends EntitySystem {
             }
 
             DebugUtils.flush();
+        }
+    }
+
+    /**
+     * Adds a color on top of the texture of a graphics component.
+     * If the graphics component has a personal color that takes priority.
+     * Else we look at the global color mask in GraphicsComponent.GLOBAL_COLOR_MASK.
+     * If neither are set we have a color mask of 0 which does nothing.
+     * @param gc graphics component
+     */
+    private void handleColorMask(GraphicsComponent gc) {
+        if (gc.hasMask) { // per texture mask has priority
+            gc.shader.setUniform3f("color_mask", gc.colorMask);
+        } else if (GraphicsComponent.HAS_MASK) { // global mask comes next
+            gc.shader.setUniform3f("color_mask", GraphicsComponent.GLOBAL_COLOR_MASK);
+        } else { // no mask
+            gc.shader.setUniform3f("color_mask", new Vector3f());
         }
     }
 
