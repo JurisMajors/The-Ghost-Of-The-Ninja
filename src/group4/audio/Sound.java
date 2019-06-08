@@ -32,6 +32,7 @@ public class Sound {
     public static Sound COIN;
     public static Sound DIE;
     public static Sound MOBDIE;
+    public static Sound MENU;
 
     private static ArrayList<Sound> allSounds;
 
@@ -47,6 +48,7 @@ public class Sound {
         COIN = new Sound("coin.ogg", false);
         DIE = new Sound("die.ogg", false);
         MOBDIE = new Sound("mobdie.ogg", false);
+        MENU = new Sound("menu.ogg", false);
 
         allSounds.add(BACKGROUND);
         allSounds.add(BEEP);

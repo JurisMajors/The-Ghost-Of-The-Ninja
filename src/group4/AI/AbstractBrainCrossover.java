@@ -48,7 +48,7 @@ public abstract class AbstractBrainCrossover extends AbstractCrossover<Brain> {
 
         // get model architectures from the parents
         Brain offspring1 = new Brain(parent1);
-        Brain offspring2 = new Brain(parent1);
+        Brain offspring2 = new Brain(parent2);
 
         // get the parameter tables from the offspring, that we modify later
         Map<String, INDArray> o1Params = offspring1.nn.paramTable();

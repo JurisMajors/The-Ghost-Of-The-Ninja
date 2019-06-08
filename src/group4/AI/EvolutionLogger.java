@@ -20,7 +20,7 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
     String filePath;
 
     /** best fitness in the whole training process **/
-    double bestFitness = -1;
+    double bestFitness = Evolver.evaluationStrat.isNatural() ? -1 : 1;
 
     private final static Logger LOGGER = Logger.getLogger("EvolutionLog"); // used for logging to file
 
