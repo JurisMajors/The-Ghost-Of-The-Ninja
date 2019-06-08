@@ -78,8 +78,8 @@ public class PlayerMovementSystem extends IteratingSystem {
 
         // We are either wandering, or not. See the state diagram.
         if (wandering) {
-            if (Math.abs(mc.velocity.x) > 1e-3) {
-                if (shouldSprint()) {
+            if (canJump(pc)) {
+                if (shouldSprint() && canSprint(pc)) {
                     nextState = EntityState.PLAYER_RUNNING;
                 } else {
                     nextState = EntityState.PLAYER_WALKING;
@@ -176,7 +176,7 @@ public class PlayerMovementSystem extends IteratingSystem {
             mc.orientation = MovementComponent.LEFT;
         }
 
-        if (shouldSprint() && canSprint(mc.velocity)) {
+        if (shouldSprint() && canSprint(pc)) {
             mc.velocity.x = moveDir * getSprintingVel(mc);
             mc.velocity.x += moveDir * mc.acceleration.x;
         } else {
@@ -203,8 +203,8 @@ public class PlayerMovementSystem extends IteratingSystem {
         return pos.onPlatform;
     }
 
-    private boolean canSprint(Vector3f velocity) {
-        return velocity.y <= 1e-3 && velocity.y >= -1e-3;
+    private boolean canSprint(PositionComponent pos) {
+        return pos.onPlatform;
     }
 
 
