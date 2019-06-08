@@ -8,6 +8,8 @@ import group4.graphics.Texture;
 import group4.graphics.VertexArray;
 import group4.maths.Vector3f;
 
+import java.util.Arrays;
+
 public class GraphicsComponent implements Component {
 
     public VertexArray geometry;

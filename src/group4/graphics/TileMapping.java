@@ -21,7 +21,7 @@ public class TileMapping {
     public static void loadAllTileMappings() {
         // MAIN is currently 8 x 7
         MAIN = new HashMap<>();
-        for (int i = 0; i < 64; i++) {
+        for (int i = 0; i < MAIN_SIZE; i++) {
             MAIN.put(i, generateTexCoords(WIDTH, HEIGHT, i));
         }
     }

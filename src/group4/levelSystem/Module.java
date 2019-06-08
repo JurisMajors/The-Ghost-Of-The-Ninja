@@ -2,7 +2,6 @@ package group4.levelSystem;
 
 import com.badlogic.ashley.core.Entity;
 import group4.AI.Brain;
-import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.mobs.*;
@@ -12,8 +11,8 @@ import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
 import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.movement.MovementHandlers.JumpingWalkingMobMovementHandler;
 import group4.game.Main;
+import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;
@@ -23,7 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import javax.xml.soap.Text;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -213,16 +211,11 @@ public class Module {
 
             if (entityId == null) {
                 continue;
-            } else if (entityId.equals(Platform.getName())) {
-                this.addPlatform(tileGridX, tileGridY, tileId);
             } else if (entityId.equals(ArtTile.getName())) {
-                this.addArtTile(tileGridX, tileGridY, tileId);
-            } else if (entityId.equals(Player.getName())) {
-                this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
-            } else if (entityId.endsWith(Mob.getName()) && !Main.AI) {
-                this.addMob(tileGridX, tileGridY, tileId, entityId);
+                this.addBackgroundElement(tileGridX, tileGridY, tileId);
             } else {
-                System.err.println("Some tiles not drawing!");
+                System.out.println(entityId);
+                System.err.println("Some background tiles not drawing!");
                 continue;
             }
         }
@@ -428,6 +421,13 @@ public class Module {
         this.addEntity(p);
     }
 
+    private void addBackgroundElement(int x, int y, int i) {
+        Vector3f tempPosition = new Vector3f(x, y, 0.0f);
+        Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
+        ArtTile p = new ArtTile(tempPosition, tempDimension, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i), RenderLayer.BACKGROUND);
+        this.addEntity(p);
+    }
+
     private void addMob(int x, int y, int i, String mobName) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
         Mob m = null;
@@ -542,14 +542,24 @@ public class Module {
      * Function which contains the mapping from the tileMap index as on the texture, to the appropriate Entity class.
      */
     private void configureMap() {
-        int[] platforms = new int[]{0, 1, 2, 5, 6, 8, 9, 10, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 32, 33, 34, 35};
-        int[] artTiles = new int[]{3, 4, 11, 12};
-        int[] players = new int[]{7};
-        int jumpingwalkingmob = 36;
-        int flappingmob = 42;
-        int walkingmob = 40;
-        int flyingmob = 41;
-        int coin = 13;
+        int[] platforms = new int[]{0, 1, 2, 3, 4, 6, 7, 8, 9,
+                                    16, 17, 18, 19, 22, 25,
+                                    32, 33, 34, 36, 38, 41,
+                                    48, 49, 50, 51, 54, 55, 56, 57,
+                                    70, 71, 72, 73, 87, 88};
+        int[] artTiles = new int[]{ 23, 24, 39, 40,
+                                    64, 65, 66, 67,
+                                    96, 97, 98, 99,
+                                    112, 113, 114, 115,
+                                    128, 129, 130, 131, 132,
+                                    144, 145, 146, 147, 148,
+                                    162, 163};
+        int[] players = new int[]{15};
+        int jumpingwalkingmob = 31;
+        int flappingmob = 47;
+        int walkingmob = 79;
+        int flyingmob = 63;
+        int coin = 95;
 
         moduleTileMap = new HashMap<Integer, String>();
         for (int i : platforms) {

@@ -5,8 +5,6 @@ import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.graphics.RenderLayer;
-import group4.ECS.systems.collision.CollisionHandlers.ExitCollision;
-import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
