@@ -54,6 +54,7 @@ public class MeleeCollision extends AbstractCollisionHandler<Entity> {
         // deal Dmg
         hc.health -= dmg.damage;
 
+        // create temporary event to declare the entity to be immune to damage
         Event immune = new Event(other, 10,
                 (subject, dur, passed) -> {
                     if (passed == 0) {
@@ -82,7 +83,7 @@ public class MeleeCollision extends AbstractCollisionHandler<Entity> {
         // behaviour of hazardous entities
         if (entity instanceof Spikes) {
 
-            System.out.println(mc.velocity);
+            // resolve knockback only if not already knocked back (might not be necessary)
             if (hc.state.contains(EntityConst.EntityState.KNOCKED)) {
                 return;
             }
@@ -96,11 +97,11 @@ public class MeleeCollision extends AbstractCollisionHandler<Entity> {
                 boost = minKnockBack / mc.velocity.length();
             }
 
-            System.out.println(mc.velocity);
+            // bounce entity
             mc.velocity = mc.velocity.scale(-boost);
-            System.out.println(mc.velocity);
 
-            Event knockback = new Event(other, 40,
+            // create a temporary event for indicating the entity to be knocked back
+            Event knockback = new Event(other, 20,
                     (subject, dur, passed) -> {
                         if (passed == 0) {
                             Mappers.healthMapper.get(subject).state.add(EntityConst.EntityState.KNOCKED);
@@ -111,8 +112,9 @@ public class MeleeCollision extends AbstractCollisionHandler<Entity> {
                             Mappers.healthMapper.get(subject).state.remove(EntityConst.EntityState.KNOCKED);
                         }
                     });
-            knockback.invoke();
 
+            // trigger event
+            knockback.invoke();
         }
 
         if (entity instanceof DamageArea) {

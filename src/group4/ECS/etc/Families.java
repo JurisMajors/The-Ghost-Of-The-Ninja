@@ -121,7 +121,7 @@ public class Families {
                     PositionComponent.class)
             .get();
 
-    // all entities which react to a timed event
+    // all entities which react to a event event
     public static final Family timedEventFamily = Family.all(EventComponent.class).get();
 
 }

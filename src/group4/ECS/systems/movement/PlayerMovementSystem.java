@@ -53,18 +53,22 @@ public class PlayerMovementSystem extends IteratingSystem {
     protected void move(Entity e, MovementComponent mc, PositionComponent pc, float deltaTime) {
         Object ref = getMovementRef(e);
         // set velocity in the direction that keyboard asks for
-        if (shouldRight(ref)) {
-            moveRight(mc, pc);
-        } else if (shouldLeft(ref)) {
-            moveLeft(mc, pc);
-        } else if (!Mappers.healthMapper.get(e).state.contains(EntityConst.EntityState.KNOCKED)) {
-            // stay still if no keys are pressed
-//            mc.velocity.x = 0;
-        }
 
-        // jump if space is pressed and if canJump is satisfied
-        if (shouldJump(ref) && canJump(mc.velocity)) {
-            jump(mc);
+        // if entity is not being knocked back
+        if (!Mappers.healthMapper.get(e).state.contains(EntityConst.EntityState.KNOCKED)) {
+            if (shouldRight(ref)) {
+                moveRight(mc, pc);
+            } else if (shouldLeft(ref)) {
+                moveLeft(mc, pc);
+            } else {
+                // stay still if no keys are pressed
+                mc.velocity.x = 0;
+            }
+
+            // jump if space is pressed and if canJump is satisfied
+            if (shouldJump(ref) && canJump(mc.velocity)) {
+                jump(mc);
+            }
         }
 
         if (shouldSpawnGhost(ref) && !((Player) e).spawnedGhost) {
@@ -72,6 +76,7 @@ public class PlayerMovementSystem extends IteratingSystem {
             ((Player) e).level.getCurrentModule().addGhost((Player) e);
         }
 
+        // cap values to not exceed the max range
         mc.velocity.capValuesi(mc.velocityRange);
     }
 

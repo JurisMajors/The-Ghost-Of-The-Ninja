@@ -8,7 +8,7 @@ public class EventComponent implements Component {
     public int passed;
 
     /**
-     * This component holds information about the time it takes for an timed entity to expire
+     * This component holds information about the time it takes for an event entity to expire
      *
      * @param duration the duration (in ticks) it takes for this event to expire
      */

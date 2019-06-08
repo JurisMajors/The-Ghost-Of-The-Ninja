@@ -125,6 +125,7 @@ public class UncollidingSystem extends IteratingSystem {
 //        if (displacement.x != 0) {
 //            mc.velocity.x = 0;
 //        }
+
         // cap the velocity (for safety)
         mc.velocity.capValuesi(mc.velocityRange);
     }

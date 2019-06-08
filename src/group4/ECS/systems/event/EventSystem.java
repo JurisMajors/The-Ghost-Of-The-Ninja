@@ -1,4 +1,4 @@
-package group4.ECS.systems.timed;
+package group4.ECS.systems.event;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -8,14 +8,14 @@ import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 
-public class TimedEventSystem extends IteratingSystem {
+public class EventSystem extends IteratingSystem {
 
     /**
-     * This System handles timed events
+     * This System handles events
      *
      * @param priority
      */
-    public TimedEventSystem(int priority) {
+    public EventSystem(int priority) {
         super(Families.timedEventFamily, priority);
     }
 

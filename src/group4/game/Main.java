@@ -11,7 +11,6 @@ import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
 import group4.ECS.systems.collision.UncollidingSystem;
 import group4.ECS.systems.collision.LastSystem;
-import group4.ECS.systems.combat.DamageSystem;
 import group4.ECS.systems.combat.PlayerCombatSystem;
 import group4.ECS.systems.death.GhostDyingSystem;
 import group4.ECS.systems.death.MobDyingSystem;
@@ -20,7 +19,7 @@ import group4.ECS.systems.movement.BulletMovementSystem;
 import group4.ECS.systems.movement.GhostMovementSystem;
 import group4.ECS.systems.movement.MobMovementSystem;
 import group4.ECS.systems.movement.PlayerMovementSystem;
-import group4.ECS.systems.timed.TimedEventSystem;
+import group4.ECS.systems.event.EventSystem;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;
@@ -131,7 +130,7 @@ public class Main implements Runnable {
         if (!AI) {
             // Set up all engine systems
             // Systems which change the gamestate
-            engine.addSystem(new TimedEventSystem(0));
+            engine.addSystem(new EventSystem(0));
             engine.addSystem(new PlayerMovementSystem(1));
             engine.addSystem(new GhostMovementSystem(2));
             engine.addSystem(new MobMovementSystem(3));

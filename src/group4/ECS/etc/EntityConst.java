@@ -30,9 +30,10 @@ public class EntityConst {
         MACHINEGUN,
     }
 
+    // defines gameplay related states
     public enum EntityState {
-        IMMUNE,
-        KNOCKED
+        IMMUNE,         // immune against dmg
+        KNOCKED         // knocked back, so not be able to move
     }
 
 }
