@@ -9,9 +9,13 @@ import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
 import group4.ECS.etc.EntityConst;
+import group4.ECS.entities.Ghost;
 import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
+import group4.ECS.etc.TheEngine;
+import group4.audio.Sound;
+import group4.game.Main;
 import group4.input.KeyBoard;
 import group4.input.MouseMovement;
 import group4.maths.Vector3f;
@@ -86,7 +90,7 @@ public class PlayerMovementSystem extends IteratingSystem {
             }
 
             // jump if space is pressed and if canJump is satisfied
-            if (shouldJump(ref) && canJump(mc.velocity) && pc.onPlatform) {
+            if (shouldJump(ref) && canJump(pc)) {
                 nextState = EntityState.PLAYER_PREJUMP;
             }
         } else {
@@ -128,28 +132,28 @@ public class PlayerMovementSystem extends IteratingSystem {
             } else {
                 // stay still if no keys are pressed
                 mc.velocity.x = 0;
-            }
+                }
 
-            // jump if space is pressed and if canJump is satisfied
-            if (shouldJump(ref) && canJump(mc.velocity)) {
+            if (!jumpInProgress && playerState == EntityState.PLAYER_JUMPING) {
+                // Catch if we have transitioned to the actual jump phase of our jump
                 jump(mc);
+                jumpInProgress = true;
+            }
+
+            // If we're tracking the jump is in progress, but it obviously isn't, toggle it off.
+            if (jumpInProgress && playerState != EntityState.PLAYER_JUMPING) {
+                jumpInProgress = false;
             }
         }
 
-        // Catch if we have transitioned to the actual jump phase of our jump
-        if (!jumpInProgress && playerState == EntityState.PLAYER_JUMPING) {
-            jump(mc);
-            jumpInProgress = true;
-        }
 
-        // If we're tracking the jump is in progress, but it obviously isn't, toggle it off.
-        if (jumpInProgress && playerState != EntityState.PLAYER_JUMPING) {
-            jumpInProgress = false;
-        }
-
-        if (shouldSpawnGhost(ref) && !((Player) e).spawnedGhost) {
-            ((Player) e).spawnedGhost = true;
-            ((Player) e).level.getCurrentModule().addGhost((Player) e);
+        // if the entity shoudlspawnghost and its previous ghost is not alive and it is on a start totem
+        if (shouldSpawnGhost(ref) && !player.spawnedGhost && player.totemStatus != null) {
+            player.spawnedGhost = true; // spawn the ghost
+            Ghost newGhost = player.totemStatus.getGhost(player); // get a ghost from the totem
+            // add it to engine an module
+            player.level.getCurrentModule().addEntity(newGhost);
+            TheEngine.getInstance().addEntity(newGhost);
         }
 
         // Finally limit the velocity vector
@@ -168,6 +172,9 @@ public class PlayerMovementSystem extends IteratingSystem {
      * Moves along the x axis in the specified direction
      */
     private void moveDirection(int moveDir, MovementComponent mc, PositionComponent pc) {
+        if (!Main.AI && !Sound.isPlaying(Sound.STEP) && canJump(pc)) {
+            Sound.playRandom(Sound.STEP);
+        }
         // set orientation of player in accordance to mouse position
         if (pc.position.x <= MouseMovement.mouseX) {
             mc.orientation = MovementComponent.RIGHT;
@@ -194,12 +201,12 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     private void jump(MovementComponent mc) {
+        // TODO: Play jump sound
         mc.velocity.y = mc.velocityRange.y;
     }
 
-    private boolean canJump(Vector3f velocity) {
-        // velocity has to be close to zero (avoid double jumping)
-        return velocity.y <= 1e-3 && velocity.y >= -1e-3;
+    private boolean canJump(PositionComponent pos) {
+        return pos.onPlatform;
     }
 
     private boolean canSprint(Vector3f velocity) {

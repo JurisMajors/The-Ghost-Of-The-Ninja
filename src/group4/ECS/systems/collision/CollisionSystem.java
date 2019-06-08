@@ -12,6 +12,7 @@ import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.entities.mobs.Mob;
+import group4.ECS.entities.totems.Totem;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
@@ -68,6 +69,7 @@ public class CollisionSystem extends IteratingSystem {
             if (other instanceof Bullet && e instanceof Bullet) continue;
             if (e instanceof Bullet && (other instanceof Ghost || other instanceof Mob)) continue;
             if (other instanceof Player && e instanceof Player) continue;
+            if (other instanceof Totem && !(e instanceof Player)) continue;
 
             // get the intersection between this (moving collidable entity) and other (collidable entity)
             Rectangle intersection = getIntersectingRectangle(e, other);

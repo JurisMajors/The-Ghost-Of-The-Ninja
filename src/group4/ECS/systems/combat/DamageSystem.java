@@ -7,6 +7,7 @@ import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.systems.collision.CollisionData;
+import group4.audio.Sound;
 
 public class DamageSystem extends IteratingSystem {
 
@@ -47,8 +48,8 @@ public class DamageSystem extends IteratingSystem {
 
             // resolve damage
             Mappers.healthMapper.get(cd.entity).health = health - dc.damage;
+            Sound.MOBHIT.play();
         }
-
     }
 
 }

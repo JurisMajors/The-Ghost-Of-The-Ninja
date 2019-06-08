@@ -2,18 +2,19 @@ package group4.levelSystem;
 
 import com.badlogic.ashley.core.Entity;
 import group4.AI.Brain;
-import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.hazards.Spikes;
-import group4.ECS.entities.mobs.*;
 import group4.ECS.entities.items.consumables.Coin;
+import group4.ECS.entities.mobs.*;
+import group4.ECS.entities.totems.EndingTotem;
+import group4.ECS.entities.totems.StartTotem;
+import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.world.ArtTile;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
 import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.movement.MovementHandlers.JumpingWalkingMobMovementHandler;
 import group4.game.Main;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -24,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -52,6 +54,7 @@ public class Module {
 
     // ghost model
     private Brain ghostModel = null;
+    private String ghostModelDir;
 
     // Keeps track of the initial player position
     private Vector3f initialPlayerPos;
@@ -92,6 +95,8 @@ public class Module {
 
 
     private void loadGhost(String loc) {
+        File f = new File(loc);
+        this.ghostModelDir = f.getParent() + "/";
         this.ghostModel = new Brain(loc);
     }
 
@@ -153,6 +158,8 @@ public class Module {
                 parseSplineLayer(layer);
             } else if (layerName.equals("COINS") && !Main.AI) {
                 parseCoinLayer(layer);
+            } else if (layerName.equals("TOTEMS")) {
+                parseTotemLayer(layer);
             } else if (layerName.equals("EXITS")) {
                 setupExits(layer);
             } else {
@@ -232,6 +239,26 @@ public class Module {
     private void addCoin(Vector3f position, int i) {
         Coin c = new Coin(position, Coin.LARGE_SIZE, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i), Coin.LARGE_VALUE);
         this.addEntity(c);
+    }
+
+    private void parseTotemLayer(JSONObject layer) {
+        JSONArray data = layer.getJSONArray("objects");
+        for (int point = 0; point < data.length(); point++) {
+            // get information about the object
+            JSONObject pointInfo = data.getJSONObject(point);
+            // get the coordinates for the control point
+            float pointX = pointInfo.getFloat("x") / 32f;
+            float pointY = this.height - pointInfo.getFloat("y") / 32f + 1;
+            String tileName = pointInfo.getString("name");
+            Vector3f position = new Vector3f(pointX, pointY, 0);
+            Totem totem;
+            if (Totem.isEnd(tileName)) {
+                totem = new EndingTotem(position, tileName, level);
+            } else {
+                totem = new StartTotem(position, tileName, level, this.ghostModelDir);
+            }
+            this.addEntity(totem);
+        }
     }
 
     private void parseSplineLayer(JSONObject layer) {
@@ -531,6 +558,8 @@ public class Module {
         int walkingmob = 40;
         int flyingmob = 41;
         int coin = 13;
+        int totemStart = 21;
+        int totemEnd = 29;
 
         moduleTileMap = new HashMap<Integer, String>();
         for (int i : platforms) {
@@ -554,7 +583,9 @@ public class Module {
         moduleTileMap.put(walkingmob, WalkingMob.getName());
         moduleTileMap.put(flyingmob, FlyingMob.getName());
 
-
         moduleTileMap.put(coin, Coin.getName());
+
+        moduleTileMap.put(totemStart, StartTotem.getName());
+        moduleTileMap.put(totemEnd, EndingTotem.getName());
     }
 }

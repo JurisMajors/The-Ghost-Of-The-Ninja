@@ -64,7 +64,6 @@ public class PlayerCombatSystem extends IteratingSystem {
         // if active item is a weapon and when player hits enter, attack
         MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(plc.activeItem);
         if (wc != null && MouseClicks.leftMouseDown()) {
-
             // if melee
             if (wc.currCooldown <= 0.0f) {
                 // set cooldown in accordance to rate of attack
@@ -137,7 +136,7 @@ public class PlayerCombatSystem extends IteratingSystem {
         excluded.add(Ghost.class);
 
         // play the slash sound
-        Sound.SLASH.play();
+        Sound.playRandom(Sound.SLASH);
 
         new DamageArea(hitboxCorner, trueHitbox,
                 wc.damage, excluded, 0);

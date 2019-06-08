@@ -1,11 +1,20 @@
 package group4.ECS.etc;
 
 import com.badlogic.ashley.core.Family;
-import group4.ECS.components.*;
+import group4.ECS.components.AudioComponent;
+import group4.ECS.components.GraphicsComponent;
+import group4.ECS.components.SplineComponent;
+import group4.ECS.components.SplinePathComponent;
+import group4.ECS.components.events.EventComponent;
 import group4.ECS.components.identities.*;
-import group4.ECS.components.physics.*;
-import group4.ECS.components.stats.*;
-import group4.ECS.components.events.*;
+import group4.ECS.components.physics.CollisionComponent;
+import group4.ECS.components.physics.DimensionComponent;
+import group4.ECS.components.physics.PhysicsComponent;
+import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.DamageComponent;
+import group4.ECS.components.stats.HealthComponent;
+import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.components.stats.RangeWeaponComponent;
 
 /**
  * This class determines groups (families) of entities which share the same components

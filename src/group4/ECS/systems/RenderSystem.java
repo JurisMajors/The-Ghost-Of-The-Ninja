@@ -11,9 +11,8 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.BodyPart;
 import group4.ECS.entities.HierarchicalPlayer;
-import group4.ECS.entities.Player;
-import group4.ECS.entities.mobs.FlappingMob;
 import group4.ECS.entities.mobs.Mob;
+import group4.ECS.entities.totems.Totem;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
@@ -23,7 +22,10 @@ import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 import group4.utils.DebugUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL41.*;
 
@@ -119,6 +121,11 @@ public class RenderSystem extends EntitySystem {
 
                     // Bind shader
                     gc.shader.bind();
+
+                    // Totems have a mask to make them different colours
+                    if (entity instanceof Totem) {
+                        gc.shader.setUniform3f("color_mask", ((Totem) entity).getRbgMask());
+                    }
 
                     // Set uniforms
                     gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers

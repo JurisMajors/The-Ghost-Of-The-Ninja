@@ -10,8 +10,8 @@ import group4.ECS.systems.CameraSystem;
 import group4.ECS.systems.RenderSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
-import group4.ECS.systems.collision.UncollidingSystem;
 import group4.ECS.systems.collision.LastSystem;
+import group4.ECS.systems.collision.UncollidingSystem;
 import group4.ECS.systems.combat.PlayerCombatSystem;
 import group4.ECS.systems.death.GhostDyingSystem;
 import group4.ECS.systems.death.MobDyingSystem;
@@ -30,13 +30,16 @@ import group4.graphics.TileMapping;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
-import group4.levelSystem.Level;
 import group4.levelSystem.FileLevel;
+import group4.levelSystem.Level;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.openal.ALC10.alcCloseDevice;
+import static org.lwjgl.openal.ALC10.alcDestroyContext;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -153,24 +156,24 @@ public class Main implements Runnable {
             Sound.BACKGROUND.play();
             // Set up all engine systems
             // Systems which change the gamestate
-            engine.addSystem(new EventSystem(0));
-            engine.addSystem(new PlayerMovementSystem(1));
-            engine.addSystem(new GhostMovementSystem(2));
-            engine.addSystem(new MobMovementSystem(3));
-            engine.addSystem(new BulletMovementSystem(4));
-            engine.addSystem(new PlayerCombatSystem(5));
-            engine.addSystem(new CollisionSystem(6));
-            engine.addSystem(new CollisionEventSystem(7));
-            engine.addSystem(new UncollidingSystem(8));
-            engine.addSystem(new PlayerDyingSystem(true, 9));
-            engine.addSystem(new GhostDyingSystem(false, 10));
-            engine.addSystem(new MobDyingSystem(11));
-            engine.addSystem(new AnimationSystem(12));
+            this.engine.addSystem(new EventSystem(0));
+            this.engine.addSystem(new PlayerMovementSystem(1));
+            this.engine.addSystem(new GhostMovementSystem(2));
+            this.engine.addSystem(new MobMovementSystem(3));
+            this.engine.addSystem(new BulletMovementSystem(4));
+            this.engine.addSystem(new PlayerCombatSystem(5));
+            this.engine.addSystem(new CollisionSystem(6));
+            this.engine.addSystem(new CollisionEventSystem(7));
+            this.engine.addSystem(new UncollidingSystem(8));
+            this.engine.addSystem(new PlayerDyingSystem(true, 9));
+            this.engine.addSystem(new GhostDyingSystem(false, 10));
+            this.engine.addSystem(new MobDyingSystem(11));
+            this.engine.addSystem(new AnimationSystem(12));
 
             // Systems which are essentially observers of the changed gamestate
-            engine.addSystem(new CameraSystem(Families.playerFamily, 13));
-            engine.addSystem(new RenderSystem(14));
-            engine.addSystem(new LastSystem(15));
+            this.engine.addSystem(new CameraSystem(Families.playerFamily, 13));
+            this.engine.addSystem(new RenderSystem(14));
+            this.engine.addSystem(new LastSystem(15));
 
             // Initialize the StartScreen, this will load the level
             this.startScreen = new StartScreen();

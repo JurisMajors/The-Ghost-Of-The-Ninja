@@ -21,6 +21,12 @@ public class CollisionEventSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         CollisionComponent cc = Mappers.collisionMapper.get(entity);
+
+        // no handler
+        if (cc.handler == null) {
+            return;
+        }
+
         // no collisions to process
         if (cc.collisions.isEmpty()) {
             return;
