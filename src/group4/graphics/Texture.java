@@ -62,7 +62,7 @@ public class Texture {
         PLAYER = new Texture("src/group4/res/textures/char1.png");
         SPLINE = new Texture("src/group4/res/textures/spline.png");
         TOTEM_START = new Texture("src/group4/res/textures/start-totem.png");
-        TOTEM_END = new Texture("src/group4/res/textures/end-totem.png")
+        TOTEM_END = new Texture("src/group4/res/textures/end-totem.png");
         START_BG = new Texture("src/group4/res/textures/start-bg.png");
         VIGNETTE_OVERLAY = new Texture("src/group4/res/textures/vignette-overlay.png");
         NOISE_OVERLAY = new Texture("src/group4/res/textures/noise-overlay.png");

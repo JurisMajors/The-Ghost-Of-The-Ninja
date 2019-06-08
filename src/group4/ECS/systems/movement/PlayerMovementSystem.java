@@ -89,7 +89,7 @@ public class PlayerMovementSystem extends IteratingSystem {
             }
 
             // jump if space is pressed and if canJump is satisfied
-            if (shouldJump(ref) && canJump(mc.velocity) && pc.onPlatform) {
+            if (shouldJump(ref) && canJump(pc)) {
                 nextState = EntityState.PLAYER_PREJUMP;
             }
         } else {
@@ -141,7 +141,6 @@ public class PlayerMovementSystem extends IteratingSystem {
         if (jumpInProgress && playerState != EntityState.PLAYER_JUMPING) {
             jumpInProgress = false;
         }
-        Player player = (Player) e;
         // if the entity shoudlspawnghost and its previous ghost is not alive and it is on a start totem
         if (shouldSpawnGhost(ref) && !player.spawnedGhost && player.totemStatus != null) {
             player.spawnedGhost = true; // spawn the ghost
@@ -167,7 +166,7 @@ public class PlayerMovementSystem extends IteratingSystem {
      * Moves along the x axis in the specified direction
      */
     private void moveDirection(int moveDir, MovementComponent mc, PositionComponent pc) {
-        if (!Main.AI && !Sound.isPlaying(Sound.STEP) && canJump(mc.velocity)) {
+        if (!Main.AI && !Sound.isPlaying(Sound.STEP) && canJump(pc)) {
             Sound.playRandom(Sound.STEP);
         }
         // set orientation of player in accordance to mouse position
@@ -200,9 +199,8 @@ public class PlayerMovementSystem extends IteratingSystem {
         mc.velocity.y = mc.velocityRange.y;
     }
 
-    private boolean canJump(Vector3f velocity) {
-        // velocity has to be close to zero (avoid double jumping)
-        return velocity.y <= 1e-3 && velocity.y >= -1e-3;
+    private boolean canJump(PositionComponent pos) {
+        return pos.onPlatform;
     }
 
     private boolean canSprint(Vector3f velocity) {
