@@ -3,6 +3,7 @@ package group4.UI;
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.entities.world.ArtTile;
 import group4.ECS.etc.TheEngine;
+import group4.audio.Sound;
 import group4.game.GameState;
 import group4.game.Main;
 import group4.graphics.RenderLayer;
@@ -81,7 +82,7 @@ public class StartScreen {
 
     private void playGame() {
         System.out.println("PLAYGAME!");
-
+        Sound.MENU.play();
         // Immediately unload this Startscreen and initialize the level
         this.unload();
         new FileLevel("./src/group4/res/maps/level_02");
