@@ -123,6 +123,10 @@ public class Sound {
         alSourcePlay(sourcePointer);
     }
 
+    /**
+     * Play random sound from the given
+     * @param sounds sounds to choose from
+     */
     public static void playRandom(Sound... sounds) {
         sounds[ran.nextInt(sounds.length)].play();
     }
