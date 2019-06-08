@@ -60,8 +60,8 @@ public class Sound {
         SLASH2 = new Sound("slash2.ogg", false);
         SLASH = new Sound[]{SLASH1, SLASH2};
 
-        STEP1 = new Sound("step1.ogg", false);
-        STEP2 = new Sound("step2.ogg", false);
+        STEP1 = new Sound("step1.ogg", false, 0.5f);
+        STEP2 = new Sound("step2.ogg", false, 0.5f);
         STEP = new Sound[]{STEP2, STEP1};
 
         COIN = new Sound("coin.ogg", false);
