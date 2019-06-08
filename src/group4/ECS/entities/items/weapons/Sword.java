@@ -13,7 +13,7 @@ public class Sword extends Item {
 
         // weapon stats
         int dmg = 10;
-        float rateOfDamage = 0.8f;
+        float rateOfDamage = 3f;
         Vector3f hitBox = new Vector3f(1.0f, 1.0f, 0.0f);
         Vector3f hitboxOffset = new Vector3f(1.3f, 0.3f, 0.0f);
 

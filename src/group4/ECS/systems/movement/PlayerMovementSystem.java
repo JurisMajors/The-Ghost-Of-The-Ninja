@@ -11,6 +11,8 @@ import group4.ECS.entities.Player;
 import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
+import group4.audio.Sound;
+import group4.game.Main;
 import group4.input.KeyBoard;
 import group4.input.MouseMovement;
 import group4.maths.Vector3f;
@@ -159,6 +161,9 @@ public class PlayerMovementSystem extends IteratingSystem {
      * Moves along the x axis in the specified direction
      */
     private void moveDirection(int moveDir, MovementComponent mc, PositionComponent pc) {
+        if (!Main.AI && !Sound.isPlaying(Sound.STEP) && canJump(mc.velocity)) {
+            Sound.playRandom(Sound.STEP);
+        }
         // set orientation of player in accordance to mouse position
         if (pc.position.x <= MouseMovement.mouseX) {
             mc.orientation = MovementComponent.RIGHT;
@@ -185,6 +190,7 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     private void jump(MovementComponent mc) {
+        // TODO: Play jump sound
         mc.velocity.y = mc.velocityRange.y;
     }
 
