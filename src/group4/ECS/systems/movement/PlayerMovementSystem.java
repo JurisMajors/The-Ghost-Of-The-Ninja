@@ -80,7 +80,7 @@ public class PlayerMovementSystem extends IteratingSystem {
         // We are either wandering, or not. See the state diagram.
         if (wandering) {
             if (Math.abs(mc.velocity.x) > 1e-3) {
-                if (shouldSprint() && canSprint(mc)) {
+                if (shouldSprint() && canSprint(pc)) {
                     nextState = EntityState.PLAYER_RUNNING;
                 } else {
                     nextState = EntityState.PLAYER_WALKING;
@@ -90,7 +90,7 @@ public class PlayerMovementSystem extends IteratingSystem {
             }
 
             // jump if space is pressed and if canJump is satisfied
-            if (shouldJump(ref) && canJump(mc)) {
+            if (shouldJump(ref) && canJump(pc)) {
                 nextState = EntityState.PLAYER_PREJUMP;
             }
         } else {
@@ -172,7 +172,7 @@ public class PlayerMovementSystem extends IteratingSystem {
      * Moves along the x axis in the specified direction
      */
     private void moveDirection(int moveDir, MovementComponent mc, PositionComponent pc) {
-        if (!Main.AI && !Sound.isPlaying(Sound.STEP) && canJump(mc)) {
+        if (!Main.AI && !Sound.isPlaying(Sound.STEP) && canJump(pc)) {
             Sound.playRandom(Sound.STEP);
         }
         // set orientation of player in accordance to mouse position
@@ -182,7 +182,7 @@ public class PlayerMovementSystem extends IteratingSystem {
             mc.orientation = MovementComponent.LEFT;
         }
 
-        if (shouldSprint() && canSprint(mc)) {
+        if (shouldSprint() && canSprint(pc)) {
             mc.velocity.x = moveDir * getSprintingVel(mc);
             mc.velocity.x += moveDir * mc.acceleration.x;
         } else {
@@ -205,12 +205,12 @@ public class PlayerMovementSystem extends IteratingSystem {
         mc.velocity.y = mc.velocityRange.y;
     }
 
-    private boolean canJump(MovementComponent mc) {
-        return Math.abs(mc.velocity.y) < 1e-3;
+    private boolean canJump(PositionComponent pc) {
+        return pc.onPlatform;
     }
 
-    private boolean canSprint(MovementComponent mc) {
-        return Math.abs(mc.velocity.y) < 1e-3;
+    private boolean canSprint(PositionComponent pc) {
+        return pc.onPlatform;
     }
 
 
