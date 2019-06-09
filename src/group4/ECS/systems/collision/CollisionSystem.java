@@ -64,7 +64,6 @@ public class CollisionSystem extends IteratingSystem {
         for (Entity other : entities) {
             // dont process collision with itself
             if (e.equals(other)) continue;
-            if (other instanceof Totem) continue;
 
             // dont register collisions bullets of bullets
             if (other instanceof Bullet && e instanceof Bullet) continue;
