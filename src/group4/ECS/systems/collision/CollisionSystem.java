@@ -4,21 +4,19 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.BooleanArray;
 import group4.ECS.components.SplineComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
-import group4.ECS.entities.DamageArea;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.entities.mobs.Mob;
+import group4.ECS.entities.totems.Totem;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.maths.Vector3f;
-import group4.utils.DebugUtils;
 
 /**
  * This applies collision to entities that can move and have a bounding box
@@ -71,6 +69,7 @@ public class CollisionSystem extends IteratingSystem {
             if (other instanceof Bullet && e instanceof Bullet) continue;
             if (e instanceof Bullet && (other instanceof Ghost || other instanceof Mob)) continue;
             if (other instanceof Player && e instanceof Player) continue;
+            if (other instanceof Totem && !(e instanceof Player)) continue;
 
             // get the intersection between this (moving collidable entity) and other (collidable entity)
             Rectangle intersection = getIntersectingRectangle(e, other);

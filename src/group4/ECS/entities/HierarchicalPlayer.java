@@ -16,8 +16,8 @@ import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -26,7 +26,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     /**
      * dimension of player aka bounding box, ghost inherits in order to apply texture
      */
-    protected Vector3f dimension = new Vector3f(1.0f, 2.0f, 0.0f);
+    protected Vector3f dimension = new Vector3f(1.0f, 1.5f, 0.0f);
 
 
     /**

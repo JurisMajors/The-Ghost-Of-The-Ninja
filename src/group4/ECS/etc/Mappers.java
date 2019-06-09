@@ -7,7 +7,6 @@ import group4.ECS.components.events.TimedComponent;
 import group4.ECS.components.identities.*;
 import group4.ECS.components.physics.*;
 import group4.ECS.components.stats.*;
-import group4.ECS.entities.Player;
 
 /**
  * Mappers retrieve components from entities in O(1) time

@@ -3,14 +3,19 @@ package group4.ECS.systems.movement;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.entities.Ghost;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
 import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
+import group4.ECS.etc.TheEngine;
+import group4.audio.Sound;
+import group4.game.Main;
 import group4.input.KeyBoard;
 import group4.input.MouseMovement;
 import group4.maths.Vector3f;
@@ -75,7 +80,7 @@ public class PlayerMovementSystem extends IteratingSystem {
         // We are either wandering, or not. See the state diagram.
         if (wandering) {
             if (Math.abs(mc.velocity.x) > 1e-3) {
-                if (shouldSprint()) {
+                if (shouldSprint() && canSprint(mc)) {
                     nextState = EntityState.PLAYER_RUNNING;
                 } else {
                     nextState = EntityState.PLAYER_WALKING;
@@ -85,7 +90,7 @@ public class PlayerMovementSystem extends IteratingSystem {
             }
 
             // jump if space is pressed and if canJump is satisfied
-            if (shouldJump(ref) && canJump(mc.velocity) && pc.onPlatform) {
+            if (shouldJump(ref) && canJump(mc)) {
                 nextState = EntityState.PLAYER_PREJUMP;
             }
         } else {
@@ -137,10 +142,18 @@ public class PlayerMovementSystem extends IteratingSystem {
         if (jumpInProgress && playerState != EntityState.PLAYER_JUMPING) {
             jumpInProgress = false;
         }
+        // if the entity shoudlspawnghost and its previous ghost is not alive and it is on a start totem
+        if (shouldSpawnGhost(ref) && !player.spawnedGhost && player.totemStatus != null) {
+            player.spawnedGhost = true; // spawn the ghost
+            Ghost newGhost = player.totemStatus.getGhost(player); // get a ghost from the totem
 
-        if (shouldSpawnGhost(ref) && !((Player) e).spawnedGhost) {
-            ((Player) e).spawnedGhost = true;
-            ((Player) e).level.getCurrentModule().addGhost((Player) e);
+            // set a background color while in the 'ghost' world
+            // TODO: this color should be chosen by someone artistic
+            GraphicsComponent.setGlobalColorMask(new Vector3f(0.2f, 0f, 0f));
+
+            // add it to engine an module
+            player.level.getCurrentModule().addEntity(newGhost);
+            TheEngine.getInstance().addEntity(newGhost);
         }
 
         // Finally limit the velocity vector
@@ -159,6 +172,9 @@ public class PlayerMovementSystem extends IteratingSystem {
      * Moves along the x axis in the specified direction
      */
     private void moveDirection(int moveDir, MovementComponent mc, PositionComponent pc) {
+        if (!Main.AI && !Sound.isPlaying(Sound.STEP) && canJump(mc)) {
+            Sound.playRandom(Sound.STEP);
+        }
         // set orientation of player in accordance to mouse position
         if (pc.position.x <= MouseMovement.mouseX) {
             mc.orientation = MovementComponent.RIGHT;
@@ -166,7 +182,7 @@ public class PlayerMovementSystem extends IteratingSystem {
             mc.orientation = MovementComponent.LEFT;
         }
 
-        if (shouldSprint() && canSprint(mc.velocity)) {
+        if (shouldSprint() && canSprint(mc)) {
             mc.velocity.x = moveDir * getSprintingVel(mc);
             mc.velocity.x += moveDir * mc.acceleration.x;
         } else {
@@ -185,16 +201,16 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     private void jump(MovementComponent mc) {
+        // TODO: Play jump sound
         mc.velocity.y = mc.velocityRange.y;
     }
 
-    private boolean canJump(Vector3f velocity) {
-        // velocity has to be close to zero (avoid double jumping)
-        return velocity.y <= 1e-3 && velocity.y >= -1e-3;
+    private boolean canJump(MovementComponent mc) {
+        return Math.abs(mc.velocity.y) < 1e-3;
     }
 
-    private boolean canSprint(Vector3f velocity) {
-        return velocity.y <= 1e-3 && velocity.y >= -1e-3;
+    private boolean canSprint(MovementComponent mc) {
+        return Math.abs(mc.velocity.y) < 1e-3;
     }
 
 
