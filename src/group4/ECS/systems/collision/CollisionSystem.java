@@ -64,7 +64,6 @@ public class CollisionSystem extends IteratingSystem {
         for (Entity other : entities) {
             // dont process collision with itself
             if (e.equals(other)) continue;
-            if (other instanceof Totem) continue;
 
             // dont register collisions bullets of bullets
             if (other instanceof Bullet && e instanceof Bullet) continue;
@@ -83,7 +82,7 @@ public class CollisionSystem extends IteratingSystem {
             // Get displacement vector
             Vector3f displacement = processCollision(e, other);
 
-            if (displacement.y > 0) {
+            if (displacement.y > 0 && !(other instanceof Totem)) {
                 setOnPlatform(e, true);
             }
 
