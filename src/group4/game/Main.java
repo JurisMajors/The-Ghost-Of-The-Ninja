@@ -12,7 +12,6 @@ import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
 import group4.ECS.systems.collision.LastSystem;
 import group4.ECS.systems.collision.UncollidingSystem;
-import group4.ECS.systems.combat.DamageSystem;
 import group4.ECS.systems.combat.PlayerCombatSystem;
 import group4.ECS.systems.death.GhostDyingSystem;
 import group4.ECS.systems.death.MobDyingSystem;
@@ -21,7 +20,7 @@ import group4.ECS.systems.movement.BulletMovementSystem;
 import group4.ECS.systems.movement.GhostMovementSystem;
 import group4.ECS.systems.movement.MobMovementSystem;
 import group4.ECS.systems.movement.PlayerMovementSystem;
-import group4.ECS.systems.timed.TimedEventSystem;
+import group4.ECS.systems.event.EventSystem;
 import group4.UI.StartScreen;
 import group4.UI.Window;
 import group4.audio.Sound;
@@ -159,13 +158,13 @@ public class Main implements Runnable {
             Sound.BACKGROUND.play();
             // Set up all engine systems
             // Systems which change the gamestate
-            this.engine.addSystem(new PlayerMovementSystem(0));
-            this.engine.addSystem(new GhostMovementSystem(1));
-            this.engine.addSystem(new MobMovementSystem(2));
-            this.engine.addSystem(new BulletMovementSystem(3));
-            this.engine.addSystem(new CollisionSystem(4));
+            this.engine.addSystem(new EventSystem(0));
+            this.engine.addSystem(new PlayerMovementSystem(1));
+            this.engine.addSystem(new GhostMovementSystem(2));
+            this.engine.addSystem(new MobMovementSystem(3));
+            this.engine.addSystem(new BulletMovementSystem(4));
             this.engine.addSystem(new PlayerCombatSystem(5));
-            this.engine.addSystem(new DamageSystem(6));
+            this.engine.addSystem(new CollisionSystem(6));
             this.engine.addSystem(new CollisionEventSystem(7));
             this.engine.addSystem(new UncollidingSystem(8));
             this.engine.addSystem(new PlayerDyingSystem(true, 9));
@@ -176,8 +175,7 @@ public class Main implements Runnable {
             // Systems which are essentially observers of the changed gamestate
             this.engine.addSystem(new CameraSystem(Families.playerFamily, 13));
             this.engine.addSystem(new RenderSystem(14));
-            this.engine.addSystem(new TimedEventSystem(15));
-            this.engine.addSystem(new LastSystem(16));
+            this.engine.addSystem(new LastSystem(15));
 
             // Initialize the StartScreen, this will load the level
             this.startScreen = new StartScreen();

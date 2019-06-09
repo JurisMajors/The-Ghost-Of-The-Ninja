@@ -23,8 +23,9 @@ public class Bullet extends Entity {
      *
      * @param position          left-bottom-back corner of the cuboid representing the bullet
      * @param velocityDirection direction (normalized) of velocity vector
+     * @param origin            origin of the Bullet, i.e. weapon
      */
-    public Bullet(Vector3f position, Vector3f velocityDirection) {
+    public Bullet(Vector3f position, Vector3f velocityDirection, Entity origin) {
 
         // velocity range
         Vector3f velocityRange = new Vector3f(0.25f, 0.25f, 0.0f);
@@ -40,7 +41,7 @@ public class Bullet extends Entity {
 
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
-        this.add(new DamageComponent(1));
+        this.add(new DamageComponent(1, origin));
         this.add(new MovementComponent(velocityDirection.scale(velocityMagnitude), velocityRange));
         this.add(new GraphicsComponent(shader, texture, dimension, false));
         this.add(new BulletComponent());

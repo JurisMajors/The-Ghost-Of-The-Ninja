@@ -7,9 +7,9 @@ import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
-import group4.ECS.entities.Ghost;
-import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
+import group4.ECS.etc.EntityConst;
+import group4.ECS.entities.Ghost;
 import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
@@ -20,6 +20,8 @@ import group4.input.KeyBoard;
 import group4.input.MouseMovement;
 import group4.maths.Vector3f;
 
+import static group4.ECS.components.stats.MovementComponent.LEFT;
+import static group4.ECS.components.stats.MovementComponent.RIGHT;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
@@ -122,26 +124,33 @@ public class PlayerMovementSystem extends IteratingSystem {
         Player player = (Player) e;
         EntityState playerState = player.getState();
 
-        // set velocity in the direction that keyboard asks for
-        if (shouldRight(ref)) {
-            moveRight(mc, pc);
-        } else if (shouldLeft(ref)) {
-            moveLeft(mc, pc);
-        } else {
-            // stay still if no keys are pressed
-            mc.velocity.x = 0;
+
+        // if entity is not being knocked back
+        if (!Mappers.healthMapper.get(e).state.contains(EntityConst.EntityState.KNOCKED)) {
+            if (shouldRight(ref)) {
+                moveRight(mc, pc);
+                mc.orientation = RIGHT;
+            } else if (shouldLeft(ref)) {
+                moveLeft(mc, pc);
+                mc.orientation = LEFT;
+            } else {
+                // stay still if no keys are pressed
+                mc.velocity.x = 0;
+            }
+
+            if (!jumpInProgress && playerState == EntityState.PLAYER_JUMPING) {
+                // Catch if we have transitioned to the actual jump phase of our jump
+                jump(mc);
+                jumpInProgress = true;
+            }
+
+            // If we're tracking the jump is in progress, but it obviously isn't, toggle it off.
+            if (jumpInProgress && playerState != EntityState.PLAYER_JUMPING) {
+                jumpInProgress = false;
+            }
         }
 
-        // Catch if we have transitioned to the actual jump phase of our jump
-        if (!jumpInProgress && playerState == EntityState.PLAYER_JUMPING) {
-            jump(mc);
-            jumpInProgress = true;
-        }
 
-        // If we're tracking the jump is in progress, but it obviously isn't, toggle it off.
-        if (jumpInProgress && playerState != EntityState.PLAYER_JUMPING) {
-            jumpInProgress = false;
-        }
         // if the entity shoudlspawnghost and its previous ghost is not alive and it is on a start totem
         if (shouldSpawnGhost(ref) && !player.spawnedGhost && player.totemStatus != null) {
             player.spawnedGhost = true; // spawn the ghost
@@ -179,7 +188,7 @@ public class PlayerMovementSystem extends IteratingSystem {
         }
         // set orientation of player in accordance to mouse position
         if (pc.position.x <= MouseMovement.mouseX) {
-            mc.orientation = MovementComponent.RIGHT;
+            mc.orientation = RIGHT;
         } else {
             mc.orientation = MovementComponent.LEFT;
         }

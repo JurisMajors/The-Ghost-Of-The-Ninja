@@ -1,12 +1,12 @@
 package group4.ECS.entities.items.consumables;
 
+import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.identities.AnimationComponent;
 import group4.ECS.components.identities.CoinComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
-import group4.ECS.entities.items.Item;
 import group4.ECS.etc.EntityState;
 import group4.ECS.systems.animation.FrameAnimation;
 import group4.ECS.systems.collision.CollisionHandlers.CoinCollision;
@@ -15,7 +15,7 @@ import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
 
-public class Coin extends Item {
+public class Coin extends Entity {
 
     public static final Vector3f SMALL_SIZE = new Vector3f(0.75f, 0.75f, 0);
     public static final Vector3f LARGE_SIZE = new Vector3f(1f, 1f, 0);

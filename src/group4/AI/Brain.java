@@ -40,6 +40,11 @@ public class Brain {
         NeuralNetConfiguration.ListBuilder lb = new NeuralNetConfiguration.Builder()
                 .weightInit(WeightInit.XAVIER)
                 .list();
+        lb.layer(new DenseLayer.Builder().nIn(layerSizes[0]).
+                nOut(layerSizes[1]).
+                activation(Activation.RELU).
+                weightInit(WeightInit.XAVIER).
+                build());
 
         lb.layer(new DenseLayer.Builder().nIn(layerSizes[0]).
                 nOut(layerSizes[1]).
