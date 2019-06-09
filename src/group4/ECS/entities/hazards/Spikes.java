@@ -6,6 +6,7 @@ import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.DamageComponent;
+import group4.ECS.entities.Ghost;
 import group4.ECS.systems.collision.CollisionHandlers.MeleeCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -26,6 +27,8 @@ public class Spikes extends Entity {
 
         int damage = 10;
         Set<Class<? extends Entity>> excluded = new HashSet<>();
+        // ghost shouldn't take dmg from spikes in the first place
+        excluded.add(Ghost.class);
 
         // Construct vertex array
         float[] vertices = new float[] {

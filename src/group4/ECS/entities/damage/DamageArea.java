@@ -66,7 +66,12 @@ public class DamageArea extends Entity {
         TheEngine.getInstance().addEntity(this);
 
          event = new Event(this, duration,
-                 (entity, dur, passed) -> TheEngine.getInstance().removeEntity(entity));
+                 (entity, dur, passed) -> {
+             if (passed == dur) {
+                 TheEngine.getInstance().removeEntity(entity);
+             }
+         })
+         ;
 
     }
 

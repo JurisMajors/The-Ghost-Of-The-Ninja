@@ -31,6 +31,10 @@ public class MeleeCollision extends AbstractCollisionHandler<Entity> {
                 continue;
             }
 
+            for (Class<? extends Entity> c : Mappers.damageMapper.get(e).excluded) {
+
+            }
+
             // compute damage and knockback
             if (Mappers.healthMapper.get(other) != null) {
                 handleDmg(e, other);
@@ -62,7 +66,7 @@ public class MeleeCollision extends AbstractCollisionHandler<Entity> {
                         return;
                     }
 
-                    if (passed == dur) {
+                    if (passed >= dur) {
                         Mappers.healthMapper.get(subject).state.remove(EntityConst.EntityState.IMMUNE);
                     }
                 });
@@ -108,7 +112,7 @@ public class MeleeCollision extends AbstractCollisionHandler<Entity> {
                             return;
                         }
 
-                        if (passed == dur) {
+                        if (passed >= dur) {
                             Mappers.healthMapper.get(subject).state.remove(EntityConst.EntityState.KNOCKED);
                         }
                     });

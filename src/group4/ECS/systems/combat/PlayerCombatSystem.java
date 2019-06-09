@@ -3,6 +3,7 @@ package group4.ECS.systems.combat;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
+import group4.ECS.components.identities.CoinComponent;
 import group4.ECS.components.identities.GhostComponent;
 import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.DimensionComponent;
@@ -11,6 +12,7 @@ import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.ItemComponent;
 import group4.ECS.components.stats.MeleeWeaponComponent;
 import group4.ECS.entities.Ghost;
+import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.damage.DamageArea;
 import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
@@ -105,16 +107,18 @@ public class PlayerCombatSystem extends IteratingSystem {
         Vector3f rayEnd = hitboxCorner.add(new Vector3f(trueHitbox.x, trueHitbox.y / 2, trueHitbox.z));
         Vector3f dir = rayEnd.sub(rayStart);
 
-        // ignore mobs, players, items, ghost, exits
+        // ignore mobs, players, items, ghost, exits and coins
         ArrayList ignoreComponets = new ArrayList();
         ignoreComponets.add(HealthComponent.class);
         ignoreComponets.add(GhostComponent.class);
         ignoreComponets.add(ItemComponent.class);
+        ignoreComponets.add(CoinComponent.class);
 
         // cast ray from (center of player + y-component of hitboxoffset) to (playerpos + hitboxoffset)
         Ray ray = new Ray(rayStart, dir, ignoreComponets, dir.length());
 
-        Vector3f intersection = ray.cast(TheEngine.getInstance().getEntitiesFor(Families.allCollidableFamily)).point;
+        // this does not take moving objects into account as well as splines (TODO: Splines)
+        Vector3f intersection = ray.cast(TheEngine.getInstance().getEntitiesFor(Families.collidableFamily)).point;
 
         // distinguish three cases
         // if hitbox fully behind wall, don't create hitbox
@@ -132,7 +136,7 @@ public class PlayerCombatSystem extends IteratingSystem {
 
         // exclude ghost and player for the damage
         Set<Class<? extends Entity>> excluded = new HashSet<>();
-        excluded.add(Player.class);
+        excluded.add(HierarchicalPlayer.class);
         excluded.add(Ghost.class);
 
         // play the slash sound
