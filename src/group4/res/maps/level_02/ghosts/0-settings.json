@@ -1,7 +1,0 @@
-{
-  "decoder": {
-    "name": "CircleVisionStateDecoder",
-    "gap": 10,
-    "rays": 60
-  }
-}
