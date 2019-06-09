@@ -88,19 +88,36 @@ public class RenderSystem extends EntitySystem {
 
         PositionComponent pc;
         GraphicsComponent gc;
+        MovementComponent mc;
         for (RenderLayer layer : RenderLayer.values()) {
             glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
             for (Entity entity : entityLayers.get(layer)) {
                 if (entity instanceof HierarchicalPlayer) {
                     // Get components via mapper for O(1) component retrieval
                     pc = Mappers.positionMapper.get(entity);
-
+                    mc = Mappers.movementMapper.get(entity);
+                    gc = Mappers.graphicsMapper.get(entity);
+                    if (mc.orientation == MovementComponent.LEFT) {
+                        // Set the mirrored projection matrix
+                        gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrixHorizontalFlip);
+                        // Since player aligns with center screen with its bottom left corner, we need to temporarily
+                        // also offset the view matrix.
+                        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
+                        Vector3f currentTranslation = cc.viewMatrix.getTranslation();
+                        gc.shader.setUniformMat4f("vw_matrix",
+                                Matrix4f.translate(
+                                        currentTranslation.sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
+                        );
+                    }
                     // Loop over the entities hierarchy and draw it correctly
                     for (BodyPart bp : ((HierarchicalPlayer) entity).hierarchy) {
                         gc = bp.getComponent(GraphicsComponent.class);
 
                         // Bind shader
                         gc.shader.bind();
+
+                        // create color overlay over textures
+                        handleColorMask(gc);
 
                         // Set uniforms
                         gc.shader.setUniformMat4f("md_matrix", bp.getModelMatrix()); // Tmp fix for giving correct positions to vertices in the vertexbuffers
@@ -114,6 +131,11 @@ public class RenderSystem extends EntitySystem {
                         gc.geometry.render();
                     }
 
+                    // Restore the default projection and view matrices
+                    gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrix);
+                    gc.shader.setUniformMat4f("vw_matrix", cc.viewMatrix);
+
+
                 } else {
                     // Get components via mapper for O(1) component retrieval
                     pc = Mappers.positionMapper.get(entity);
@@ -122,10 +144,8 @@ public class RenderSystem extends EntitySystem {
                     // Bind shader
                     gc.shader.bind();
 
-                    // Totems have a mask to make them different colours
-                    if (entity instanceof Totem) {
-                        gc.shader.setUniform3f("color_mask", ((Totem) entity).getRbgMask());
-                    }
+                    // create color overlay over textures
+                    handleColorMask(gc);
 
                     // Set uniforms
                     gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers
@@ -147,7 +167,7 @@ public class RenderSystem extends EntitySystem {
             Shader.DEBUG.bind();
 //            DebugUtils.drawGrid(1.0f);
 
-            for (Entity e: entities) {
+            for (Entity e : entities) {
                 // draw spline paths during debug
                 if (Mappers.splinePathMapper.get(e) != null) {
                     DebugUtils.drawSpline(Mappers.splinePathMapper.get(e).points);
@@ -155,14 +175,14 @@ public class RenderSystem extends EntitySystem {
                 // draw the velocity of all mobs
                 if (e instanceof Mob) {
                     pc = Mappers.positionMapper.get(e);
-                    MovementComponent mc = Mappers.movementMapper.get(e);
+                    mc = Mappers.movementMapper.get(e);
                     DebugUtils.drawLine(pc.position, pc.position.add(mc.velocity));
                 }
             }
 
             // Temporary example for drawing lines or boxes.
             // NOTE: Uncomment to see the effect
-            for (Entity a: entities) { // For all A, for all B...  N^2 loop
+            for (Entity a : entities) { // For all A, for all B...  N^2 loop
                 PositionComponent pca = Mappers.positionMapper.get(a);
                 DimensionComponent dca = Mappers.dimensionMapper.get(a);
                 DebugUtils.drawBox(pca.position, pca.position.add(dca.dimension));
@@ -180,6 +200,23 @@ public class RenderSystem extends EntitySystem {
             }
 
             DebugUtils.flush();
+        }
+    }
+
+    /**
+     * Adds a color on top of the texture of a graphics component.
+     * If the graphics component has a personal color that takes priority.
+     * Else we look at the global color mask in GraphicsComponent.GLOBAL_COLOR_MASK.
+     * If neither are set we have a color mask of 0 which does nothing.
+     * @param gc graphics component
+     */
+    private void handleColorMask(GraphicsComponent gc) {
+        if (gc.hasMask) { // per texture mask has priority
+            gc.shader.setUniform3f("color_mask", gc.colorMask);
+        } else if (GraphicsComponent.HAS_MASK) { // global mask comes next
+            gc.shader.setUniform3f("color_mask", GraphicsComponent.GLOBAL_COLOR_MASK);
+        } else { // no mask
+            gc.shader.setUniform3f("color_mask", new Vector3f());
         }
     }
 

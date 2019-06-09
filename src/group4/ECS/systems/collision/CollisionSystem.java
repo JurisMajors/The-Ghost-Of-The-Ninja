@@ -82,7 +82,7 @@ public class CollisionSystem extends IteratingSystem {
             // Get displacement vector
             Vector3f displacement = processCollision(e, other);
 
-            if (displacement.y > 0) {
+            if (displacement.y > 0 && !(other instanceof Totem)) {
                 setOnPlatform(e, true);
             }
 
@@ -195,12 +195,13 @@ public class CollisionSystem extends IteratingSystem {
      * Given a list of corners and their closest spline points, and a discard array mask, set the final closestPoint
      * and closestNormal of the moving entity and the spline. Return the index or (cornder-)code for the
      * eventual corner that becomes the closest point.
-     * @param corners corners of the entity
-     * @param closestPoints closest point on spline for each corner
+     *
+     * @param corners        corners of the entity
+     * @param closestPoints  closest point on spline for each corner
      * @param closestNormals normal for the corresponding closest spline point
-     * @param discard boolean mask
-     * @param closestPoint closest point which gets set in this function
-     * @param closestNormal closest normal which gets set in this function
+     * @param discard        boolean mask
+     * @param closestPoint   closest point which gets set in this function
+     * @param closestNormal  closest normal which gets set in this function
      * @return code/index for the corner that will get displaced and is closest to the spline
      */
     private int getClosestPoint(Vector3f[] corners, Vector3f[] closestPoints, Vector3f[] closestNormals, boolean[] discard, Vector3f closestPoint, Vector3f closestNormal) {
@@ -409,6 +410,7 @@ public class CollisionSystem extends IteratingSystem {
 
     /**
      * TODO: add javadoc
+     *
      * @param first
      * @param scnd
      * @param intersection
@@ -436,6 +438,7 @@ public class CollisionSystem extends IteratingSystem {
 
     /**
      * TODO: add javadoc
+     *
      * @param first
      * @param scnd
      * @param intersection
@@ -515,6 +518,7 @@ public class CollisionSystem extends IteratingSystem {
 
     /**
      * TODO: add lavadoc
+     *
      * @param first
      * @param second
      * @return
@@ -539,6 +543,7 @@ public class CollisionSystem extends IteratingSystem {
 
     /**
      * TODO: add javadoc
+     *
      * @param botLeft
      * @param dim
      * @return
