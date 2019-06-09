@@ -24,6 +24,7 @@ import group4.ECS.systems.event.EventSystem;
 import group4.UI.StartScreen;
 import group4.UI.Window;
 import group4.audio.Sound;
+import group4.graphics.ImageSequence;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;
@@ -145,6 +146,7 @@ public class Main implements Runnable {
         Shader.loadAllShaders();
         Texture.loadAllTextures();
         TileMapping.loadAllTileMappings();
+        ImageSequence.loadAllImageSequences();
 
         // Initialize the engine
         this.engine = TheEngine.getInstance();

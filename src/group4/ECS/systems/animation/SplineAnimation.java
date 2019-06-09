@@ -16,7 +16,7 @@ public class SplineAnimation extends Animation {
     }
 
     @Override
-    protected void stepAnimation() {
+    protected void stepAnimation(float deltaTime) {
         Vector3f pointOnCurve = this.spline.getPoint(this.currentT);
         PositionComponent pcTarget = Mappers.positionMapper.get(target);
         pcTarget.position = pointOnCurve;//.position.add(new Vector3f(player.getComponent(DimensionComponent.class).dimension.x / 2, 0.0f, 0.0f));

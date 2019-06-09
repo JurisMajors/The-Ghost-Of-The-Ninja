@@ -3,6 +3,7 @@ package group4.ECS.systems.movement;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
@@ -80,7 +81,7 @@ public class PlayerMovementSystem extends IteratingSystem {
         // We are either wandering, or not. See the state diagram.
         if (wandering) {
             if (Math.abs(mc.velocity.x) > 1e-3) {
-                if (shouldSprint()) {
+                if (shouldSprint() && canSprint(mc)) {
                     nextState = EntityState.PLAYER_RUNNING;
                 } else {
                     nextState = EntityState.PLAYER_WALKING;
@@ -90,7 +91,7 @@ public class PlayerMovementSystem extends IteratingSystem {
             }
 
             // jump if space is pressed and if canJump is satisfied
-            if (shouldJump(ref) && canJump(pc)) {
+            if (shouldJump(ref) && canJump(mc)) {
                 nextState = EntityState.PLAYER_PREJUMP;
             }
         } else {
@@ -151,6 +152,11 @@ public class PlayerMovementSystem extends IteratingSystem {
         if (shouldSpawnGhost(ref) && !player.spawnedGhost && player.totemStatus != null) {
             player.spawnedGhost = true; // spawn the ghost
             Ghost newGhost = player.totemStatus.getGhost(player); // get a ghost from the totem
+
+            // set a background color while in the 'ghost' world
+            // TODO: this color should be chosen by someone artistic
+            GraphicsComponent.setGlobalColorMask(new Vector3f(0.2f, 0f, 0f));
+
             // add it to engine an module
             player.level.getCurrentModule().addEntity(newGhost);
             TheEngine.getInstance().addEntity(newGhost);
@@ -161,18 +167,20 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     private void moveRight(MovementComponent mc, PositionComponent pc) {
-        moveDirection(1, mc, pc);
+        moveDirection(MovementComponent.RIGHT, mc, pc);
+        mc.setOrientation(MovementComponent.RIGHT);
     }
 
     private void moveLeft(MovementComponent mc, PositionComponent pc) {
-        moveDirection(-1, mc, pc);
+        moveDirection(MovementComponent.LEFT, mc, pc);
+        mc.setOrientation(MovementComponent.LEFT);
     }
 
     /**
      * Moves along the x axis in the specified direction
      */
     private void moveDirection(int moveDir, MovementComponent mc, PositionComponent pc) {
-        if (!Main.AI && !Sound.isPlaying(Sound.STEP) && canJump(pc)) {
+        if (!Main.AI && !Sound.isPlaying(Sound.STEP) && canJump(mc)) {
             Sound.playRandom(Sound.STEP);
         }
         // set orientation of player in accordance to mouse position
@@ -182,7 +190,7 @@ public class PlayerMovementSystem extends IteratingSystem {
             mc.orientation = MovementComponent.LEFT;
         }
 
-        if (shouldSprint() && canSprint(mc.velocity)) {
+        if (shouldSprint() && canSprint(mc)) {
             mc.velocity.x = moveDir * getSprintingVel(mc);
             mc.velocity.x += moveDir * mc.acceleration.x;
         } else {
@@ -205,12 +213,12 @@ public class PlayerMovementSystem extends IteratingSystem {
         mc.velocity.y = mc.velocityRange.y;
     }
 
-    private boolean canJump(PositionComponent pos) {
-        return pos.onPlatform;
+    private boolean canJump(MovementComponent mc) {
+        return Math.abs(mc.velocity.y) < 1e-3;
     }
 
-    private boolean canSprint(Vector3f velocity) {
-        return velocity.y <= 1e-3 && velocity.y >= -1e-3;
+    private boolean canSprint(MovementComponent mc) {
+        return Math.abs(mc.velocity.y) < 1e-3;
     }
 
 
