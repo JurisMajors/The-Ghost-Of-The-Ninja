@@ -53,7 +53,7 @@ public class Coin extends Item {
         AnimationComponent ac = this.getComponent(AnimationComponent.class);
         ac.addAnimation(
                 EntityState.DEFAULT, // A default animation
-                new FrameAnimation(this, 0.0f, ImageSequence.COIN, 6)
+                new FrameAnimation(this, 0.0f, ImageSequence.COIN, 30)
         );
         ac.setAnimation(EntityState.DEFAULT);
     }
