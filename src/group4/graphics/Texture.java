@@ -31,6 +31,10 @@ public class Texture {
     public static Texture PLAYER_DARK_LEG_LOWER;
     public static Texture PLAYER_LIGHT_LEG_UPPER;
     public static Texture PLAYER_LIGHT_LEG_LOWER;
+    public static Texture PLAYER_DARK_ARM_UPPER;
+    public static Texture PLAYER_DARK_ARM_LOWER;
+    public static Texture PLAYER_LIGHT_ARM_UPPER;
+    public static Texture PLAYER_LIGHT_ARM_LOWER;
     
     // GAME UI / OVERLAYS
     public static Texture START_BG;
@@ -72,6 +76,10 @@ public class Texture {
         PLAYER_DARK_LEG_UPPER = new Texture("src/group4/res/textures/player/ninja3withlayers_0003_upperfurtherleg.png");
         PLAYER_LIGHT_LEG_LOWER = new Texture("src/group4/res/textures/player/ninja3withlayers_0000_lowerfurtherleg.png");
         PLAYER_LIGHT_LEG_UPPER = new Texture("src/group4/res/textures/player/ninja3withlayers_0001_uppercloserleg.png");
+        PLAYER_DARK_ARM_UPPER = new Texture("src/group4/res/textures/player/ninja3withlayers_0007_upperfurtherarm.png");
+        PLAYER_DARK_ARM_LOWER = new Texture("src/group4/res/textures/player/ninja3withlayers_0006_lowerfurtherarm.png");
+        PLAYER_LIGHT_ARM_UPPER = new Texture("src/group4/res/textures/player/ninja3withlayers_0005_uppercloserarm.png");
+        PLAYER_LIGHT_ARM_LOWER = new Texture("src/group4/res/textures/player/ninja3withlayers_0004_lowercloserarm.png");
         
         START_BG = new Texture("src/group4/res/textures/start-bg.png");
         VIGNETTE_OVERLAY = new Texture("src/group4/res/textures/vignette-overlay.png");
