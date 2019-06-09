@@ -247,4 +247,12 @@ public class GraphicsComponent implements Component {
             };
         }
     }
+
+    /**
+     * Allows for updating the texture (e.g. for framebased animation)
+     * @param texture
+     */
+    public void setTexture(Texture texture) {
+        this.texture = texture;
+    }
 }

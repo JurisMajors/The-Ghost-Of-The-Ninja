@@ -2,17 +2,18 @@ package group4.graphics;
 
 import group4.utils.FileUtils;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ImageSequence {
     public static ImageSequence COIN;
 
-    List<Texture> frames;
+    public List<Texture> frames;
+    public int frameCount;
+
     public ImageSequence(String folder) {
-        frames = load(folder);
+        this.frames = load(folder);
+        this.frameCount = this.frames.size();
     }
 
     private List<Texture> load(String folder) {
