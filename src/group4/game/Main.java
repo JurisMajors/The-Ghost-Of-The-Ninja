@@ -219,7 +219,6 @@ public class Main implements Runnable {
                 lastFpsTime = 0;
                 fps = 0;
             }
-            glClearColor(255,255,255, 1);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
             if (STATE == GameState.PLAYING || STATE == GameState.STARTSCREEN) {

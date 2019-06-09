@@ -114,7 +114,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
 
         // Draw the right leg
         float[] rightLegAngles = this.getLimbAngles(this.getOffsetHipPosition(false), rightFootOffset, upperLegDimension.y, lowerLegDimension.y, true);
-        rightLegUpper = new BodyPart(torso, new Vector3f(-0.03125f, 0.03125f, 0.0f), upperLegDimension, rightLegAngles[0], Texture.PLAYER_LIGHT_LEG_UPPER);
+        rightLegUpper = new BodyPart(torso, new Vector3f(-0.03125f, 0.03125f, -1.0f), upperLegDimension, rightLegAngles[0], Texture.PLAYER_LIGHT_LEG_UPPER);
         rightLegLower = new BodyPart(rightLegUpper, new Vector3f(0.0f, upperLegDimension.y - 0.0625f, 0.0f), lowerLegDimension, rightLegAngles[1], Texture.PLAYER_LIGHT_LEG_LOWER);
         this.hierarchy.add(rightLegUpper);
         this.hierarchy.add(rightLegLower);
@@ -136,7 +136,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
 
         // Draw the right arm
         float[] rightArmAngles = this.getLimbAngles(this.getOffsetShoulderPosition(false), rightWristOffset, upperArmDimension.y, lowerArmDimension.y, false);
-        rightArmUpper = new BodyPart(torso, shoulderOffset.add(new Vector3f(-0.140625f, 0.0f, 0.0f)), upperArmDimension, rightArmAngles[0], Texture.PLAYER_LIGHT_ARM_UPPER);
+        rightArmUpper = new BodyPart(torso, shoulderOffset.add(new Vector3f(-0.140625f, 0.0f, -1.0f)), upperArmDimension, rightArmAngles[0], Texture.PLAYER_LIGHT_ARM_UPPER);
         rightArmLower = new BodyPart(rightArmUpper, new Vector3f(0.0f, upperArmDimension.y - 0.03125f, 0.0f), lowerArmDimension, rightArmAngles[1], Texture.PLAYER_LIGHT_ARM_LOWER);
         this.hierarchy.add(rightArmUpper);
         this.hierarchy.add(rightArmLower);
