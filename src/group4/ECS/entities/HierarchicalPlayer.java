@@ -553,17 +553,6 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     }
 
     private AnimationSet generateJumpAnim() {
-        // Animate the hip bounce during walking
-        SplineAnimation hipCycle = new SplineAnimation(
-                this.torso, 0.0f,
-                new Vector3f[]{
-                        new Vector3f(0.050f, 0.0f, 0.0f),
-                        new Vector3f(-.083f, 0.0f, 0.0f),
-                        new Vector3f(-.083f, 0.0f, 0.0f),
-                        new Vector3f(0.050f, 0.0f, 0.0f)
-                }
-        );
-
         // Add leg animations
         Vector3f[] footPosLeft = new Vector3f[]{
                 new Vector3f(0.66f, 0.0f, 0.0f),
@@ -600,13 +589,11 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
 
         // Add the cycles to an animation set and return
         AnimationSet jumpingAnimationSet = new AnimationSet();
-        jumpingAnimationSet.add(hipCycle);
         jumpingAnimationSet.add(foot_L);
         jumpingAnimationSet.add(foot_R);
         jumpingAnimationSet.add(hand_L);
         jumpingAnimationSet.add(hand_R);
 
-//        walkingAnimationSet.add(walkCycle);
         return jumpingAnimationSet;
     }
 
