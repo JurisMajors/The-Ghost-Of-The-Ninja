@@ -4,6 +4,8 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.etc.TheEngine;
+import group4.game.GameState;
+import group4.game.Main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,6 +59,7 @@ public abstract class Level {
         this.configExits();                                 // Configure the exits
 
         this.checkSanity();                                 // Check that the level was created appropriately
+        Main.setState(GameState.PLAYING);                   // Ensure the system knows the game is playing.
     }
 
     /**
@@ -88,6 +91,7 @@ public abstract class Level {
         this.configExits();                                 // Configure the exits
 
         this.checkSanity();                                 // Check that the level was created appropriately
+        Main.setState(GameState.PLAYING);
     }
 
     /**
@@ -222,5 +226,34 @@ public abstract class Level {
             throw new IllegalArgumentException("Level: no exit action is defined for this exit");
 
         this.exitActions.get(e).exit();
+    }
+
+
+    /**
+     * Reset the level to initial state
+     */
+    public void reset() {
+        // Unload current module
+        this.currentModule.unload();
+
+        // Reset all modules
+        for (Module m : this.modules) {
+            m.reset();
+        }
+
+        // Set the root module as the current module
+        this.currentModule = this.rootModule;
+
+        // Configure the exits correctly
+        this.configExits();
+
+        // Create a new player and set it to correct position
+        TheEngine.getInstance().removeEntity(this.player);
+        this.player = this.createPlayer();
+        TheEngine.getInstance().addEntity(this.player);
+        this.player.getComponent(PositionComponent.class).position = this.currentModule.getPlayerInitialPosition();
+
+        // Load the module
+        this.currentModule.load();
     }
 }

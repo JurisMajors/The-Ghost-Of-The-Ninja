@@ -15,7 +15,7 @@ import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.audio.Sound;
 import group4.game.Main;
-import group4.game.Window;
+import group4.UI.Window;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
@@ -72,7 +72,7 @@ public class PlayerCombatSystem extends IteratingSystem {
                 // mouse x in world pos
                 float mouseWorldX = camX + ((float) MouseMovement.mouseX *
                         (Main.SCREEN_WIDTH / Window.getWidth()) - Main.SCREEN_WIDTH / 2);
-
+                
                 // if clicking right of player, hit right, else hit left
                 Vector3f trueOffset = new Vector3f(wc.hitboxOffset);
                 if (mouseWorldX < pc.position.x + dc.dimension.x / 2) {
