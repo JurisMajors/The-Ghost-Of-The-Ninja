@@ -169,7 +169,7 @@ public class Main implements Runnable {
             this.engine.addSystem(new PlayerDyingSystem(true, 9));
             this.engine.addSystem(new GhostDyingSystem(false, 10));
             this.engine.addSystem(new MobDyingSystem(11));
-            //this.engine.addSystem(new AnimationSystem(12));
+            this.engine.addSystem(new AnimationSystem(12));
 
             // Systems which are essentially observers of the changed gamestate
             this.engine.addSystem(new CameraSystem(Families.playerFamily, 13));

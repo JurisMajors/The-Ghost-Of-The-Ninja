@@ -68,10 +68,13 @@ public class AnimationSystem extends IteratingSystem {
             float lowerLength = handle.lower.getComponent(DimensionComponent.class).dimension.y;
 
             // Calculate and set the new rotations for the limbs based on the start and endpoints of the IK chain
+            // Check if we are dealing with a left or a right limb
+            boolean left = handleName.endsWith("L");
             boolean bendForward = handleName.startsWith("foot");
-            float[] angles = player.getLimbAngles(player.getHipPosition(), pc.position, upperLength, lowerLength, bendForward);
+            float[] angles = player.getLimbAngles(player.getOffsetHipPosition(left), pc.position, upperLength, lowerLength, bendForward);
             handle.upper.rotation = angles[0];
             handle.lower.rotation = angles[1];
+
         }
         
 
