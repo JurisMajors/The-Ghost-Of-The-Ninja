@@ -4,6 +4,7 @@ import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.world.Exit;
 import group4.maths.Vector3f;
+import group4.utils.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,10 +24,10 @@ public class FileLevel extends Level {
      * be used in the specific level.
      */
     private void configurePaths() {
-        this.modulePaths = this.getFilePaths(this.levelRoot + "/modules");
+        this.modulePaths = FileUtils.getFilePaths(this.levelRoot + "/modules");
         this.ghostPaths = new ArrayList<>();
 
-        List<String> allGhostFiles = this.getFilePaths(this.levelRoot + "/ghosts");
+        List<String> allGhostFiles = FileUtils.getFilePaths(this.levelRoot + "/ghosts");
         for (String modulePath : this.modulePaths) {
             boolean matched = false; // See if we find a ghost for this module
             String[] splits = modulePath.split("\\" + File.separator); // a\b\c.json => [a, b, c.json]
@@ -49,20 +50,6 @@ public class FileLevel extends Level {
                 this.ghostPaths.add(null);
             }
         }
-    }
-
-    private List<String> getFilePaths(String folder) {
-        List<String> filePaths = new ArrayList<>();
-        File folder_fd = new File(folder);
-        for (final File fileEntry : folder_fd.listFiles()) {
-            if (fileEntry.isDirectory()) {
-                continue;
-            } else {
-                filePaths.add(fileEntry.getPath());
-            }
-        }
-        Collections.sort(filePaths); // sort the modules in the correct order
-        return filePaths;
     }
 
     @Override

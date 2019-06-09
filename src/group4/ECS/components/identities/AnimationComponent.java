@@ -52,5 +52,4 @@ public class AnimationComponent implements Component {
     public Animation getAnimation(EntityState state) {
         return this.animations.get(state);
     }
-
 }
