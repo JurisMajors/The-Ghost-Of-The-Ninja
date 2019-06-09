@@ -25,6 +25,10 @@ public class AnimationSystem extends IteratingSystem {
 
         if (entity instanceof HierarchicalPlayer) {
             animatePlayer((HierarchicalPlayer) entity);
+        } else {
+            // Assumption: player/ghost is a special case, the rest we (currently) handle via here.
+            AnimationComponent ac = Mappers.animationMapper.get(entity);
+            ac.getCurrentAnimation().update(this.deltaTime);
         }
     }
 
