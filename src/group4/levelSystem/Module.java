@@ -224,8 +224,8 @@ public class Module {
                 this.addArtTile(tileGridX, tileGridY, tileId);
             } else if (entityId.equals(Player.getName())) {
                 this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
-            } else if (entityId.equals(Spikes.getName())) { // TODO: generalize for all hazards
-                this.addHazard(tileGridX, tileGridY, tileId);
+            } else if (entityId.equals(Spikes.getName())) {
+                this.addSpike(tileGridX, tileGridY, tileId);
             } else if (entityId.endsWith(Mob.getName()) && !Main.AI) {
                 this.addMob(tileGridX, tileGridY, tileId, entityId);
             } else {
@@ -457,10 +457,28 @@ public class Module {
      * @param y the y position of the platform in the module grid
      * @param i the identifier for the tile within the TileMap
      */
-    private void addHazard(int x, int y, int i) {
+    private void addSpike(int x, int y, int i) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
-        // TODO: different dimensions, damage, textures, etc.
-        Spikes p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        Spikes p;
+
+        switch (i) {
+            case 48: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                    new Vector3f(0.0f,1.0f,0.0f));
+                    break;
+            case 49: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                    new Vector3f(1.0f,0.0f,0.0f));
+                    break;
+            case 50: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                    new Vector3f(0.0f,-1.0f,0.0f));
+                    break;
+            case 51: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                    new Vector3f(-1.0f,0.0f,0.0f));
+                    break;
+            default: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                    new Vector3f(0.0f,1.0f,0.0f));
+                    break;
+        }
+
         this.addEntity(p);
     }
 
@@ -552,7 +570,10 @@ public class Module {
         int[] platforms = new int[]{0, 1, 2, 5, 6, 8, 9, 10, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 32, 33, 34, 35};
         int[] artTiles = new int[]{3, 4, 11, 12};
         int[] players = new int[]{7};
-        int[] hazards = new int[]{48, 49, 50, 51};
+        int spike_up = 48;
+        int spike_right = 49;
+        int spike_down = 50;
+        int spike_left = 51;
         int jumpingwalkingmob = 36;
         int flappingmob = 42;
         int walkingmob = 40;
@@ -574,10 +595,12 @@ public class Module {
             moduleTileMap.put(i, Player.getName());
         }
 
-        // TODO: all hazards
-        for (int i : hazards) {
-            moduleTileMap.put(i, Spikes.getName());
-        }
+        // spikes
+        moduleTileMap.put(spike_up, Spikes.getName());
+        moduleTileMap.put(spike_right, Spikes.getName());
+        moduleTileMap.put(spike_down, Spikes.getName());
+        moduleTileMap.put(spike_left, Spikes.getName());
+
         moduleTileMap.put(jumpingwalkingmob, JumpingWalkingMob.getName());
         moduleTileMap.put(flappingmob, FlappingMob.getName());
         moduleTileMap.put(walkingmob, WalkingMob.getName());

@@ -1,6 +1,7 @@
 package group4.ECS.systems.collision.CollisionHandlers;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector3;
 import group4.ECS.components.events.Event;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.PositionComponent;
@@ -64,7 +65,7 @@ public class DamageCollision extends AbstractCollisionHandler<Entity> {
 
         if (dmg.origin instanceof Spikes) {
             // create temporary event to declare the entity to be immune to damage
-            Event immune = new Event(other, 10,
+            Event immune = new Event(other, 20,
                     (subject, dur, passed) -> {
                         if (passed == 0) {
                             Mappers.healthMapper.get(subject).state.add(EntityConst.EntityState.IMMUNE);
@@ -101,20 +102,34 @@ public class DamageCollision extends AbstractCollisionHandler<Entity> {
             }
 
             // min knockback velocity
-            float minKnockBack = 0.15f;
-            float maxKnockBack = 0.3f;
+            float knockback_vel = 0.3f;
 
             // if incoming velocity too low, set outgoing vector to minimum knockback
-            float boost = 1.0f;
-            if (mc.velocity.length() < minKnockBack) {
-                boost = minKnockBack / mc.velocity.length();
+            float knock_factor = knockback_vel / mc.velocity.length();
+
+            System.out.println(mc.velocity);
+            Vector3f n = ((Spikes) entity).normal;
+            if (mc.velocity.x != 0.0f) {
+                // compute reflection vector
+                Vector3f d = mc.velocity;
+                Vector3f r = d.sub(n.scale((2 * d.dot(n))));
+                mc.velocity = r.scale(knock_factor);
+            } else {
+                if (n.equals(new Vector3f(0.0f, 1.0f, 0.0f))) {
+                    mc.velocity = new Vector3f(0.0f, knockback_vel, 0.0f);
+                } else if (n.equals(new Vector3f(0.0f, -1.0f, 0.0f))) {
+                    mc.velocity = new Vector3f(0.0f, -knockback_vel, 0.0f);
+                } else if (n.equals(new Vector3f(1.0f, 0.0f, 0.0f))) {
+                    mc.velocity = new Vector3f(knockback_vel, 0.0f, 0.0f);
+                } else {
+                    mc.velocity = new Vector3f(-knockback_vel, 0.0f, 0.0f);
+                }
             }
 
-            // bounce entity
-            mc.velocity = mc.velocity.scale(-boost);
+            System.out.println(mc.velocity);
 
             // create a temporary event for indicating the entity to be knocked back
-            Event knockback = new Event(other, 15,
+            Event knockback = new Event(other, 10,
                     (subject, dur, passed) -> {
                         if (passed == 0) Mappers.healthMapper.get(subject).state.add(EntityConst.EntityState.KNOCKED);
                         if (passed >= dur) Mappers.healthMapper.get(subject).state.remove(EntityConst.EntityState.KNOCKED);
