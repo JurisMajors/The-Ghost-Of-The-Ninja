@@ -13,6 +13,8 @@ import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.Totem;
+import group4.ECS.entities.world.Block;
+import group4.ECS.entities.world.Platform;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
@@ -82,7 +84,7 @@ public class CollisionSystem extends IteratingSystem {
             // Get displacement vector
             Vector3f displacement = processCollision(e, other);
 
-            if (displacement.y > 0) {
+            if (displacement.y > 0 && (other instanceof Platform || other instanceof Block)) {
                 setOnPlatform(e, true);
             }
 
