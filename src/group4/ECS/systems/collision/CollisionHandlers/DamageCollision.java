@@ -1,10 +1,8 @@
 package group4.ECS.systems.collision.CollisionHandlers;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.math.Vector3;
 import group4.ECS.components.events.Event;
 import group4.ECS.components.physics.CollisionComponent;
-import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MeleeWeaponComponent;
@@ -18,7 +16,6 @@ import group4.ECS.systems.collision.CollisionData;
 import group4.maths.Vector3f;
 
 import java.util.Set;
-import java.util.Vector;
 
 import static group4.ECS.components.stats.MovementComponent.LEFT;
 
