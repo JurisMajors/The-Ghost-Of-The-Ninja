@@ -87,8 +87,6 @@ public class DamageCollision extends AbstractCollisionHandler<Entity> {
             return;
         }
 
-        System.out.println(other);
-
         // TODO: should be for all hazardous entities
         // behaviour of hazardous entities
         if (entity instanceof Spikes) {
@@ -122,8 +120,6 @@ public class DamageCollision extends AbstractCollisionHandler<Entity> {
                     mc.velocity = new Vector3f(-knockback_vel, 0.0f, 0.0f);
                 }
             }
-
-            System.out.println(mc.velocity);
 
             // create a temporary event for indicating the entity to be knocked back
             Event knockback = new Event(other, 10,
