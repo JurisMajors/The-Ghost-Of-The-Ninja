@@ -1,6 +1,7 @@
 package group4.ECS.systems.collision.CollisionHandlers;
 
 import com.badlogic.ashley.core.Entity;
+import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.identities.CoinComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
@@ -141,6 +142,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
         Vector3f tDim = totem.getComponent(DimensionComponent.class).dimension;
         if (gPos.x >= tPos.add(tDim.scale(0.5f)).x) {
             ghost.getComponent(HealthComponent.class).health = 0;
+            GraphicsComponent.clearGlobalColorMask();
         }
     }
 
@@ -160,6 +162,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
     private static void handleExit(Player player, Exit exit) {
         if (player instanceof Ghost) { // kill ghost if has reached exit
             player.getComponent(HealthComponent.class).health = 0;
+            GraphicsComponent.clearGlobalColorMask();
         } else {
             exit.module.getLevel().handleExit(exit);
         }
