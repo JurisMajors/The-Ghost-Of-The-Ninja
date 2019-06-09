@@ -160,9 +160,9 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
 //    }
 
     private static void handleExit(Player player, Exit exit) {
+        GraphicsComponent.clearGlobalColorMask();
         if (player instanceof Ghost) { // kill ghost if has reached exit
             player.getComponent(HealthComponent.class).health = 0;
-            GraphicsComponent.clearGlobalColorMask();
         } else {
             exit.module.getLevel().handleExit(exit);
         }
