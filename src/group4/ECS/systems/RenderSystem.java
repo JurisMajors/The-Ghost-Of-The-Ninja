@@ -88,13 +88,27 @@ public class RenderSystem extends EntitySystem {
 
         PositionComponent pc;
         GraphicsComponent gc;
+        MovementComponent mc;
         for (RenderLayer layer : RenderLayer.values()) {
             glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
             for (Entity entity : entityLayers.get(layer)) {
                 if (entity instanceof HierarchicalPlayer) {
                     // Get components via mapper for O(1) component retrieval
                     pc = Mappers.positionMapper.get(entity);
-
+                    mc = Mappers.movementMapper.get(entity);
+                    gc = Mappers.graphicsMapper.get(entity);
+                    if (mc.orientation == MovementComponent.LEFT) {
+                        // Set the mirrored projection matrix
+                        gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrixHorizontalFlip);
+                        // Since player aligns with center screen with its bottom left corner, we need to temporarily
+                        // also offset the view matrix.
+                        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
+                        Vector3f currentTranslation = cc.viewMatrix.getTranslation();
+                        gc.shader.setUniformMat4f("vw_matrix",
+                                Matrix4f.translate(
+                                        currentTranslation.sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
+                        );
+                    }
                     // Loop over the entities hierarchy and draw it correctly
                     for (BodyPart bp : ((HierarchicalPlayer) entity).hierarchy) {
                         gc = bp.getComponent(GraphicsComponent.class);
@@ -116,6 +130,11 @@ public class RenderSystem extends EntitySystem {
                         // Render!
                         gc.geometry.render();
                     }
+
+                    // Restore the default projection and view matrices
+                    gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrix);
+                    gc.shader.setUniformMat4f("vw_matrix", cc.viewMatrix);
+
 
                 } else {
                     // Get components via mapper for O(1) component retrieval
@@ -156,7 +175,7 @@ public class RenderSystem extends EntitySystem {
                 // draw the velocity of all mobs
                 if (e instanceof Mob) {
                     pc = Mappers.positionMapper.get(e);
-                    MovementComponent mc = Mappers.movementMapper.get(e);
+                    mc = Mappers.movementMapper.get(e);
                     DebugUtils.drawLine(pc.position, pc.position.add(mc.velocity));
                 }
             }

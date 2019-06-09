@@ -161,11 +161,13 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     private void moveRight(MovementComponent mc, PositionComponent pc) {
-        moveDirection(1, mc, pc);
+        moveDirection(MovementComponent.RIGHT, mc, pc);
+        mc.setOrientation(MovementComponent.RIGHT);
     }
 
     private void moveLeft(MovementComponent mc, PositionComponent pc) {
-        moveDirection(-1, mc, pc);
+        moveDirection(MovementComponent.LEFT, mc, pc);
+        mc.setOrientation(MovementComponent.LEFT);
     }
 
     /**

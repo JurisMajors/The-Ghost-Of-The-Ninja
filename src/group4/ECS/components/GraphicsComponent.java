@@ -279,4 +279,12 @@ public class GraphicsComponent implements Component {
         GLOBAL_COLOR_MASK = new Vector3f();
         HAS_MASK = false;
     }
+
+    /**
+     * Allows for updating the texture (e.g. for framebased animation)
+     * @param texture
+     */
+    public void setTexture(Texture texture) {
+        this.texture = texture;
+    }
 }
