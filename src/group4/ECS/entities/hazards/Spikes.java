@@ -7,7 +7,7 @@ import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.entities.Ghost;
-import group4.ECS.systems.collision.CollisionHandlers.MeleeCollision;
+import group4.ECS.systems.collision.CollisionHandlers.DamageCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
@@ -45,8 +45,8 @@ public class Spikes extends Entity {
         };
 
         this.add(new PositionComponent(position.add(new Vector3f(0.15f, 0.15f, 0.0f))));
-        this.add(new CollisionComponent(MeleeCollision.getInstance()));
-        this.add(new DamageComponent(damage, excluded));
+        this.add(new CollisionComponent(DamageCollision.getInstance()));
+        this.add(new DamageComponent(damage, excluded, this));
         this.add(new GraphicsComponent(shader, texture, vertices, indices, texCoords));
         this.add(new DimensionComponent(new Vector3f(0.7f, 0.7f, 0.0f)));
     }

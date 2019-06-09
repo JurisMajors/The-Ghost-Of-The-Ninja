@@ -26,4 +26,5 @@ public class MobDyingSystem extends PlayerDyingSystem {
         super.sound();
         Sound.playRandom(Sound.MOBDIE);
     }
+
 }

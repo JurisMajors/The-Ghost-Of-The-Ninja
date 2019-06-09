@@ -8,9 +8,7 @@ import group4.ECS.components.identities.GhostComponent;
 import group4.ECS.components.identities.PlayerComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
-import group4.ECS.components.stats.HealthComponent;
-import group4.ECS.components.stats.ItemComponent;
-import group4.ECS.components.stats.MeleeWeaponComponent;
+import group4.ECS.components.stats.*;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.damage.DamageArea;
@@ -31,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import static group4.ECS.components.stats.MovementComponent.LEFT;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class PlayerCombatSystem extends IteratingSystem {
@@ -48,9 +47,7 @@ public class PlayerCombatSystem extends IteratingSystem {
      */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        PositionComponent pc = Mappers.positionMapper.get(entity);
         PlayerComponent plc = Mappers.playerMapper.get(entity);
-        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
 
         // process cooldown for all items
         cooldown(deltaTime, plc);
@@ -65,33 +62,46 @@ public class PlayerCombatSystem extends IteratingSystem {
 
         // if active item is a weapon and when player hits enter, attack
         MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(plc.activeItem);
-        if (wc != null && MouseClicks.leftMouseDown()) {
+        if (wc != null && KeyBoard.isKeyDown(GLFW_KEY_ENTER)) {
             // if melee
             if (wc.currCooldown <= 0.0f) {
                 // set cooldown in accordance to rate of attack
                 wc.currCooldown = wc.cooldown;
 
                 // attack and create damage hitbox
-                attack(pc, wc, dc);
+                attack(entity);
             }
         }
     }
 
-    private void attack(PositionComponent pc, MeleeWeaponComponent wc, DimensionComponent dc) {
+    private void attack(Entity entity) {
+        PositionComponent pc = Mappers.positionMapper.get(entity);
+        MovementComponent mc = Mappers.movementMapper.get(entity);
+        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
+        MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(Mappers.playerMapper.get(entity).activeItem);
 
         // TODO: account for non-centric camera, e.g. pass on cam offset from display centre
-        // camera x in world position
-        float camX = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0)
-                .getComponent(PositionComponent.class).position.x;
+//        // camera x in world position
+//        float camX = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0)
+//                .getComponent(PositionComponent.class).position.x;
+//
+//        // mouse x in world pos
+//        float mouseWorldX = camX + ((float) MouseMovement.mouseX *
+//                (Main.SCREEN_WIDTH / Window.getWidth()) - Main.SCREEN_WIDTH / 2);
+//
+//        // if clicking right of player, hit right, else hit left
+//        Vector3f trueOffset = new Vector3f(wc.hitboxOffset);
+//        Vector3f trueHitbox = new Vector3f(wc.hitBox);
+//        if (mouseWorldX < pc.position.x + dc.dimension.x / 2) {
+//            trueOffset.x = -1 * wc.hitboxOffset.x;
+//            trueHitbox.x = -1 * wc.hitBox.x;
+//        } else {
+//            trueOffset.x = wc.hitboxOffset.x + dc.dimension.x;
+//        }
 
-        // mouse x in world pos
-        float mouseWorldX = camX + ((float) MouseMovement.mouseX *
-                (Main.SCREEN_WIDTH / Window.getWidth()) - Main.SCREEN_WIDTH / 2);
-
-        // if clicking right of player, hit right, else hit left
         Vector3f trueOffset = new Vector3f(wc.hitboxOffset);
         Vector3f trueHitbox = new Vector3f(wc.hitBox);
-        if (mouseWorldX < pc.position.x + dc.dimension.x / 2) {
+        if (mc.orientation == LEFT) {
             trueOffset.x = -1 * wc.hitboxOffset.x;
             trueHitbox.x = -1 * wc.hitBox.x;
         } else {
@@ -143,7 +153,7 @@ public class PlayerCombatSystem extends IteratingSystem {
         Sound.playRandom(Sound.SLASH);
 
         new DamageArea(hitboxCorner, trueHitbox,
-                wc.damage, excluded, 0);
+                wc.damage, excluded, 0, entity);
 
     }
 

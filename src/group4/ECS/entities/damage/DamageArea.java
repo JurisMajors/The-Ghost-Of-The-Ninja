@@ -8,7 +8,7 @@ import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.collision.CollisionHandlers.MeleeCollision;
+import group4.ECS.systems.collision.CollisionHandlers.DamageCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
@@ -29,11 +29,11 @@ public class DamageArea extends Entity {
      * @param excluded  exclude for damage
      */
     public DamageArea(Vector3f position, Vector3f dimension, int damage, Set<Class<? extends Entity>> excluded,
-                      int duration) {
+                      int duration, Entity origin) {
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
-        this.add(new CollisionComponent(MeleeCollision.getInstance()));
-        this.add(new DamageComponent(damage, excluded));
+        this.add(new CollisionComponent(DamageCollision.getInstance()));
+        this.add(new DamageComponent(damage, excluded, origin));
 
         // Construct vertex array
         float[] vertices = new float[] {
