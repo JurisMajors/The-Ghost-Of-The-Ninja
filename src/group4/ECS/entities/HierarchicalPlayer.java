@@ -132,7 +132,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         this.IKHandles.put("foot_L", new IKEndEffector(leftLegUpper, leftLegLower, leftFootOffset, "foot_L"));
 
         // Set the right wrist position
-        Vector3f rightWristOffset = new Vector3f(this.dimension.x/4, 0.5f, 0.0f);
+        Vector3f rightWristOffset = new Vector3f(this.dimension.x / 4, 0.5f, 0.0f);
 
         // Draw the right arm
         float[] rightArmAngles = this.getLimbAngles(this.getOffsetShoulderPosition(false), rightWristOffset, upperArmDimension.y, lowerArmDimension.y, false);
@@ -274,6 +274,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     /**
      * Get offset hip position relative to player bottom left position
      * Used to position the "left" and "right" legs correctly
+     *
      * @param left get the position of the left-leg hip if true, right-leg hip position otherwise
      */
     public Vector3f getOffsetHipPosition(boolean left) {
@@ -303,6 +304,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
 
     /**
      * Get the offset shoulder position relative to the player bottom left position
+     *
      * @param left get the position of the left-arm shoulder if true, right-arm shoulder position otherwise
      */
     public Vector3f getOffsetShoulderPosition(boolean left) {
@@ -323,8 +325,6 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         AnimationSet fallingAS = this.generateFallingAnim();
         DelayedAnimationSet postFallAS = this.generatePostFallAnim();
 
-//        DelayedAnimationSet postFallAnimationSet = this.generatePostFallAnim();
-
 
         // Register the animations within the AnimationComponent
         AnimationComponent ac = this.getComponent(AnimationComponent.class);
@@ -337,7 +337,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     }
 
     private DelayedAnimationSet generatePreJumpAnim() {
-        // Animate the hip bounce during walking
+        // Have player crouch a bit
         SplineAnimation hip = new SplineAnimation(
                 this.torso, 0.0f,
                 new Vector3f[]{
@@ -393,7 +393,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     }
 
     private DelayedAnimationSet generatePostFallAnim() {
-        // Animate the hip bounce during walking
+        // Have player crouch a bit
         SplineAnimation hip = new SplineAnimation(
                 this.torso, 0.0f,
                 new Vector3f[]{
@@ -449,46 +449,38 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     }
 
     private AnimationSet generateIdleAnim() {
-        // Animate the hip bounce during walking
+        // Have slight hip bounce for excitement
         SplineAnimation hip = new SplineAnimation(
                 this.torso, 0.0f,
                 new Vector3f[]{
-                        new Vector3f(0.0f, 0.050f, 0.0f),
-                        new Vector3f(0.0f, -.083f, 0.0f),
-                        new Vector3f(0.0f, -.083f, 0.0f),
-                        new Vector3f(0.0f, 0.050f, 0.0f),
-                        new Vector3f(0.0f, 0.050f, 0.0f),
-                        new Vector3f(0.0f, -.083f, 0.0f),
-                        new Vector3f(0.0f, -.083f, 0.0f),
-                        new Vector3f(0.0f, 0.050f, 0.0f)
+                        new Vector3f(0.0f, 0.025f, 0.0f),
+                        new Vector3f(0.0f, -.015f, 0.0f),
+                        new Vector3f(0.0f, -.015f, 0.0f),
+                        new Vector3f(0.0f, 0.025f, 0.0f)
                 }
         );
 
         // Add leg animations
         Vector3f[] footPath = new Vector3f[]{
                 new Vector3f(0.0f, 0.0f, 0.0f),
-                new Vector3f(-.5f, 0.0f, 0.0f),
-                new Vector3f(-2.f, 0.0f, 0.0f),
-                new Vector3f(-.1f, 0.2f, 0.0f),
-                new Vector3f(0.1f, 0.2f, 0.0f),
-                new Vector3f(0.7f, 0.0f, 0.0f),
-                new Vector3f(0.5f, 0.0f, 0.0f),
-                new Vector3f(0.0f, 0.0f, 0.0f)
+                new Vector3f(0.0f, 0.0f, 0.0f),
+                new Vector3f(0.0f, 0.0f, 0.0f),
+                new Vector3f(0.0f, 0.0f, 0.0f),
         };
         SplineAnimation foot_L = new SplineAnimation(this.IKHandles.get("foot_L"), 0.5f, footPath);
         SplineAnimation foot_R = new SplineAnimation(this.IKHandles.get("foot_R"), 0.0f, footPath);
 
-        // Add hand animations
+        // Really small hand animation
         float vShift = 0.1f;
         Vector3f[] handPath = new Vector3f[]{
-                new Vector3f(-0.789f, -0.025687f + vShift, 0.0f),
-                new Vector3f(-0.826588f, 0.00997323f + vShift, 0.0f),
-                new Vector3f(-0.250242f, -0.228083f + vShift, 0.0f),
-                new Vector3f(0.399352f, 0.332843f + vShift, 0.0f),
-                new Vector3f(0.593074f, 0.183455f + vShift, 0.0f),
-                new Vector3f(0.390678f, -0.223264f + vShift, 0.0f),
-                new Vector3f(-0.609735f, -0.148088f + vShift, 0.0f),
-                new Vector3f(-0.789f, -0.025687f + vShift, 0.0f),
+                new Vector3f(0.000f, 0.1f + vShift, 0.0f),
+                new Vector3f(0.132f, 0.1f + vShift, 0.0f),
+                new Vector3f(0.132f, -.1f + vShift, 0.0f),
+                new Vector3f(0.000f, -.1f + vShift, 0.0f),
+                new Vector3f(0.000f, -.1f + vShift, 0.0f),
+                new Vector3f(-.132f, -.1f + vShift, 0.0f),
+                new Vector3f(-.132f, 0.1f + vShift, 0.0f),
+                new Vector3f(0.000f, 0.1f + vShift, 0.0f),
         };
 
         SplineAnimation hand_L = new SplineAnimation(this.IKHandles.get("hand_L"), 0.0f, handPath);
@@ -503,7 +495,6 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         walkingAnimationSet.add(hand_R);
         return walkingAnimationSet;
     }
-
 
     private AnimationSet generateWalkingAnim() {
         // Animate the hip bounce during walking
