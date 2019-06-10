@@ -17,16 +17,22 @@ import java.util.Set;
 
 public class Spikes extends Entity {
 
+    // determines in which direction the spikes point
+    public Vector3f normal;
+
     /**
      * @param position
      * @param shader
      * @param texture
      * @param texCoords
+     * @param normal the direction of the spikes
      */
-    public Spikes(Vector3f position, Shader shader, Texture texture, float[] texCoords) {
+    public Spikes(Vector3f position, Shader shader, Texture texture, float[] texCoords, Vector3f normal) {
 
+        this.normal = normal;
         int damage = 10;
         Set<Class<? extends Entity>> excluded = new HashSet<>();
+
         // ghost shouldn't take dmg from spikes in the first place
         excluded.add(Ghost.class);
 
