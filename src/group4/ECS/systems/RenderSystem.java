@@ -11,6 +11,7 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.BodyPart;
+import group4.ECS.entities.Ghost;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.Totem;
@@ -169,7 +170,7 @@ public class RenderSystem extends EntitySystem {
         DimensionComponent dc;
         for (Entity entity : this.entities) {
             hc = Mappers.healthMapper.get(entity);
-            if (hc != null) {
+            if (hc != null && !(entity instanceof Ghost)) {
                 pc = Mappers.positionMapper.get(entity);
                 dc = Mappers.dimensionMapper.get(entity);
                 GraphicsComponent healthBarBG = new GraphicsComponent(Shader.SIMPLE, Texture.RED, new Vector3f(1.0f, 0.1f, 0.0f), true);
