@@ -14,13 +14,13 @@ import group4.maths.Vector3f;
  * The helper Ghost
  */
 public class Ghost extends HierarchicalPlayer {
-    public boolean best; // whether has reached the exit
+    public boolean best; // whether has reached the exit (used during training)
+
     public Player master = null; // the player which spawned the ghost
     public int endTotem; // totem identification to determine when it has reached end of its path
-    public boolean helping = false; // whether this ghost is a helper
-    public boolean carrying = false;
 
-    private boolean blockMovement = false;
+    public boolean helping = false; // whether this ghost is a helper
+    public boolean carrying = false; // whether this ghost is a carrier
 
     /**
      * @param position center point of Ghost
@@ -58,20 +58,4 @@ public class Ghost extends HierarchicalPlayer {
     public static String getName() {
         return "Ghost";
     }
-
-    /**
-     * Whether movement is blocked
-     */
-    public boolean isBlocked() {
-        return this.blockMovement;
-    }
-
-    /**
-     * Set whether or not movement should be blocked
-     * @param blocked new value for the movement block
-     */
-    public void setBlocked(boolean blocked) {
-        this.blockMovement = blocked;
-    }
-
 }

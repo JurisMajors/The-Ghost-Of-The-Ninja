@@ -16,9 +16,9 @@ public abstract class Totem extends Entity {
 
     private Vector3f dimension = new Vector3f(2f, 2f, 0);
 
-    private String name;
+    private String name; // name of the totem
 
-    public Level level;
+    public Level level; // level taht it resides in
 
     //public Vector3f rgbMask;
 
@@ -40,7 +40,7 @@ public abstract class Totem extends Entity {
             return new GraphicsComponent(shader, Texture.TOTEM_START, dimension, RenderLayer.BACKGROUND, false);
         }
     }
-
+    // unique identification of the totem
     public int getID() {
         return Integer.parseInt(this.name.substring(1));
     }
@@ -90,7 +90,7 @@ public abstract class Totem extends Entity {
     }
 
     public static int carryCost() {
-        return 500;
+        return 0;
     }
 
     public static int challangeReward() {
