@@ -174,7 +174,7 @@ public class RenderSystem extends EntitySystem {
         }
 
         // Draw some transparent things on top of the render
-        this.drawOverlays((Camera) camera);
+//        this.drawOverlays((Camera) camera);
 
         // Start of debug drawing
         if (DEBUG) {
@@ -218,20 +218,20 @@ public class RenderSystem extends EntitySystem {
         }
     }
 
-    private void drawOverlays(Camera camera) {
-        if (this.vignette == null) {
-            Vector3f dimension = new Vector3f(16.0f, 9.0f, 0.0f); // Fullscreen
-            this.vignette = new GraphicsComponent(Shader.SIMPLE, Texture.VIGNETTE_OVERLAY, dimension, RenderLayer.VIGNETTE);
-        }
-
-        if (this.noise == null) {
-            Vector3f dimension = new Vector3f(16.0f, 9.0f, 0.0f); // Fullscreen
-            this.add(new GraphicsComponent(Shader.SIMPLE, Texture.NOISE_OVERLAY, dimension, RenderLayer.NOISE));
-        }
-
-        Vector3f position = camera.getComponent(PositionComponent.class).position;
-        this.vignette
-    }
+//    private void drawOverlays(Camera camera) {
+//        if (this.vignette == null) {
+//            Vector3f dimension = new Vector3f(16.0f, 9.0f, 0.0f); // Fullscreen
+//            this.vignette = new GraphicsComponent(Shader.SIMPLE, Texture.VIGNETTE_OVERLAY, dimension, RenderLayer.VIGNETTE);
+//        }
+//
+//        if (this.noise == null) {
+//            Vector3f dimension = new Vector3f(16.0f, 9.0f, 0.0f); // Fullscreen
+//            this.add(new GraphicsComponent(Shader.SIMPLE, Texture.NOISE_OVERLAY, dimension, RenderLayer.NOISE));
+//        }
+//
+//        Vector3f position = camera.getComponent(PositionComponent.class).position;
+//        this.vignette
+//    }
 
     /**
      * Adds a color on top of the texture of a graphics component.
