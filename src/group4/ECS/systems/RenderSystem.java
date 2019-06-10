@@ -136,29 +136,12 @@ public class RenderSystem extends EntitySystem {
                     // Restore the default projection and view matrices
                     gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrix);
                     gc.shader.setUniformMat4f("vw_matrix", cc.viewMatrix);
-
-
                 } else {
                     // Get components via mapper for O(1) component retrieval
                     pc = Mappers.positionMapper.get(entity);
                     gc = Mappers.graphicsMapper.get(entity);
 
-                    // Bind shader
-                    gc.shader.bind();
-
-                    // create color overlay over textures
-                    handleColorMask(gc);
-
-                    // Set uniforms
-                    gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers
-                    gc.shader.setUniform1f("tex", gc.texture.getTextureID()); // Specify which texture slot to use
-
-                    // Bind texture and specify texture slot
-                    gc.texture.bind();
-                    glActiveTexture(gc.texture.getTextureID());
-
-                    // Render!
-                    gc.geometry.render();
+                    gc.render(pc.position);
                 }
             }
         }
@@ -193,13 +176,6 @@ public class RenderSystem extends EntitySystem {
                 DimensionComponent dca = Mappers.dimensionMapper.get(a);
                 DebugUtils.drawBox(pca.position, pca.position.add(dca.dimension));
 
-//                for (int i = 0; i < entities.size(); i++) { // NOTE: Can't access Iterator in a nested fashion for some reason.. Hence the for(i = 0... style
-////                    Entity b = entities.get(i);
-////                    PositionComponent pcb = Mappers.positionMapper.get(b);
-////                    DebugUtils.drawLine(pca.position, pcb.position);
-////                    DebugUtils.drawCircle(pca.position, 2.0f, 50);
-//                }
-
                 if (a instanceof HierarchicalPlayer) {
                     DebugUtils.drawCircle(a.getComponent(PositionComponent.class).position.add(new Vector3f(a.getComponent(DimensionComponent.class).dimension.x / 2, 0.8f, 0.0f)), 0.9f, 50);
                 }
@@ -223,8 +199,6 @@ public class RenderSystem extends EntitySystem {
             if (hc != null) {
                 pc = Mappers.positionMapper.get(entity);
                 dc = Mappers.dimensionMapper.get(entity);
-//                GraphicsComponent healthBarBG = new GraphicsComponent(Shader.SIMPLE, Texture.RED, new Vector3f(1.0f, 0.1f, 0.0f), true);
-//                GraphicsComponent healthBarFG = new GraphicsComponent(Shader.SIMPLE, Texture.GREEN, new Vector3f(hc.health / (float) hc.initialHealth, 0.1f, 0.0f), true);
 
                 Vector3f fullBarSize = new Vector3f(1.0f, 0.1f, 0.0f);
                 Vector3f healthBarSize = new Vector3f(hc.health / (float) hc.initialHealth, 0.1f, 0.0f);
@@ -239,22 +213,8 @@ public class RenderSystem extends EntitySystem {
                 this.drawBar(
                         pc.position.add(new Vector3f(dc.dimension.x / 2.0f, 1.1f * dc.dimension.y, 0.0f)),
                         fullBarSize,
-                        Texture.GREEN
+                        Texture.RED
                 );
-
-//                ////////// BG
-//                healthBarBG.shader.bind();
-//                // Set uniforms
-//                healthBarBG.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position.add(new Vector3f(dc.dimension.x / 2.0f, 1.1f * dc.dimension.y, 0.0f))));
-//                healthBarBG.shader.setUniform1f("tex", healthBarBG.texture.getTextureID()); // Specify which texture slot to use
-//
-//                // Bind texture and specify texture slot
-//                healthBarBG.texture.bind();
-//                glActiveTexture(healthBarBG.texture.getTextureID());
-//
-//                healthBarBG.geometry.render();
-
-
             }
         }
     }
