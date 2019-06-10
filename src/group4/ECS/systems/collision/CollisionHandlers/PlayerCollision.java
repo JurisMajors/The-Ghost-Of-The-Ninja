@@ -16,6 +16,7 @@ import group4.ECS.entities.items.consumables.Coin;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.StartTotem;
 import group4.ECS.entities.totems.Totem;
+import group4.ECS.entities.totems.TotemHelp;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
@@ -121,7 +122,8 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
     }
 
     private void resetTotem(Player player) {
-        player.totemStatus = null;
+        player.totemStatus = null; // reset totem status
+        TheEngine.getInstance().removeEntity(TotemHelp.getInstance()); // remove help
     }
 
     private void playerHandleTotem(Player player, Totem totem) {
@@ -130,7 +132,12 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
         } else {
             // starting totem
             player.totemStatus = (StartTotem) totem;
-            // TODO: Draw help
+            if (player.spawnedGhost) return; // if ghost is alive dont draw help
+            // otherwise player is on starting totem and he neeeds to see the help image
+            Vector3f helpPos = new Vector3f(totem.getComponent(PositionComponent.class).position);
+            helpPos.y += totem.getComponent(DimensionComponent.class).dimension.y;
+            helpPos.x += totem.getComponent(DimensionComponent.class).dimension.x * 0.1f;
+            TheEngine.getInstance().addEntity(TotemHelp.getHelp(helpPos));
         }
     }
 
