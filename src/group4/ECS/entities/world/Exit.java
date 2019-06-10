@@ -1,7 +1,7 @@
 package group4.ECS.entities.world;
 
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.components.*;
+import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.identities.ExitComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
@@ -44,7 +44,7 @@ public class Exit extends Entity {
     public Exit(Vector3f p, Vector3f d, Module m, int targetModule) {
         this.add(new PositionComponent(p));
         this.add(new DimensionComponent(d));
-        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.WHITE, d, false));
+        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.NOTHINGNESS, d, false));
         this.add(new CollisionComponent(ExitCollision.getInstance()));
         this.add(new ExitComponent());
 

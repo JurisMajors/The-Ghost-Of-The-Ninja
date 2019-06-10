@@ -2,7 +2,6 @@ package group4.ECS.systems.movement.MovementHandlers;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
-import group4.ECS.components.SplineComponent;
 import group4.ECS.components.SplinePathComponent;
 import group4.ECS.components.identities.GhostComponent;
 import group4.ECS.components.identities.MobComponent;
@@ -208,16 +207,25 @@ public abstract class AbstractMovementHandler<T extends Mob> {
 
         // center of the mob
         Vector3f center = pc.position.add(dc.dimension.scale(0.5f));
+
+        // only cast rays when the player is close enough to the mob
+        float distance = getPlayerPosition().euclidDist(center);
+        if (distance > viewRange + 1) {
+            return false;
+        }
+
         // get the corners of the mob
         Vector3f[] mobCorners = getCorners(pc.position, dc.dimension);
 
         // the mob can see from all its corners and its center
-        Vector3f[] mobEyes = new Vector3f[5];
+        Vector3f[] mobEyes = new Vector3f[1];
         mobEyes[0] = center;
+        /*
         // add the corners
         for (int i = 0; i < 4; i++) {
             mobEyes[i + 1] = mobCorners[i];
         }
+         */
 
         // we want to look at all player corners
         Vector3f[] playerCorners = getCorners(getPlayerPosition(), getPlayerDimension());

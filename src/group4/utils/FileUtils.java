@@ -1,9 +1,9 @@
 package group4.utils;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class FileUtils {
 
@@ -33,4 +33,22 @@ public class FileUtils {
         return result.toString();
     }
 
+    /**
+     * Gives all files in a given folder.
+     * @param folder
+     * @return A list of strings.
+     */
+    public static List<String> getFilePaths(String folder) {
+        List<String> filePaths = new ArrayList<>();
+        File folder_fd = new File(folder);
+        for (final File fileEntry : folder_fd.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                continue;
+            } else {
+                filePaths.add(fileEntry.getPath());
+            }
+        }
+        Collections.sort(filePaths); // sort the modules in the correct order
+        return filePaths;
+    }
 }

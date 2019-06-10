@@ -11,19 +11,21 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.BodyPart;
 import group4.ECS.entities.HierarchicalPlayer;
-import group4.ECS.entities.Player;
-import group4.ECS.entities.mobs.FlappingMob;
 import group4.ECS.entities.mobs.Mob;
+import group4.ECS.entities.totems.Totem;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
-import group4.graphics.RenderLayer.Layer;
+import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 import group4.utils.DebugUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL41.*;
 
@@ -32,7 +34,7 @@ import static org.lwjgl.opengl.GL41.*;
  * position as well as a graphics component
  */
 public class RenderSystem extends EntitySystem {
-    private boolean DEBUG = true;
+    private boolean DEBUG = false;
     // array of registered entities in the graphicsFamily
     private ImmutableArray<Entity> entities;
 
@@ -71,7 +73,7 @@ public class RenderSystem extends EntitySystem {
      */
     public void update(float deltaTime) {
         // Match objects to RenderLayers so we can draw layer by layer
-        Map<Layer, List<Entity>> entityLayers = sortEntitiesByLayer();
+        Map<RenderLayer, List<Entity>> entityLayers = sortEntitiesByLayer();
 
         // Get the camera and its main component from the engine
         Entity camera = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0); // There should only be one camera currently
@@ -86,19 +88,36 @@ public class RenderSystem extends EntitySystem {
 
         PositionComponent pc;
         GraphicsComponent gc;
-        for (Layer layer : Layer.values()) {
+        MovementComponent mc;
+        for (RenderLayer layer : RenderLayer.values()) {
             glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
             for (Entity entity : entityLayers.get(layer)) {
                 if (entity instanceof HierarchicalPlayer) {
                     // Get components via mapper for O(1) component retrieval
                     pc = Mappers.positionMapper.get(entity);
-
+                    mc = Mappers.movementMapper.get(entity);
+                    gc = Mappers.graphicsMapper.get(entity);
+                    if (mc.orientation == MovementComponent.LEFT) {
+                        // Set the mirrored projection matrix
+                        gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrixHorizontalFlip);
+                        // Since player aligns with center screen with its bottom left corner, we need to temporarily
+                        // also offset the view matrix.
+                        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
+                        Vector3f currentTranslation = cc.viewMatrix.getTranslation();
+                        gc.shader.setUniformMat4f("vw_matrix",
+                                Matrix4f.translate(
+                                        currentTranslation.sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
+                        );
+                    }
                     // Loop over the entities hierarchy and draw it correctly
                     for (BodyPart bp : ((HierarchicalPlayer) entity).hierarchy) {
                         gc = bp.getComponent(GraphicsComponent.class);
 
                         // Bind shader
                         gc.shader.bind();
+
+                        // create color overlay over textures
+                        handleColorMask(gc);
 
                         // Set uniforms
                         gc.shader.setUniformMat4f("md_matrix", bp.getModelMatrix()); // Tmp fix for giving correct positions to vertices in the vertexbuffers
@@ -112,6 +131,11 @@ public class RenderSystem extends EntitySystem {
                         gc.geometry.render();
                     }
 
+                    // Restore the default projection and view matrices
+                    gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrix);
+                    gc.shader.setUniformMat4f("vw_matrix", cc.viewMatrix);
+
+
                 } else {
                     // Get components via mapper for O(1) component retrieval
                     pc = Mappers.positionMapper.get(entity);
@@ -119,6 +143,9 @@ public class RenderSystem extends EntitySystem {
 
                     // Bind shader
                     gc.shader.bind();
+
+                    // create color overlay over textures
+                    handleColorMask(gc);
 
                     // Set uniforms
                     gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers
@@ -140,7 +167,7 @@ public class RenderSystem extends EntitySystem {
             Shader.DEBUG.bind();
 //            DebugUtils.drawGrid(1.0f);
 
-            for (Entity e: entities) {
+            for (Entity e : entities) {
                 // draw spline paths during debug
                 if (Mappers.splinePathMapper.get(e) != null) {
                     DebugUtils.drawSpline(Mappers.splinePathMapper.get(e).points);
@@ -148,14 +175,14 @@ public class RenderSystem extends EntitySystem {
                 // draw the velocity of all mobs
                 if (e instanceof Mob) {
                     pc = Mappers.positionMapper.get(e);
-                    MovementComponent mc = Mappers.movementMapper.get(e);
+                    mc = Mappers.movementMapper.get(e);
                     DebugUtils.drawLine(pc.position, pc.position.add(mc.velocity));
                 }
             }
 
             // Temporary example for drawing lines or boxes.
             // NOTE: Uncomment to see the effect
-            for (Entity a: entities) { // For all A, for all B...  N^2 loop
+            for (Entity a : entities) { // For all A, for all B...  N^2 loop
                 PositionComponent pca = Mappers.positionMapper.get(a);
                 DimensionComponent dca = Mappers.dimensionMapper.get(a);
                 DebugUtils.drawBox(pca.position, pca.position.add(dca.dimension));
@@ -173,6 +200,23 @@ public class RenderSystem extends EntitySystem {
             }
 
             DebugUtils.flush();
+        }
+    }
+
+    /**
+     * Adds a color on top of the texture of a graphics component.
+     * If the graphics component has a personal color that takes priority.
+     * Else we look at the global color mask in GraphicsComponent.GLOBAL_COLOR_MASK.
+     * If neither are set we have a color mask of 0 which does nothing.
+     * @param gc graphics component
+     */
+    private void handleColorMask(GraphicsComponent gc) {
+        if (gc.hasMask) { // per texture mask has priority
+            gc.shader.setUniform3f("color_mask", gc.colorMask);
+        } else if (GraphicsComponent.HAS_MASK) { // global mask comes next
+            gc.shader.setUniform3f("color_mask", GraphicsComponent.GLOBAL_COLOR_MASK);
+        } else { // no mask
+            gc.shader.setUniform3f("color_mask", new Vector3f());
         }
     }
 
@@ -197,10 +241,10 @@ public class RenderSystem extends EntitySystem {
      *
      * @return Map<Layer, List < Entity>>, the entities sorted by layer
      */
-    private Map<Layer, List<Entity>> sortEntitiesByLayer() {
+    private Map<RenderLayer, List<Entity>> sortEntitiesByLayer() {
         // Construct an empty hashmap and create a key for each layer
-        Map<Layer, List<Entity>> entityLayers = new HashMap<>();
-        for (Layer layer : Layer.values()) {
+        Map<RenderLayer, List<Entity>> entityLayers = new HashMap<>();
+        for (RenderLayer layer : RenderLayer.values()) {
             entityLayers.put(layer, new ArrayList<>());
         }
 

@@ -2,6 +2,7 @@ package group4.AI;
 
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.indexing.NDArrayIndex;
 import org.uncommons.maths.number.NumberGenerator;
 import org.uncommons.maths.random.Probability;
 
@@ -58,13 +59,13 @@ public class StandardCrossover extends AbstractBrainCrossover {
             // get random index to crossover over
             long crossoverIndex = (1 + rng.nextInt((int) nCols - 1));
             // get parts of the parent rows
-            INDArray p1First = p1WRow.get(interval(0, crossoverIndex));
-            INDArray p2Scnd = p2WRow.get(interval(crossoverIndex, nCols));
+            INDArray p1First = p1WRow.get(NDArrayIndex.all(), interval(0, crossoverIndex));
+            INDArray p2Scnd = p2WRow.get(NDArrayIndex.all(), interval(crossoverIndex, nCols));
             // concatenate them to one offspring
             firstOffWeights.add(Nd4j.concat(1, p1First, p2Scnd));
 
-            INDArray p1Scnd = p1WRow.get(interval(crossoverIndex, nCols));
-            INDArray p2First = p2WRow.get(interval(0, crossoverIndex));
+            INDArray p1Scnd = p1WRow.get(NDArrayIndex.all(), interval(crossoverIndex, nCols));
+            INDArray p2First = p2WRow.get(NDArrayIndex.all(), interval(0, crossoverIndex));
             scndOffWeights.add(Nd4j.concat(1, p2First, p1Scnd));
 
             rowIndex++;

@@ -5,13 +5,13 @@ import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.AnimationSystem;
+import group4.ECS.systems.animation.AnimationSystem;
 import group4.ECS.systems.CameraSystem;
 import group4.ECS.systems.RenderSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
-import group4.ECS.systems.collision.UncollidingSystem;
 import group4.ECS.systems.collision.LastSystem;
+import group4.ECS.systems.collision.UncollidingSystem;
 import group4.ECS.systems.combat.DamageSystem;
 import group4.ECS.systems.combat.PlayerCombatSystem;
 import group4.ECS.systems.death.GhostDyingSystem;
@@ -22,37 +22,28 @@ import group4.ECS.systems.movement.GhostMovementSystem;
 import group4.ECS.systems.movement.MobMovementSystem;
 import group4.ECS.systems.movement.PlayerMovementSystem;
 import group4.ECS.systems.timed.TimedEventSystem;
+import group4.UI.StartScreen;
+import group4.UI.Window;
 import group4.audio.Sound;
+import group4.graphics.ImageSequence;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
-import group4.levelSystem.Level;
 import group4.levelSystem.FileLevel;
+import group4.levelSystem.Level;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.ALC;
-import org.lwjgl.openal.ALCCapabilities;
-import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryStack;
-
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.openal.AL10.*;
+import static org.lwjgl.openal.ALC10.alcCloseDevice;
+import static org.lwjgl.openal.ALC10.alcDestroyContext;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.stb.STBVorbis.stb_vorbis_decode_filename;
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.jemalloc.JEmalloc.Functions.free;
-import static org.lwjgl.system.libc.LibCStdlib.free;
-import static sun.audio.AudioDevice.device;
-
 
 public class Main implements Runnable {
     private Thread thread;
@@ -73,9 +64,11 @@ public class Main implements Runnable {
     private Level level;
     private Engine engine;
     private Camera camera;
+    private StartScreen startScreen;
 
-    public static final float SCREEN_WIDTH = 16.5f;
+    public static final float SCREEN_WIDTH = 16.0f;
     public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
+    public static GameState STATE;
 
     /**
      * Creates a new thread on which it wel run() the game.
@@ -154,6 +147,7 @@ public class Main implements Runnable {
         Shader.loadAllShaders();
         Texture.loadAllTextures();
         TileMapping.loadAllTileMappings();
+        ImageSequence.loadAllImageSequences();
 
         // Initialize the engine
         this.engine = TheEngine.getInstance();
@@ -185,10 +179,10 @@ public class Main implements Runnable {
             this.engine.addSystem(new TimedEventSystem(15));
             this.engine.addSystem(new LastSystem(16));
 
-            // Initialize the level
-            this.level = new FileLevel("./src/group4/res/maps/level_02");
-
+            // Initialize the StartScreen, this will load the level
+            this.startScreen = new StartScreen();
         }
+
         // Set up a camera for our game
         this.camera = new Camera();
         this.engine.addEntity(camera); // Adding the camera to the module (which adds it to the engine?)
@@ -228,9 +222,15 @@ public class Main implements Runnable {
                 fps = 0;
             }
 
+            glClearColor(58.0f / 255, 46.0f / 255, 43.0f / 255, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            this.engine.update((float) delta); // Update the gamestate
+            if (STATE == GameState.PLAYING || STATE == GameState.STARTSCREEN) {
+                if (STATE == GameState.STARTSCREEN) {
+                    this.startScreen.update(); // Allows for the startscreen logic to update.. Should perhaps be an entity? But this works.
+                }
+                this.engine.update((float) delta); // Update the gamestate
+            }
 
             glfwSwapBuffers(this.window); // swap the color buffers
 
@@ -255,11 +255,14 @@ public class Main implements Runnable {
         }
     }
 
+    public static void setState(GameState state) {
+        STATE = state;
+    }
+
     public static void main(String[] args) {
         if (Main.AI && args.length != 0) {
             Evolver.parseArgs(args);
         }
         new Main().start();
     }
-
 }

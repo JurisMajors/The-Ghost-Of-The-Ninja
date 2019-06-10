@@ -8,6 +8,7 @@ import group4.maths.Vector3f;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
+import org.deeplearning4j.nn.conf.layers.LSTM;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
@@ -40,8 +41,18 @@ public class Brain {
                 .weightInit(WeightInit.XAVIER)
                 .list();
 
+        lb.layer(new DenseLayer.Builder().nIn(layerSizes[0]).
+                nOut(layerSizes[1]).
+                activation(Activation.RELU).
+                weightInit(WeightInit.XAVIER).
+                build());
+        lb.layer(new LSTM.Builder().nIn(layerSizes[1]).nOut(layerSizes[2])
+                .activation(Activation.RELU)
+                .weightInit(WeightInit.XAVIER)
+                .build());
+
         // build the dense layers
-        for (int i = 0; i < layerSizes.length - 2; i++) {
+        for (int i = 2; i < layerSizes.length - 2; i++) {
             lb.layer(new DenseLayer.Builder().nIn(layerSizes[i]).nOut(layerSizes[i + 1])
                     .activation(Activation.RELU)
                     .weightInit(WeightInit.XAVIER)

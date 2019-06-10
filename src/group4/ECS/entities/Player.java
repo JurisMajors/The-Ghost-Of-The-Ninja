@@ -9,7 +9,9 @@ import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.etc.EntityState;
 import group4.ECS.components.stats.ScoreComponent;
+import group4.ECS.entities.totems.StartTotem;
 import group4.ECS.systems.collision.CollisionHandlers.PlayerCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -44,7 +46,20 @@ public class Player extends Entity {
      */
     public static final float walkingRatio = 3.0f/4.0f;
 
+    /**
+     * Whether the player has spawned a ghost and it is alive
+     */
     public boolean spawnedGhost;
+
+    /**
+     * The starting totem that the player is touching
+     * Null if not touching
+     */
+    public StartTotem totemStatus;
+    /*
+     * Variable to keep track of state of entity
+     */
+    protected EntityState state = EntityState.PLAYER_IDLE;
 
     /**
      * Creates a player
@@ -53,6 +68,7 @@ public class Player extends Entity {
      * @param level the level that the player is part of
      */
     public Player(Vector3f position, Level level) {
+        totemStatus = null;
 
         // shader
         Shader shader = Shader.SIMPLE;
@@ -64,7 +80,7 @@ public class Player extends Entity {
         this.spawnedGhost = false;
 
         // add needed components
-        this.add(new PositionComponent(position));
+        this.add(new PositionComponent(new Vector3f(position)));
         this.add(new DimensionComponent(dimension));
         // temporary!!, player should initially not move
         this.add(new MovementComponent(new Vector3f(), velocityRange, accel));
@@ -78,5 +94,23 @@ public class Player extends Entity {
 
     public static String getName() {
         return "Player";
+    }
+
+    /**
+     * Set the state of the entity
+     * @param s The new state of the entity
+     */
+    public void setState(EntityState s) {
+        if (this.state != s) {
+            this.state = s;
+//            System.out.println(s); // Uncomment for state change logging
+        }
+    }
+
+    /**
+     * Get the current state of the entity
+     */
+    public EntityState getState() {
+        return this.state;
     }
 }

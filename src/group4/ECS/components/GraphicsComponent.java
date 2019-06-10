@@ -1,22 +1,32 @@
 package group4.ECS.components;
 
 import com.badlogic.ashley.core.Component;
-import group4.AI.Evolver;
 import group4.game.Main;
-import group4.graphics.RenderLayer.Layer;
+import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.VertexArray;
 import group4.maths.Vector3f;
 
+import java.util.Arrays;
+
 public class GraphicsComponent implements Component {
+
+    // color mask that can be set to add this color over every graphics component
+    public static Vector3f GLOBAL_COLOR_MASK = new Vector3f();
+    // true if the global mask needs to be applied, false otherwise
+    public static boolean HAS_MASK = false;
 
     public VertexArray geometry;
     public Shader shader;
     public Texture texture;
 
     // Layer/depth at which to render the component.
-    public Layer layer;
+    public RenderLayer layer;
+
+    // adds color on top of the texture, does nothing unless set explicitly
+    public boolean hasMask = false;
+    public Vector3f colorMask = new Vector3f();
 
     /**
      * Constructor which constructs a VertexArray object and stores the given shader and texture for rendering. Gives
@@ -33,7 +43,7 @@ public class GraphicsComponent implements Component {
         this.shader = shader;
         this.texture = texture;
         this.geometry = new VertexArray(vertices, indices, tcs);
-        this.layer = Layer.MAIN;
+        this.layer = RenderLayer.MAIN;
     }
 
     /**
@@ -47,7 +57,7 @@ public class GraphicsComponent implements Component {
      * @param tcs      Float[], a uv/st-coordinate for every vertex.
      * @param layer    Integer, specifying the layer depth at which the component should be rendered.
      */
-    public GraphicsComponent(Shader shader, Texture texture, float[] vertices, byte[] indices, float[] tcs, Layer layer) {
+    public GraphicsComponent(Shader shader, Texture texture, float[] vertices, byte[] indices, float[] tcs, RenderLayer layer) {
         if (!Main.SHOULD_OPENGL) return;
         this.shader = shader;
         this.texture = texture;
@@ -88,7 +98,43 @@ public class GraphicsComponent implements Component {
         this.shader = shader;
         this.texture = texture;
         this.geometry = new VertexArray(vertices, indices, tcs);
-        this.layer = Layer.MAIN;
+        this.layer = RenderLayer.MAIN;
+    }
+
+    /**
+     * Constructs a VertexArray object and stores the shader and texture for rendering.
+     * The vertexArray is created from (0,0,0) till (dimension.x, dimension.y, 0) and is covered fully by the texture.
+     * This means the texture will be stretched or shrunk to fit the dimension.
+     *
+     * @param shader    Shader, the shader to apply during rendering
+     * @param texture   Texture, the image to pass to the shader
+     * @param dimension size of the graphics to be displayed.
+     * @param layer     On what layer to draw
+     */
+    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, RenderLayer layer) {
+        if (!Main.SHOULD_OPENGL) return;
+        // Construct vertex array
+        float[] vertices = generateVertices(dimension, false);
+
+        // Construct index array (used for geometry mesh)
+        byte[] indices = new byte[]{
+                0, 1, 2,
+                2, 3, 0
+        };
+
+        // Construct texture coords covering the full texture
+        float[] tcs = new float[]{
+                0, 1,
+                0, 0,
+                1, 0,
+                1, 1
+        };
+
+        // set instance variables
+        this.shader = shader;
+        this.texture = texture;
+        this.geometry = new VertexArray(vertices, indices, tcs);
+        this.layer = layer;
     }
 
     /**
@@ -101,7 +147,7 @@ public class GraphicsComponent implements Component {
      * @param dimension size of the graphics to be displayed.
      * @param center    If this is true, the GC will be centered around midpoint the bottom edge
      */
-    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, Layer layer, boolean center) {
+    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, RenderLayer layer, boolean center) {
         if (!Main.SHOULD_OPENGL) return;
         // Construct vertex array
         float[] vertices = generateVertices(dimension, center);
@@ -154,7 +200,7 @@ public class GraphicsComponent implements Component {
         this.shader = shader;
         this.texture = texture;
         this.geometry = new VertexArray(vertices, indices, texCoords);
-        this.layer = Layer.MAIN;
+        this.layer = RenderLayer.MAIN;
     }
 
     /**
@@ -170,7 +216,7 @@ public class GraphicsComponent implements Component {
      * @param layer     Enum, indicating on which specific layer this component should be drawn
      * @param center    If this is true, the GC will be centered around midpoint the bottom edge
      */
-    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, float[] texCoords, Layer layer, boolean center) {
+    public GraphicsComponent(Shader shader, Texture texture, Vector3f dimension, float[] texCoords, RenderLayer layer, boolean center) {
         if (!Main.SHOULD_OPENGL) return;
         // Construct vertex array
         float[] vertices = generateVertices(dimension, center);
@@ -191,15 +237,16 @@ public class GraphicsComponent implements Component {
 
     /**
      * Method to generate a vertex array given a dimension
+     *
      * @param dimension the dimension of the bounding rectangle of the resulting vertex array
-     * @param center whether or not to center the vertices around the middle of the bottom edge
+     * @param center    whether or not to center the vertices around the middle of the bottom edge
      * @return
      */
     private float[] generateVertices(Vector3f dimension, boolean center) {
         if (center) {
             return new float[]{
-                    - dimension.x / 2, 0, 0,
-                    - dimension.x / 2, dimension.y, 0,
+                    -dimension.x / 2, 0, 0,
+                    -dimension.x / 2, dimension.y, 0,
                     dimension.x / 2, dimension.y, 0,
                     dimension.x / 2, 0, 0,
             };
@@ -211,5 +258,33 @@ public class GraphicsComponent implements Component {
                     dimension.x, 0, 0,
             };
         }
+    }
+
+    public void setColorMask(Vector3f mask) {
+        this.colorMask = new Vector3f(mask);
+        hasMask = true;
+    }
+
+    public void clearColorMask() {
+        this.colorMask = new Vector3f();
+        hasMask = false;
+    }
+
+    public static void setGlobalColorMask(Vector3f mask) {
+        GLOBAL_COLOR_MASK = new Vector3f(mask);
+        HAS_MASK = true;
+    }
+
+    public static void clearGlobalColorMask() {
+        GLOBAL_COLOR_MASK = new Vector3f();
+        HAS_MASK = false;
+    }
+
+    /**
+     * Allows for updating the texture (e.g. for framebased animation)
+     * @param texture
+     */
+    public void setTexture(Texture texture) {
+        this.texture = texture;
     }
 }

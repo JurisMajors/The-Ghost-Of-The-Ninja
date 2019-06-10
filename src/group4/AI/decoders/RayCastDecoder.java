@@ -3,6 +3,7 @@ package group4.AI.decoders;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
+import group4.ECS.components.identities.CoinComponent;
 import group4.ECS.components.identities.ExitComponent;
 import group4.ECS.components.identities.GhostComponent;
 import group4.ECS.components.identities.PlayerComponent;
@@ -62,6 +63,7 @@ public class RayCastDecoder {
         ignorables.add(GhostComponent.class);
         ignorables.add(ExitComponent.class);
         ignorables.add(PlayerComponent.class);
+        ignorables.add(CoinComponent.class);
 
         for (int i = ghostFeatures.length; i < this.nrRays ; i+=2) {
             // create ray with appropriate direction

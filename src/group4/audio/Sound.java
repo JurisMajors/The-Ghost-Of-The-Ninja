@@ -5,6 +5,7 @@ import org.lwjgl.system.MemoryStack;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.stb.STBVorbis.stb_vorbis_decode_filename;
@@ -23,15 +24,26 @@ public class Sound {
      */
     private int sourcePointer;
 
+    private static Random ran = new Random();
+
     /**
      * List of all sounds in the game.
      */
     public static Sound BACKGROUND;
     public static Sound BEEP;
-    public static Sound SLASH;
+    public static Sound[] SLASH;
+    public static Sound SLASH1;
+    public static Sound SLASH2;
+    public static Sound STEP2;
+    public static Sound STEP1;
+    public static Sound[] STEP;
     public static Sound COIN;
     public static Sound DIE;
-    public static Sound MOBDIE;
+    public static Sound MOBHIT;
+    public static Sound MOBDIE1;
+    public static Sound MOBDIE2;
+    public static Sound[] MOBDIE;
+    public static Sound MENU;
 
     private static ArrayList<Sound> allSounds;
 
@@ -41,19 +53,40 @@ public class Sound {
     public static void loadAllSounds() {
         allSounds = new ArrayList<>();
 
-        BACKGROUND = new Sound("background.ogg", true, 0.5f);
+        BACKGROUND = new Sound("background.ogg", true, 0.4f);
         BEEP = new Sound("fire.ogg", false);
-        SLASH = new Sound("slash.ogg", false);
+
+        SLASH1 = new Sound("slash1.ogg", false);
+        SLASH2 = new Sound("slash2.ogg", false);
+        SLASH = new Sound[]{SLASH1, SLASH2};
+
+        STEP1 = new Sound("step1.ogg", false, 0.5f);
+        STEP2 = new Sound("step2.ogg", false, 0.5f);
+        STEP = new Sound[]{STEP2, STEP1};
+
         COIN = new Sound("coin.ogg", false);
-        DIE = new Sound("die.ogg", false);
-        MOBDIE = new Sound("mobdie.ogg", false);
+
+        DIE = new Sound("die.ogg", false, 0.8f);
+        MOBDIE1 = new Sound("mobdie1.ogg", false, 0.7f);
+        MOBDIE2 = new Sound("mobdie1.ogg", false, 0.7f);
+        MOBDIE = new Sound[]{MOBDIE1, MOBDIE2};
+
+        MOBHIT = new Sound("mobhit.ogg", false);
+
+        MENU = new Sound("menu.ogg", false, 0.7f);
 
         allSounds.add(BACKGROUND);
         allSounds.add(BEEP);
-        allSounds.add(SLASH);
+        allSounds.add(SLASH1);
+        allSounds.add(SLASH2);
+        allSounds.add(STEP1);
+        allSounds.add(STEP2);
         allSounds.add(COIN);
         allSounds.add(DIE);
-        allSounds.add(MOBDIE);
+        allSounds.add(MOBDIE1);
+        allSounds.add(MOBDIE2);
+        allSounds.add(MOBHIT);
+        allSounds.add(MENU);
     }
 
     /**
@@ -97,6 +130,27 @@ public class Sound {
     public void play() {
         //Play the sound
         alSourcePlay(sourcePointer);
+    }
+
+    public boolean isPlaying() {
+        return AL_PLAYING == alGetSourcei(sourcePointer, AL_SOURCE_STATE);
+    }
+
+    public static boolean isPlaying(Sound... sounds) {
+        for (Sound s : sounds) {
+            if (s.isPlaying()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Play random sound from the given
+     * @param sounds sounds to choose from
+     */
+    public static void playRandom(Sound... sounds) {
+        sounds[ran.nextInt(sounds.length)].play();
     }
 
     /**

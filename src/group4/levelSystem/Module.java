@@ -2,18 +2,20 @@ package group4.levelSystem;
 
 import com.badlogic.ashley.core.Entity;
 import group4.AI.Brain;
-import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
-import group4.ECS.entities.mobs.*;
 import group4.ECS.entities.items.consumables.Coin;
+import group4.ECS.entities.mobs.*;
+import group4.ECS.entities.totems.EndingTotem;
+import group4.ECS.entities.totems.StartTotem;
+import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.world.ArtTile;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
 import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.movement.MovementHandlers.JumpingWalkingMobMovementHandler;
 import group4.game.Main;
+import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;
@@ -23,7 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import javax.xml.soap.Text;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -52,6 +54,7 @@ public class Module {
 
     // ghost model
     private Brain ghostModel = null;
+    private String ghostModelDir;
 
     // Keeps track of the initial player position
     private Vector3f initialPlayerPos;
@@ -92,6 +95,8 @@ public class Module {
 
 
     private void loadGhost(String loc) {
+        File f = new File(loc);
+        this.ghostModelDir = f.getParent() + "/";
         this.ghostModel = new Brain(loc);
     }
 
@@ -153,8 +158,12 @@ public class Module {
                 parseSplineLayer(layer);
             } else if (layerName.equals("COINS") && !Main.AI) {
                 parseCoinLayer(layer);
+            }else if (layerName.equals("TOTEMS")) {
+                parseTotemLayer(layer);
             } else if (layerName.equals("EXITS")) {
                 setupExits(layer);
+            } else if (layerName.equals("BG")) {
+                parseBackgroundLayer(layer);
             } else {
                 // In case the layer is not MAIN or EXITS
                 System.err.println("Unrecognized layer name: " + layer.getString("name"));
@@ -190,6 +199,35 @@ public class Module {
             }
         }
 
+    }
+
+    private void parseBackgroundLayer(JSONObject layer) {
+        // Get height and width of layer
+        int layerHeight = layer.getInt("height");
+        int layerWidth = layer.getInt("width");
+
+        // Loop over the data grid
+        JSONArray data = layer.getJSONArray("data");
+        for (int tile = 0; tile < data.length(); tile++) {
+            // Get the grid position of the tile
+            int tileGridX = tile % layerWidth;
+            int tileGridY = layerHeight - tile / layerWidth;
+
+            // Get the type of the tile
+            int tileId = data.getInt(tile) - 1;
+
+            String entityId = moduleTileMap.get(tileId);
+
+            if (entityId == null) {
+                continue;
+            } else if (entityId.equals(ArtTile.getName())) {
+                this.addBackgroundElement(tileGridX, tileGridY, tileId);
+            } else {
+                System.out.println(entityId);
+                System.err.println("Some background tiles not drawing!");
+                continue;
+            }
+        }
     }
 
     private void parseMainLayer(JSONObject layer) {
@@ -230,6 +268,26 @@ public class Module {
     private void addCoin(Vector3f position, int i) {
         Coin c = new Coin(position, Coin.LARGE_SIZE, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i), Coin.LARGE_VALUE);
         this.addEntity(c);
+    }
+
+    private void parseTotemLayer(JSONObject layer) {
+        JSONArray data = layer.getJSONArray("objects");
+        for (int point = 0; point < data.length(); point++) {
+            // get information about the object
+            JSONObject pointInfo = data.getJSONObject(point);
+            // get the coordinates for the control point
+            float pointX = pointInfo.getFloat("x") / 32f;
+            float pointY = this.height - pointInfo.getFloat("y") / 32f + 1;
+            String tileName = pointInfo.getString("name");
+            Vector3f position = new Vector3f(pointX, pointY, 0);
+            Totem totem;
+            if (Totem.isEnd(tileName)) {
+                totem = new EndingTotem(position, tileName, level);
+            } else {
+                totem = new StartTotem(position, tileName, level, this.ghostModelDir);
+            }
+            this.addEntity(totem);
+        }
     }
 
     private void parseSplineLayer(JSONObject layer) {
@@ -392,6 +450,13 @@ public class Module {
         this.addEntity(p);
     }
 
+    private void addBackgroundElement(int x, int y, int i) {
+        Vector3f tempPosition = new Vector3f(x, y, 0.0f);
+        Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
+        ArtTile p = new ArtTile(tempPosition, tempDimension, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i), RenderLayer.BACKGROUND);
+        this.addEntity(p);
+    }
+
     private void addMob(int x, int y, int i, String mobName) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
         Mob m = null;
@@ -506,14 +571,27 @@ public class Module {
      * Function which contains the mapping from the tileMap index as on the texture, to the appropriate Entity class.
      */
     private void configureMap() {
-        int[] platforms = new int[]{0, 1, 2, 5, 6, 8, 9, 10, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 32, 33, 34, 35};
-        int[] artTiles = new int[]{3, 4, 11, 12};
-        int[] players = new int[]{7};
-        int jumpingwalkingmob = 36;
-        int flappingmob = 42;
-        int walkingmob = 40;
-        int flyingmob = 41;
-        int coin = 13;
+        int totemStart = 21;
+        int totemEnd = 29;
+        int[] platforms = new int[]{0, 1, 2, 3, 4, 6, 7, 8, 9,
+                                    16, 17, 18, 19, 22, 25,
+                                    32, 33, 34, 35, 38, 41,
+                                    48, 49, 50, 51, 54, 55, 56, 57,
+                                    70, 71, 72, 73, 87, 88};
+        int[] artTiles = new int[]{ 23, 24, 39, 40,
+                                    64, 65, 66, 67,
+                                    80, 81, 82, 83,
+                                    96, 97, 98, 99,
+                                    112, 113, 114, 115,
+                                    128, 129, 130, 131, 132,
+                                    144, 145, 146, 147, 148,
+                                    162, 163};
+        int[] players = new int[]{15};
+        int jumpingwalkingmob = 31;
+        int flappingmob = 47;
+        int walkingmob = 79;
+        int flyingmob = 63;
+        int coin = 95;
 
         moduleTileMap = new HashMap<Integer, String>();
         for (int i : platforms) {
@@ -533,7 +611,9 @@ public class Module {
         moduleTileMap.put(walkingmob, WalkingMob.getName());
         moduleTileMap.put(flyingmob, FlyingMob.getName());
 
-
         moduleTileMap.put(coin, Coin.getName());
+
+        moduleTileMap.put(totemStart, StartTotem.getName());
+        moduleTileMap.put(totemEnd, EndingTotem.getName());
     }
 }
