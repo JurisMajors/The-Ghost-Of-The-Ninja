@@ -66,4 +66,8 @@ public class MovementComponent implements Component {
         this.acceleration = acceleration;
     }
 
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
+    }
+
 }
