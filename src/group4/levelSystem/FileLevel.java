@@ -4,6 +4,7 @@ import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.world.Exit;
 import group4.maths.Vector3f;
+import group4.utils.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;

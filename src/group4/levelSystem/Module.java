@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import group4.AI.Brain;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
+import group4.ECS.entities.hazards.Spikes;
 import group4.ECS.entities.items.consumables.Coin;
 import group4.ECS.entities.mobs.*;
 import group4.ECS.entities.totems.EndingTotem;
@@ -224,7 +225,8 @@ public class Module {
                 this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
             } else if (entityId.endsWith(Mob.getName())) {
                 if (Main.AI) continue;
-                this.addMob(tileGridX, tileGridY, tileId, entityId);
+            } else if (entityId.equals(Spikes.getName())) {
+                this.addSpike(tileGridX, tileGridY, tileId);
             } else {
                 System.err.println("Some tiles not drawing!");
                 continue;
@@ -429,6 +431,38 @@ public class Module {
     }
 
     /**
+     * Adds an artTile entity to the module. These entities only render. They have no collision.
+     *
+     * @param x the x position of the platform in the module grid
+     * @param y the y position of the platform in the module grid
+     * @param i the identifier for the tile within the TileMap
+     */
+    private void addSpike(int x, int y, int i) {
+        Vector3f tempPosition = new Vector3f(x, y, 0.0f);
+        Spikes p;
+
+        switch (i) {
+            case 48: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                    new Vector3f(0.0f,1.0f,0.0f));
+                    break;
+            case 49: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                    new Vector3f(1.0f,0.0f,0.0f));
+                    break;
+            case 50: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                    new Vector3f(0.0f,-1.0f,0.0f));
+                    break;
+            case 51: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                    new Vector3f(-1.0f,0.0f,0.0f));
+                    break;
+            default: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                    new Vector3f(0.0f,1.0f,0.0f));
+                    break;
+        }
+
+        this.addEntity(p);
+    }
+
+    /**
      * Given the data for the "EXITS" layer, adds all exits and gives them an integer ID for the module
      * to which they point.
      *
@@ -516,6 +550,10 @@ public class Module {
         int[] platforms = new int[]{0, 1, 2, 5, 6, 8, 9, 10, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 32, 33, 34, 35};
         int[] artTiles = new int[]{3, 4, 11, 12};
         int[] players = new int[]{7};
+        int spike_up = 48;
+        int spike_right = 49;
+        int spike_down = 50;
+        int spike_left = 51;
         int jumpingwalkingmob = 36;
         int flappingmob = 42;
         int walkingmob = 40;
@@ -536,6 +574,12 @@ public class Module {
         for (int i : players) {
             moduleTileMap.put(i, Player.getName());
         }
+
+        // spikes
+        moduleTileMap.put(spike_up, Spikes.getName());
+        moduleTileMap.put(spike_right, Spikes.getName());
+        moduleTileMap.put(spike_down, Spikes.getName());
+        moduleTileMap.put(spike_left, Spikes.getName());
 
         moduleTileMap.put(jumpingwalkingmob, JumpingWalkingMob.getName());
         moduleTileMap.put(flappingmob, FlappingMob.getName());

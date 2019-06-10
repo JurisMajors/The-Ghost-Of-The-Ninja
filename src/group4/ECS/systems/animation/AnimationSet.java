@@ -43,7 +43,7 @@ public class AnimationSet extends Animation {
 
 
     @Override
-    protected void stepAnimation() {
+    protected void stepAnimation(float deltaTime) {
     } // Lekker leeg :)
 
 }

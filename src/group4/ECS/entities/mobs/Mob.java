@@ -17,9 +17,10 @@ import group4.levelSystem.Level;
 import group4.maths.Vector3f;
 
 public class Mob extends Entity {
-    //dimension of the mob, aka bounding box
-    protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f);//dimension of the mob, aka bounding box
+
+    protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f); //dimension of the mob, aka bounding box
     public Level level;
+
     /**
      * Creates a mob
      *

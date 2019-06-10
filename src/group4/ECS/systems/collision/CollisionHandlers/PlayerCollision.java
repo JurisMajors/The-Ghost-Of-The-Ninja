@@ -8,8 +8,8 @@ import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.ScoreComponent;
-import group4.ECS.entities.DamageArea;
 import group4.ECS.entities.Ghost;
+import group4.ECS.entities.damage.DamageArea;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.entities.items.consumables.Coin;
@@ -21,7 +21,6 @@ import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.collision.CollisionData;
 import group4.audio.Sound;
-import group4.game.Main;
 import group4.maths.Vector3f;
 
 import java.util.ArrayList;
@@ -83,7 +82,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
                 handleExit(player, (Exit) other);
                 // after player exit interaction we dont want to fix their positions (we are just going to execute the exit action)
                 removables.add(cd);
-            } else if (other instanceof DamageArea) { // TODO: super janky, damageArea does not apply to player whatsoever
+            } else if (other instanceof DamageArea) {
                 removables.add(cd);
             } else if (other instanceof Coin) {
                 if (!(player instanceof Ghost)) handleCoin(player, (Coin) other);
@@ -160,6 +159,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
 //    }
 
     private static void handleExit(Player player, Exit exit) {
+        GraphicsComponent.clearGlobalColorMask();
         if (player instanceof Ghost) { // kill ghost if has reached exit
             player.getComponent(HealthComponent.class).health = 0;
             GraphicsComponent.clearGlobalColorMask();
