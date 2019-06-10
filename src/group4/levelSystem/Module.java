@@ -225,6 +225,7 @@ public class Module {
                 this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
             } else if (entityId.endsWith(Mob.getName())) {
                 if (Main.AI) continue;
+                this.addMob(tileGridX, tileGridY, tileId, entityId);
             } else if (entityId.equals(Spikes.getName())) {
                 this.addSpike(tileGridX, tileGridY, tileId);
             } else {
