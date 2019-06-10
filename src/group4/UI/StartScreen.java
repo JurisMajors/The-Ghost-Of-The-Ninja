@@ -49,20 +49,6 @@ public class StartScreen {
 
         this.entities.add(
                 new ArtTile(
-                        Texture.VIGNETTE_OVERLAY,
-                        RenderLayer.VIGNETTE
-                )
-        );
-
-        this.entities.add(
-                new ArtTile(
-                        Texture.NOISE_OVERLAY,
-                        RenderLayer.NOISE
-                )
-        );
-
-        this.entities.add(
-                new ArtTile(
                         Texture.LOGO_FULLSCREEN,
                         RenderLayer.MAIN
                 )

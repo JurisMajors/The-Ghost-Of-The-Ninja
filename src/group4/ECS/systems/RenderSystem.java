@@ -10,14 +10,17 @@ import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.BodyPart;
+import group4.ECS.entities.Camera;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.Totem;
+import group4.ECS.entities.world.ArtTile;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
+import group4.graphics.Texture;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 import group4.utils.DebugUtils;
@@ -37,6 +40,8 @@ public class RenderSystem extends EntitySystem {
     private boolean DEBUG = false;
     // array of registered entities in the graphicsFamily
     private ImmutableArray<Entity> entities;
+    private GraphicsComponent vignette = null;
+    private GraphicsComponent noise = null;
 
     public RenderSystem() {
     }
@@ -168,6 +173,9 @@ public class RenderSystem extends EntitySystem {
             }
         }
 
+        // Draw some transparent things on top of the render
+        this.drawOverlays((Camera) camera);
+
         // Start of debug drawing
         if (DEBUG) {
             glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
@@ -208,6 +216,21 @@ public class RenderSystem extends EntitySystem {
 
             DebugUtils.flush();
         }
+    }
+
+    private void drawOverlays(Camera camera) {
+        if (this.vignette == null) {
+            Vector3f dimension = new Vector3f(16.0f, 9.0f, 0.0f); // Fullscreen
+            this.vignette = new GraphicsComponent(Shader.SIMPLE, Texture.VIGNETTE_OVERLAY, dimension, RenderLayer.VIGNETTE);
+        }
+
+        if (this.noise == null) {
+            Vector3f dimension = new Vector3f(16.0f, 9.0f, 0.0f); // Fullscreen
+            this.add(new GraphicsComponent(Shader.SIMPLE, Texture.NOISE_OVERLAY, dimension, RenderLayer.NOISE));
+        }
+
+        Vector3f position = camera.getComponent(PositionComponent.class).position;
+        this.vignette
     }
 
     /**
