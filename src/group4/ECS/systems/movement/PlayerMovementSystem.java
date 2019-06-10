@@ -57,6 +57,8 @@ public class PlayerMovementSystem extends IteratingSystem {
         // apply gravity
         this.doGravity(mc, gc);
 
+        this.ghostSpawning(entity);
+
         // move in the specified direction
         pc.position.addi(mc.velocity);
     }
@@ -152,24 +154,29 @@ public class PlayerMovementSystem extends IteratingSystem {
             }
         }
 
+        // Finally limit the velocity vector
+        mc.velocity.capValuesi(mc.velocityRange);
+    }
 
+    private void ghostSpawning(Entity e) {
+        Player player = (Player) e;
         // if the entity shoudlspawnghost and its previous ghost is not alive and it is on a start totem
         if (!player.spawnedGhost && player.totemStatus != null) {
             boolean spawned = false;
             Ghost newGhost = null;
-            if (challangeGhost(ref)) {
+            if (challangeGhost()) {
                 spawned = true;
                 newGhost = player.totemStatus.getChallangeGhost(player); // get a ghost from the totem
                 System.out.println("spawning challange ghost");
-            } else if (helpGhost(ref)) {
+            } else if (helpGhost()) {
                 spawned = true;
                 System.out.println("spawning help ghost");
-            } else if (carryGhost(ref)) {
+            } else if (carryGhost()) {
                 spawned = true;
                 System.out.println("spawning carry ghost");
             }
             if (spawned) {
-                player.spawnedGhost =true;
+                player.spawnedGhost = true;
                 // set a background color while in the 'ghost' world
                 // TODO: this color should be chosen by someone artistic
                 GraphicsComponent.setGlobalColorMask(new Vector3f(0.2f, 0f, 0f));
@@ -178,15 +185,16 @@ public class PlayerMovementSystem extends IteratingSystem {
                 TheEngine.getInstance().addEntity(newGhost);
             }
         }
-
-        // Finally limit the velocity vector
-        mc.velocity.capValuesi(mc.velocityRange);
     }
 
-    protected boolean challangeGhost(Object ref) {
+    protected boolean helpGhost() {
+        return KeyBoard.isKeyDown(GLFW_KEY_G);
+    }
+
+    protected boolean challangeGhost() {
         return KeyBoard.isKeyDown(GLFW_KEY_C);
     }
-    protected boolean carryGhost(Object ref) {
+    protected boolean carryGhost() {
         return KeyBoard.isKeyDown(GLFW_KEY_H);
     }
 
@@ -297,9 +305,6 @@ public class PlayerMovementSystem extends IteratingSystem {
         return false; // In all other cases, we do not jump or update
     }
 
-    protected boolean helpGhost(Object ref) {
-        return KeyBoard.isKeyDown(GLFW_KEY_G);
-    }
 
     /**
      * Provides a reference object, if one needed for determining
