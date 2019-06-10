@@ -1,4 +1,4 @@
-package group4.ECS.entities.world;
+        package group4.ECS.entities.world;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphicsComponent;
@@ -8,6 +8,7 @@ import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.systems.collision.CollisionHandlers.SplinePlatformCollision;
+import group4.game.Main;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
@@ -35,9 +36,10 @@ public class SplinePlatform extends Entity {
 
         SplineComponent sp = createSplineComponent(spline, 100, thickness);
         this.add(sp);
-
-        GraphicsComponent gc = createGraphicsComponent(sp.points, sp.normals, thickness, shader, texture);
-        this.add(gc);
+        if (Main.SHOULD_OPENGL) {
+            GraphicsComponent gc = createGraphicsComponent(sp.points, sp.normals, thickness, shader, texture);
+            this.add(gc);
+        }
     }
 
     public SplinePlatform(MultiSpline spline, Shader shader, Texture texture) {

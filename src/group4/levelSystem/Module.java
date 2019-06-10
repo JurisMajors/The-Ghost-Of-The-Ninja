@@ -52,8 +52,7 @@ public class Module {
     // List that keeps track of all the entities in the module
     private List<Entity> entities;
 
-    // ghost model
-    private Brain ghostModel = null;
+    // ghost directory
     private String ghostModelDir;
 
     // Keeps track of the initial player position
@@ -72,9 +71,9 @@ public class Module {
      * Default construct, which constructs a module based on a Tiled .tmx file
      */
 
-    public Module(Level l, String tiledModuleLocation, String ghostModelLocation) {
-        if (ghostModelLocation != null) {
-            loadGhost(ghostModelLocation);
+    public Module(Level l, String tiledModuleLocation, String ghostModelDir) {
+        if (ghostModelDir != null) {
+            loadGhost(ghostModelDir);
         }
         this.configureMap();
         this.splineMap = new HashMap<>();
@@ -86,18 +85,16 @@ public class Module {
     /**
      * Constructor to work with non-tiled modules
      */
-    public Module(Level l, String ghostModelLocation) {
-        if (ghostModelLocation != null) {
-            loadGhost(ghostModelLocation);
+    public Module(Level l, String ghostModelDir) {
+        if (ghostModelDir != null) {
+            loadGhost(ghostModelDir);
         }
         this.setup(l);
     }
 
 
     private void loadGhost(String loc) {
-        File f = new File(loc);
-        this.ghostModelDir = f.getParent() + "/";
-        this.ghostModel = new Brain(loc);
+        this.ghostModelDir = loc;
     }
 
     /**
@@ -156,9 +153,11 @@ public class Module {
                 parseMainLayer(layer);
             } else if (layerName.equals("SPLINES")) {
                 parseSplineLayer(layer);
-            } else if (layerName.equals("COINS") && !Main.AI) {
+            } else if (layerName.equals("COINS")) {
+                if (Main.AI) continue;
                 parseCoinLayer(layer);
-            } else if (layerName.equals("TOTEMS")) {
+            }else if (layerName.equals("TOTEMS")) {
+                if (Main.AI) continue;
                 parseTotemLayer(layer);
             } else if (layerName.equals("EXITS")) {
                 setupExits(layer);
@@ -224,10 +223,11 @@ public class Module {
                 this.addArtTile(tileGridX, tileGridY, tileId);
             } else if (entityId.equals(Player.getName())) {
                 this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
+            } else if (entityId.endsWith(Mob.getName())) {
+                if (Main.AI) continue;
+                this.addMob(tileGridX, tileGridY, tileId, entityId);
             } else if (entityId.equals(Spikes.getName())) {
                 this.addSpike(tileGridX, tileGridY, tileId);
-            } else if (entityId.endsWith(Mob.getName()) && !Main.AI) {
-                this.addMob(tileGridX, tileGridY, tileId, entityId);
             } else {
                 System.err.println("Some tiles not drawing!");
                 continue;
@@ -370,25 +370,6 @@ public class Module {
      */
     public Iterable<Entity> getEntities() {
         return this.entities;
-    }
-
-
-    /**
-     * Add a ghost to the current module
-     */
-    public void addGhost(Player master) throws IllegalStateException {
-        if (Main.AI) return;
-
-        if (this.entities == null) {
-            throw new IllegalStateException("Adding ghost before initialized entities container");
-        }
-        if (this.ghostModel != null) {
-            Ghost g = new Ghost(this.level, this.ghostModel, master);
-            this.addEntity(g);
-            TheEngine.getInstance().addEntity(g);
-        } else {
-            System.err.println("WARNING: Not loading ghost in module");
-        }
     }
 
 

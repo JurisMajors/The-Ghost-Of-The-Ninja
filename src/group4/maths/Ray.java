@@ -9,6 +9,7 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.Mappers;
+import group4.ECS.systems.RenderSystem;
 import group4.utils.DebugUtils;
 
 import java.awt.geom.Line2D;

@@ -84,8 +84,8 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
                 removables.add(cd);
             } else if (other instanceof DamageArea) {
                 removables.add(cd);
-            } else if (other instanceof Coin && !(player instanceof Ghost)) {
-                handleCoin(player, (Coin) other);
+            } else if (other instanceof Coin) {
+                if (!(player instanceof Ghost)) handleCoin(player, (Coin) other);
                 removables.add(cd);
             } else if (other instanceof Totem) {
                 if (player instanceof Ghost) {

@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class HealthComponent implements Component {
-
+    public int initialHealth;
     public int health;
     public Set<EntityConst.EntityState> state;
 
@@ -18,6 +18,7 @@ public class HealthComponent implements Component {
      * @param health health of the entity
      */
     public HealthComponent (int health) {
+        this.initialHealth = health; // For HP bar width tracking.
         this.health = health;
         this.state = new HashSet<>();
     }
