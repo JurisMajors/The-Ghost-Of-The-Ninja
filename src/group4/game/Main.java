@@ -222,9 +222,6 @@ public class Main implements Runnable {
                 fps = 0;
             }
 
-            glClearColor(58.0f / 255, 46.0f / 255, 43.0f / 255, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-
             if (STATE == GameState.PLAYING || STATE == GameState.STARTSCREEN) {
                 if (STATE == GameState.STARTSCREEN) {
                     this.startScreen.update(); // Allows for the startscreen logic to update.. Should perhaps be an entity? But this works.
