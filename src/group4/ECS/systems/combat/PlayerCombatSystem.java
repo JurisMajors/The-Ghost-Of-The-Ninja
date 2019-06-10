@@ -12,16 +12,11 @@ import group4.ECS.components.stats.*;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.damage.DamageArea;
-import group4.ECS.entities.Player;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.audio.Sound;
-import group4.game.Main;
-import group4.UI.Window;
 import group4.input.KeyBoard;
-import group4.input.MouseClicks;
-import group4.input.MouseMovement;
 import group4.maths.Ray;
 import group4.maths.Vector3f;
 
@@ -30,6 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static group4.ECS.components.stats.MovementComponent.LEFT;
+import static group4.ECS.components.stats.MovementComponent.RIGHT;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class PlayerCombatSystem extends IteratingSystem {
@@ -80,6 +76,9 @@ public class PlayerCombatSystem extends IteratingSystem {
         DimensionComponent dc = Mappers.dimensionMapper.get(entity);
         MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(Mappers.playerMapper.get(entity).activeItem);
 
+        // play the slash sound
+        Sound.playRandom(Sound.SLASH);
+
         // TODO: account for non-centric camera, e.g. pass on cam offset from display centre
 //        // camera x in world position
 //        float camX = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0)
@@ -102,19 +101,22 @@ public class PlayerCombatSystem extends IteratingSystem {
         Vector3f trueOffset = new Vector3f(wc.hitboxOffset);
         Vector3f trueHitbox = new Vector3f(wc.hitBox);
         if (mc.orientation == LEFT) {
-            trueOffset.x = -1 * wc.hitboxOffset.x;
-            trueHitbox.x = -1 * wc.hitBox.x;
+            trueOffset.x = -1 * (wc.hitboxOffset.x + wc.hitBox.x);
         } else {
-            trueOffset.x = wc.hitboxOffset.x + dc.dimension.x;
+            trueOffset.x += dc.dimension.x;
         }
 
-        // corner of hitbox nearest to player
+        // left corner of hitbox
         Vector3f hitboxCorner = pc.position.add(trueOffset);
 
         // start and end of ray
         Vector3f rayStart = pc.position
                 .add(new Vector3f(dc.dimension.x / 2, trueOffset.y + trueHitbox.y / 2, 0.0f));
-        Vector3f rayEnd = hitboxCorner.add(new Vector3f(trueHitbox.x, trueHitbox.y / 2, trueHitbox.z));
+        Vector3f rayEnd = hitboxCorner.add(new Vector3f(0.0f, trueHitbox.y / 2, trueHitbox.z));
+        if (mc.orientation == RIGHT) {
+            rayEnd.addi(new Vector3f(trueHitbox.x, 0.0f, 0.0f));
+        }
+        // direction of ray
         Vector3f dir = rayEnd.sub(rayStart);
 
         // ignore mobs, players, items, ghost, exits and coins
@@ -133,24 +135,22 @@ public class PlayerCombatSystem extends IteratingSystem {
         // distinguish three cases
         // if hitbox fully behind wall, don't create hitbox
         if ((trueOffset.x >= 0 && intersection.x <= hitboxCorner.x) ||
-                (trueOffset.x < 0 && intersection.x > hitboxCorner.x)) {
+                (trueOffset.x < 0 && intersection.x > hitboxCorner.x + wc.hitBox.x)) {
             return;
         }
 
         // if hitbox partially in wall, shrink hitbox
         if (trueOffset.x >= 0 && intersection.x < rayEnd.x) {
-            trueHitbox.x = trueHitbox.x - (rayEnd.x - intersection.x);
+            trueHitbox.x -= (rayEnd.x - intersection.x);
         } else if (trueOffset.x < 0 && intersection.x > rayEnd.x) {
-            trueHitbox.x = trueHitbox.x + (intersection.x - rayEnd.x);
+            hitboxCorner.x += (intersection.x - rayEnd.x);
+            trueHitbox.x -= (intersection.x - rayEnd.x);
         }
 
         // exclude ghost and player for the damage
         Set<Class<? extends Entity>> excluded = new HashSet<>();
         excluded.add(HierarchicalPlayer.class);
         excluded.add(Ghost.class);
-
-        // play the slash sound
-        Sound.playRandom(Sound.SLASH);
 
         new DamageArea(hitboxCorner, trueHitbox,
                 wc.damage, excluded, 0, entity);
