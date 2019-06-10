@@ -290,6 +290,22 @@ public class GraphicsComponent implements Component {
     }
 
     /**
+     * Adds a color on top of the texture of a graphics component.
+     * If the graphics component has a personal color that takes priority.
+     * Else we look at the global color mask in GraphicsComponent.GLOBAL_COLOR_MASK.
+     * If neither are set we have a color mask of 0 which does nothing.
+     */
+    public void handleColorMask() {
+        if (this.hasMask) { // per texture mask has priority
+            this.shader.setUniform3f("color_mask", this.colorMask);
+        } else if (GraphicsComponent.HAS_MASK) { // global mask comes next
+            this.shader.setUniform3f("color_mask", GraphicsComponent.GLOBAL_COLOR_MASK);
+        } else { // no mask
+            this.shader.setUniform3f("color_mask", new Vector3f());
+        }
+    }
+
+    /**
      * Render this GC.
      *
      * @param position Where to render.
@@ -297,6 +313,7 @@ public class GraphicsComponent implements Component {
     public void render(Vector3f position) {
         if (!Main.SHOULD_OPENGL) return;
         this.shader.bind();
+        this.handleColorMask();
         // Set uniforms
         this.shader.setUniformMat4f("md_matrix", Matrix4f.translate(position)); //pc.position.add(new Vector3f(dc.dimension.x / 2.0f, 1.1f * dc.dimension.y, 0.0f))));
         this.shader.setUniform1f("tex", this.texture.getTextureID()); // Specify which texture slot to use

@@ -119,7 +119,7 @@ public class RenderSystem extends EntitySystem {
                         gc.shader.bind();
 
                         // create color overlay over textures
-                        handleColorMask(gc);
+                        gc.handleColorMask();
 
                         // Set uniforms
                         gc.shader.setUniformMat4f("md_matrix", bp.getModelMatrix()); // Tmp fix for giving correct positions to vertices in the vertexbuffers
@@ -232,24 +232,6 @@ public class RenderSystem extends EntitySystem {
         glActiveTexture(bar.texture.getTextureID());
 
         bar.geometry.render();
-    }
-
-    /**
-     * Adds a color on top of the texture of a graphics component.
-     * If the graphics component has a personal color that takes priority.
-     * Else we look at the global color mask in GraphicsComponent.GLOBAL_COLOR_MASK.
-     * If neither are set we have a color mask of 0 which does nothing.
-     *
-     * @param gc graphics component
-     */
-    private void handleColorMask(GraphicsComponent gc) {
-        if (gc.hasMask) { // per texture mask has priority
-            gc.shader.setUniform3f("color_mask", gc.colorMask);
-        } else if (GraphicsComponent.HAS_MASK) { // global mask comes next
-            gc.shader.setUniform3f("color_mask", GraphicsComponent.GLOBAL_COLOR_MASK);
-        } else { // no mask
-            gc.shader.setUniform3f("color_mask", new Vector3f());
-        }
     }
 
     /**
