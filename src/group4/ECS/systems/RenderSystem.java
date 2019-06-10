@@ -197,7 +197,7 @@ public class RenderSystem extends EntitySystem {
         HealthComponent hc;
         for (Entity entity : this.entities) {
             hc = Mappers.healthMapper.get(entity);
-            if (hc != null) {
+            if (hc != null && !(entity instanceof Ghost)) {
                 pc = Mappers.positionMapper.get(entity);
                 dc = Mappers.dimensionMapper.get(entity);
 
