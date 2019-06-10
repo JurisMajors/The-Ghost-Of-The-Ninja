@@ -8,6 +8,7 @@ import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.identities.CameraComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.BodyPart;
 import group4.ECS.entities.HierarchicalPlayer;
@@ -18,6 +19,7 @@ import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
+import group4.graphics.Texture;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 import group4.utils.DebugUtils;
@@ -158,6 +160,46 @@ public class RenderSystem extends EntitySystem {
                     // Render!
                     gc.geometry.render();
                 }
+            }
+        }
+
+        // Ad hoc way of drawing the healthbars
+        glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
+        HealthComponent hc;
+        DimensionComponent dc;
+        for (Entity entity : this.entities) {
+            hc = Mappers.healthMapper.get(entity);
+            if (hc != null) {
+                pc = Mappers.positionMapper.get(entity);
+                dc = Mappers.dimensionMapper.get(entity);
+                GraphicsComponent healthBarBG = new GraphicsComponent(Shader.SIMPLE, Texture.RED, new Vector3f(1.0f, 0.1f, 0.0f), true);
+                GraphicsComponent healthBarFG = new GraphicsComponent(Shader.SIMPLE, Texture.GREEN, new Vector3f(hc.health / (float) hc.initialHealth, 0.1f, 0.0f), true);
+
+                ////////// FG
+                healthBarFG.shader.bind();
+                // Set uniforms
+                healthBarFG.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position.add(new Vector3f(dc.dimension.x / 2.0f, 1.1f * dc.dimension.y, 0.0f))));
+                healthBarFG.shader.setUniform1f("tex", healthBarFG.texture.getTextureID()); // Specify which texture slot to use
+
+                // Bind texture and specify texture slot
+                healthBarFG.texture.bind();
+                glActiveTexture(healthBarFG.texture.getTextureID());
+
+                healthBarFG.geometry.render();
+
+                ////////// BG
+                healthBarBG.shader.bind();
+                // Set uniforms
+                healthBarBG.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position.add(new Vector3f(dc.dimension.x / 2.0f, 1.1f * dc.dimension.y, 0.0f))));
+                healthBarBG.shader.setUniform1f("tex", healthBarBG.texture.getTextureID()); // Specify which texture slot to use
+
+                // Bind texture and specify texture slot
+                healthBarBG.texture.bind();
+                glActiveTexture(healthBarBG.texture.getTextureID());
+
+                healthBarBG.geometry.render();
+
+
             }
         }
 
