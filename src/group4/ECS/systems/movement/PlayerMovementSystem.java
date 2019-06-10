@@ -9,6 +9,7 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.components.stats.ScoreComponent;
 import group4.ECS.entities.Player;
+import group4.ECS.entities.totems.Totem;
 import group4.ECS.etc.EntityConst;
 import group4.ECS.entities.Ghost;
 import group4.ECS.etc.EntityState;
@@ -160,26 +161,32 @@ public class PlayerMovementSystem extends IteratingSystem {
 
     private void ghostSpawning(Entity e) {
         Player player = (Player) e;
-        // if the entity shoudlspawnghost and its previous ghost is not alive and it is on a start totem
+        int score = player.getComponent(ScoreComponent.class).getScore();
+        // if the player previous ghost is not alive and player is on a start totem
         if (!player.spawnedGhost && player.totemStatus != null) {
-            boolean spawned = false;
-            Ghost newGhost = null;
+            boolean spawned = false; // whether player decided to spawn a ghost
+            Ghost newGhost = null; // the spawned ghost
+            Vector3f mask = new Vector3f(); // the global mask to apply for the world
+
+            // process keypresses/conditions for spawning
             if (challangeGhost()) {
                 spawned = true;
-                newGhost = player.totemStatus.getChallangeGhost(player); // get a ghost from the totem
-                System.out.println("spawning challange ghost");
-            } else if (helpGhost()) {
+                newGhost = player.totemStatus.getChallangeGhost(player); // get a challanger ghost from the totem
+                mask.x = 0.2f;
+            } else if (helpGhost(score)) {
                 spawned = true;
-                System.out.println("spawning help ghost");
-            } else if (carryGhost()) {
+                player.getComponent(ScoreComponent.class).subScore(Totem.helpCost());
+                newGhost = player.totemStatus.getHelpGhost(player);
+                mask.z = 0.2f;
+            } else if (carryGhost(score)) {
                 spawned = true;
+                player.getComponent(ScoreComponent.class).subScore(Totem.carryCost());
                 System.out.println("spawning carry ghost");
             }
             if (spawned) {
                 player.spawnedGhost = true;
                 // set a background color while in the 'ghost' world
-                // TODO: this color should be chosen by someone artistic
-                GraphicsComponent.setGlobalColorMask(new Vector3f(0.2f, 0f, 0f));
+                GraphicsComponent.setGlobalColorMask(mask);
                 // add it to engine an module
                 player.level.getCurrentModule().addEntity(newGhost);
                 TheEngine.getInstance().addEntity(newGhost);
@@ -187,15 +194,15 @@ public class PlayerMovementSystem extends IteratingSystem {
         }
     }
 
-    protected boolean helpGhost() {
-        return KeyBoard.isKeyDown(GLFW_KEY_G);
+    protected boolean helpGhost(int score) {
+        return KeyBoard.isKeyDown(GLFW_KEY_G) && score >= Totem.helpCost();
     }
 
     protected boolean challangeGhost() {
         return KeyBoard.isKeyDown(GLFW_KEY_C);
     }
-    protected boolean carryGhost() {
-        return KeyBoard.isKeyDown(GLFW_KEY_H);
+    protected boolean carryGhost(int score) {
+        return KeyBoard.isKeyDown(GLFW_KEY_H) && score >= Totem.carryCost();
     }
 
     private void moveRight(MovementComponent mc, PositionComponent pc) {

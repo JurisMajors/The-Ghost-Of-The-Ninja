@@ -15,8 +15,9 @@ import group4.maths.Vector3f;
  */
 public class Ghost extends HierarchicalPlayer {
     public boolean best; // whether has reached the exit
-    public Player master = null;
-    public int endTotem;
+    public Player master = null; // the player which spawned the ghost
+    public int endTotem; // totem identification to determine when it has reached end of its path
+    public boolean helping = false; // whether this ghost is a helper
 
     private boolean blockMovement = false;
 

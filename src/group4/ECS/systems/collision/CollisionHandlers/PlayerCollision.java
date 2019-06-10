@@ -18,10 +18,12 @@ import group4.ECS.entities.totems.StartTotem;
 import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.totems.TotemHelp;
 import group4.ECS.entities.world.Exit;
+import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.collision.CollisionData;
 import group4.audio.Sound;
+import group4.game.Main;
 import group4.maths.Vector3f;
 
 import java.util.ArrayList;
@@ -46,31 +48,6 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
         // loop through all collisions and handle them accordingly
         for (CollisionData cd : others) {
             Entity other = cd.entity;
-
-            // Ghost on platform/spline detection (while not training)
-//            if (player instanceof Ghost && (other instanceof Platform || Families.collidableSplineFamily.matches(other)) && !Main.AI) {
-//                Entity mainCamera = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0);
-
-//                // Check whether the ghost is off screen
-//                Vector3f mainCameraPosition = mainCamera.getComponent(PositionComponent.class).position;
-//                Vector3f ghostPosition = player.getComponent(PositionComponent.class).position;
-
-//                if (!(ghostPosition.x <= mainCameraPosition.x + Main.SCREEN_WIDTH / 2 && ghostPosition.x >= mainCameraPosition.x - Main.SCREEN_WIDTH / 2
-//                        && ghostPosition.y <= mainCameraPosition.y + Main.SCREEN_HEIGHT / 2 && ghostPosition.y >= mainCameraPosition.y - Main.SCREEN_HEIGHT / 2)) {
-//                    // Ghost is on a platform and not visible on the screen of the user, so let it wait
-//                    ((Ghost) player).setBlocked(true);
-//                } else {
-//                    // Ghost is on a platform and visible on the screen of the user, check if is is blocked
-//                    if (((Ghost) player).isBlocked()) {
-//                        // Ghost is indeed blocked, wait until it is sufficiently visible on the screen and then continue moving the ghost
-//                        Vector3f ghostDimension = player.getComponent(DimensionComponent.class).dimension;
-//                        if (ghostPosition.x <= mainCameraPosition.x + Main.SCREEN_WIDTH / 2 - 2 * ghostDimension.x) {
-//                            ((Ghost) player).setBlocked(false);
-//                        }
-//                    }
-//                }
-
-//            }
 
             // example
             if (other instanceof Mob) {
@@ -130,7 +107,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
         if (totem.isEnd()) {
             if (player.spawnedGhost && player.challanging) { // ghost is still alive
                 // means that we got the there faster
-                player.getComponent(ScoreComponent.class).addScore(500);
+                player.getComponent(ScoreComponent.class).addScore(Totem.challangeReward());
                 player.challanging = false;
             }
             // end totem, player cannot do a lot here
@@ -138,7 +115,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
             // starting totem
             player.totemStatus = (StartTotem) totem;
             if (player.spawnedGhost) return; // if ghost is alive dont draw help
-            // otherwise player is on starting totem and he neeeds to see the help image
+            // otherwise player is on starting totem and he need to see the help image
             Vector3f helpPos = new Vector3f(totem.getComponent(PositionComponent.class).position);
             helpPos.y += totem.getComponent(DimensionComponent.class).dimension.y;
             helpPos.x += totem.getComponent(DimensionComponent.class).dimension.x * 0.1f;

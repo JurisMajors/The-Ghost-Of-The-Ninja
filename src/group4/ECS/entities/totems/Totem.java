@@ -85,4 +85,16 @@ public abstract class Totem extends Entity {
         gc.setColorMask(rgbMask);
     }
 
+    public static int helpCost() {
+        return 100;
+    }
+
+    public static int carryCost() {
+        return 500;
+    }
+
+    public static int challangeReward() {
+        return 500;
+    }
+
 }
