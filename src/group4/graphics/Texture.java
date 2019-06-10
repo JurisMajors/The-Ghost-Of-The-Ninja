@@ -18,6 +18,8 @@ public class Texture {
     public static Texture EXIT;  // TODO: More to be added.
     public static Texture BLACK;
     public static Texture WHITE;
+    public static Texture GREEN;
+    public static Texture RED;
     public static Texture MAIN_TILES;
     public static Texture PLAYER;
     public static Texture BACKGROUND;
@@ -57,6 +59,8 @@ public class Texture {
         BACKGROUND = new Texture("src/group4/res/textures/cave.jpg");
         BLACK = new Texture("src/group4/res/textures/black.png");
         WHITE = new Texture("src/group4/res/textures/white.png");
+        GREEN = new Texture("src/group4/res/textures/green.png");
+        RED = new Texture("src/group4/res/textures/red.png");
         HITBOX = new Texture("src/group4/res/textures/hitbox.png");
         NOTHINGNESS = new Texture("src/group4/res/textures/FF4D00-0.png");
         PLAYER = new Texture("src/group4/res/textures/char1.png");
