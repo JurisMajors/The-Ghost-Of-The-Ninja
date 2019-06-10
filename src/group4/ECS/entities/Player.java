@@ -50,6 +50,7 @@ public class Player extends Entity {
      * Whether the player has spawned a ghost and it is alive
      */
     public boolean spawnedGhost;
+    public boolean challanging = false;
 
     /**
      * The starting totem that the player is touching

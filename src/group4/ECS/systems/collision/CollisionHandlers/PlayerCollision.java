@@ -128,6 +128,11 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
 
     private void playerHandleTotem(Player player, Totem totem) {
         if (totem.isEnd()) {
+            if (player.spawnedGhost && player.challanging) { // ghost is still alive
+                // means that we got the there faster
+                player.getComponent(ScoreComponent.class).addScore(500);
+                player.challanging = false;
+            }
             // end totem, player cannot do a lot here
         } else {
             // starting totem

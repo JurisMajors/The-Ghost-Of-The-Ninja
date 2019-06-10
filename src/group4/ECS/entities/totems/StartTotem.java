@@ -23,12 +23,22 @@ public class StartTotem extends Totem {
         }
     }
 
-    public Ghost getGhost(Player master) {
+    public Ghost getChallangeGhost(Player master) {
         Ghost g = new Ghost(this.getComponent(PositionComponent.class).position,
                 level, this.ghostBrain, master);
         g.endTotem = this.getID();
+        master.challanging = true;
         return g;
     }
+
+    public Ghost getHelpGhost(Player player) {
+        return null;
+    }
+
+    public Ghost getCarryGhost(Player player) {
+       return null;
+    }
+
 
     @Override
     public boolean isEnd() {

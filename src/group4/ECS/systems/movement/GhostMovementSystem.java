@@ -43,7 +43,11 @@ public class GhostMovementSystem extends PlayerMovementSystem {
     }
 
     @Override
-    protected boolean shouldSpawnGhost(Object ref) { return false; }
+    protected boolean helpGhost(Object ref) { return false; }
+    @Override
+    protected boolean challangeGhost(Object ref) { return false; }
+    @Override
+    protected boolean carryGhost(Object ref) { return false; }
 
     @Override
     protected void move(Entity e, MovementComponent mc, PositionComponent pc, float deltaTime) {
