@@ -58,7 +58,7 @@ public class PlayerCombatSystem extends IteratingSystem {
 
         // if active item is a weapon and when player hits enter, attack
         MeleeWeaponComponent wc = Mappers.meleeWeaponMapper.get(plc.activeItem);
-        if (wc != null && KeyBoard.isKeyDown(GLFW_KEY_RIGHT_SHIFT)) {
+        if (wc != null && KeyBoard.isKeyDown(GLFW_KEY_ENTER)) {
             // if melee
             if (wc.currCooldown <= 0.0f) {
                 // set cooldown in accordance to rate of attack
