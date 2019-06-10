@@ -90,7 +90,7 @@ public abstract class Totem extends Entity {
     }
 
     public static int carryCost() {
-        return 0;
+        return 500;
     }
 
     public static int challangeReward() {
