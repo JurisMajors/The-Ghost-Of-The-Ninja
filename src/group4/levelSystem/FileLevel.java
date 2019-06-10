@@ -24,23 +24,10 @@ public class FileLevel extends Level {
      * be used in the specific level.
      */
     private void configurePaths() {
-        this.modulePaths = this.getFilePaths(this.levelRoot + "/modules");
+        this.modulePaths = FileUtils.getFilePaths(this.levelRoot + "/modules");
         this.ghostDir = this.levelRoot + "/ghosts/";
     }
 
-    private List<String> getFilePaths(String folder) {
-        List<String> filePaths = new ArrayList<>();
-        File folder_fd = new File(folder);
-        for (final File fileEntry : folder_fd.listFiles()) {
-            if (fileEntry.isDirectory()) {
-                continue;
-            } else {
-                filePaths.add(fileEntry.getPath());
-            }
-        }
-        Collections.sort(filePaths); // sort the modules in the correct order
-        return filePaths;
-    }
 
     @Override
     protected Module createRoot() {
