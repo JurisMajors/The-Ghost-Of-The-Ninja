@@ -107,11 +107,6 @@ public class CollisionSystem extends IteratingSystem {
         // get all collidable spline entities
         ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.collidableSplineFamily);
 
-        // entity position and dimension
-        PositionComponent pc = Mappers.positionMapper.get(e);
-        DimensionComponent dc = Mappers.dimensionMapper.get(e);
-
-
         // loop through all collidable splines
         for (Entity spline : entities) {
             // don't do collision with the same object
