@@ -62,11 +62,16 @@ public class GhostMovementSystem extends PlayerMovementSystem {
             Vector3f mainCameraPosition = mainCamera.getComponent(PositionComponent.class).position;
 
             // Check whether the ghost is off screen
-            if (!(pc.position.x <= mainCameraPosition.x + Main.SCREEN_WIDTH / 2 && pc.position.x >= mainCameraPosition.x - Main.SCREEN_WIDTH / 2
-                    && pc.position.y <= mainCameraPosition.y + Main.SCREEN_HEIGHT / 2 && pc.position.y >= mainCameraPosition.y - Main.SCREEN_HEIGHT / 2)) {
+            if (!(pc.position.x <= mainCameraPosition.x + Main.SCREEN_WIDTH / 2
+                    && pc.position.x >= mainCameraPosition.x - Main.SCREEN_WIDTH / 2
+                    && pc.position.y <= mainCameraPosition.y + Main.SCREEN_HEIGHT / 2
+                    && pc.position.y >= mainCameraPosition.y - Main.SCREEN_HEIGHT / 2)) {
                 shouldMove = false;
             }
         }
         if (shouldMove) super.move(e, mc, pc, deltaTime);
+        if (((Ghost) e).carrying) { // this ghost is a carrier ghost, then move the player with the ghost
+            ((Ghost) e).master.getComponent(PositionComponent.class).position = new Vector3f(pc.position);
+        }
     }
 }

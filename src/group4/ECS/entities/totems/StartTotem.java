@@ -35,13 +35,15 @@ public class StartTotem extends Totem {
         Ghost g = new Ghost(this.getComponent(PositionComponent.class).position,
                 level, this.ghostBrain, master);
         g.endTotem = this.getID();
-        master.challanging = false;
         g.helping = true;
         return g;
     }
 
     public Ghost getCarryGhost(Player master) {
-       return null;
+        Ghost g = new Ghost(this.level, this.ghostBrain, master);
+        g.endTotem = this.getID();
+        g.carrying = true;
+       return g;
     }
 
 

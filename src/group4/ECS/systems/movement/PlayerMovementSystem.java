@@ -126,7 +126,6 @@ public class PlayerMovementSystem extends IteratingSystem {
         // Get and "unpack" some much used objects
         Object ref = getMovementRef(e);
         Player player = (Player) e;
-        System.out.println(player.getComponent(ScoreComponent.class).getScore());
         EntityState playerState = player.getState();
 
 
@@ -172,6 +171,7 @@ public class PlayerMovementSystem extends IteratingSystem {
             if (challangeGhost()) {
                 spawned = true;
                 newGhost = player.totemStatus.getChallangeGhost(player); // get a challanger ghost from the totem
+                player.startTotemID = player.totemStatus.getID();
                 mask.x = 0.2f;
             } else if (helpGhost(score)) {
                 spawned = true;
@@ -181,7 +181,8 @@ public class PlayerMovementSystem extends IteratingSystem {
             } else if (carryGhost(score)) {
                 spawned = true;
                 player.getComponent(ScoreComponent.class).subScore(Totem.carryCost());
-                System.out.println("spawning carry ghost");
+                newGhost = player.totemStatus.getCarryGhost(player);
+                mask.z = 0.5f;
             }
             if (spawned) {
                 player.spawnedGhost = true;

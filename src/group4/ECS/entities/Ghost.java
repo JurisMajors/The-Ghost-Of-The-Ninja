@@ -18,6 +18,7 @@ public class Ghost extends HierarchicalPlayer {
     public Player master = null; // the player which spawned the ghost
     public int endTotem; // totem identification to determine when it has reached end of its path
     public boolean helping = false; // whether this ghost is a helper
+    public boolean carrying = false;
 
     private boolean blockMovement = false;
 
@@ -44,20 +45,13 @@ public class Ghost extends HierarchicalPlayer {
         this(position, level, new Brain(brainPath));
     }
 
-    /**
-     * Ghost constructor which also sets the master,
-     * this constructor must be used when ghost is
-     * spawned in-game by the player
-     * @param master the player which spawned the ghost
-     */
     public Ghost (Level level, Brain brain, Player master) {
         this(master.getComponent(PositionComponent.class).position,
                 level, brain);
         this.master = master;
     }
     public Ghost (Vector3f pos, Level level, Brain brain, Player master) {
-        this(new Vector3f(pos)
-                , level, brain);
+        this(pos, level, brain);
         this.master = master;
     }
 

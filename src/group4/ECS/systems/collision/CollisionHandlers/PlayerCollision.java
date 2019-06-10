@@ -105,7 +105,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
 
     private void playerHandleTotem(Player player, Totem totem) {
         if (totem.isEnd()) {
-            if (player.spawnedGhost && player.challanging) { // ghost is still alive
+            if (player.spawnedGhost && player.challanging && player.startTotemID == totem.getID()) { // ghost is still alive
                 // means that we got the there faster
                 player.getComponent(ScoreComponent.class).addScore(Totem.challangeReward());
                 player.challanging = false;
@@ -113,8 +113,8 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
             // end totem, player cannot do a lot here
         } else {
             // starting totem
+            if (player.spawnedGhost) return; // if a ghost is alive dont do shit
             player.totemStatus = (StartTotem) totem;
-            if (player.spawnedGhost) return; // if ghost is alive dont draw help
             // otherwise player is on starting totem and he need to see the help image
             Vector3f helpPos = new Vector3f(totem.getComponent(PositionComponent.class).position);
             helpPos.y += totem.getComponent(DimensionComponent.class).dimension.y;
@@ -128,7 +128,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
         Vector3f gPos = ghost.getComponent(PositionComponent.class).position;
         Vector3f tPos = totem.getComponent(PositionComponent.class).position;
         Vector3f tDim = totem.getComponent(DimensionComponent.class).dimension;
-        if (gPos.x >= tPos.add(tDim.scale(0.5f)).x) {
+        if (gPos.x >= tPos.add(tDim.scale(0.3f)).x) {
             ghost.getComponent(HealthComponent.class).health = 0;
             GraphicsComponent.clearGlobalColorMask();
         }

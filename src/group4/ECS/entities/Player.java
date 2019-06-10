@@ -51,6 +51,7 @@ public class Player extends Entity {
      */
     public boolean spawnedGhost;
     public boolean challanging = false;
+    public int startTotemID = -1;
 
     /**
      * The starting totem that the player is touching
