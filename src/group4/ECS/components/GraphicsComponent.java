@@ -6,7 +6,10 @@ import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.VertexArray;
+import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
+
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 public class GraphicsComponent implements Component {
 
@@ -284,5 +287,24 @@ public class GraphicsComponent implements Component {
      */
     public void setTexture(Texture texture) {
         this.texture = texture;
+    }
+
+    /**
+     * Render this GC.
+     *
+     * @param position Where to render.
+     */
+    public void render(Vector3f position) {
+        if (!Main.SHOULD_OPENGL) return;
+        this.shader.bind();
+        // Set uniforms
+        this.shader.setUniformMat4f("md_matrix", Matrix4f.translate(position)); //pc.position.add(new Vector3f(dc.dimension.x / 2.0f, 1.1f * dc.dimension.y, 0.0f))));
+        this.shader.setUniform1f("tex", this.texture.getTextureID()); // Specify which texture slot to use
+
+        // Bind texture and specify texture slot
+        this.texture.bind();
+        glActiveTexture(this.texture.getTextureID());
+
+        this.geometry.render();
     }
 }
