@@ -7,6 +7,8 @@ import java.util.List;
 
 public class ImageSequence {
     public static ImageSequence COIN;
+    public static ImageSequence TORCH;
+    public static ImageSequence TORCH_LIGHT;
 
     public List<Texture> frames;
     public int frameCount;
@@ -32,5 +34,7 @@ public class ImageSequence {
      */
     public static void loadAllImageSequences() {
         COIN = new ImageSequence("src/group4/res/textures/animated/coin/");
+        TORCH = new ImageSequence("src/group4/res/textures/animated/torch/");
+        TORCH_LIGHT = new ImageSequence("src/group4/res/textures/animated/torchlight/");
     }
 }
