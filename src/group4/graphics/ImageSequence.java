@@ -10,6 +10,7 @@ public class ImageSequence {
     public static ImageSequence TORCH;
     public static ImageSequence TORCH_LIGHT;
     public static ImageSequence BAT;
+    public static ImageSequence BAT2;
 
     public List<Texture> frames;
     public int frameCount;
@@ -38,5 +39,6 @@ public class ImageSequence {
         TORCH = new ImageSequence("src/group4/res/textures/animated/torch/");
         TORCH_LIGHT = new ImageSequence("src/group4/res/textures/animated/torchlight/");
         BAT = new ImageSequence("src/group4/res/textures/animated/bat/");
+        BAT2 = new ImageSequence("src/group4/res/textures/animated/bat2/");
     }
 }
