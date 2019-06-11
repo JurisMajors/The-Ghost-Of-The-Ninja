@@ -1,3 +1,7 @@
+![Game logo][gamelogo]
+
+[gamelogo]: src/group4/res/textures/logo.png "Game logo"
+
 # DBL-IIS (Platformer)
 
 Welcome to the project page, obviously this is work in progress.

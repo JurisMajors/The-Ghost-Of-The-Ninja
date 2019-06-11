@@ -17,9 +17,10 @@ import group4.levelSystem.Level;
 import group4.maths.Vector3f;
 
 public class Mob extends Entity {
-    //dimension of the mob, aka bounding box
-    protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f);//dimension of the mob, aka bounding box
+
+    protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f); //dimension of the mob, aka bounding box
     public Level level;
+
     /**
      * Creates a mob
      *
@@ -34,9 +35,20 @@ public class Mob extends Entity {
         this.add(new DimensionComponent(dimension));
         this.add(new MovementComponent(new Vector3f(), velocityRange));
         this.add(new GravityComponent());
-        this.add(new GraphicsComponent(shader, texture, dimension));
+        this.add(new GraphicsComponent(shader, texture, dimension, false));
         this.add(new CollisionComponent(MobCollision.getInstance()));
-        this.add(new HealthComponent(100));
+        this.add(new HealthComponent(30));
         this.add(new MobComponent(handler));
+    }
+
+    public Mob(Vector3f position, Level l, Texture tex, float[] texCoord, AbstractMovementHandler handler) {
+        this (position, l, handler);
+        this.remove(GraphicsComponent.class);
+        this.add(new GraphicsComponent(Shader.SIMPLE, tex, dimension, texCoord, false));
+
+    }
+
+    public static String getName() {
+        return "Mob";
     }
 }

@@ -1,4 +1,4 @@
-package group4.ECS.entities.world;
+        package group4.ECS.entities.world;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphicsComponent;
@@ -8,6 +8,7 @@ import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.systems.collision.CollisionHandlers.SplinePlatformCollision;
+import group4.game.Main;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
@@ -22,23 +23,27 @@ public class SplinePlatform extends Entity {
      * Creates a platform based on a spline.
      * Note that all the points of the spline argument MUST be inside the dimension vector.
      *
-     * @param position  left-bottom-back corner of the cuboid representing the platform
-     * @param dimension such that the right-top-front corner of the cuboid representing the platform is position+dimension
-     * @param spline    spline representing the actual walkable platform
-     * @param shader    shader for this platform
-     * @param texture   texture for this platform
+     * @param position left-bottom-back corner of the cuboid representing the platform
+     * @param spline   spline representing the actual walkable platform
+     * @param shader   shader for this platform
+     * @param texture  texture for this platform
      */
-    public SplinePlatform(Vector3f position, Vector3f dimension, MultiSpline spline, float thickness, Shader shader, Texture texture) {
+    public SplinePlatform(Vector3f position, MultiSpline spline, float thickness, Shader shader, Texture texture) {
         this.add(new PositionComponent(position));
-        this.add(new DimensionComponent(dimension));
+        this.add(new DimensionComponent(new Vector3f()));
         this.add(new PlatformComponent());
         this.add(new CollisionComponent(SplinePlatformCollision.getInstance()));
 
         SplineComponent sp = createSplineComponent(spline, 100, thickness);
         this.add(sp);
+        if (Main.SHOULD_OPENGL) {
+            GraphicsComponent gc = createGraphicsComponent(sp.points, sp.normals, thickness, shader, texture);
+            this.add(gc);
+        }
+    }
 
-        GraphicsComponent gc = createGraphicsComponent(sp.points, sp.normals, thickness, shader, texture);
-        this.add(gc);
+    public SplinePlatform(MultiSpline spline, Shader shader, Texture texture) {
+        this(new Vector3f(), spline, 0.5f, shader, texture);
     }
 
     private SplineComponent createSplineComponent(MultiSpline spline, int numPoints, float thickness) {
@@ -50,6 +55,8 @@ public class SplinePlatform extends Entity {
         float t = 0.0f;
         // loop through all controlpoints over the spline
         for (int k = 0; k <= numPoints; k++) {
+            if (t > 1.0f) t = 1.0f;
+
             points[k] = spline.getPoint(t);
             normals[k] = spline.getNormal(t);
 
@@ -105,11 +112,12 @@ public class SplinePlatform extends Entity {
         tcArray.add(new Vector3f());
         tcArray.add(new Vector3f());
         for (int k = 0; k < points.length - 1; k++) {
+            float t = k / (float) (points.length - 2);
             // add next vertex coordinates and texture coordinates
             vertexArray.add(tops[k + 1]);
             vertexArray.add(bots[k + 1]);
-            tcArray.add(new Vector3f());
-            tcArray.add(new Vector3f());
+            tcArray.add(new Vector3f(t, 1, 0));
+            tcArray.add(new Vector3f(t, 0, 0));
 
             // create a square with the previous top and bot and the current top and bot
             // first triangle (CW)
@@ -179,4 +187,7 @@ public class SplinePlatform extends Entity {
         return result;
     }
 
+    public static String getName() {
+        return "SplinePlatform";
+    }
 }

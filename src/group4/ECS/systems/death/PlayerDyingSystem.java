@@ -2,12 +2,14 @@ package group4.ECS.systems.death;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.etc.Families;
+import group4.audio.Sound;
 import group4.levelSystem.Module;
 import group4.maths.Vector3f;
 
@@ -19,11 +21,12 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
      * Initialize the PlayerDyingSystem
      * @param reset Indicate whether the system should automatically reset the module once the player dies
      */
-    public PlayerDyingSystem(boolean reset) {
-        this(Families.playerFamily, reset);
+    public PlayerDyingSystem(boolean reset, int priority) {
+        this(Families.playerFamily, reset, priority);
     }
-    PlayerDyingSystem(Family f, boolean reset) {
-        super(f);
+
+    PlayerDyingSystem(Family f, boolean reset, int priority) {
+        super(f, priority);
         this.autoReset = reset;
     }
 
@@ -35,8 +38,11 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
 
         // Compute player center
         Vector3f pc = pp.position.add(pd.dimension.scale(0.5f));
+
+        // get current module of entity
         Module curModule = entity instanceof Player ? ((Player)entity).level.getCurrentModule()
                 : ((Mob) entity).level.getCurrentModule();
+
         // Check whether or not the player's center is outside the module grid
         // We keep a 1 grid-unit boundary which the player's center can legally move out of the grid
         if (pc.x < -5 || pc.x > curModule.getWidth() + 5 ||
@@ -57,19 +63,25 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
     protected boolean die(Entity entity, float deltaTime) {
         entity.getComponent(HealthComponent.class).health = 0;
 
+        // hacky fix since apparently the mob dying sytem inherits this..?
+        if (!(entity instanceof Mob)) {
+            GraphicsComponent.clearGlobalColorMask();
+        }
         // If auto reset is enabled, reset the module to its original state
         // and reposition the player, while giving it new health
         if (this.autoReset) {
-            ((Player) entity).level.getCurrentModule().reset();
-            ((Player) entity).getComponent(PositionComponent.class).position =
-                    ((Player) entity).level.getCurrentModule().getPlayerInitialPosition();
-            ((Player) entity).getComponent(HealthComponent.class).health = 100;
+            ((Player) entity).level.reset();
+            // TODO: trigger the 'you died splash screen'
         }
-
 
         // Level should take care of removing a player from the engine if that is necessary
         // Return that player should not be removed
         return false;
     }
 
+    @Override
+    protected void sound() {
+        super.sound();
+        Sound.DIE.play();
+    }
 }

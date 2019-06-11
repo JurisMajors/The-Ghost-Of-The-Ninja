@@ -4,6 +4,8 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.etc.TheEngine;
+import group4.game.GameState;
+import group4.game.Main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +33,9 @@ public abstract class Level {
     // Keep track of ExitActions that are registered per Exit
     private HashMap<Exit, ExitAction> exitActions;
 
+    // Keep track of the root folder for a level, Optional!
+    protected String levelRoot;
+
     /**
      * Initializes the level using factory & template method
      * Override @code{createRoot} and @code{createAdditionalModules} to specify the modules to be used for the level
@@ -47,18 +52,51 @@ public abstract class Level {
         TheEngine.getInstance().addEntity(this.player);     // Register the level wide player instance to the engine
 
         this.switchModule(this.rootModule);                 // Switch the current module to the root module
-                                                            // Also takes care of positioning the player entity etc.
+        // Also takes care of positioning the player entity etc.
 
         this.exitActions = new HashMap<>();                 // Initialize the exit action list
 
         this.configExits();                                 // Configure the exits
 
         this.checkSanity();                                 // Check that the level was created appropriately
+        Main.setState(GameState.PLAYING);                   // Ensure the system knows the game is playing.
     }
 
+    /**
+     * Initializes the level using factory & template method. Bases modules on a given folder path.
+     * Override @code{createRoot} and @code{createAdditionalModules} to specify the modules to be used for the level
+     *
+     * @param levelRoot String, the root path of the level
+     */
+    public Level(String levelRoot) {
+        this.levelRoot = levelRoot;
+
+        // I want to set the levelRoot before calling this(), which java won't allow. Hence this is a copy paste
+        // of the other constructor.
+        this.modules = new ArrayList<>();                   // Initialize the modules list
+
+        this.rootModule = this.createRoot();                // Create and add the root module
+        this.addModule(this.rootModule);
+
+        this.createAdditionalModules();                     // Create and add the additional modules
+
+        this.player = this.createPlayer();                  // Create the level wide player instance
+        TheEngine.getInstance().addEntity(this.player);     // Register the level wide player instance to the engine
+
+        this.switchModule(this.rootModule);                 // Switch the current module to the root module
+        // Also takes care of positioning the player entity etc.
+
+        this.exitActions = new HashMap<>();                 // Initialize the exit action list
+
+        this.configExits();                                 // Configure the exits
+
+        this.checkSanity();                                 // Check that the level was created appropriately
+        Main.setState(GameState.PLAYING);
+    }
 
     /**
      * Checks the sanity of the level
+     *
      * @Throws IllegalStateException if the level is not sane
      */
     private final void checkSanity() {
@@ -97,6 +135,7 @@ public abstract class Level {
 
     /**
      * This method adds a module to this level
+     *
      * @param m The module to add to this level
      */
     protected final void addModule(Module m) {
@@ -120,7 +159,8 @@ public abstract class Level {
      * Switches the level to the next module
      */
     public final void switchModule(Module m) {
-        if (!this.modules.contains(m)) throw new IllegalArgumentException("Level: you cannot switch to a module that is not part of the Level");
+        if (!this.modules.contains(m))
+            throw new IllegalArgumentException("Level: you cannot switch to a module that is not part of the Level");
 
         // Unload the old module (if there is an old module)
         if (this.currentModule != null) {
@@ -156,6 +196,7 @@ public abstract class Level {
 
     /**
      * Set the exit action for a certain exit
+     *
      * @param e The exit
      * @param a The exit action
      */
@@ -177,6 +218,7 @@ public abstract class Level {
 
     /**
      * Let the level react to an exit being reached
+     *
      * @param e The exit that was reached
      */
     public void handleExit(Exit e) {
@@ -184,5 +226,34 @@ public abstract class Level {
             throw new IllegalArgumentException("Level: no exit action is defined for this exit");
 
         this.exitActions.get(e).exit();
+    }
+
+
+    /**
+     * Reset the level to initial state
+     */
+    public void reset() {
+        // Unload current module
+        this.currentModule.unload();
+
+        // Reset all modules
+        for (Module m : this.modules) {
+            m.reset();
+        }
+
+        // Set the root module as the current module
+        this.currentModule = this.rootModule;
+
+        // Configure the exits correctly
+        this.configExits();
+
+        // Create a new player and set it to correct position
+        TheEngine.getInstance().removeEntity(this.player);
+        this.player = this.createPlayer();
+        TheEngine.getInstance().addEntity(this.player);
+        this.player.getComponent(PositionComponent.class).position = this.currentModule.getPlayerInitialPosition();
+
+        // Load the module
+        this.currentModule.load();
     }
 }

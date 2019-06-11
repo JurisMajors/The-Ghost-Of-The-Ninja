@@ -20,7 +20,7 @@ public abstract class RayStateDecoder implements StateDecoderInterface {
     /**
      * nr of rays to cast
      **/
-    private int nrRays;
+    int nrRays;
     /**
      * range of the ray casting angle (in degrees)
      **/
@@ -29,11 +29,13 @@ public abstract class RayStateDecoder implements StateDecoderInterface {
      * The ray caster which combines the given feature factories in a double array
      */
     private RayCastDecoder rayDecoder;
+    int rayLength;
 
-    public RayStateDecoder(int n, float angleRange) {
+    public RayStateDecoder(int n, float angleRange, int length) {
+        this.rayLength = length;
         this.nrRays = n;
         this.angleRange = angleRange;
-        this.rayDecoder = new RayCastDecoder(this.angleRange, this.nrRays, new StandardIntersectionDecoder());
+        this.rayDecoder = new RayCastDecoder(this.angleRange, this.nrRays, new StandardIntersectionDecoder(), length);
     }
 
     @Override
@@ -58,7 +60,7 @@ public abstract class RayStateDecoder implements StateDecoderInterface {
 
     @Override
     public int getInputSize() {
-        return 2 * this.nrRays + this.ghostFeatureAmount();
+        return this.nrRays + this.ghostFeatureAmount();
     }
 
     /**

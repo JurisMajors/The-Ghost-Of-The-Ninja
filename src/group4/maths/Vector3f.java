@@ -36,6 +36,16 @@ public class Vector3f {
     }
 
     /**
+     * Give this vector the values of the vector to copy
+     * @param toCopy vector to copy
+     */
+    public void setVector(Vector3f toCopy) {
+        this.x = toCopy.x;
+        this.y = toCopy.y;
+        this.z = toCopy.z;
+    }
+
+    /**
      * Adds this vector to another vector and results the result.
      *
      * @param other vector
@@ -109,6 +119,21 @@ public class Vector3f {
     }
 
     /**
+     * Computes the angle between this vector and other in degrees
+     * @param other vector
+     * @return angle between this and other in degrees
+     */
+    public float angle(Vector3f other) {
+        // cos(alpha) = (A . B) / (|A| * |B|)
+        float cosa = dot(other) / (length() * other.length());
+
+        float angle = (float) Math.acos(cosa);
+        float degrees = (float) Math.toDegrees(angle);
+
+        return degrees;
+    }
+
+    /**
      * Computes and returns the cross producto of this vector with other.
      *
      * @param other vector
@@ -166,6 +191,19 @@ public class Vector3f {
     public float euclidDist(Vector3f other) {
         Vector3f diff = this.sub(other);
         return (float) Math.sqrt(diff.dot(diff));
+    }
+
+    /**
+     * Calculates the manhattan distance between two vectors
+     * @param other the vector to calculate the distance to
+     * @return manhattan dist between this and other
+     */
+    public float manhDist(Vector3f other) {
+        Vector3f diff = this.sub(other);
+        diff.x = Math.abs(diff.x);
+        diff.y = Math.abs(diff.y);
+        diff.z = Math.abs(diff.z);
+        return diff.x + diff.y + diff.z;
     }
 
     /**
@@ -274,6 +312,15 @@ public class Vector3f {
         return this.capValues(new Vector3f(max, max, max));
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Vector3f) {
+            Vector3f vec = (Vector3f) obj;
+            return this.x == vec.x && this.y == vec.y && this.z == vec.z;
+        }
+
+        return false;
+    }
 
     private float capDirection(float cur, float max) throws IllegalArgumentException {
         if (max < 0) throw new IllegalArgumentException(this.getClass().getName() + " capDirection(cur,max) received " +

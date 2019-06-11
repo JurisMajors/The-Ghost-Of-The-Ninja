@@ -47,7 +47,7 @@ public abstract class AbstractBrainMutation implements EvolutionaryOperator<Brai
             String key = entry.getKey(); // info about the matrix, ends with W if a weight matrix
             if (key.endsWith("b")) continue;
             // mutate the weight thats not bias
-            INDArray w = entry.getValue();
+            INDArray w = entry.getValue().dup();
             // mutate the weight
             mutateWeight(w, r);
             mutatedB.nn.setParam(key, w);

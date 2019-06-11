@@ -9,7 +9,6 @@ import java.util.Random;
  */
 public class BrainFactory extends AbstractCandidateFactory<Brain> {
     int[] layerInfo;
-    public static int seed = 1;
     /**
      * Give neural network sizes.
      */
@@ -30,7 +29,7 @@ public class BrainFactory extends AbstractCandidateFactory<Brain> {
 
     @Override
     public Brain generateRandomCandidate(Random random) {
-        Brain b = new Brain(layerInfo, random.nextInt());
+        Brain b = new Brain(layerInfo);
         return b;
     }
 }

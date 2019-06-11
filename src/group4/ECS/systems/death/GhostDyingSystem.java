@@ -2,7 +2,6 @@ package group4.ECS.systems.death;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.identities.GhostComponent;
-import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.entities.Ghost;
 import group4.ECS.etc.Families;
@@ -10,12 +9,12 @@ import group4.game.Main;
 
 public class GhostDyingSystem extends PlayerDyingSystem {
 
-    public GhostDyingSystem (boolean reset) {
-        super(Families.ghostFamily, reset);
+    public GhostDyingSystem (boolean reset, int priority) {
+        super(Families.ghostFamily, reset, priority);
     }
 
-    public GhostDyingSystem () {
-        super(Families.ghostFamily, false);
+    public GhostDyingSystem (int priority) {
+        super(Families.ghostFamily, false, priority);
     }
 
     @Override
@@ -35,14 +34,16 @@ public class GhostDyingSystem extends PlayerDyingSystem {
         // if best move has more than 50 calls, but there are still
         // two moves with zero, this individual is dumb :)
         boolean tooDumb = (moveFreq[argMax] > 80 && zerosCount >= 2);
-        return super.shouldDie(entity, deltaTime) || tooDumb;
+        return super.shouldDie(entity, deltaTime) || (Main.AI && tooDumb);
     }
 
     @Override
     protected boolean die(Entity entity, float deltaTime) {
         Ghost g = (Ghost) entity;
         if (!Main.AI) {
-            g.getComponent(PositionComponent.class).position = g.level.getCurrentModule().getPlayerInitialPosition();
+            g.getComponent(HealthComponent.class).health = 0;
+            g.master.spawnedGhost = false; // can spawn again
+            return true;
         } else {
             g.getComponent(HealthComponent.class).health = 0;
         }

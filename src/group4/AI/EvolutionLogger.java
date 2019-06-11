@@ -4,6 +4,7 @@ import org.uncommons.watchmaker.framework.EvolutionObserver;
 import org.uncommons.watchmaker.framework.PopulationData;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -14,8 +15,12 @@ import java.util.logging.SimpleFormatter;
 public class EvolutionLogger implements EvolutionObserver<Brain> {
     /** every genToSave best individual is saved **/
     private int genToSave;
+
     /** directory where to save the best individuals **/
     String filePath;
+
+    /** best fitness in the whole training process **/
+    double bestFitness = Evolver.evaluationStrat.isNatural() ? -1 : 1;
 
     private final static Logger LOGGER = Logger.getLogger("EvolutionLog"); // used for logging to file
 
@@ -32,7 +37,12 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);
 
-            LOGGER.info("Logger initialized");
+            LOGGER.info("Logger initialized! \n" +
+                    "Layers: " + Arrays.toString(Evolver.layerSizes) + "\n" +
+                    "Population: " + Evolver.populationSize + "\n" +
+                    "MutationProb: " + Evolver.mutationProbability + "\n" +
+                    "Rays: " + Evolver.rays + "\n" +
+                    "Evaluation: " + Evolver.evaluationStrat.getClass().getName());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -53,25 +63,34 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
      */
     @Override
     public void populationUpdate(PopulationData<? extends Brain> data) {
-        String log = String.format("Current generation: %d \n Mean Fitness: %f \n Best Fitness: %f \n STD fitness : %f",
-                data.getGenerationNumber(), data.getMeanFitness(),
+        String log = String.format("Current generation: %d / %d \n Mean Fitness: %f \n Best Fitness: %f \n STD fitness: %f",
+                data.getGenerationNumber() + 1, Evolver.genCount, data.getMeanFitness(),
                 data.getBestCandidateFitness(), data.getFitnessStandardDeviation());
 
-        System.out.println(log);
         if (this.filePath != null) {
             LOGGER.info(log);
         }
+        boolean forceSave = false; // whether to save the model if other conditions dont suffice
+        if ((data.isNaturalFitness() && bestFitness < data.getBestCandidateFitness()) ||
+        !data.isNaturalFitness() && bestFitness > data.getBestCandidateFitness()) { // found better fitness than before
+            bestFitness = data.getBestCandidateFitness(); // save it in the variable
+            forceSave = true; // and save the model
+        }
+        if (data.getGenerationNumber() + 1 == Evolver.genCount) {
+            forceSave = true;
+        }
 
         // save best candidate every number of generations
-        if (this.filePath != null &&
-                data.getGenerationNumber() % genToSave == 0
-                && data.getGenerationNumber() != 0) {
+        if ((this.filePath != null &&
+                data.getGenerationNumber() % genToSave == 0)
+                || forceSave) {
 
             Brain best = data.getBestCandidate();
             try {
+                String modelName = this.filePath + "Gen-" + data.getGenerationNumber() +
+                        "-Fit-" + data.getBestCandidateFitness() + "-" + System.currentTimeMillis();
                 // save it to file with some information in file name and timestamp
-                best.toFile(this.filePath + "Gen-" + data.getGenerationNumber() +
-                        "-Fit-" + data.getBestCandidateFitness() + "-" + System.currentTimeMillis());
+                best.toFile(modelName, !(Evolver.saveSettingsOnce && data.getGenerationNumber() > genToSave));
             } catch (IOException e) {
                 System.err.println("WARNING: Individuals are not being saved because " +
                                     "IOException was thrown on path " + this.filePath);

@@ -19,7 +19,7 @@ public class Block extends Entity {
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent());
 
-        this.add(new GraphicsComponent(shader, texture, DimensionComponent.defaultTileDimension));
+        this.add(new GraphicsComponent(shader, texture, DimensionComponent.defaultTileDimension, false));
         this.add(new CollisionComponent(BlockCollision.getInstance()));
 
     }
@@ -27,7 +27,7 @@ public class Block extends Entity {
     public Block(Vector3f position, Shader shader, Texture texture, float[] tileMapCoords) {
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent());
-        this.add(new GraphicsComponent(shader, texture, DimensionComponent.defaultTileDimension, tileMapCoords));
+        this.add(new GraphicsComponent(shader, texture, DimensionComponent.defaultTileDimension, tileMapCoords, false));
         this.add(new CollisionComponent(BlockCollision.getInstance()));
     }
 
@@ -47,7 +47,10 @@ public class Block extends Entity {
 
         // create basic graphics component covering the dimension of this block
         this.add(new CollisionComponent(BlockCollision.getInstance()));
-        this.add(new GraphicsComponent(shader, texture, dimension));
+        this.add(new GraphicsComponent(shader, texture, dimension, false));
     }
 
+    public static String getName() {
+        return "Exit";
+    }
 }

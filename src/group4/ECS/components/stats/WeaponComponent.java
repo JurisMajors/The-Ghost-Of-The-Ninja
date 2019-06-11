@@ -1,16 +1,16 @@
 package group4.ECS.components.stats;
 
-import com.badlogic.ashley.core.Component;
-import group4.ECS.etc.EntityConst;
+public class WeaponComponent extends ItemComponent {
 
-public class WeaponComponent implements Component {
+    public int damage;
 
-    public int fireRate;
-    public EntityConst.BulletType type;
-
-    public WeaponComponent(int fireRate, EntityConst.BulletType type) {
-        this.fireRate = fireRate;
-        this.type = type;
+    /**
+     * @param damage
+     * @param cooldown the cooldown to which the item is set after usage
+     */
+    public WeaponComponent(int damage, float cooldown) {
+        super(cooldown);
+        this.damage = damage;
     }
 
 }

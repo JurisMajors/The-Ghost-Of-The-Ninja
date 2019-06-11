@@ -7,10 +7,14 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.identities.CameraComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.entities.Camera;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
+import group4.game.GameState;
+import group4.game.Main;
 import group4.maths.Matrix4f;
+import group4.maths.Vector3f;
 
 
 /**
@@ -23,7 +27,8 @@ public class CameraSystem extends EntitySystem {
     private ImmutableArray<Entity> entities;
     private Family family;
 
-    public CameraSystem(Family f) {
+    public CameraSystem(Family f, int priority) {
+        super(priority);
         this.family = f;
     }
 
@@ -53,18 +58,31 @@ public class CameraSystem extends EntitySystem {
      */
     public void update(float deltaTime) {
         // Get the camera and the player (there should be only one of both, currently)
-        Entity mainCamera = entities.get(0);
-        Entity player = TheEngine.getInstance().getEntitiesFor(family).get(0);
-
-        // get mapper for O(1) component retrieval
+        Camera mainCamera = (Camera) entities.get(0);
         CameraComponent cc = Mappers.cameraMapper.get(mainCamera);
-        PositionComponent pc = Mappers.positionMapper.get(player);
+
+        Vector3f newPosition;
+        if (Main.STATE == GameState.PLAYING) {
+            // Camera which follows the player
+            newPosition = strictTargetFollow();
+        } else {
+            // Static for now
+            newPosition = new Vector3f(8.0f, 4.5f, 0.0f);
+        }
+
+        // update cam world pos
+        Mappers.positionMapper.get(mainCamera).position = newPosition;
 
         // Update the view matrix to be the player position
         // Note that player position vector should be inverted to center the view on the player
-        cc.viewMatrix = Matrix4f.translate(pc.position.scale(-1.0f));
+        cc.viewMatrix = Matrix4f.translate(newPosition.scale(-1.0f));
     }
 
+    private Vector3f strictTargetFollow() {
+        Entity player = TheEngine.getInstance().getEntitiesFor(family).get(0);
+        PositionComponent pc = Mappers.positionMapper.get(player);
+        return pc.position;
+    }
     /**
      * @return whether this system is active or not
      */
