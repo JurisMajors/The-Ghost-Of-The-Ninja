@@ -27,10 +27,9 @@ public class FlappingMob extends Mob {
     public FlappingMob(Vector3f position, Level l, Texture tex, float[] texCoords) {
         super(position, l, FlappingMobMovementHandler.getInstance());
         this.add(new FlappingMobComponent());
-        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.DEBUG, new Vector3f(1.0f, 1.0f, 0.0f), true));
+        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.DEBUG, new Vector3f(1.0f, 1.0f, 0.0f), false));
         this.add(new AnimationComponent());
         this.setupAnimation();
-        System.out.println("adding bat!");
     }
 
     private void setupAnimation() {
