@@ -114,7 +114,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
 
         // Draw the right leg
         float[] rightLegAngles = this.getLimbAngles(this.getOffsetHipPosition(false), rightFootOffset, upperLegDimension.y, lowerLegDimension.y, true);
-        rightLegUpper = new BodyPart(torso, new Vector3f(-0.03125f, 0.03125f, -1.0f), upperLegDimension, rightLegAngles[0], Texture.PLAYER_LIGHT_LEG_UPPER);
+        rightLegUpper = new BodyPart(torso, new Vector3f(-0.03125f, 0.03125f, -0.5f), upperLegDimension, rightLegAngles[0], Texture.PLAYER_LIGHT_LEG_UPPER);
         rightLegLower = new BodyPart(rightLegUpper, new Vector3f(0.0f, upperLegDimension.y - 0.0625f, 0.0f), lowerLegDimension, rightLegAngles[1], Texture.PLAYER_LIGHT_LEG_LOWER);
         this.hierarchy.add(rightLegUpper);
         this.hierarchy.add(rightLegLower);
