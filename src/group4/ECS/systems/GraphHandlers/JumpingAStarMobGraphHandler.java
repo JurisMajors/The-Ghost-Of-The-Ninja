@@ -16,7 +16,6 @@ public class JumpingAStarMobGraphHandler extends AbstractGraphHandler<JumpingASt
 
     @Override
     protected void generateFirstLayerNodes(Entity entity, ArrayList<Node> prevLayer, ArrayList<Node> currLayer) {
-        super.generateFirstLayerNodes(entity, prevLayer, currLayer);
         for (int i = 0; i < prevLayer.size(); i++) {
             leftUpNode(entity, currLayer, prevLayer.get(i));
             rightUpNode(entity, currLayer, prevLayer.get(i));
