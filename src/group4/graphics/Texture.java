@@ -26,8 +26,7 @@ public class Texture {
     public static Texture HITBOX;
     public static Texture NOTHINGNESS;
     public static Texture SPLINE;
-    public static Texture TOTEM_START;
-    public static Texture TOTEM_END;
+    public static Texture TOTEM;
 
     // GAME UI / OVERLAYS
     public static Texture START_BG;
@@ -65,8 +64,7 @@ public class Texture {
         NOTHINGNESS = new Texture("src/group4/res/textures/FF4D00-0.png");
         PLAYER = new Texture("src/group4/res/textures/char1.png");
         SPLINE = new Texture("src/group4/res/textures/spline.png");
-        TOTEM_START = new Texture("src/group4/res/textures/start-totem.png");
-        TOTEM_END = new Texture("src/group4/res/textures/end-totem.png");
+        TOTEM = new Texture("src/group4/res/textures/totem.png");
         START_BG = new Texture("src/group4/res/textures/start-bg.png");
         VIGNETTE_OVERLAY = new Texture("src/group4/res/textures/vignette-overlay.png");
         NOISE_OVERLAY = new Texture("src/group4/res/textures/noise-overlay.png");
