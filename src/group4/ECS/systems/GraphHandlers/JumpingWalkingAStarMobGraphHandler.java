@@ -6,6 +6,7 @@ import group4.ECS.systems.movement.MovementHandlers.AbstractMovementHandler;
 
 public class JumpingWalkingAStarMobGraphHandler extends AbstractGraphHandler<JumpingWalkingAStarMob> {
     private static AbstractGraphHandler agh = new JumpingWalkingAStarMobGraphHandler();
+
     public static AbstractGraphHandler getInstance() {
         return agh;
     }

@@ -110,15 +110,16 @@ public class UncollidingSystem extends IteratingSystem {
 
     /**
      * TODO: add javadoc
+     *
      * @param mc
      * @param displacement
      */
-    private void handleVelocity (MovementComponent mc, Vector3f displacement) {
+    private void handleVelocity(MovementComponent mc, Vector3f displacement) {
         if (displacement.y > 0) { // displacement from bottom
             if (mc.velocity.y <= 0) { // if falling down
                 mc.velocity.y = 0; // set velocity to zero
             }
-        } else if (displacement.y < 0){  // displacement from top
+        } else if (displacement.y < 0) {  // displacement from top
             mc.velocity.y *= -0.3; // go down when hit from top
         }
 

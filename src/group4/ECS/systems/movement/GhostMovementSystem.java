@@ -11,7 +11,7 @@ import group4.ECS.etc.Families;
 public class GhostMovementSystem extends PlayerMovementSystem {
 
     public GhostMovementSystem(int priority) {
-        super(Families.ghostFamily, priority) ;
+        super(Families.ghostFamily, priority);
     }
 
     @Override
@@ -43,7 +43,9 @@ public class GhostMovementSystem extends PlayerMovementSystem {
     }
 
     @Override
-    protected boolean shouldSpawnGhost(Object ref) { return false; }
+    protected boolean shouldSpawnGhost(Object ref) {
+        return false;
+    }
 
     @Override
     protected void move(Entity e, MovementComponent mc, PositionComponent pc, float deltaTime) {

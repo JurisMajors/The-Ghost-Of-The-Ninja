@@ -163,18 +163,18 @@ public class Platform extends Entity {
         }
         return result;
     }
-    
-    public float highestPoint(float x1, float x2){
+
+    public float highestPoint(float x1, float x2) {
         PositionComponent pc = this.getComponent(PositionComponent.class);
         DimensionComponent dc = this.getComponent(DimensionComponent.class);
-        if(pc.position.x>=x2||pc.position.x+dc.dimension.x<=x1) return -1.0f;
-        return pc.position.y+dc.dimension.y;
+        if (pc.position.x >= x2 || pc.position.x + dc.dimension.x <= x1) return -1.0f;
+        return pc.position.y + dc.dimension.y;
     }
 
-    public float lowestPoint(float x1, float x2){
+    public float lowestPoint(float x1, float x2) {
         PositionComponent pc = this.getComponent(PositionComponent.class);
         DimensionComponent dc = this.getComponent(DimensionComponent.class);
-        if(pc.position.x>=x2||pc.position.x+dc.dimension.x<=x1) return -1.0f;
+        if (pc.position.x >= x2 || pc.position.x + dc.dimension.x <= x1) return -1.0f;
         return pc.position.y;
     }
 

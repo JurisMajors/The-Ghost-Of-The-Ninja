@@ -37,6 +37,7 @@ public abstract class AbstractBrainCrossover extends AbstractCrossover<Brain> {
 
     /**
      * Apply the crossover rule on two parents producing two offsprings..
+     *
      * @return offsprings in a list
      */
     @Override
@@ -73,7 +74,8 @@ public abstract class AbstractBrainCrossover extends AbstractCrossover<Brain> {
             if (offW == null || offW.get(0) == null
                     || offW.get(1) == null) throw new NullPointerException("Offspring weights are null!");
 
-            if (offW.size() != 2) throw new IllegalStateException("Produced " + offW.size() + " offspring, instead of 2");
+            if (offW.size() != 2)
+                throw new IllegalStateException("Produced " + offW.size() + " offspring, instead of 2");
 
             // add the new weights to the offspring
             assignWeights(offW.get(0), layer, o1Params);
@@ -94,9 +96,10 @@ public abstract class AbstractBrainCrossover extends AbstractCrossover<Brain> {
 
     /**
      * Apply crossover rule on two parent weights
+     *
      * @param par1W weights of first parent
      * @param par2W weights of the second parent
-     * @param rng random number generator
+     * @param rng   random number generator
      * @return List of lists, which first list contains weights for the first offspring and the second list weights for first offspring
      * @post \return.size() == 2 && \return != null && \return.get(0) != null && \return.get(1) != null
      */

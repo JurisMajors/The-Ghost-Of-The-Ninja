@@ -16,7 +16,7 @@ public abstract class AbstractCollisionHandler<T extends Entity> {
     /**
      * This function specifies how a player deals with different types of collisions.
      *
-     * @param e is the entity subclass which to resolve the collision
+     * @param e  is the entity subclass which to resolve the collision
      * @param cc the collision component of the entity
      */
     public abstract void collision(T e, CollisionComponent cc);

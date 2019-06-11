@@ -15,7 +15,7 @@ public class Camera extends Entity {
 
         // Centered projection matrix
         this.add(new CameraComponent(Matrix4f.orthographic(-Main.SCREEN_WIDTH / 2, Main.SCREEN_WIDTH / 2,
-                - Main.SCREEN_HEIGHT / 2, Main.SCREEN_HEIGHT / 2, -1.0f, 1.0f)));
+                -Main.SCREEN_HEIGHT / 2, Main.SCREEN_HEIGHT / 2, -1.0f, 1.0f)));
     }
 
     public static String getName() {

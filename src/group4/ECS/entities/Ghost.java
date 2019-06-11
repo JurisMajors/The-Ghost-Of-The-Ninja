@@ -39,7 +39,7 @@ public class Ghost extends HierarchicalPlayer {
         this.add(new GhostComponent(brain));
     }
 
-    public Ghost (Vector3f position, Level level, String brainPath) {
+    public Ghost(Vector3f position, Level level, String brainPath) {
         this(position, level, new Brain(brainPath));
     }
 
@@ -47,14 +47,16 @@ public class Ghost extends HierarchicalPlayer {
      * Ghost constructor which also sets the master,
      * this constructor must be used when ghost is
      * spawned in-game by the player
+     *
      * @param master the player which spawned the ghost
      */
-    public Ghost (Level level, Brain brain, Player master) {
+    public Ghost(Level level, Brain brain, Player master) {
         this(master.getComponent(PositionComponent.class).position,
                 level, brain);
         this.master = master;
     }
-    public Ghost (Vector3f pos, Level level, Brain brain, Player master) {
+
+    public Ghost(Vector3f pos, Level level, Brain brain, Player master) {
         this(new Vector3f(pos)
                 , level, brain);
         this.master = master;
@@ -73,6 +75,7 @@ public class Ghost extends HierarchicalPlayer {
 
     /**
      * Set whether or not movement should be blocked
+     *
      * @param blocked new value for the movement block
      */
     public void setBlocked(boolean blocked) {

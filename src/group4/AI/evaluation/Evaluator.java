@@ -44,9 +44,13 @@ import static org.lwjgl.opengl.GL11.glClear;
  */
 public class Evaluator implements FitnessEvaluator<Brain> {
 
-    /** timer for determining the time passed during game **/
+    /**
+     * timer for determining the time passed during game
+     **/
     private Timer timer;
-    /** evaluation strategy for individuals **/
+    /**
+     * evaluation strategy for individuals
+     **/
     private AbstractEvaluationStrategy strategy;
 
     public Evaluator(AbstractEvaluationStrategy strategy) {
@@ -150,7 +154,7 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         engine.addSystem(new CollisionSystem(2));
         engine.addSystem(new CollisionEventSystem(3));
         engine.addSystem(new UncollidingSystem(4));
-        engine.addSystem(new GhostDyingSystem(false,5));
+        engine.addSystem(new GhostDyingSystem(false, 5));
         if (Evolver.render) {
             engine.addSystem(new RenderSystem(6));
         }

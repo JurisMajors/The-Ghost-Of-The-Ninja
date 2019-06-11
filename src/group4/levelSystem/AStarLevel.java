@@ -1,6 +1,7 @@
 package group4.levelSystem;
 
 import group4.AI.Evolver;
+import group4.ECS.entities.AStarMobs.JumpingAStarMob;
 import group4.ECS.entities.AStarMobs.JumpingWalkingAStarMob;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
@@ -18,10 +19,11 @@ import group4.maths.spline.MultiSpline;
  */
 public class AStarLevel extends Level {
     private final static String modulePath = Evolver.modulePath;
+
     @Override
     protected Module createRoot() {
         if (modulePath == null) throw new IllegalStateException("Module Path is not set for AI level");
-        Module m= new Module(this, this.modulePath, null);
+        Module m = new Module(this, this.modulePath, null);
         // my little spline test
         Vector3f tempPosition = new Vector3f(15.0f, 4.0f, 0.0f);
         Vector3f tempDimension = new Vector3f(2.0f, 1.0f, 0.0f);
@@ -40,7 +42,7 @@ public class AStarLevel extends Level {
             v.addi(new Vector3f(0.0f, 2.0f, 0.0f));
         }
         MultiSpline mySpline = new MultiSpline(tempPoint);
-        SplinePlatform splinePlatform = new SplinePlatform(tempPosition,  mySpline, thickness, Shader.SIMPLE, Texture.BRICK);
+        SplinePlatform splinePlatform = new SplinePlatform(tempPosition, mySpline, thickness, Shader.SIMPLE, Texture.BRICK);
         m.addEntity(splinePlatform);
         return m;
     }
@@ -52,13 +54,13 @@ public class AStarLevel extends Level {
 
     @Override
     protected Player createPlayer() {
-        TheEngine.getInstance().addEntity(new JumpingWalkingAStarMob(new Vector3f(20, 10, 0.0f), this,null,"JWAS.txt",null));
+        TheEngine.getInstance().addEntity(new JumpingAStarMob(new Vector3f(20, 10, 0.0f), this, this.rootModule, null, null));
         return new HierarchicalPlayer(new Vector3f(), this);
     }
 
     @Override
     protected void configExits() {
-        Module mod= this.getCurrentModule();
+        Module mod = this.getCurrentModule();
         // my little spline test
         Vector3f tempPosition = new Vector3f(15.0f, 4.0f, 0.0f);
         Vector3f tempDimension = new Vector3f(2.0f, 1.0f, 0.0f);
@@ -77,7 +79,7 @@ public class AStarLevel extends Level {
             v.addi(new Vector3f(0.0f, 2.0f, 0.0f));
         }
         MultiSpline mySpline = new MultiSpline(tempPoint);
-        SplinePlatform splinePlatform = new SplinePlatform(tempPosition,  mySpline, thickness, Shader.SIMPLE, Texture.BRICK);
+        SplinePlatform splinePlatform = new SplinePlatform(tempPosition, mySpline, thickness, Shader.SIMPLE, Texture.BRICK);
         mod.addEntity(splinePlatform);
 
         ExitAction global = new ExitAction() {

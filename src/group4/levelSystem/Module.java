@@ -157,7 +157,7 @@ public class Module {
                 parseSplineLayer(layer);
             } else if (layerName.equals("COINS") && !Main.AI) {
                 parseCoinLayer(layer);
-            }else if (layerName.equals("TOTEMS")) {
+            } else if (layerName.equals("TOTEMS")) {
                 parseTotemLayer(layer);
             } else if (layerName.equals("EXITS")) {
                 setupExits(layer);

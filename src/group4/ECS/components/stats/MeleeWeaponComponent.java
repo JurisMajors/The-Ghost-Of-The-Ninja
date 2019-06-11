@@ -12,7 +12,7 @@ public class MeleeWeaponComponent extends WeaponComponent {
      * melee weapon
      *
      * @param damage
-     * @param cooldown See {@link group4.ECS.systems.combat.PlayerCombatSystem}
+     * @param cooldown     See {@link group4.ECS.systems.combat.PlayerCombatSystem}
      * @param hitBox
      * @param hitboxOffset
      */

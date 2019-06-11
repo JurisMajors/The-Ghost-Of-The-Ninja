@@ -12,13 +12,13 @@ import group4.levelSystem.Module;
 import group4.maths.Vector3f;
 
 public class JumpingAStarMob extends AStarMob {
-    public JumpingAStarMob(Vector3f position, Level l, Module module,String inFile,String outFile) {
-        super(position, l,module,inFile,outFile, JumpingAStarMobGraphHandler.getInstance());
+    public JumpingAStarMob(Vector3f position, Level l, Module module, String inFile, String outFile) {
+        super(position, l, module, inFile, outFile, JumpingAStarMobGraphHandler.getInstance());
         this.add(new JumpingAStarMobComponent());
     }
 
-    public JumpingAStarMob(Vector3f position, Level l,Module module,String inFile,String outFile, Texture tex, float[] texCoords) {
-        super(position, l,module,inFile,outFile, tex, texCoords, JumpingAStarMobGraphHandler.getInstance());
+    public JumpingAStarMob(Vector3f position, Level l, Module module, String inFile, String outFile, Texture tex, float[] texCoords) {
+        super(position, l, module, inFile, outFile, tex, texCoords, JumpingAStarMobGraphHandler.getInstance());
         this.add(new JumpingAStarMobComponent());
     }
 

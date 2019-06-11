@@ -19,6 +19,7 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
 
     /**
      * Initialize the PlayerDyingSystem
+     *
      * @param reset Indicate whether the system should automatically reset the module once the player dies
      */
     public PlayerDyingSystem(boolean reset, int priority) {
@@ -40,7 +41,7 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
         Vector3f pc = pp.position.add(pd.dimension.scale(0.5f));
 
         // get current module of entity
-        Module curModule = entity instanceof Player ? ((Player)entity).level.getCurrentModule()
+        Module curModule = entity instanceof Player ? ((Player) entity).level.getCurrentModule()
                 : ((Mob) entity).level.getCurrentModule();
 
         // Check whether or not the player's center is outside the module grid

@@ -8,7 +8,9 @@ import group4.ECS.systems.collision.CollisionData;
 
 public class ExitCollision extends AbstractCollisionHandler<Exit> {
 
-    /** Singleton **/
+    /**
+     * Singleton
+     **/
     private static AbstractCollisionHandler me = new ExitCollision();
 
     @Override

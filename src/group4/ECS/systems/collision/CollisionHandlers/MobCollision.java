@@ -12,7 +12,9 @@ import java.util.Set;
 
 public class MobCollision extends AbstractCollisionHandler<Mob> {
 
-    /** Singleton **/
+    /**
+     * Singleton
+     **/
     private static AbstractCollisionHandler me = new MobCollision();
 
     @Override
@@ -35,7 +37,7 @@ public class MobCollision extends AbstractCollisionHandler<Mob> {
         }
     }
 
-    public static AbstractCollisionHandler getInstance(){
+    public static AbstractCollisionHandler getInstance() {
         return me;
     }
 

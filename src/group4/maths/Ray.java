@@ -36,10 +36,11 @@ public class Ray {
 
     /**
      * Creates a ray that can be casted
-     * @param startingPos starting pos of the ray
-     * @param dir the direction of the ray (doesnt have to be normalized)
+     *
+     * @param startingPos         starting pos of the ray
+     * @param dir                 the direction of the ray (doesnt have to be normalized)
      * @param ignorableComponents entities containing these components are ignored
-     * @param length length of the ray
+     * @param length              length of the ray
      */
     public Ray(Vector3f startingPos, Vector3f dir, Collection<Class<? extends Component>> ignorableComponents, float length) {
         this.startPos = new Vector3f(startingPos);
@@ -50,8 +51,9 @@ public class Ray {
 
     /**
      * Creates ray of very large length
-     * @param startingPos starting pos of the ray
-     * @param dir the direction of the ray (doesnt have to be normalized)
+     *
+     * @param startingPos         starting pos of the ray
+     * @param dir                 the direction of the ray (doesnt have to be normalized)
      * @param ignorableComponents entities containing these components are ignored
      */
     public Ray(Vector3f startingPos, Vector3f dir, Collection<Class<? extends Component>> ignorableComponents) {
@@ -60,17 +62,20 @@ public class Ray {
 
     /**
      * Creates ray with specified starting position, doesnt ignore any component entities
+     *
      * @param startingPos starting pos of the ray
-     * @param dir the direction of the ray (doesnt have to be normalized)
-     * @param length , the length of the ray
+     * @param dir         the direction of the ray (doesnt have to be normalized)
+     * @param length      , the length of the ray
      */
     public Ray(Vector3f startingPos, Vector3f dir, float length) {
         this(startingPos, dir, new ArrayList<>(), length);
     }
+
     /**
      * Creates very large ray in specified direction
+     *
      * @param startingPos starting pos of the ray
-     * @param dir the direction of the ray (doesnt have to be normalized)
+     * @param dir         the direction of the ray (doesnt have to be normalized)
      */
     public Ray(Vector3f startingPos, Vector3f dir) {
         this(startingPos, dir, new ArrayList<>(), 10000f);
@@ -80,7 +85,7 @@ public class Ray {
      * Cast the ray to the given entities
      *
      * @param entities the entities that the ray might intersect
-     * @param debug whether to draw rays with debug utils
+     * @param debug    whether to draw rays with debug utils
      * @return IntersectionPair, containing intersection point and entity. Entity is null if no intersection occured.
      */
     public IntersectionPair cast(ImmutableArray<Entity> entities, boolean debug) {
@@ -210,6 +215,7 @@ public class Ray {
 
     /**
      * Given infinite lines, return intersection point
+     *
      * @param a1 first point of line 1
      * @param a2 second point of line 1
      * @param b1 first point of line 2

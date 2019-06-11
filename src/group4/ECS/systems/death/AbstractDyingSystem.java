@@ -29,7 +29,8 @@ public abstract class AbstractDyingSystem extends IteratingSystem {
 
     /**
      * Determine whether the entity should die.
-     * @param entity the entity to determine its fate
+     *
+     * @param entity    the entity to determine its fate
      * @param deltaTime delta time of the game
      * @return whether to kill the entity
      */
@@ -37,7 +38,8 @@ public abstract class AbstractDyingSystem extends IteratingSystem {
 
     /**
      * Death callback for the entity.
-     * @param entity  the entity to kill
+     *
+     * @param entity    the entity to kill
      * @param deltaTime delta time of the game
      * @return whether to remove the entity from the engine
      */

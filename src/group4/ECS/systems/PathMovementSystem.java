@@ -11,7 +11,7 @@ import group4.maths.Vector3f;
 import group4.utils.DebugUtils;
 
 public class PathMovementSystem extends IteratingSystem {
-    int vertexID=0;
+    int vertexID = 0;
 
     public PathMovementSystem() {
         super(Families.pathFamily);
@@ -23,20 +23,20 @@ public class PathMovementSystem extends IteratingSystem {
         PositionComponent pc = Mappers.positionMapper.get(entity);
         PathComponent pathc = Mappers.pathMapper.get(entity);
 
-        if (pathc.coordinates.size()>0) {
-            gc.vertexID=pathc.vertexID.getFirst();
+        if (pathc.coordinates.size() > 0) {
+            gc.vertexID = pathc.vertexID.getFirst();
             pathc.vertexID.removeFirst();
             pc.position = pathc.coordinates.getFirst();
             pathc.coordinates.removeFirst();
             /*for (int i = pathc.index + 1; i < pathc.direction.length; i++)
                 DebugUtils.drawLine(pathc.direction[i - 1], pathc.direction[i]);*/
         }
-        if(gc.vertexID!=-1) vertexID=gc.vertexID;
-            for (int i = 0; i < gc.neighbours.get(vertexID).size(); i++) {
-                for (int j = 1; j < gc.edgePath.get(gc.edgeID[vertexID][gc.neighbours.get(vertexID).get(i)]).size(); j++) {
-                    DebugUtils.drawLine(gc.edgePath.get(gc.edgeID[vertexID][gc.neighbours.get(vertexID).get(i)]).get(j - 1), gc.edgePath.get(gc.edgeID[vertexID][gc.neighbours.get(vertexID).get(i)]).get(j));
-                }
+        if (gc.vertexID != -1) vertexID = gc.vertexID;
+        for (int i = 0; i < gc.neighbours.get(vertexID).size(); i++) {
+            for (int j = 1; j < gc.edgePath.get(gc.edgeID[vertexID][gc.neighbours.get(vertexID).get(i)]).size(); j++) {
+                DebugUtils.drawLine(gc.edgePath.get(gc.edgeID[vertexID][gc.neighbours.get(vertexID).get(i)]).get(j - 1), gc.edgePath.get(gc.edgeID[vertexID][gc.neighbours.get(vertexID).get(i)]).get(j));
             }
+        }
 
         /*GraphComponent mgc = Mappers.moduleGraphMapper.get(entity);
         for(int i=0;i<mgc.xCoords.length;i++)if(mgc.collisionPairs.containsKey(mgc.xCoords[i])){

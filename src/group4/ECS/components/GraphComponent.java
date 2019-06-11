@@ -22,16 +22,16 @@ public class GraphComponent implements Component {
     public TreeMap<Float, Integer> yHValue;
 
     public GraphComponent(Module module) {
-        this.module=module;
+        this.module = module;
     }
 
     public GraphComponent(Module module, String outFile) {
-        this.module=module;
-        this.outFile=outFile;
+        this.module = module;
+        this.outFile = outFile;
     }
 
     public GraphComponent(String inFile) {
-        this.inFile=inFile;
+        this.inFile = inFile;
     }
 
 }

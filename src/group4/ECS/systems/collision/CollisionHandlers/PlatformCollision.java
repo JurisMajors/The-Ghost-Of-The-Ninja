@@ -5,7 +5,9 @@ import group4.ECS.entities.world.Platform;
 
 public class PlatformCollision extends AbstractCollisionHandler<Platform> {
 
-    /** Singleton **/
+    /**
+     * Singleton
+     **/
     private static AbstractCollisionHandler me = new PlatformCollision();
 
     @Override

@@ -13,7 +13,9 @@ import java.util.Set;
 
 public class MeleeCollision extends AbstractCollisionHandler<DamageArea> {
 
-    /** Singleton **/
+    /**
+     * Singleton
+     **/
     private static AbstractCollisionHandler me = new MeleeCollision();
 
     @Override
@@ -43,7 +45,7 @@ public class MeleeCollision extends AbstractCollisionHandler<DamageArea> {
         h.health -= dmg.damage;
     }
 
-    public static AbstractCollisionHandler getInstance(){
+    public static AbstractCollisionHandler getInstance() {
         return me;
     }
 }

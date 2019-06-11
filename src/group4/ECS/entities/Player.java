@@ -44,7 +44,7 @@ public class Player extends Entity {
     /**
      * The part of velocityRange, that is used for velocity, when not sprinting
      */
-    public static final float walkingRatio = 3.0f/4.0f;
+    public static final float walkingRatio = 3.0f / 4.0f;
 
     /**
      * Whether the player has spawned a ghost and it is alive
@@ -65,7 +65,7 @@ public class Player extends Entity {
      * Creates a player
      *
      * @param position center point of player
-     * @param level the level that the player is part of
+     * @param level    the level that the player is part of
      */
     public Player(Vector3f position, Level level) {
         totemStatus = null;
@@ -98,6 +98,7 @@ public class Player extends Entity {
 
     /**
      * Set the state of the entity
+     *
      * @param s The new state of the entity
      */
     public void setState(EntityState s) {

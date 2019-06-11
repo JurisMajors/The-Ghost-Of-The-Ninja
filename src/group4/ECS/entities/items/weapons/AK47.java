@@ -23,7 +23,7 @@ public class AK47 extends Gun {
 
         // add weapon specs
         this.add(new RangeWeaponComponent(10, 15,
-                new Vector3f(0.5f, 2.0f,0.0f), EntityConst.BulletType.MACHINEGUN));
+                new Vector3f(0.5f, 2.0f, 0.0f), EntityConst.BulletType.MACHINEGUN));
     }
 
     public static String getName() {

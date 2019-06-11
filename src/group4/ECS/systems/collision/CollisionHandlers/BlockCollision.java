@@ -5,7 +5,9 @@ import group4.ECS.entities.world.Block;
 
 public class BlockCollision extends AbstractCollisionHandler<Block> {
 
-    /** Singleton **/
+    /**
+     * Singleton
+     **/
     private static AbstractCollisionHandler me = new BlockCollision();
 
     @Override

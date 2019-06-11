@@ -14,6 +14,7 @@ public class AnimationComponent implements Component {
     private Map<EntityState, Animation> animations;
     private Animation currentAnimation;
     private EntityState currentState;
+
     /**
      * Default constructor which creates the component. No data is currently associated with being animatable.
      */

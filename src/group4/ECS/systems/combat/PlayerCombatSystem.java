@@ -36,7 +36,7 @@ public class PlayerCombatSystem extends IteratingSystem {
      * This manages the combat of the player, i.e. input -> attack
      * as well as all cooldowns of players items in inventory
      *
-     * @param entity player
+     * @param entity    player
      * @param deltaTime time in between past and current tick
      */
     @Override
@@ -62,7 +62,7 @@ public class PlayerCombatSystem extends IteratingSystem {
             // if melee
             if (wc.cooldown <= 0.0f) {
                 // set cooldown in accordance to rate of attack
-                wc.cooldown = wc.rateOfAttack == 0 ? 0 :1 / wc.rateOfAttack;
+                wc.cooldown = wc.rateOfAttack == 0 ? 0 : 1 / wc.rateOfAttack;
 
                 // TODO: account for non-centric camera, e.g. pass on cam offset from display centre
                 // camera x in world position
@@ -72,7 +72,7 @@ public class PlayerCombatSystem extends IteratingSystem {
                 // mouse x in world pos
                 float mouseWorldX = camX + ((float) MouseMovement.mouseX *
                         (Main.SCREEN_WIDTH / Window.getWidth()) - Main.SCREEN_WIDTH / 2);
-                
+
                 // if clicking right of player, hit right, else hit left
                 Vector3f trueOffset = new Vector3f(wc.hitboxOffset);
                 if (mouseWorldX < pc.position.x + dc.dimension.x / 2) {
@@ -101,8 +101,8 @@ public class PlayerCombatSystem extends IteratingSystem {
      * This method manages all cooldowns for all items within the players inventory
      *
      * @param deltaTime time in between past and current tick
-     * @param plc referencing the player
-     * TODO: add cooldown on weaponswitch
+     * @param plc       referencing the player
+     *                  TODO: add cooldown on weaponswitch
      */
     private void cooldown(float deltaTime, PlayerComponent plc) {
         for (Item item : plc.inventory) {

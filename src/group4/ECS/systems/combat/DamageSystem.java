@@ -18,7 +18,7 @@ public class DamageSystem extends IteratingSystem {
     /**
      * This will resolve damage for all collisions of damage inflicting entities
      *
-     * @param entity the entity which inflicts damage
+     * @param entity    the entity which inflicts damage
      * @param deltaTime the time which passed in between the last and current tick
      */
     @Override

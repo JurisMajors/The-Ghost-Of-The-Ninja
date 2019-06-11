@@ -2,7 +2,7 @@ package group4.ECS.etc;
 
 /**
  * constant ID's for item, trap, enemy, ... related game mechanics
- *
+ * <p>
  * not final, we might in the end not use enums....
  */
 public class EntityConst {
@@ -15,7 +15,7 @@ public class EntityConst {
     }
 
     // TODO: add effects
-    public enum EffectID  {
+    public enum EffectID {
         UNDEFINED_EFFECT,
         SMALL_HEAL,
         MEDIUM_HEAL,

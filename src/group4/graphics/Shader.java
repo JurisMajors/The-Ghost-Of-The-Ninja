@@ -60,6 +60,7 @@ public class Shader {
 
     /**
      * Gives the id of the shader program.
+     *
      * @return int, the id.
      */
     public int getShaderId() {
@@ -95,7 +96,7 @@ public class Shader {
     /**
      * Sets the uniform with the given name to the given value.
      *
-     * @param name String, denoting the uniform
+     * @param name  String, denoting the uniform
      * @param value Integer, value to set
      */
     public void setUniform1i(String name, int value) {
@@ -106,7 +107,7 @@ public class Shader {
     /**
      * Sets the uniform with the given name to the given value.
      *
-     * @param name String, denoting the uniform
+     * @param name  String, denoting the uniform
      * @param value Float, value to set
      */
     public void setUniform1f(String name, float value) {
@@ -118,8 +119,8 @@ public class Shader {
      * Sets the uniform with the given name to the given value.
      *
      * @param name String, denoting the uniform
-     * @param v1 Float, first value to set
-     * @param v2 Float, second value to set
+     * @param v1   Float, first value to set
+     * @param v2   Float, second value to set
      */
     public void setUniform2f(String name, float v1, float v2) {
         int location = getUniformLocation(name);
@@ -129,7 +130,7 @@ public class Shader {
     /**
      * Sets the uniform with the given name to the given value.
      *
-     * @param name String, denoting the uniform
+     * @param name   String, denoting the uniform
      * @param vector Vector3f, value to set
      */
     public void setUniform3f(String name, Vector3f vector) {
@@ -140,18 +141,19 @@ public class Shader {
     /**
      * Sets the uniform with the given name to the given value.
      *
-     * @param name String, denoting the uniform
+     * @param name   String, denoting the uniform
      * @param matrix Matrix4f, value to set
      */
     public void setUniformMat4f(String name, Matrix4f matrix) {
         int location = getUniformLocation(name);
         glUniformMatrix4fv(location, false, matrix.toFloatBuffer());
     }
+
     /**
      * Given a shader type and the source code of the shader, this function creates and compiles
      * the appropriate shader for use in OpenGL.
      *
-     * @param type (GL_VERTEX_SHADER | GL_FRAGMENT_SHADER)
+     * @param type   (GL_VERTEX_SHADER | GL_FRAGMENT_SHADER)
      * @param source String with the source code of the shader to be created
      * @return id of shader if compiled successfully, 0 if compilation failed.
      */

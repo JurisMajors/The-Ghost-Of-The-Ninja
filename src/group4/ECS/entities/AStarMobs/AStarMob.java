@@ -21,7 +21,7 @@ public class AStarMob extends Entity {
     protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f);
     public Level level;
 
-    public AStarMob(Vector3f position, Level l, Module module,String inFile,String outFile, AbstractGraphHandler handler) {
+    public AStarMob(Vector3f position, Level l, Module module, String inFile, String outFile, AbstractGraphHandler handler) {
         Vector3f velocityRange = new Vector3f(0.05f, 0.25f, 0.0f);
         Shader shader = Shader.SIMPLE;
         Texture texture = Texture.EXIT;
@@ -32,15 +32,15 @@ public class AStarMob extends Entity {
         this.add(new GravityComponent());
         this.add(new GraphicsComponent(shader, texture, dimension, false));
         this.add(new HealthComponent(30));
-        if(inFile!=null)this.add(new GraphComponent(inFile));
-        else if(outFile!=null)this.add(new GraphComponent(module,outFile));
+        if (inFile != null) this.add(new GraphComponent(inFile));
+        else if (outFile != null) this.add(new GraphComponent(module, outFile));
         else this.add(new GraphComponent(module));
         this.add(new AStarMobComponent(handler));
         this.add(new PathComponent());
     }
 
-    public AStarMob(Vector3f position, Level l,Module module,String inFile,String outFile, Texture tex, float[] texCoord, AbstractGraphHandler handler) {
-        this (position, l,module,inFile,outFile, handler);
+    public AStarMob(Vector3f position, Level l, Module module, String inFile, String outFile, Texture tex, float[] texCoord, AbstractGraphHandler handler) {
+        this(position, l, module, inFile, outFile, handler);
         this.remove(GraphicsComponent.class);
         this.add(new GraphicsComponent(Shader.SIMPLE, tex, dimension, texCoord, false));
 

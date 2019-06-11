@@ -15,10 +15,9 @@ import group4.maths.Vector3f;
 public class DamageArea extends Entity {
 
     /**
-     *
-     * @param position position of the damage area
+     * @param position  position of the damage area
      * @param dimension dimension field of effect
-     * @param damage damage inflicted on colliding entity (HealthComponent needed)
+     * @param damage    damage inflicted on colliding entity (HealthComponent needed)
      */
     public DamageArea(Vector3f position, Vector3f dimension, int damage) {
 
@@ -28,7 +27,7 @@ public class DamageArea extends Entity {
         this.add(new DamageComponent(damage));
 
         // Construct vertex array
-        float[] vertices = new float[] {
+        float[] vertices = new float[]{
                 0, 0, 0,
                 0, dimension.y, 0,
                 dimension.x, dimension.y, 0,
@@ -36,13 +35,13 @@ public class DamageArea extends Entity {
         };
 
         // Construct index array (used for geometry mesh)
-        byte[] indices = new byte[] {
+        byte[] indices = new byte[]{
                 0, 1, 2,
                 2, 3, 0
         };
 
         // Construct texture coords
-        float[] tcs = new float[] {
+        float[] tcs = new float[]{
                 0, 1,
                 0, 0,
                 1, 0,

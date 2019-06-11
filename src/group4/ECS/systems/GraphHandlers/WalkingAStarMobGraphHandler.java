@@ -7,6 +7,7 @@ import group4.maths.Vector3f;
 
 public class WalkingAStarMobGraphHandler extends AbstractGraphHandler<WalkingAStarMob> {
     private static AbstractGraphHandler agh = new JumpingWalkingAStarMobGraphHandler();
+
     public static AbstractGraphHandler getInstance() {
         return agh;
     }

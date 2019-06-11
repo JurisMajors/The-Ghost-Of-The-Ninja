@@ -25,7 +25,7 @@ public class AStarPathSystem extends IteratingSystem {
         GraphComponent gc = Mappers.graphMapper.get(entity);
         PathComponent pathc = Mappers.pathMapper.get(entity);
         PositionComponent ppc = Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
-        if(gc.vertexID!=-1){
+        if (gc.vertexID != -1) {
             int playerVertexID = 0;
             for (int i = 0; i < gc.vertexCoords.size(); i++) {
                 if (Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(i).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(i).y, 2)) < Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(playerVertexID).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(playerVertexID).y, 2))) {
@@ -48,8 +48,7 @@ public class AStarPathSystem extends IteratingSystem {
             int value = (int) (Math.abs(gc.vertexCoords.get(i).x - gc.vertexCoords.get(dest).x) / mc.velocityRange.x);
             if (gc.vertexCoords.get(i).y <= gc.vertexCoords.get(dest).y) {
                 value += gc.yHValue.ceilingKey(gc.vertexCoords.get(dest).y - gc.vertexCoords.get(i).y);
-            }
-            else value += gc.yHValue.floorKey(gc.vertexCoords.get(i).y - gc.vertexCoords.get(dest).y);
+            } else value += gc.yHValue.floorKey(gc.vertexCoords.get(i).y - gc.vertexCoords.get(dest).y);
             hValue[i] = value;
         }
 
@@ -96,11 +95,11 @@ public class AStarPathSystem extends IteratingSystem {
 
         if (exists) {
             int curr = dest;
-            pathc.vertexID=new LinkedList<Integer>();
-            pathc.coordinates=new LinkedList<Vector3f>();
+            pathc.vertexID = new LinkedList<Integer>();
+            pathc.coordinates = new LinkedList<Vector3f>();
             while (parent[curr] != -1) {
                 pathc.vertexID.addFirst(curr);
-                for(int i=gc.edgePath.get(gc.edgeID[parent[curr]][curr]).size()-1;i>=0;i--){
+                for (int i = gc.edgePath.get(gc.edgeID[parent[curr]][curr]).size() - 1; i >= 0; i--) {
                     pathc.vertexID.addFirst(-1);
                     pathc.coordinates.addFirst(gc.edgePath.get(gc.edgeID[parent[curr]][curr]).get(i));
                 }
