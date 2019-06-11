@@ -12,7 +12,7 @@ import group4.maths.Vector3f;
 import java.util.ArrayList;
 
 public class JumpingAStarMobGraphHandler extends AbstractGraphHandler<JumpingAStarMob> {
-    private static AbstractGraphHandler agh = new JumpingWalkingAStarMobGraphHandler();
+    private static AbstractGraphHandler agh = new JumpingAStarMobGraphHandler();
 
     @Override
     protected void generateFirstLayerNodes(Entity entity, ArrayList<Node> prevLayer, ArrayList<Node> currLayer) {
