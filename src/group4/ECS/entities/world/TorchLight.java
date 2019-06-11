@@ -19,9 +19,8 @@ public class TorchLight extends Entity {
      * @param position  bottom left position of the coin
      */
     public TorchLight(Vector3f position) {
-        Vector3f defaultDimension = new Vector3f(1.0f, 2.0f, 0.0f);
-        this.add(new PositionComponent(position));
-        this.add(new DimensionComponent(new Vector3f(1.0f, 2.0f, 0.0f)));
+        Vector3f defaultDimension = new Vector3f(3.0f, 3.0f, 0.0f);
+        this.add(new PositionComponent(position));//.add(new Vector3f(0.0f, 0.4f, 0.0f))));
 
         // This is a temp new one to illustrate the animation
         this.add(new GraphicsComponent(Shader.SIMPLE, Texture.DEBUG, defaultDimension, true));

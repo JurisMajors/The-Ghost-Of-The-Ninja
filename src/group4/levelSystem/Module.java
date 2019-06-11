@@ -198,7 +198,6 @@ public class Module {
     }
 
     private void parseLightLayer(JSONObject layer) {
-        System.out.println("lights");
         // Get height and width of layer
         int layerHeight = layer.getInt("height");
         int layerWidth = layer.getInt("width");
@@ -212,14 +211,7 @@ public class Module {
 
             // Get the type of the tile
             int tileId = data.getInt(tile) - 1;
-//            System.out.println(tileId);
-            if (tileId != -1) {
-                System.out.println(moduleTileMap.get(tileId));
-            }
             String entityId = moduleTileMap.get(tileId);
-            if (entityId != null) {
-                System.out.println(entityId);
-            }
             if (entityId == null) {
                 continue;
             } else if (entityId.equals(Torch.getName())) {
