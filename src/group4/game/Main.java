@@ -5,9 +5,9 @@ import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.*;
+import group4.ECS.systems.GraphHandlers.AStarMobGraphSystem;
 import group4.ECS.systems.animation.AnimationSystem;
-import group4.ECS.systems.CameraSystem;
-import group4.ECS.systems.RenderSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
 import group4.ECS.systems.collision.LastSystem;
@@ -31,6 +31,7 @@ import group4.graphics.TileMapping;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
+import group4.levelSystem.AStarLevel;
 import group4.levelSystem.FileLevel;
 import group4.levelSystem.Level;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -157,6 +158,10 @@ public class Main implements Runnable {
             Sound.BACKGROUND.play();
             // Set up all engine systems
             // Systems which change the gamestate
+            this.engine.addSystem(new AStarMobGraphSystem());
+            this.engine.addSystem(new AStarPathSystem());
+            this.engine.addSystem(new PathMovementSystem());
+
             this.engine.addSystem(new PlayerMovementSystem(0));
             this.engine.addSystem(new GhostMovementSystem(1));
             this.engine.addSystem(new MobMovementSystem(2));

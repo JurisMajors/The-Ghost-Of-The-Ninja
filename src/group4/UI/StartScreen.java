@@ -9,6 +9,7 @@ import group4.game.Main;
 import group4.graphics.RenderLayer;
 import group4.graphics.Texture;
 import group4.input.KeyBoard;
+import group4.levelSystem.AStarLevel;
 import group4.levelSystem.FileLevel;
 import group4.levelSystem.Level;
 
@@ -85,7 +86,8 @@ public class StartScreen {
         Sound.MENU.play();
         // Immediately unload this Startscreen and initialize the level
         this.unload();
-        new FileLevel("./src/group4/res/maps/level_02");
+        //new FileLevel("./src/group4/res/maps/level_02");
+        new AStarLevel();
     }
 
     public void update() {
