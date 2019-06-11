@@ -3,6 +3,7 @@ package group4.levelSystem;
 import group4.AI.Evolver;
 import group4.ECS.entities.AStarMobs.JumpingAStarMob;
 import group4.ECS.entities.AStarMobs.JumpingWalkingAStarMob;
+import group4.ECS.entities.AStarMobs.WalkingAStarMob;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.world.Exit;
@@ -54,7 +55,7 @@ public class AStarLevel extends Level {
 
     @Override
     protected Player createPlayer() {
-        TheEngine.getInstance().addEntity(new JumpingAStarMob(new Vector3f(20, 10, 0.0f), this, this.rootModule, null, null));
+        TheEngine.getInstance().addEntity(new JumpingWalkingAStarMob(new Vector3f(20, 10, 0.0f), this, this.rootModule, null, null));
         return new HierarchicalPlayer(new Vector3f(), this);
     }
 

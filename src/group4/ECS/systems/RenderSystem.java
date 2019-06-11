@@ -221,7 +221,7 @@ public class RenderSystem extends EntitySystem {
      * Constructs a Map which stores all entities in the engine sorted to the layer
      * indicated in their respective GraphicsComponent.
      *
-     * @return Map<Layer   ,       List       <       Entity>>, the entities sorted by layer
+     * @return Map<Layer       ,               List               <               Entity>>, the entities sorted by layer
      */
     private Map<RenderLayer, List<Entity>> sortEntitiesByLayer() {
         // Construct an empty hashmap and create a key for each layer

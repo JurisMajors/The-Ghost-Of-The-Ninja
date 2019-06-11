@@ -333,29 +333,6 @@ public abstract class AbstractGraphHandler<T extends AStarMob> {
         }
     }
 
-    public void adjustYZero(Entity entity, Node node, HashMap<Float, TreeMap<Float, Integer>> coordsVertex) {
-        float down = -1.0f;
-        if (coordsVertex.containsKey(node.coordinates.x) && coordsVertex.get(node.coordinates.x).size() > 0 && coordsVertex.get(node.coordinates.x).firstKey() <= node.coordinates.y
-                && node.coordinates.y - coordsVertex.get(node.coordinates.x).floorKey(node.coordinates.y) < 1.0f) {
-            down = node.coordinates.y - coordsVertex.get(node.coordinates.x).floorKey(node.coordinates.y);
-        }
-        float up = -1.0f;
-        if (coordsVertex.containsKey(node.coordinates.x) && coordsVertex.get(node.coordinates.x).size() > 0 && coordsVertex.get(node.coordinates.x).lastKey() >= node.coordinates.y
-                && coordsVertex.get(node.coordinates.x).ceilingKey(node.coordinates.y) - node.coordinates.y < 1.0f) {
-            up = coordsVertex.get(node.coordinates.x).ceilingKey(node.coordinates.y) - node.coordinates.y;
-        }
-        if (down >= 0.0f) {
-            if (up >= 0.0f) {
-                if (down <= up) node.coordinates.y -= down;
-                else node.coordinates.y += up;
-            } else {
-                node.coordinates.y -= down;
-            }
-        } else if (up >= 0.0f) {
-            node.coordinates.y += up;
-        }
-    }
-
     public void adjustYPos(Entity entity, Node node, HashMap<Float, TreeSet<Float>> ceiling) {
         DimensionComponent dc = Mappers.dimensionMapper.get(entity);
         GraphComponent gc = Mappers.graphMapper.get(entity);
@@ -371,7 +348,7 @@ public abstract class AbstractGraphHandler<T extends AStarMob> {
         }
     }
 
-    public void adjustYNeg(Entity entity, Node node, HashMap<Float, TreeMap<Float, Integer>> coordsVertex) {
+    public void adjustYNeg(Node node, HashMap<Float, TreeMap<Float, Integer>> coordsVertex) {
         if (coordsVertex.containsKey(node.coordinates.x) && coordsVertex.get(node.coordinates.x).size() > 0 && coordsVertex.get(node.coordinates.x).lastKey() >= node.coordinates.y
                 && coordsVertex.get(node.coordinates.x).ceilingKey(node.coordinates.y) - node.coordinates.y <= -node.yVelocity) {
             node.coordinates.y = coordsVertex.get(node.coordinates.x).ceilingKey(node.coordinates.y);
@@ -381,12 +358,18 @@ public abstract class AbstractGraphHandler<T extends AStarMob> {
 
     public void removeCollidingFirstLayerNodes(Entity entity, ArrayList<Node> currLayer, HashMap<Float, TreeMap<Float, Integer>> coordsVertex, HashMap<Float, TreeSet<Float>> ceiling, HashMap<Float, TreeMap<Float, Integer>> bottomCollision, HashMap<Float, ArrayList<Float>> highestTopCollision) {
         DimensionComponent dc = Mappers.dimensionMapper.get(entity);
+        GravityComponent g = Mappers.gravityMapper.get(entity);
 
         ArrayList<Node> tempLayer = new ArrayList<Node>();
         for (int i = 0; i < currLayer.size(); i++) {
-            if (currLayer.get(i).yVelocity == 0.0f) adjustYZero(entity, currLayer.get(i), coordsVertex);
-            else if (currLayer.get(i).yVelocity > 0.0f) adjustYPos(entity, currLayer.get(i), ceiling);
-            else adjustYNeg(entity, currLayer.get(i), coordsVertex);
+            if (currLayer.get(i).yVelocity > 0.0f) adjustYPos(entity, currLayer.get(i), ceiling);
+            else if (currLayer.get(i).yVelocity < 0.0f) {
+                if (currLayer.get(i).yVelocity == -g.gravity.y) {
+                    currLayer.get(i).yVelocity -= 0.5f;
+                    adjustYNeg(currLayer.get(i), coordsVertex);
+                    if (currLayer.get(i).yVelocity != 0.0f) currLayer.get(i).yVelocity += 0.5f;
+                } else adjustYNeg(currLayer.get(i), coordsVertex);
+            }
             if (checkPosition(entity, currLayer.get(i).coordinates.x, currLayer.get(i).coordinates.y, currLayer.get(i).coordinates.y + dc.dimension.y, bottomCollision, highestTopCollision)) {
                 tempLayer.add(currLayer.get(i));
             }
@@ -401,7 +384,7 @@ public abstract class AbstractGraphHandler<T extends AStarMob> {
         ArrayList<Node> tempLayer = new ArrayList<Node>();
         for (int i = 0; i < currLayer.size(); i++) {
             if (currLayer.get(i).yVelocity > 0.0f) adjustYPos(entity, currLayer.get(i), ceiling);
-            else if (currLayer.get(i).yVelocity < 0.0f) adjustYNeg(entity, currLayer.get(i), coordsVertex);
+            else if (currLayer.get(i).yVelocity < 0.0f) adjustYNeg(currLayer.get(i), coordsVertex);
             if (checkPosition(entity, currLayer.get(i).coordinates.x, currLayer.get(i).coordinates.y, currLayer.get(i).coordinates.y + dc.dimension.y, bottomCollision, highestTopCollision)) {
                 tempLayer.add(currLayer.get(i));
             }
@@ -491,9 +474,6 @@ public abstract class AbstractGraphHandler<T extends AStarMob> {
     }
 
     public void computeEdges(Entity entity, HashMap<Float, TreeMap<Float, Integer>> coordsVertex, HashMap<Float, HashMap<Float, Integer>> hashCoordsVertex, HashMap<Float, TreeSet<Float>> ceiling, HashMap<Float, TreeMap<Float, Integer>> bottomCollision, HashMap<Float, ArrayList<Float>> highestTopCollision) {
-        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
-        MovementComponent mc = Mappers.movementMapper.get(entity);
-        GravityComponent g = Mappers.gravityMapper.get(entity);
         GraphComponent gc = Mappers.graphMapper.get(entity);
 
         gc.edgePath = new ArrayList<ArrayList<Vector3f>>();
@@ -516,20 +496,15 @@ public abstract class AbstractGraphHandler<T extends AStarMob> {
         }
     }
 
-    public void computeYHValues(Entity entity) {
+    protected void posYHValues(Entity entity) {
         MovementComponent mc = Mappers.movementMapper.get(entity);
         GraphComponent gc = Mappers.graphMapper.get(entity);
         GravityComponent g = Mappers.gravityMapper.get(entity);
 
-        gc.yHValue = new TreeMap<Float, Integer>();
+        float position = 0.0f;
+        float velocity = mc.velocityRange.y - g.gravity.y;
+        ArrayList<Float> heights = new ArrayList<Float>();
 
-        float position;
-        float velocity;
-        ArrayList<Float> heights;
-
-        position = 0.0f;
-        velocity = mc.velocityRange.y - g.gravity.y;
-        heights = new ArrayList<Float>();
         while (velocity > 0) {
             position += velocity;
             heights.add(position);
@@ -542,17 +517,30 @@ public abstract class AbstractGraphHandler<T extends AStarMob> {
                 heights.add(heights.get(i) + heights.get(ssize - 1));
         }
         for (int i = 0; i < heights.size(); i++) gc.yHValue.put(heights.get(i), i + 1);
+    }
 
-        gc.yHValue.put(0.0f, 0);
+    protected void negYHValues(Entity entity) {
+        GraphComponent gc = Mappers.graphMapper.get(entity);
+        GravityComponent g = Mappers.gravityMapper.get(entity);
 
-        position = 0.0f;
-        velocity = -g.gravity.y;
-        heights = new ArrayList<Float>();
+        float position = 0.0f;
+        float velocity = -g.gravity.y;
+        ArrayList<Float> heights = new ArrayList<Float>();
+
         while (heights.size() == 0 || -heights.get(heights.size() - 1) < gc.module.getHeight()) {
             position += velocity;
             heights.add(position);
             velocity -= g.gravity.y;
         }
         for (int i = 0; i < heights.size(); i++) gc.yHValue.put(heights.get(i), i + 1);
+    }
+
+    public void computeYHValues(Entity entity) {
+        GraphComponent gc = Mappers.graphMapper.get(entity);
+
+        gc.yHValue = new TreeMap<Float, Integer>();
+        posYHValues(entity);
+        gc.yHValue.put(0.0f, 0);
+        negYHValues(entity);
     }
 }
