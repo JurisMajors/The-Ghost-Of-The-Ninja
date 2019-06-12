@@ -10,7 +10,9 @@ import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.components.stats.ScoreComponent;
 import group4.ECS.entities.BodyPart;
+import group4.ECS.entities.Ghost;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.Totem;
@@ -95,6 +97,7 @@ public class RenderSystem extends EntitySystem {
         PositionComponent pc;
         GraphicsComponent gc;
         MovementComponent mc;
+        ScoreComponent sc = null; // Must be initialized to at least null
         for (RenderLayer layer : RenderLayer.values()) {
             glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
             for (Entity entity : entityLayers.get(layer)) {
@@ -103,6 +106,11 @@ public class RenderSystem extends EntitySystem {
                     pc = Mappers.positionMapper.get(entity);
                     mc = Mappers.movementMapper.get(entity);
                     gc = Mappers.graphicsMapper.get(entity);
+                    if (entity instanceof Ghost) {
+                        // do nothing
+                    } else {
+                        sc = Mappers.scoreMapper.get(entity);
+                    }
                     if (mc.orientation == MovementComponent.LEFT) {
                         // Set the mirrored projection matrix
                         gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrixHorizontalFlip);
@@ -153,7 +161,10 @@ public class RenderSystem extends EntitySystem {
         // Draw all the health bars in the currently active module for all entities which have a HealthComponent.
         // Dead entities are automatically removed from the engine, and hence also their healthbars.
         this.drawHealthBars();
-        textGenerator.drawText("Hallo", 0.0f, 0.0f);
+
+        if (sc != null) {
+            this.drawScore(sc.getScore(), cc.viewMatrix.getTranslation());
+        }
         // Start of debug drawing
         if (DEBUG) {
             glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
@@ -187,6 +198,14 @@ public class RenderSystem extends EntitySystem {
 
             DebugUtils.flush();
         }
+    }
+
+    /**
+     * Draws the score of the player
+     */
+    private void drawScore(int score, Vector3f position) {
+        String text = "Score: " + String.format("%05d", score);
+        this.textGenerator.drawText(text, -position.x + 3.5f, -position.y + 4.0f);
     }
 
     /**

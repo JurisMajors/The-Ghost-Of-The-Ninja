@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.Math.max;
-// https://github.com/SilverTiger/lwjgl3-tutorial/blob/master/src/silvertiger/tutorial/lwjgl/text/Font.java
+
 public class Text {
     private Map<Character, Glyph> atlas;
     private Texture texture;
@@ -25,7 +25,7 @@ public class Text {
         try {
 //            Font font = new Font ("TimesRoman", Font.BOLD, 32);
             Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(path));
-            font = font.deriveFont(50F);
+            font = font.deriveFont(35F);
             this.texture = createAtlas(font);
         } catch (Exception e) {
             System.err.println("[WARNING] Could not load font!");
