@@ -86,8 +86,8 @@ public class StartScreen {
         Sound.MENU.play();
         // Immediately unload this Startscreen and initialize the level
         this.unload();
-        //new FileLevel("./src/group4/res/maps/level_02");
-        new AStarLevel();
+        new FileLevel("./src/group4/res/maps/level_02");
+//        new AStarLevel();
     }
 
     public void update() {

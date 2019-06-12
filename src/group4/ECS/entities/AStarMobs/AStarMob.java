@@ -5,21 +5,24 @@ import group4.ECS.components.GraphComponent;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.PathComponent;
 import group4.ECS.components.identities.AStarMobComponent;
+import group4.ECS.components.identities.MobComponent;
+import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.entities.mobs.Mob;
 import group4.ECS.systems.GraphHandlers.AbstractGraphHandler;
+import group4.ECS.systems.collision.CollisionHandlers.MobCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
 import group4.maths.Vector3f;
 
-public class AStarMob extends Entity {
+public class AStarMob extends Mob {
     protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f);
-    public Level level;
 
     public AStarMob(Vector3f position, Level l, Module module, String inFile, String outFile, AbstractGraphHandler handler) {
         Vector3f velocityRange = new Vector3f(0.05f, 0.25f, 0.0f);
@@ -30,6 +33,7 @@ public class AStarMob extends Entity {
         this.add(new DimensionComponent(dimension));
         this.add(new MovementComponent(new Vector3f(), velocityRange));
         this.add(new GravityComponent());
+        this.add(new CollisionComponent(MobCollision.getInstance()));
         this.add(new GraphicsComponent(shader, texture, dimension, false));
         this.add(new HealthComponent(30));
         if (inFile != null) this.add(new GraphComponent(inFile));
@@ -37,6 +41,7 @@ public class AStarMob extends Entity {
         else this.add(new GraphComponent(module));
         this.add(new AStarMobComponent(handler));
         this.add(new PathComponent());
+        this.add(new MobComponent());
     }
 
     public AStarMob(Vector3f position, Level l, Module module, String inFile, String outFile, Texture tex, float[] texCoord, AbstractGraphHandler handler) {
@@ -47,6 +52,6 @@ public class AStarMob extends Entity {
     }
 
     public static String getName() {
-        return "AStarMob";
+        return "Mob";
     }
 }

@@ -55,7 +55,6 @@ public class AStarLevel extends Level {
 
     @Override
     protected Player createPlayer() {
-        TheEngine.getInstance().addEntity(new JumpingWalkingAStarMob(new Vector3f(20, 10, 0.0f), this, this.rootModule, null, null));
         return new HierarchicalPlayer(new Vector3f(), this);
     }
 

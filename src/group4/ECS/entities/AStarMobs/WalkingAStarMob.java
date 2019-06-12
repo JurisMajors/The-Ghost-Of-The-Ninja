@@ -1,9 +1,7 @@
 package group4.ECS.entities.AStarMobs;
 
 import group4.ECS.components.identities.WalkingMobComponent;
-import group4.ECS.entities.mobs.Mob;
 import group4.ECS.systems.GraphHandlers.WalkingAStarMobGraphHandler;
-import group4.ECS.systems.movement.MovementHandlers.WalkingMobMovementHandler;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
@@ -20,7 +18,11 @@ public class WalkingAStarMob extends AStarMob {
         this.add(new WalkingMobComponent());
     }
 
+    public WalkingAStarMob(Vector3f position, Level l, Module module, Texture texture, float[] texCoords) {
+        this(position, l, module, null, null, texture, texCoords);
+    }
+
     public static String getName() {
-        return "WalkingAStarMob";
+        return "WalkingMob";
     }
 }

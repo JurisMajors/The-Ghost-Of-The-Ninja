@@ -2,13 +2,8 @@ package group4.ECS.systems.GraphHandlers;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphComponent;
-import group4.ECS.components.physics.GravityComponent;
-import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.AStarMobs.WalkingAStarMob;
-import group4.ECS.entities.mobs.WalkingMob;
 import group4.ECS.etc.Mappers;
-import group4.ECS.systems.movement.MovementHandlers.AbstractMovementHandler;
-import group4.maths.Vector3f;
 
 import java.util.ArrayList;
 

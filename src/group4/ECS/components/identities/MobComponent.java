@@ -12,4 +12,8 @@ public class MobComponent implements Component {
     public MobComponent(AbstractMovementHandler handler) {
         this.handler = handler;
     }
+
+    public MobComponent() {
+
+    }
 }

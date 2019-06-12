@@ -1,12 +1,14 @@
 package group4.levelSystem;
 
 import com.badlogic.ashley.core.Entity;
-import group4.AI.Brain;
-import group4.ECS.entities.Ghost;
+import group4.ECS.entities.AStarMobs.AStarMob;
+import group4.ECS.entities.AStarMobs.JumpingAStarMob;
+import group4.ECS.entities.AStarMobs.JumpingWalkingAStarMob;
+import group4.ECS.entities.AStarMobs.WalkingAStarMob;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.hazards.Spikes;
 import group4.ECS.entities.items.consumables.Coin;
-import group4.ECS.entities.mobs.*;
+import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.EndingTotem;
 import group4.ECS.entities.totems.StartTotem;
 import group4.ECS.entities.totems.Totem;
@@ -25,7 +27,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -156,7 +157,7 @@ public class Module {
             } else if (layerName.equals("COINS")) {
                 if (Main.AI) continue;
                 parseCoinLayer(layer);
-            }else if (layerName.equals("TOTEMS")) {
+            } else if (layerName.equals("TOTEMS")) {
                 if (Main.AI) continue;
                 parseTotemLayer(layer);
             } else if (layerName.equals("EXITS")) {
@@ -404,16 +405,15 @@ public class Module {
 
     private void addMob(int x, int y, int i, String mobName) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
-        Mob m = null;
-        if (mobName.equals(JumpingWalkingMob.getName())) {
-            m = new JumpingWalkingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
-        } else if (mobName.equals(WalkingMob.getName())) {
-            m = new WalkingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
-        } else if (mobName.equals(FlyingMob.getName())) {
-            m = new FlyingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
-        } else if (mobName.equals(FlappingMob.getName())) {
-            m = new FlappingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        AStarMob m = null;
+        if (mobName.equals(JumpingWalkingAStarMob.getName())) {
+            m = new JumpingWalkingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        } else if (mobName.equals(WalkingAStarMob.getName())) {
+            m = new WalkingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        } else if (mobName.equals(JumpingAStarMob.getName())) {
+            m = new JumpingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
         }
+        if (m == null) return;
         this.addEntity(m);
     }
 
@@ -443,21 +443,26 @@ public class Module {
         Spikes p;
 
         switch (i) {
-            case 48: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
-                    new Vector3f(0.0f,1.0f,0.0f));
-                    break;
-            case 49: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
-                    new Vector3f(1.0f,0.0f,0.0f));
-                    break;
-            case 50: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
-                    new Vector3f(0.0f,-1.0f,0.0f));
-                    break;
-            case 51: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
-                    new Vector3f(-1.0f,0.0f,0.0f));
-                    break;
-            default: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
-                    new Vector3f(0.0f,1.0f,0.0f));
-                    break;
+            case 48:
+                p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                        new Vector3f(0.0f, 1.0f, 0.0f));
+                break;
+            case 49:
+                p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                        new Vector3f(1.0f, 0.0f, 0.0f));
+                break;
+            case 50:
+                p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                        new Vector3f(0.0f, -1.0f, 0.0f));
+                break;
+            case 51:
+                p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                        new Vector3f(-1.0f, 0.0f, 0.0f));
+                break;
+            default:
+                p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                        new Vector3f(0.0f, 1.0f, 0.0f));
+                break;
         }
 
         this.addEntity(p);
@@ -556,7 +561,7 @@ public class Module {
         int spike_down = 50;
         int spike_left = 51;
         int jumpingwalkingmob = 36;
-        int flappingmob = 42;
+        int jumpingmob = 42;
         int walkingmob = 40;
         int flyingmob = 41;
         int coin = 13;
@@ -582,10 +587,9 @@ public class Module {
         moduleTileMap.put(spike_down, Spikes.getName());
         moduleTileMap.put(spike_left, Spikes.getName());
 
-        moduleTileMap.put(jumpingwalkingmob, JumpingWalkingMob.getName());
-        moduleTileMap.put(flappingmob, FlappingMob.getName());
-        moduleTileMap.put(walkingmob, WalkingMob.getName());
-        moduleTileMap.put(flyingmob, FlyingMob.getName());
+        moduleTileMap.put(jumpingwalkingmob, JumpingWalkingAStarMob.getName());
+        moduleTileMap.put(jumpingmob, JumpingAStarMob.getName());
+        moduleTileMap.put(walkingmob, WalkingAStarMob.getName());
 
         moduleTileMap.put(coin, Coin.getName());
 

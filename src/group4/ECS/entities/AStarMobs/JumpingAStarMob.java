@@ -1,11 +1,7 @@
 package group4.ECS.entities.AStarMobs;
 
 import group4.ECS.components.identities.JumpingAStarMobComponent;
-import group4.ECS.components.identities.JumpingMobComponent;
-import group4.ECS.entities.mobs.Mob;
 import group4.ECS.systems.GraphHandlers.JumpingAStarMobGraphHandler;
-import group4.ECS.systems.movement.MovementHandlers.JumpingMobMovementHandler;
-import group4.ECS.systems.movement.MovementHandlers.JumpingWalkingMobMovementHandler;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.levelSystem.Module;
@@ -22,7 +18,11 @@ public class JumpingAStarMob extends AStarMob {
         this.add(new JumpingAStarMobComponent());
     }
 
+    public JumpingAStarMob(Vector3f position, Level l, Module module, Texture tex, float[] texCoords) {
+        this(position, l, module, null, null, tex, texCoords);
+    }
+
     public static String getName() {
-        return "JumpingAStarMob";
+        return "JumpingMob";
     }
 }

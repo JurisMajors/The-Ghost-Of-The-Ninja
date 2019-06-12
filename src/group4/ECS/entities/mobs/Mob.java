@@ -18,35 +18,7 @@ import group4.maths.Vector3f;
 
 public class Mob extends Entity {
 
-    protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f); //dimension of the mob, aka bounding box
     public Level level;
-
-    /**
-     * Creates a mob
-     *
-     * @param position left-bottom-back corner of the cuboid representing the mob
-     */
-    public Mob(Vector3f position, Level l, AbstractMovementHandler handler) {
-        Vector3f velocityRange = new Vector3f(0.05f, 0.25f, 0.0f);//velocity range
-        Shader shader = Shader.SIMPLE;//shader
-        Texture texture = Texture.EXIT;//texture
-        this.level = l;
-        this.add(new PositionComponent(position));
-        this.add(new DimensionComponent(dimension));
-        this.add(new MovementComponent(new Vector3f(), velocityRange));
-        this.add(new GravityComponent());
-        this.add(new GraphicsComponent(shader, texture, dimension, false));
-        this.add(new CollisionComponent(MobCollision.getInstance()));
-        this.add(new HealthComponent(30));
-        this.add(new MobComponent(handler));
-    }
-
-    public Mob(Vector3f position, Level l, Texture tex, float[] texCoord, AbstractMovementHandler handler) {
-        this(position, l, handler);
-        this.remove(GraphicsComponent.class);
-        this.add(new GraphicsComponent(Shader.SIMPLE, tex, dimension, texCoord, false));
-
-    }
 
     public static String getName() {
         return "Mob";

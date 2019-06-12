@@ -13,8 +13,8 @@ import group4.utils.DebugUtils;
 public class PathMovementSystem extends IteratingSystem {
     int vertexID = 0;
 
-    public PathMovementSystem() {
-        super(Families.pathFamily);
+    public PathMovementSystem(int priority) {
+        super(Families.pathFamily, priority);
     }
 
     @Override

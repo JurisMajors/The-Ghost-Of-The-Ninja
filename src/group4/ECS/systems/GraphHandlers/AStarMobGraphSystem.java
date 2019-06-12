@@ -9,8 +9,8 @@ import group4.ECS.etc.Mappers;
 
 public class AStarMobGraphSystem extends IteratingSystem {
 
-    public AStarMobGraphSystem() {
-        super(Families.aStarMobFamily);
+    public AStarMobGraphSystem(int priority) {
+        super(Families.aStarMobFamily, priority);
     }
 
     @Override

@@ -15,8 +15,8 @@ import java.util.*;
 
 public class AStarPathSystem extends IteratingSystem {
 
-    public AStarPathSystem() {
-        super(Families.aStarMobFamily);
+    public AStarPathSystem(int priority) {
+        super(Families.aStarMobFamily, priority);
     }
 
     @Override
