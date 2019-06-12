@@ -27,6 +27,7 @@ public class Texture {
     public static Texture SPLINE;
     public static Texture TOTEM_START;
     public static Texture TOTEM_END;
+    public static Texture TOTEM_HELP;
 
     // Storing all player related textures
     public static Texture PLAYER_TORSO;
@@ -94,6 +95,7 @@ public class Texture {
         NOISE_OVERLAY = new Texture("src/group4/res/textures/noise-overlay.png");
         PRESS_ENTER = new Texture("src/group4/res/textures/press-enter.png");
         LOGO_FULLSCREEN = new Texture("src/group4/res/textures/logo-fullscreen.png");
+        TOTEM_HELP = new Texture("src/group4/res/textures/totemhelp.png");
     }
 
     /**
