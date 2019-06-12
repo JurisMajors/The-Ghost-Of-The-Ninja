@@ -44,6 +44,7 @@ public class GhostDyingSystem extends PlayerDyingSystem {
             g.getComponent(HealthComponent.class).health = 0;
             g.master.spawnedGhost = false; // can spawn again
             g.master.challanging = false;
+            g.master.startTotemID = -1;
             return true;
         } else {
             g.getComponent(HealthComponent.class).health = 0;

@@ -175,12 +175,12 @@ public class PlayerMovementSystem extends IteratingSystem {
                 mask.x = 0.2f;
             } else if (helpGhost(score)) {
                 spawned = true;
-                player.getComponent(ScoreComponent.class).subScore(Totem.helpCost());
+                player.getComponent(ScoreComponent.class).subScore(Totem.HELPCOST);
                 newGhost = player.totemStatus.getHelpGhost(player);
                 mask.z = 0.2f;
             } else if (carryGhost(score)) {
                 spawned = true;
-                player.getComponent(ScoreComponent.class).subScore(Totem.carryCost());
+                player.getComponent(ScoreComponent.class).subScore(Totem.CARRYCOST);
                 newGhost = player.totemStatus.getCarryGhost(player);
                 mask.z = 0.5f;
             }
@@ -196,14 +196,14 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     protected boolean helpGhost(int score) {
-        return KeyBoard.isKeyDown(GLFW_KEY_G) && score >= Totem.helpCost();
+        return KeyBoard.isKeyDown(GLFW_KEY_G) && score >= Totem.HELPCOST;
     }
 
     protected boolean challangeGhost() {
         return KeyBoard.isKeyDown(GLFW_KEY_C);
     }
     protected boolean carryGhost(int score) {
-        return KeyBoard.isKeyDown(GLFW_KEY_H) && score >= Totem.carryCost();
+        return KeyBoard.isKeyDown(GLFW_KEY_H) && score >= Totem.CARRYCOST;
     }
 
     private void moveRight(MovementComponent mc, PositionComponent pc) {
