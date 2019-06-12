@@ -4,21 +4,21 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.BooleanArray;
 import group4.ECS.components.SplineComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
-import group4.ECS.entities.DamageArea;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.entities.mobs.Mob;
+import group4.ECS.entities.totems.Totem;
+import group4.ECS.entities.world.Block;
+import group4.ECS.entities.world.Platform;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.maths.Vector3f;
-import group4.utils.DebugUtils;
 
 /**
  * This applies collision to entities that can move and have a bounding box
@@ -71,6 +71,7 @@ public class CollisionSystem extends IteratingSystem {
             if (other instanceof Bullet && e instanceof Bullet) continue;
             if (e instanceof Bullet && (other instanceof Ghost || other instanceof Mob)) continue;
             if (other instanceof Player && e instanceof Player) continue;
+            if (other instanceof Totem && !(e instanceof Player)) continue;
 
             // get the intersection between this (moving collidable entity) and other (collidable entity)
             Rectangle intersection = getIntersectingRectangle(e, other);
@@ -83,7 +84,7 @@ public class CollisionSystem extends IteratingSystem {
             // Get displacement vector
             Vector3f displacement = processCollision(e, other);
 
-            if (displacement.y > 0) {
+            if (displacement.y > 0 && (other instanceof Platform || other instanceof Block)) {
                 setOnPlatform(e, true);
             }
 
@@ -105,11 +106,6 @@ public class CollisionSystem extends IteratingSystem {
     private void detectSplineCollisions(Entity e) {
         // get all collidable spline entities
         ImmutableArray<Entity> entities = TheEngine.getInstance().getEntitiesFor(Families.collidableSplineFamily);
-
-        // entity position and dimension
-        PositionComponent pc = Mappers.positionMapper.get(e);
-        DimensionComponent dc = Mappers.dimensionMapper.get(e);
-
 
         // loop through all collidable splines
         for (Entity spline : entities) {
@@ -196,12 +192,13 @@ public class CollisionSystem extends IteratingSystem {
      * Given a list of corners and their closest spline points, and a discard array mask, set the final closestPoint
      * and closestNormal of the moving entity and the spline. Return the index or (cornder-)code for the
      * eventual corner that becomes the closest point.
-     * @param corners corners of the entity
-     * @param closestPoints closest point on spline for each corner
+     *
+     * @param corners        corners of the entity
+     * @param closestPoints  closest point on spline for each corner
      * @param closestNormals normal for the corresponding closest spline point
-     * @param discard boolean mask
-     * @param closestPoint closest point which gets set in this function
-     * @param closestNormal closest normal which gets set in this function
+     * @param discard        boolean mask
+     * @param closestPoint   closest point which gets set in this function
+     * @param closestNormal  closest normal which gets set in this function
      * @return code/index for the corner that will get displaced and is closest to the spline
      */
     private int getClosestPoint(Vector3f[] corners, Vector3f[] closestPoints, Vector3f[] closestNormals, boolean[] discard, Vector3f closestPoint, Vector3f closestNormal) {
@@ -410,6 +407,7 @@ public class CollisionSystem extends IteratingSystem {
 
     /**
      * TODO: add javadoc
+     *
      * @param first
      * @param scnd
      * @param intersection
@@ -437,6 +435,7 @@ public class CollisionSystem extends IteratingSystem {
 
     /**
      * TODO: add javadoc
+     *
      * @param first
      * @param scnd
      * @param intersection
@@ -516,6 +515,7 @@ public class CollisionSystem extends IteratingSystem {
 
     /**
      * TODO: add lavadoc
+     *
      * @param first
      * @param second
      * @return
@@ -540,6 +540,7 @@ public class CollisionSystem extends IteratingSystem {
 
     /**
      * TODO: add javadoc
+     *
      * @param botLeft
      * @param dim
      * @return

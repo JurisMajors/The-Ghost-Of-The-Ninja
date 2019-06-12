@@ -6,8 +6,10 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import group4.ECS.components.SplineComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.Mappers;
+import group4.ECS.systems.RenderSystem;
 import group4.utils.DebugUtils;
 
 import java.awt.geom.Line2D;
@@ -90,12 +92,15 @@ public class Ray {
         // for each entity calculate the intersection
         entity_loop:
         for (Entity e : entities) {
-            // ignore entities that contain an ignoreable component
+            // ignore entities that contain an ignorable component
             for (Class<? extends Component> component : this.ignorableComponents) {
                 // skip this entity
                 if (e.getComponent(component) != null) {
                     continue entity_loop;
                 }
+            }
+            if (e instanceof Totem) { // ignore cuz in background
+                continue entity_loop;
             }
 
             List<Vector3f> intersections = this.intersects(e); // get intersection points

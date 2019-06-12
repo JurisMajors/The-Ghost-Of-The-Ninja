@@ -1,8 +1,7 @@
 package group4.ECS.entities.items.consumables;
 
-import group4.ECS.entities.items.Item;
+import com.badlogic.ashley.core.Entity;
 
-public class HealthPotion extends Item {
-
+public class HealthPotion extends Entity {
 
 }

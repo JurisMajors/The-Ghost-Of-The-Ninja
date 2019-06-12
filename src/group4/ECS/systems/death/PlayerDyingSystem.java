@@ -2,6 +2,7 @@ package group4.ECS.systems.death;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
@@ -62,8 +63,10 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
     protected boolean die(Entity entity, float deltaTime) {
         entity.getComponent(HealthComponent.class).health = 0;
 
-        Sound.DIE.play();
-
+        // hacky fix since apparently the mob dying sytem inherits this..?
+        if (!(entity instanceof Mob)) {
+            GraphicsComponent.clearGlobalColorMask();
+        }
         // If auto reset is enabled, reset the module to its original state
         // and reposition the player, while giving it new health
         if (this.autoReset) {
@@ -76,4 +79,9 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
         return false;
     }
 
+    @Override
+    protected void sound() {
+        super.sound();
+        Sound.DIE.play();
+    }
 }

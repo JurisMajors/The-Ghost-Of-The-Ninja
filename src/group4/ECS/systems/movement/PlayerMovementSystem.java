@@ -3,18 +3,25 @@ package group4.ECS.systems.movement;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
-import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
+import group4.ECS.etc.EntityConst;
+import group4.ECS.entities.Ghost;
 import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
+import group4.ECS.etc.TheEngine;
+import group4.audio.Sound;
+import group4.game.Main;
 import group4.input.KeyBoard;
 import group4.input.MouseMovement;
 import group4.maths.Vector3f;
 
+import static group4.ECS.components.stats.MovementComponent.LEFT;
+import static group4.ECS.components.stats.MovementComponent.RIGHT;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
@@ -41,11 +48,68 @@ public class PlayerMovementSystem extends IteratingSystem {
         MovementComponent mc = Mappers.movementMapper.get(entity);
         GravityComponent gc = Mappers.gravityMapper.get(entity);
         // process movement events
-        move(entity, mc, pc, deltaTime);
+        this.move(entity, mc, pc, deltaTime);
+
+        // Finally, update the animation
+        this.updateState(entity, mc, pc);
+
         // apply gravity
-        doGravity(mc, gc);
+        this.doGravity(mc, gc);
+
         // move in the specified direction
         pc.position.addi(mc.velocity);
+    }
+
+    /**
+     * This class takes in an Entity and its movement- and positioncomponents. According to the current state of the
+     * Entity and the movements/inputs applied in this update cycle, we determine a new EntityState with which to update.
+     *
+     * @param e Entity, for which we update the EnityState
+     */
+    protected void updateState(Entity e, MovementComponent mc, PositionComponent pc) {
+        // Get and "unpack" some much used objects
+        Object ref = getMovementRef(e);
+        Player player = (Player) e;
+        EntityState playerState = player.getState();
+        EntityState nextState = null;
+
+        // If we are NOT in the jump or landing sequence, AND we ARE on a platform, then we are idle/walking/running.
+        boolean wandering = playerState != EntityState.PLAYER_POSTFALL &&
+                playerState != EntityState.PLAYER_FALLING &&
+                playerState != EntityState.PLAYER_PREJUMP &&
+                pc.onPlatform && !jumpInProgress;
+
+        // We are either wandering, or not. See the state diagram.
+        if (wandering) {
+            if (Math.abs(mc.velocity.x) > 1e-3) {
+                if (shouldSprint() && canSprint(pc)) {
+                    nextState = EntityState.PLAYER_RUNNING;
+                } else {
+                    nextState = EntityState.PLAYER_WALKING;
+                }
+            } else {
+                nextState = EntityState.PLAYER_IDLE;
+            }
+
+            // jump if space is pressed and if canJump is satisfied
+            if (shouldJump(ref) && canJump(pc)) {
+                nextState = EntityState.PLAYER_PREJUMP;
+            }
+        } else {
+            // Check if player is falling to animate a fall
+            if (mc.velocity.y < -1e-3) {
+                nextState = EntityState.PLAYER_FALLING;
+            }
+
+            // Check if player has landed on a platform for animation
+            if (((Player) e).getState() == EntityState.PLAYER_FALLING && pc.onPlatform) {
+                nextState = EntityState.PLAYER_POSTFALL;
+            }
+        }
+
+        if (nextState != null) {
+            player.setState(nextState);
+        }
     }
 
     /**
@@ -57,62 +121,48 @@ public class PlayerMovementSystem extends IteratingSystem {
     protected void move(Entity e, MovementComponent mc, PositionComponent pc, float deltaTime) {
         // Get and "unpack" some much used objects
         Object ref = getMovementRef(e);
-        HierarchicalPlayer player = (HierarchicalPlayer) e;
+        Player player = (Player) e;
         EntityState playerState = player.getState();
 
-        // set velocity in the direction that keyboard asks for
-        if (shouldRight(ref)) {
-            moveRight(mc, pc);
-        } else if (shouldLeft(ref)) {
-            moveLeft(mc, pc);
-        } else {
-            // stay still if no keys are pressed
-            mc.velocity.x = 0;
-        }
 
-        // If we are NOT in the jump or landing sequence, AND we ARE on a platform, then we are idle/walking/running.
-        boolean wandering = playerState != EntityState.PLAYER_POSTFALL && playerState != EntityState.PLAYER_PREJUMP && pc.onPlatform;
-        if (wandering) {
-            if (Math.abs(mc.velocity.x) > 1e-3) {
-                if (shouldSprint()) {
-                    player.setState(EntityState.PLAYER_RUNNING);
-                } else {
-                    player.setState(EntityState.PLAYER_WALKING);
-                }
+        // if entity is not being knocked back
+        if (!Mappers.healthMapper.get(e).state.contains(EntityConst.EntityState.KNOCKED)) {
+            if (shouldRight(ref)) {
+                moveRight(mc, pc);
+                mc.orientation = RIGHT;
+            } else if (shouldLeft(ref)) {
+                moveLeft(mc, pc);
+                mc.orientation = LEFT;
             } else {
-                player.setState(EntityState.PLAYER_IDLE);
+                // stay still if no keys are pressed
+                mc.velocity.x = 0;
+            }
+
+            if (!jumpInProgress && playerState == EntityState.PLAYER_JUMPING) {
+                // Catch if we have transitioned to the actual jump phase of our jump
+                jump(mc);
+                jumpInProgress = true;
+            }
+
+            // If we're tracking the jump is in progress, but it obviously isn't, toggle it off.
+            if (jumpInProgress && playerState != EntityState.PLAYER_JUMPING) {
+                jumpInProgress = false;
             }
         }
 
-        // jump if space is pressed and if canJump is satisfied
-        if (shouldJump(ref) && canJump(mc.velocity) && pc.onPlatform) {
-            player.setState(EntityState.PLAYER_PREJUMP);
-        }
 
-        // Catch if we have transitioned to the actual jump phase of our jump
-        if (!jumpInProgress && playerState == EntityState.PLAYER_JUMPING) {
-            jump(mc);
-            jumpInProgress = true;
-        }
+        // if the entity shoudlspawnghost and its previous ghost is not alive and it is on a start totem
+        if (shouldSpawnGhost(ref) && !player.spawnedGhost && player.totemStatus != null) {
+            player.spawnedGhost = true; // spawn the ghost
+            Ghost newGhost = player.totemStatus.getGhost(player); // get a ghost from the totem
 
-        // If we're tracking the jump is in progress, but it obviously isn't, toggle it off.
-        if (jumpInProgress && playerState != EntityState.PLAYER_JUMPING) {
-            jumpInProgress = false;
-        }
+            // set a background color while in the 'ghost' world
+            // TODO: this color should be chosen by someone artistic
+            GraphicsComponent.setGlobalColorMask(new Vector3f(0.2f, 0f, 0f));
 
-        // Check if player is falling to animate a fall
-        if (mc.velocity.y < -1e-3) {
-            player.setState(EntityState.PLAYER_FALLING);
-        }
-
-        // Check if player has landed on a platform for animation
-        if (((Player) e).getState() == EntityState.PLAYER_FALLING && pc.onPlatform) {
-            player.setState(EntityState.PLAYER_POSTFALL);
-        }
-
-        if (shouldSpawnGhost(ref) && !((Player) e).spawnedGhost) {
-            ((Player) e).spawnedGhost = true;
-            ((Player) e).level.getCurrentModule().addGhost((Player) e);
+            // add it to engine an module
+            player.level.getCurrentModule().addEntity(newGhost);
+            TheEngine.getInstance().addEntity(newGhost);
         }
 
         // Finally limit the velocity vector
@@ -120,25 +170,30 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     private void moveRight(MovementComponent mc, PositionComponent pc) {
-        moveDirection(1, mc, pc);
+        moveDirection(MovementComponent.RIGHT, mc, pc);
+        mc.setOrientation(MovementComponent.RIGHT);
     }
 
     private void moveLeft(MovementComponent mc, PositionComponent pc) {
-        moveDirection(-1, mc, pc);
+        moveDirection(MovementComponent.LEFT, mc, pc);
+        mc.setOrientation(MovementComponent.LEFT);
     }
 
     /**
      * Moves along the x axis in the specified direction
      */
     private void moveDirection(int moveDir, MovementComponent mc, PositionComponent pc) {
+        if (!Main.AI && !Sound.isPlaying(Sound.STEP) && canJump(pc)) {
+            Sound.playRandom(Sound.STEP);
+        }
         // set orientation of player in accordance to mouse position
         if (pc.position.x <= MouseMovement.mouseX) {
-            mc.orientation = MovementComponent.RIGHT;
+            mc.orientation = RIGHT;
         } else {
             mc.orientation = MovementComponent.LEFT;
         }
 
-        if (shouldSprint() && canSprint(mc.velocity)) {
+        if (shouldSprint() && canSprint(pc)) {
             mc.velocity.x = moveDir * getSprintingVel(mc);
             mc.velocity.x += moveDir * mc.acceleration.x;
         } else {
@@ -157,16 +212,16 @@ public class PlayerMovementSystem extends IteratingSystem {
     }
 
     private void jump(MovementComponent mc) {
+        // TODO: Play jump sound
         mc.velocity.y = mc.velocityRange.y;
     }
 
-    private boolean canJump(Vector3f velocity) {
-        // velocity has to be close to zero (avoid double jumping)
-        return velocity.y <= 1e-3 && velocity.y >= -1e-3;
+    private boolean canJump(PositionComponent pc) {
+        return pc.onPlatform;
     }
 
-    private boolean canSprint(Vector3f velocity) {
-        return velocity.y <= 1e-3 && velocity.y >= -1e-3;
+    private boolean canSprint(PositionComponent pc) {
+        return pc.onPlatform;
     }
 
 

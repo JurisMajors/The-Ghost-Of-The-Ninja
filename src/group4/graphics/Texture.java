@@ -18,11 +18,15 @@ public class Texture {
     public static Texture EXIT;  // TODO: More to be added.
     public static Texture BLACK;
     public static Texture WHITE;
+    public static Texture GREEN;
+    public static Texture RED;
     public static Texture MAIN_TILES;
     public static Texture BACKGROUND;
     public static Texture HITBOX;
     public static Texture NOTHINGNESS;
     public static Texture SPLINE;
+    public static Texture TOTEM_START;
+    public static Texture TOTEM_END;
 
     // Storing all player related textures
     public static Texture PLAYER_TORSO;
@@ -66,6 +70,8 @@ public class Texture {
         BACKGROUND = new Texture("src/group4/res/textures/cave.jpg");
         BLACK = new Texture("src/group4/res/textures/black.png");
         WHITE = new Texture("src/group4/res/textures/white.png");
+        GREEN = new Texture("src/group4/res/textures/green.png");
+        RED = new Texture("src/group4/res/textures/red.png");
         HITBOX = new Texture("src/group4/res/textures/hitbox.png");
         NOTHINGNESS = new Texture("src/group4/res/textures/FF4D00-0.png");
         SPLINE = new Texture("src/group4/res/textures/spline.png");
@@ -81,6 +87,8 @@ public class Texture {
         PLAYER_LIGHT_ARM_UPPER = new Texture("src/group4/res/textures/player/ninja3withlayers_0005_uppercloserarm.png");
         PLAYER_LIGHT_ARM_LOWER = new Texture("src/group4/res/textures/player/ninja3withlayers_0004_lowercloserarm.png");
         
+        TOTEM_START = new Texture("src/group4/res/textures/start-totem.png");
+        TOTEM_END = new Texture("src/group4/res/textures/end-totem.png");
         START_BG = new Texture("src/group4/res/textures/start-bg.png");
         VIGNETTE_OVERLAY = new Texture("src/group4/res/textures/vignette-overlay.png");
         NOISE_OVERLAY = new Texture("src/group4/res/textures/noise-overlay.png");

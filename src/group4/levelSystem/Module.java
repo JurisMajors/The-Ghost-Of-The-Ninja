@@ -2,17 +2,19 @@ package group4.levelSystem;
 
 import com.badlogic.ashley.core.Entity;
 import group4.AI.Brain;
-import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
-import group4.ECS.entities.mobs.*;
+import group4.ECS.entities.hazards.Spikes;
 import group4.ECS.entities.items.consumables.Coin;
+import group4.ECS.entities.mobs.*;
+import group4.ECS.entities.totems.EndingTotem;
+import group4.ECS.entities.totems.StartTotem;
+import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.world.ArtTile;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
 import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.movement.MovementHandlers.JumpingWalkingMobMovementHandler;
 import group4.game.Main;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -23,7 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import javax.xml.soap.Text;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -50,8 +52,8 @@ public class Module {
     // List that keeps track of all the entities in the module
     private List<Entity> entities;
 
-    // ghost model
-    private Brain ghostModel = null;
+    // ghost directory
+    private String ghostModelDir;
 
     // Keeps track of the initial player position
     private Vector3f initialPlayerPos;
@@ -69,9 +71,9 @@ public class Module {
      * Default construct, which constructs a module based on a Tiled .tmx file
      */
 
-    public Module(Level l, String tiledModuleLocation, String ghostModelLocation) {
-        if (ghostModelLocation != null) {
-            loadGhost(ghostModelLocation);
+    public Module(Level l, String tiledModuleLocation, String ghostModelDir) {
+        if (ghostModelDir != null) {
+            loadGhost(ghostModelDir);
         }
         this.configureMap();
         this.splineMap = new HashMap<>();
@@ -83,16 +85,16 @@ public class Module {
     /**
      * Constructor to work with non-tiled modules
      */
-    public Module(Level l, String ghostModelLocation) {
-        if (ghostModelLocation != null) {
-            loadGhost(ghostModelLocation);
+    public Module(Level l, String ghostModelDir) {
+        if (ghostModelDir != null) {
+            loadGhost(ghostModelDir);
         }
         this.setup(l);
     }
 
 
     private void loadGhost(String loc) {
-        this.ghostModel = new Brain(loc);
+        this.ghostModelDir = loc;
     }
 
     /**
@@ -151,8 +153,12 @@ public class Module {
                 parseMainLayer(layer);
             } else if (layerName.equals("SPLINES")) {
                 parseSplineLayer(layer);
-            } else if (layerName.equals("COINS") && !Main.AI) {
+            } else if (layerName.equals("COINS")) {
+                if (Main.AI) continue;
                 parseCoinLayer(layer);
+            }else if (layerName.equals("TOTEMS")) {
+                if (Main.AI) continue;
+                parseTotemLayer(layer);
             } else if (layerName.equals("EXITS")) {
                 setupExits(layer);
             } else {
@@ -217,8 +223,11 @@ public class Module {
                 this.addArtTile(tileGridX, tileGridY, tileId);
             } else if (entityId.equals(Player.getName())) {
                 this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
-            } else if (entityId.endsWith(Mob.getName()) && !Main.AI) {
+            } else if (entityId.endsWith(Mob.getName())) {
+                if (Main.AI) continue;
                 this.addMob(tileGridX, tileGridY, tileId, entityId);
+            } else if (entityId.equals(Spikes.getName())) {
+                this.addSpike(tileGridX, tileGridY, tileId);
             } else {
                 System.err.println("Some tiles not drawing!");
                 continue;
@@ -230,6 +239,26 @@ public class Module {
     private void addCoin(Vector3f position, int i) {
         Coin c = new Coin(position, Coin.LARGE_SIZE, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i), Coin.LARGE_VALUE);
         this.addEntity(c);
+    }
+
+    private void parseTotemLayer(JSONObject layer) {
+        JSONArray data = layer.getJSONArray("objects");
+        for (int point = 0; point < data.length(); point++) {
+            // get information about the object
+            JSONObject pointInfo = data.getJSONObject(point);
+            // get the coordinates for the control point
+            float pointX = pointInfo.getFloat("x") / 32f;
+            float pointY = this.height - pointInfo.getFloat("y") / 32f + 1;
+            String tileName = pointInfo.getString("name");
+            Vector3f position = new Vector3f(pointX, pointY, 0);
+            Totem totem;
+            if (Totem.isEnd(tileName)) {
+                totem = new EndingTotem(position, tileName, level);
+            } else {
+                totem = new StartTotem(position, tileName, level, this.ghostModelDir);
+            }
+            this.addEntity(totem);
+        }
     }
 
     private void parseSplineLayer(JSONObject layer) {
@@ -345,25 +374,6 @@ public class Module {
 
 
     /**
-     * Add a ghost to the current module
-     */
-    public void addGhost(Player master) throws IllegalStateException {
-        if (Main.AI) return;
-
-        if (this.entities == null) {
-            throw new IllegalStateException("Adding ghost before initialized entities container");
-        }
-        if (this.ghostModel != null) {
-            Ghost g = new Ghost(this.level, this.ghostModel, master);
-            this.addEntity(g);
-            TheEngine.getInstance().addEntity(g);
-        } else {
-            System.err.println("WARNING: Not loading ghost in module");
-        }
-    }
-
-
-    /**
      * Get the width of the module grid
      */
     public int getWidth() {
@@ -418,6 +428,38 @@ public class Module {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
         Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
         Platform p = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        this.addEntity(p);
+    }
+
+    /**
+     * Adds an artTile entity to the module. These entities only render. They have no collision.
+     *
+     * @param x the x position of the platform in the module grid
+     * @param y the y position of the platform in the module grid
+     * @param i the identifier for the tile within the TileMap
+     */
+    private void addSpike(int x, int y, int i) {
+        Vector3f tempPosition = new Vector3f(x, y, 0.0f);
+        Spikes p;
+
+        switch (i) {
+            case 48: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                    new Vector3f(0.0f,1.0f,0.0f));
+                    break;
+            case 49: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                    new Vector3f(1.0f,0.0f,0.0f));
+                    break;
+            case 50: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                    new Vector3f(0.0f,-1.0f,0.0f));
+                    break;
+            case 51: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                    new Vector3f(-1.0f,0.0f,0.0f));
+                    break;
+            default: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                    new Vector3f(0.0f,1.0f,0.0f));
+                    break;
+        }
+
         this.addEntity(p);
     }
 
@@ -509,11 +551,17 @@ public class Module {
         int[] platforms = new int[]{0, 1, 2, 5, 6, 8, 9, 10, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 32, 33, 34, 35};
         int[] artTiles = new int[]{3, 4, 11, 12};
         int[] players = new int[]{7};
+        int spike_up = 48;
+        int spike_right = 49;
+        int spike_down = 50;
+        int spike_left = 51;
         int jumpingwalkingmob = 36;
         int flappingmob = 42;
         int walkingmob = 40;
         int flyingmob = 41;
         int coin = 13;
+        int totemStart = 21;
+        int totemEnd = 29;
 
         moduleTileMap = new HashMap<Integer, String>();
         for (int i : platforms) {
@@ -528,12 +576,20 @@ public class Module {
             moduleTileMap.put(i, Player.getName());
         }
 
+        // spikes
+        moduleTileMap.put(spike_up, Spikes.getName());
+        moduleTileMap.put(spike_right, Spikes.getName());
+        moduleTileMap.put(spike_down, Spikes.getName());
+        moduleTileMap.put(spike_left, Spikes.getName());
+
         moduleTileMap.put(jumpingwalkingmob, JumpingWalkingMob.getName());
         moduleTileMap.put(flappingmob, FlappingMob.getName());
         moduleTileMap.put(walkingmob, WalkingMob.getName());
         moduleTileMap.put(flyingmob, FlyingMob.getName());
 
-
         moduleTileMap.put(coin, Coin.getName());
+
+        moduleTileMap.put(totemStart, StartTotem.getName());
+        moduleTileMap.put(totemEnd, EndingTotem.getName());
     }
 }

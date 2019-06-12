@@ -3,6 +3,7 @@ package group4.ECS.systems.death;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import group4.ECS.etc.Families;
+import group4.audio.Sound;
 
 public class MobDyingSystem extends PlayerDyingSystem {
 
@@ -19,4 +20,11 @@ public class MobDyingSystem extends PlayerDyingSystem {
         super.die(entity, deltaTime);
         return true;
     }
+
+    @Override
+    protected void sound() {
+        super.sound();
+        Sound.playRandom(Sound.MOBDIE);
+    }
+
 }
