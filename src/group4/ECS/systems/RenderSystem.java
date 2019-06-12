@@ -124,6 +124,7 @@ public class RenderSystem extends EntitySystem {
                     }
 
                     if (mc.orientation == MovementComponent.LEFT) {
+                        gc.shader.bind();
                         // Set the mirrored projection matrix
                         gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrixHorizontalFlip);
                         // Since player aligns with center screen with its bottom left corner, we need to temporarily
