@@ -704,15 +704,15 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         SplineAnimation foot_R = new SplineAnimation(this.IKHandles.get("foot_R"), 0.0f, footPosRight);
 
         // Add hand animations
-        float vShift = 1.0f;
+        float vShift = 1.1f;
         Vector3f[] handPath = new Vector3f[]{
+                new Vector3f(0.01f,	0.0f + vShift,	0.0f),
+                new Vector3f(-0.3f,	0.0f + vShift,	0.0f),
+                new Vector3f(0.075f,	0.0f + vShift,	0.0f),
                 new Vector3f(0.0f,	0.0f + vShift,	0.0f),
+                new Vector3f(-.06f,	0.0f + vShift,	0.0f),
                 new Vector3f(0.0f,	0.0f + vShift,	0.0f),
-                new Vector3f(0.0f,	0.0f + vShift,	0.0f),
-                new Vector3f(0.0f,	0.0f + vShift,	0.0f),
-                new Vector3f(0.0f,	0.0f + vShift,	0.0f),
-                new Vector3f(0.0f,	0.0f + vShift,	0.0f),
-                new Vector3f(0.0f,	0.0f + vShift,	0.0f),
+                new Vector3f(0.2f,	0.0f + vShift,	0.0f),
                 new Vector3f(0.0f,	0.0f + vShift,	0.0f),
         };
 
