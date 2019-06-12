@@ -19,7 +19,7 @@ public abstract class Totem extends Entity {
     public static final int CARRYCOST = 500;
     public static final int CHALLANGEREWARD = 500;
 
-    private String name; // name of the totem
+    protected String name; // name of the totem
 
     public Level level; // level taht it resides in
 
@@ -45,7 +45,7 @@ public abstract class Totem extends Entity {
     }
     // unique identification of the totem
     public int getID() {
-        return Integer.parseInt(this.name.substring(1));
+        return Character.getNumericValue(this.name.charAt(1));
     }
 
     public abstract boolean isEnd();

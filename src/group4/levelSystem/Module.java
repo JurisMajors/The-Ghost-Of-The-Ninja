@@ -59,6 +59,9 @@ public class Module {
     // JSON Object containing the tiled data
     JSONObject tiledData;
 
+    // module file
+    private File modulePath;
+
     // Storing the mapping from the tilemap indices to the engine Entities
     private Map<Integer, String> moduleTileMap;
     // maps character of spline to its control points
@@ -102,6 +105,7 @@ public class Module {
         // Try to read the tiled json file
         try {
             FileReader fileReader = new FileReader(fileLocation);
+            this.modulePath = new File(fileLocation);
 
             // Construct the JSON object containing the tiled module information
             this.tiledData = new JSONObject(new JSONTokener(fileReader));
@@ -316,6 +320,7 @@ public class Module {
             float pointX = pointInfo.getFloat("x") / 32f;
             float pointY = this.height - pointInfo.getFloat("y") / 32f + 1;
             String tileName = pointInfo.getString("name");
+            tileName += this.modulePath.getName().split(".")[0];
             Vector3f position = new Vector3f(pointX, pointY, 0);
             Totem totem;
             if (Totem.isEnd(tileName)) {
