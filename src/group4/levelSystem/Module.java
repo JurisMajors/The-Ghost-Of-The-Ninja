@@ -309,9 +309,6 @@ public class Module {
     }
 
     private void parseTotemLayer(JSONObject layer) {
-        if (true) {
-            return;
-        }
         JSONArray data = layer.getJSONArray("objects");
         for (int point = 0; point < data.length(); point++) {
             // get information about the object
@@ -320,7 +317,7 @@ public class Module {
             float pointX = pointInfo.getFloat("x") / 32f;
             float pointY = this.height - pointInfo.getFloat("y") / 32f + 1;
             String tileName = pointInfo.getString("name");
-            tileName += this.modulePath.getName().split(".")[0];
+            tileName += this.modulePath.getName().split("\\.")[0];
             Vector3f position = new Vector3f(pointX, pointY, 0);
             Totem totem;
             if (Totem.isEnd(tileName)) {
