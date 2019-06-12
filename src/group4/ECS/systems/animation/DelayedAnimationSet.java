@@ -18,7 +18,6 @@ public class DelayedAnimationSet extends AnimationSet {
      */
     @Override
     public boolean update(float deltaTime) {
-        System.out.println(this.currentFrame / (float) this.frames);
         for (Animation a : this.animations) {
             a.update(this.currentFrame / (float) this.frames);
         }
