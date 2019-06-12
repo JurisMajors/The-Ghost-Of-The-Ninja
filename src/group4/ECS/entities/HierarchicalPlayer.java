@@ -5,10 +5,7 @@ import group4.ECS.components.identities.AnimationComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.etc.EntityState;
-import group4.ECS.systems.animation.AnimationSet;
-import group4.ECS.systems.animation.DelayedAnimationSet;
-import group4.ECS.systems.animation.IKEndEffector;
-import group4.ECS.systems.animation.SplineAnimation;
+import group4.ECS.systems.animation.*;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
@@ -355,7 +352,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
 
     private DelayedAnimationSet generatePreJumpAnim() {
         // Have player crouch a bit
-        SplineAnimation hip = new SplineAnimation(
+        DelayedSplineAnimation hip = new DelayedSplineAnimation(
                 this.torso, 0.0f,
                 new Vector3f[]{
                         new Vector3f(0.0f, 0.050f, 0.0f),
@@ -380,8 +377,8 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
                 new Vector3f(0.33f, 0.0f, 0.0f)
         };
 
-        SplineAnimation foot_L = new SplineAnimation(this.IKHandles.get("foot_L"), 0.0f, footPosLeft);
-        SplineAnimation foot_R = new SplineAnimation(this.IKHandles.get("foot_R"), 0.0f, footPosRight);
+        DelayedSplineAnimation foot_L = new DelayedSplineAnimation(this.IKHandles.get("foot_L"), 0.0f, footPosLeft);
+        DelayedSplineAnimation foot_R = new DelayedSplineAnimation(this.IKHandles.get("foot_R"), 0.0f, footPosRight);
 
         // Add hand animations
         float vShift = 0.1f;
@@ -396,8 +393,8 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
                 new Vector3f(-0.789f, -0.025687f + vShift, 0.0f),
         };
 
-        SplineAnimation hand_L = new SplineAnimation(this.IKHandles.get("hand_L"), 0.0f, handPath);
-        SplineAnimation hand_R = new SplineAnimation(this.IKHandles.get("hand_R"), 0.5f, handPath);
+        DelayedSplineAnimation hand_L = new DelayedSplineAnimation(this.IKHandles.get("hand_L"), 0.0f, handPath);
+        DelayedSplineAnimation hand_R = new DelayedSplineAnimation(this.IKHandles.get("hand_R"), 0.5f, handPath);
 
         // Add the cycles to an animation set and return
         DelayedAnimationSet preJumpAnimationSet = new DelayedAnimationSet(60);
@@ -411,7 +408,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
 
     private DelayedAnimationSet generatePostFallAnim() {
         // Have player crouch a bit
-        SplineAnimation hip = new SplineAnimation(
+        DelayedSplineAnimation hip = new DelayedSplineAnimation(
                 this.torso, 0.0f,
                 new Vector3f[]{
                         new Vector3f(0.0f, 0.050f, 0.0f),
@@ -436,8 +433,8 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
                 new Vector3f(0.33f, 0.0f, 0.0f)
         };
 
-        SplineAnimation foot_L = new SplineAnimation(this.IKHandles.get("foot_L"), 0.0f, footPosLeft);
-        SplineAnimation foot_R = new SplineAnimation(this.IKHandles.get("foot_R"), 0.0f, footPosRight);
+        DelayedSplineAnimation foot_L = new DelayedSplineAnimation(this.IKHandles.get("foot_L"), 0.0f, footPosLeft);
+        DelayedSplineAnimation foot_R = new DelayedSplineAnimation(this.IKHandles.get("foot_R"), 0.0f, footPosRight);
 
         // Add hand animations
         float vShift = 0.1f;
@@ -452,8 +449,8 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
                 new Vector3f(-0.789f, -0.025687f + vShift, 0.0f),
         };
 
-        SplineAnimation hand_L = new SplineAnimation(this.IKHandles.get("hand_L"), 0.0f, handPath);
-        SplineAnimation hand_R = new SplineAnimation(this.IKHandles.get("hand_R"), 0.5f, handPath);
+        DelayedSplineAnimation hand_L = new DelayedSplineAnimation(this.IKHandles.get("hand_L"), 0.0f, handPath);
+        DelayedSplineAnimation hand_R = new DelayedSplineAnimation(this.IKHandles.get("hand_R"), 0.5f, handPath);
 
         // Add the cycles to an animation set and return
         DelayedAnimationSet preJumpAnimationSet = new DelayedAnimationSet(2);
