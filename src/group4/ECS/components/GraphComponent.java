@@ -13,7 +13,6 @@ public class GraphComponent implements Component {
     public Module module;
     public String inFile;
     public String outFile;
-    public int vertexID;
     public ArrayList<Vector3f> vertexCoords;
     public ArrayList<ArrayList<Vector3f>> edgePath;
     public ArrayList<ArrayList<Integer>> neighbours;

@@ -11,7 +11,6 @@ import group4.maths.Vector3f;
 import group4.utils.DebugUtils;
 
 public class PathMovementSystem extends IteratingSystem {
-    int vertexID = 0;
 
     public PathMovementSystem(int priority) {
         super(Families.pathFamily, priority);
@@ -19,12 +18,11 @@ public class PathMovementSystem extends IteratingSystem {
 
     @Override
     public void processEntity(Entity entity, float deltaTime) {
-        GraphComponent gc = Mappers.graphMapper.get(entity);
         PositionComponent pc = Mappers.positionMapper.get(entity);
         PathComponent pathc = Mappers.pathMapper.get(entity);
 
         if (pathc.coordinates.size() > 0) {
-            gc.vertexID = pathc.vertexID.getFirst();
+            pathc.vertex = pathc.vertexID.getFirst();
             pathc.vertexID.removeFirst();
             pc.position = pathc.coordinates.getFirst();
             pathc.coordinates.removeFirst();

@@ -30,10 +30,8 @@ public abstract class AbstractGraphHandler<T extends AStarMob> {
                     readFromFile(entity, gc.inFile);
                 } catch (IOException e) {
                 }
-                initialVertex(entity);
             } else {
                 generateVertices(entity);
-                initialVertex(entity);
                 computeYHValues(entity);
                 if (gc.outFile != null) {
                     try {
@@ -111,19 +109,6 @@ public abstract class AbstractGraphHandler<T extends AStarMob> {
         }
 
         fw.close();
-    }
-
-    public void initialVertex(Entity entity) {
-        PositionComponent pc = Mappers.positionMapper.get(entity);
-        GraphComponent gc = Mappers.graphMapper.get(entity);
-        gc.vertexID = 0;
-        for (int i = 0; i < gc.vertexCoords.size(); i++) {
-            if (Math.sqrt(Math.pow(pc.position.x - gc.vertexCoords.get(i).x, 2) + Math.pow(pc.position.y - gc.vertexCoords.get(i).y, 2))
-                    < Math.sqrt(Math.pow(pc.position.x - gc.vertexCoords.get(gc.vertexID).x, 2) + Math.pow(pc.position.y - gc.vertexCoords.get(gc.vertexID).y, 2))) {
-                gc.vertexID = i;
-            }
-        }
-        pc.position = gc.vertexCoords.get(gc.vertexID);
     }
 
     public void addCollisionPair(Entity entity, TreeMap<Float, Float> collisionPairs, float lp, float hp) {

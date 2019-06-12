@@ -32,8 +32,10 @@ public class AStarPathSystem extends AbstractMovementHandler {
         PositionComponent mobPos = Mappers.positionMapper.get(entity);
         DimensionComponent mobDim = Mappers.dimensionMapper.get(entity);
         MobComponent mobC = Mappers.mobMapper.get(entity);
-        if (gc.vertexID != -1) {
 
+        if(pathc.vertex==null)initialVertex(entity);
+
+        if (pathc.vertex != -1) {
             setVisionRange(entity);
 
             // center of the mob
@@ -58,13 +60,27 @@ public class AStarPathSystem extends AbstractMovementHandler {
                     }
                 }
                 if (Math.sqrt(Math.pow(mc.velocityRange.x, 2) + Math.pow(mc.velocityRange.y, 2)) >= Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(playerVertexID).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(playerVertexID).y, 2))) {
-                    computePath(entity, gc.vertexID, playerVertexID);
+                    computePath(entity, pathc.vertex, playerVertexID);
                 }
             } else {
                 pathc.vertexID.clear();
                 pathc.coordinates.clear();
             }
         }
+    }
+
+    public void initialVertex(Entity entity) {
+        PositionComponent pc = Mappers.positionMapper.get(entity);
+        GraphComponent gc = Mappers.graphMapper.get(entity);
+        PathComponent pathc = Mappers.pathMapper.get(entity);
+        pathc.vertex = 0;
+        for (int i = 0; i < gc.vertexCoords.size(); i++) {
+            if (Math.sqrt(Math.pow(pc.position.x - gc.vertexCoords.get(i).x, 2) + Math.pow(pc.position.y - gc.vertexCoords.get(i).y, 2))
+                    < Math.sqrt(Math.pow(pc.position.x - gc.vertexCoords.get(pathc.vertex).x, 2) + Math.pow(pc.position.y - gc.vertexCoords.get(pathc.vertex).y, 2))) {
+                pathc.vertex = i;
+            }
+        }
+        pc.position = gc.vertexCoords.get(pathc.vertex);
     }
 
     private void computePath(Entity entity, int src, int dest) {
