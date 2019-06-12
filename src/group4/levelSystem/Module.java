@@ -18,6 +18,10 @@ import group4.ECS.entities.world.Exit;
 import group4.ECS.entities.world.Platform;
 import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.GraphHandlers.AbstractGraphHandler;
+import group4.ECS.systems.GraphHandlers.JumpingAStarMobGraphHandler;
+import group4.ECS.systems.GraphHandlers.JumpingWalkingAStarMobGraphHandler;
+import group4.ECS.systems.GraphHandlers.WalkingAStarMobGraphHandler;
 import group4.game.Main;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
@@ -68,6 +72,20 @@ public class Module {
     // maps character of spline to its control points
     private Map<Character, List<Vector3f>> splineMap;
 
+    /**
+     * Graphs for AStar mobs to not recompute again
+     */
+    GraphComponent jwGraph = new GraphComponent(this); // jumping walking
+    GraphComponent wGraph = new GraphComponent(this); // walking
+    GraphComponent jGraph = new GraphComponent(this); // jumping graph
+    /**
+     * A star handlers for all different types of mobs.
+     */
+    public static AbstractGraphHandler jwHandler = new JumpingWalkingAStarMobGraphHandler();
+    public static AbstractGraphHandler wHandler = new WalkingAStarMobGraphHandler();
+    public static AbstractGraphHandler jHandler = new JumpingAStarMobGraphHandler();
+
+    List<Mob> mobs = new ArrayList<>();
 
     /**
      * Default construct, which constructs a module based on a Tiled .tmx file
@@ -93,6 +111,7 @@ public class Module {
         }
         this.setup(l);
     }
+
 
 
     private void loadGhost(String loc) {
@@ -235,7 +254,6 @@ public class Module {
                 continue;
             }
         }
-
     }
 
     private void addCoin(Vector3f position, int i) {
@@ -405,21 +423,30 @@ public class Module {
     }
 
     private void addMob(int x, int y, int i, String mobName) {
-        GraphComponent jwGraph = null; // jumping walking
-        GraphComponent wGraph = null; // walking
-        GraphComponent jGraph = null; // jumping graph
-
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
         AStarMob m = null;
         if (mobName.equals(JumpingWalkingAStarMob.getName())) {
-            m = new JumpingWalkingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+            m = new JumpingWalkingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i), jwGraph);
         } else if (mobName.equals(WalkingAStarMob.getName())) {
-            m = new WalkingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+            m = new WalkingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i), wGraph);
         } else if (mobName.equals(JumpingAStarMob.getName())) {
-            m = new JumpingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+            m = new JumpingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i), jGraph);
         }
         if (m == null) return;
+        this.mobs.add(m);
         this.addEntity(m);
+    }
+
+    public void finalizeMobs() {
+        for (Mob m : this.mobs) {
+            if (m instanceof JumpingAStarMob) {
+                jHandler.constructGraph(m,jGraph);
+            } else if (m instanceof WalkingAStarMob) {
+                wHandler.constructGraph(m, wGraph);
+            } else if (m instanceof JumpingWalkingAStarMob) {
+                jwHandler.constructGraph(m, jwGraph);
+            }
+        }
     }
 
     /**

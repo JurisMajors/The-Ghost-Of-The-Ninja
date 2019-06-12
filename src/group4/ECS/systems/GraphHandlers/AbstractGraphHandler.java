@@ -1,10 +1,10 @@
 package group4.ECS.systems.GraphHandlers;
 
 import com.badlogic.ashley.core.Entity;
+import com.google.common.graph.Graph;
 import group4.ECS.components.GraphComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.GravityComponent;
-import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.AStarMobs.AStarMob;
 import group4.ECS.entities.world.Platform;
@@ -21,10 +21,8 @@ import java.util.*;
 public abstract class AbstractGraphHandler<T extends AStarMob> {
 
 
-    public void constructGraph(Entity entity) {
-        GraphComponent gc = Mappers.graphMapper.get(entity);
+    public void constructGraph(Entity entity, GraphComponent gc) {
         if (gc.vertexCoords == null) {
-            System.out.println("hello " + entity);
             if (gc.inFile != null) {
                 try {
                     readFromFile(entity, gc.inFile);

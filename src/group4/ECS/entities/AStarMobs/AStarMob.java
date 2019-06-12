@@ -1,6 +1,5 @@
 package group4.ECS.entities.AStarMobs;
 
-import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphComponent;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.PathComponent;
@@ -24,7 +23,7 @@ import group4.maths.Vector3f;
 public class AStarMob extends Mob {
     protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f);
 
-    public AStarMob(Vector3f position, Level l, Module module, String inFile, String outFile, AbstractGraphHandler handler) {
+    public AStarMob(Vector3f position, Level l, Module module, String inFile, String outFile, AbstractGraphHandler handler, GraphComponent graphComponent) {
         Vector3f velocityRange = new Vector3f(0.05f, 0.25f, 0.0f);
         Shader shader = Shader.SIMPLE;
         Texture texture = Texture.EXIT;
@@ -36,16 +35,16 @@ public class AStarMob extends Mob {
         this.add(new CollisionComponent(MobCollision.getInstance()));
         this.add(new GraphicsComponent(shader, texture, dimension, false));
         this.add(new HealthComponent(30));
-        if (inFile != null) this.add(new GraphComponent(inFile));
-        else if (outFile != null) this.add(new GraphComponent(module, outFile));
-        else this.add(new GraphComponent(module));
+
+        this.add(graphComponent);
+
         this.add(new AStarMobComponent(handler));
         this.add(new PathComponent());
         this.add(new MobComponent());
     }
 
-    public AStarMob(Vector3f position, Level l, Module module, String inFile, String outFile, Texture tex, float[] texCoord, AbstractGraphHandler handler) {
-        this(position, l, module, inFile, outFile, handler);
+    public AStarMob(Vector3f position, Level l, Module module, String inFile, String outFile, Texture tex, float[] texCoord, AbstractGraphHandler handler, GraphComponent graphComponent) {
+        this(position, l, module, inFile, outFile, handler, graphComponent);
         this.remove(GraphicsComponent.class);
         this.add(new GraphicsComponent(Shader.SIMPLE, tex, dimension, texCoord, false));
 
