@@ -370,12 +370,14 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
                 new Vector3f(0.33f, 0.0f, 0.0f)
         };
 
-        };
-                new Vector3f(-.33f, 0.0f, 0.0f)
-                new Vector3f(-.33f, 0.0f, 0.0f),
-                new Vector3f(-.33f, 0.0f, 0.0f),
-                new Vector3f(-.33f, 0.0f, 0.0f),
+
         Vector3f[] footPosRight = new Vector3f[]{
+                new Vector3f(-.33f, 0.0f, 0.0f),
+                new Vector3f(-.33f, 0.0f, 0.0f),
+                new Vector3f(-.33f, 0.0f, 0.0f),
+                new Vector3f(-.33f, 0.0f, 0.0f),
+        };
+
         DelayedSplineAnimation foot_L = new DelayedSplineAnimation(this.IKHandles.get("foot_L"), 0.0f, footPosLeft);
         DelayedSplineAnimation foot_R = new DelayedSplineAnimation(this.IKHandles.get("foot_R"), 0.0f, footPosRight);
 
@@ -396,7 +398,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         DelayedSplineAnimation hand_R = new DelayedSplineAnimation(this.IKHandles.get("hand_R"), 0.5f, handPath);
 
         // Add the cycles to an animation set and return
-        DelayedAnimationSet preJumpAnimationSet = new DelayedAnimationSet(60);
+        DelayedAnimationSet preJumpAnimationSet = new DelayedAnimationSet(5);
         preJumpAnimationSet.add(hip);
         preJumpAnimationSet.add(foot_L);
         preJumpAnimationSet.add(foot_R);
@@ -452,7 +454,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         DelayedSplineAnimation hand_R = new DelayedSplineAnimation(this.IKHandles.get("hand_R"), 0.5f, handPath);
 
         // Add the cycles to an animation set and return
-        DelayedAnimationSet preJumpAnimationSet = new DelayedAnimationSet(2);
+        DelayedAnimationSet preJumpAnimationSet = new DelayedAnimationSet(5);
         preJumpAnimationSet.add(hip);
         preJumpAnimationSet.add(foot_L);
         preJumpAnimationSet.add(foot_R);
