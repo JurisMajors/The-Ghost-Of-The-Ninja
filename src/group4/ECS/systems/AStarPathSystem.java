@@ -4,16 +4,20 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import group4.ECS.components.GraphComponent;
 import group4.ECS.components.PathComponent;
+import group4.ECS.components.identities.MobComponent;
+import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.collision.CollisionHandlers.MobCollision;
+import group4.ECS.systems.movement.MovementHandlers.AbstractMovementHandler;
 import group4.maths.Vector3f;
 
 import java.util.*;
 
-public class AStarPathSystem extends IteratingSystem {
+public class AStarPathSystem extends AbstractMovementHandler {
 
     public AStarPathSystem(int priority) {
         super(Families.aStarMobFamily, priority);
@@ -25,15 +29,40 @@ public class AStarPathSystem extends IteratingSystem {
         GraphComponent gc = Mappers.graphMapper.get(entity);
         PathComponent pathc = Mappers.pathMapper.get(entity);
         PositionComponent ppc = Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
+        PositionComponent mobPos = Mappers.positionMapper.get(entity);
+        DimensionComponent mobDim = Mappers.dimensionMapper.get(entity);
+        MobComponent mobC = Mappers.mobMapper.get(entity);
         if (gc.vertexID != -1) {
-            int playerVertexID = 0;
-            for (int i = 0; i < gc.vertexCoords.size(); i++) {
-                if (Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(i).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(i).y, 2)) < Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(playerVertexID).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(playerVertexID).y, 2))) {
-                    playerVertexID = i;
-                }
+
+            setVisionRange(entity);
+
+            // center of the mob
+            Vector3f center = mobPos.position.add(mobDim.dimension.scale(0.5f));
+            // only cast rays when the player is close enough to the mob
+            float distance = getPlayerPosition().euclidDist(center);
+
+            boolean canSee;
+            if (mobC.currentVisionRange == MobComponent.chaseRange) {
+                canSee = distance <= MobComponent.chaseRange;
+                System.out.println("Chasing");
+            } else {
+                canSee = canSeePlayer(mobPos, mobDim, mobC.currentVisionRange);
+                System.out.println("Seeing");
             }
-            if (Math.sqrt(Math.pow(mc.velocityRange.x, 2) + Math.pow(mc.velocityRange.y, 2)) >= Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(playerVertexID).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(playerVertexID).y, 2))) {
-                computePath(entity, gc.vertexID, playerVertexID);
+
+            if (canSee) {
+                int playerVertexID = 0;
+                for (int i = 0; i < gc.vertexCoords.size(); i++) {
+                    if (Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(i).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(i).y, 2)) < Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(playerVertexID).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(playerVertexID).y, 2))) {
+                        playerVertexID = i;
+                    }
+                }
+                if (Math.sqrt(Math.pow(mc.velocityRange.x, 2) + Math.pow(mc.velocityRange.y, 2)) >= Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(playerVertexID).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(playerVertexID).y, 2))) {
+                    computePath(entity, gc.vertexID, playerVertexID);
+                }
+            } else {
+                pathc.vertexID.clear();
+                pathc.coordinates.clear();
             }
         }
     }

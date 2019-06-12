@@ -1,6 +1,7 @@
 package group4.levelSystem;
 
 import com.badlogic.ashley.core.Entity;
+import group4.ECS.components.GraphComponent;
 import group4.ECS.entities.AStarMobs.AStarMob;
 import group4.ECS.entities.AStarMobs.JumpingAStarMob;
 import group4.ECS.entities.AStarMobs.JumpingWalkingAStarMob;
@@ -404,6 +405,10 @@ public class Module {
     }
 
     private void addMob(int x, int y, int i, String mobName) {
+        GraphComponent jwGraph = null; // jumping walking
+        GraphComponent wGraph = null; // walking
+        GraphComponent jGraph = null; // jumping graph
+
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
         AStarMob m = null;
         if (mobName.equals(JumpingWalkingAStarMob.getName())) {

@@ -24,6 +24,7 @@ public abstract class AbstractGraphHandler<T extends AStarMob> {
     public void constructGraph(Entity entity) {
         GraphComponent gc = Mappers.graphMapper.get(entity);
         if (gc.vertexCoords == null) {
+            System.out.println("hello " + entity);
             if (gc.inFile != null) {
                 try {
                     readFromFile(entity, gc.inFile);

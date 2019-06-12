@@ -2,6 +2,8 @@ package group4.ECS.systems.movement.MovementHandlers;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IteratingSystem;
 import group4.ECS.components.SplinePathComponent;
 import group4.ECS.components.identities.GhostComponent;
 import group4.ECS.components.identities.MobComponent;
@@ -30,8 +32,12 @@ import static group4.ECS.components.stats.MovementComponent.LEFT;
 import static group4.ECS.components.stats.MovementComponent.RIGHT;
 
 
-public abstract class AbstractMovementHandler<T extends Mob> {
+public abstract class AbstractMovementHandler<T extends Mob> extends IteratingSystem {
 
+
+    public AbstractMovementHandler(Family family, int priority) {
+        super(family, priority);
+    }
 
     public void handleMovement(Entity entity, float deltaTime) {
         // Get some components from the mob that is supposed to move
@@ -183,7 +189,7 @@ public abstract class AbstractMovementHandler<T extends Mob> {
         mc.velocity.y -= gc.gravity.y;
     }
 
-    private Vector3f getPlayerPosition() {
+    protected Vector3f getPlayerPosition() {
         return Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0)).position;
     }
 
@@ -196,33 +202,31 @@ public abstract class AbstractMovementHandler<T extends Mob> {
      *
      * @param mob
      */
-    private void setVisionRange(Entity mob) {
+    protected void setVisionRange(Entity mob) {
         MobComponent mc = Mappers.mobMapper.get(mob);
         PositionComponent pc = Mappers.positionMapper.get(mob);
         DimensionComponent dc = Mappers.dimensionMapper.get(mob);
 
-        // for now define the vision ranges of the mobs here
-        final float chaseRange = 6.0f; // once a mob has spotted the player this will be his vision range
-        final float viewRange = 2.0f; // if the mob has not spotted the player yet, this is their vision range
-
         if (canSeePlayer(pc, dc, mc.currentVisionRange)) {
-            mc.currentVisionRange = chaseRange;
+            mc.currentVisionRange = MobComponent.chaseRange;
         } else {
-            mc.currentVisionRange = viewRange;
+            mc.currentVisionRange = MobComponent.viewRange;
         }
     }
 
-    private boolean canSeePlayer(PositionComponent pc, DimensionComponent dc, float viewRange) {
+    protected boolean canSeePlayer(PositionComponent pc, DimensionComponent dc, float viewRange) {
         List<Class<? extends Component>> seeThrough = new ArrayList<>();
         seeThrough.add(MobComponent.class);
         seeThrough.add(DamageComponent.class);
         seeThrough.add(GhostComponent.class);
+
 
         // center of the mob
         Vector3f center = pc.position.add(dc.dimension.scale(0.5f));
 
         // only cast rays when the player is close enough to the mob
         float distance = getPlayerPosition().euclidDist(center);
+
         if (distance > viewRange + 1) {
             return false;
         }
