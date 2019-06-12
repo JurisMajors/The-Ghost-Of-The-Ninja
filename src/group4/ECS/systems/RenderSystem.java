@@ -29,7 +29,6 @@ import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 import group4.utils.DebugUtils;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -86,9 +85,9 @@ public class RenderSystem extends EntitySystem {
      */
     public void update(float deltaTime) {
         glClearColor(
-                27 / 255.0f,
-                27 / 255.0f,
-                37 / 255.0f,
+                58 / 255.0f,
+                46 / 255.0f,
+                43   / 255.0f,
                 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
@@ -123,7 +122,9 @@ public class RenderSystem extends EntitySystem {
                     } else {
                         sc = Mappers.scoreMapper.get(entity);
                     }
+
                     if (mc.orientation == MovementComponent.LEFT) {
+                        gc.shader.bind();
                         // Set the mirrored projection matrix
                         gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrixHorizontalFlip);
                         // Since player aligns with center screen with its bottom left corner, we need to temporarily
@@ -309,9 +310,6 @@ public class RenderSystem extends EntitySystem {
      * @return Map<Layer, List < Entity>>, the entities sorted by layer
      */
     private Map<RenderLayer, List<Entity>> sortEntitiesByLayer() {
-        glClearColor(10 / 255.0f, 10 / 255.0f, 10 / 255.0f, 1.0f); // If merge conflict, do not pick this one :)
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-
         // Construct an empty hashmap and create a key for each layer
         Map<RenderLayer, List<Entity>> entityLayers = new HashMap<>();
         for (RenderLayer layer : RenderLayer.values()) {
