@@ -64,7 +64,6 @@ public class FileLevel extends Level {
                         new ExitAction(this) { // Make sure to pass in the level in the constructor, so we can call back to it
                             @Override
                             public void exit() { // The actual action to execute
-                                System.out.println(e.targetModule);
                                 this.callBackLevel.switchModule(this.callBackLevel.getModuleReference(e.targetModule)); // Switch to the Simple Module once the exit is reached
                             }
                         }

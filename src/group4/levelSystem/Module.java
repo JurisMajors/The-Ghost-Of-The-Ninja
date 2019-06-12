@@ -581,7 +581,9 @@ public class Module {
 
                     The following line below this comment works however as expected...
                  */
-                addExit(tileGridX, tileGridY, targetModule - TileMapping.MAIN_SIZE - 16);
+                int exitNumber = targetModule - TileMapping.MAIN_SIZE - 16;
+
+                addExit(tileGridX, tileGridY, exitNumber < 0 ? exitNumber + 16 : exitNumber);
             }
         }
     }
