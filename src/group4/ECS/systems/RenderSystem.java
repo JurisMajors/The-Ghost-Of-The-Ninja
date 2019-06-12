@@ -19,11 +19,13 @@ import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
+import group4.graphics.Text;
 import group4.graphics.Texture;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 import group4.utils.DebugUtils;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,8 +41,9 @@ public class RenderSystem extends EntitySystem {
     private boolean DEBUG = false;
     // array of registered entities in the graphicsFamily
     private ImmutableArray<Entity> entities;
-
+    private Text textGenerator;
     public RenderSystem() {
+        this.textGenerator = new Text("src/group4/res/fonts/PressStart2P.ttf");
     }
 
     /**
@@ -48,6 +51,7 @@ public class RenderSystem extends EntitySystem {
      */
     public RenderSystem(int priority) {
         super(priority);
+        this.textGenerator = new Text("src/group4/res/fonts/PressStart2P.ttf");
     }
 
     /**
@@ -149,7 +153,7 @@ public class RenderSystem extends EntitySystem {
         // Draw all the health bars in the currently active module for all entities which have a HealthComponent.
         // Dead entities are automatically removed from the engine, and hence also their healthbars.
         this.drawHealthBars();
-
+        textGenerator.drawText("Hallo", 0.0f, 0.0f);
         // Start of debug drawing
         if (DEBUG) {
             glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff

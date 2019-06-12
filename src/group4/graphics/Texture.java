@@ -42,7 +42,11 @@ public class Texture {
     private int texture;
 
     public Texture(String path) {
-        texture = load(path);
+        texture = loadFromPath(path);
+    }
+
+    public Texture(BufferedImage img) {
+        texture = loadFromBuffer(img);
     }
 
     /**
@@ -74,12 +78,39 @@ public class Texture {
         LOGO_FULLSCREEN = new Texture("src/group4/res/textures/logo-fullscreen.png");
     }
 
+    private int loadFromBuffer(BufferedImage image) {
+        // read image from file and store contents in integer array
+        int[] pixels = null;
+        width = image.getWidth();
+        height = image.getHeight();
+        pixels = new int[width * height];
+        // get the RGB values of the whole image, read it into the pixel array. (offset 0, stride=width)
+        image.getRGB(0, 0, width, height, pixels, 0, width);
+
+        // get a texture ID from opengl
+        int result = glGenTextures();
+        // bind the texture so we can change its parameters
+        glBindTexture(GL_TEXTURE_2D, result);
+        /*
+        These two parameters prevent blurring: when we don't know the color of a pixel we take the value of the
+        nearest pixel and we don't use linear interpolation (because that causes blurring).
+         */
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        // add our image data to the texture
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, BufferUtils.getIntBuffer(pixels));
+        // unbind the texture after setup is done
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        return result;
+    }
+
     /**
      * Loads a texture located at path into openGL.
      * @param path relative path to the project root.
      * @return integer id for this texture in opengl
      */
-    private int load(String path) {
+    private int loadFromPath(String path) {
         // read image from file and store contents in integer array
         int[] pixels = null;
         try {

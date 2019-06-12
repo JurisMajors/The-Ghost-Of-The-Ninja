@@ -1,7 +1,14 @@
 package group4.graphics;
 
+import group4.ECS.components.GraphicsComponent;
+import group4.maths.Vector3f;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,10 +17,18 @@ import static java.lang.Math.max;
 public class Text {
     private Map<Character, Glyph> atlas;
     private Texture texture;
+    private int fontHeight;
+    private int atlasWidth, atlasHeight;
 
-    public Text(java.awt.Font font) {
+    public Text(String path) {
         this.atlas = new HashMap<>();
-        this.texture = createAtlas(font);
+        try {
+            Font font = new Font ("TimesRoman", Font.BOLD, 32);
+//            Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(path));
+            this.texture = createAtlas(font);
+        } catch (Exception e) {
+            System.err.println("[WARNING] Could not load font!");
+        }
     }
 
     private Texture createAtlas(Font font) {
@@ -31,7 +46,7 @@ public class Text {
             height = max(height, glyphImage.getHeight()); // Update the height the image should be
         }
 
-        int fontHeight = height;
+        fontHeight = height;
 
         BufferedImage atlasImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = atlasImage.createGraphics();
@@ -53,7 +68,17 @@ public class Text {
             atlas.put(c, glyph);
         }
 
-        return new Texture("");
+        this.atlasWidth = atlasImage.getWidth();
+        this.atlasHeight = atlasImage.getHeight();
+        System.out.println(this.atlasWidth + ", " + this.atlasHeight);
+        try{
+            File file = new File("C:\\Users\\S4K4YUME\\Desktop/myimage.png");
+            ImageIO.write(atlasImage, "png", file);
+        } catch (Exception e) {
+
+        }
+
+        return new Texture(atlasImage);
     }
 
     /**
@@ -133,5 +158,72 @@ public class Text {
         }
         height += lineHeight;
         return height;
+    }
+
+    /**
+     * Draw text at the specified position and color.
+     *
+     * @param text     Text to draw
+     * @param x        X coordinate of the text position
+     * @param y        Y coordinate of the text position
+     */
+    public void drawText(String text, float x, float y) {
+        int textHeight = getHeight(text);
+
+        float drawX = x;
+        float drawY = y;
+        if (textHeight > fontHeight) {
+            drawY += textHeight - fontHeight;
+        }
+
+        for (int i = 0; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            System.out.print(ch);
+            if (ch == '\n') {
+                /* Line feed, set x and y to draw at the next line */
+                drawY -= fontHeight;
+                drawX = x;
+                continue;
+            }
+            if (ch == '\r') {
+                /* Carriage return, just skip it */
+                continue;
+            }
+
+            // Create the texture and draw!
+            Glyph g = this.atlas.get(ch);
+
+            float[] tcs = new float[]{
+                    0, 1,
+                    0, 0,
+                    1, 0,
+                    1, 1
+            };
+
+            float[] tcs2 = new float[]{
+                g.x / (float) atlasWidth, (g.y + g.height) / (float) atlasHeight,
+                g.x / (float) atlasWidth, g.y / (float) atlasHeight,
+                (g.x + g.width) / (float) atlasWidth, g.y / (float) atlasHeight,
+                (g.x + g.width) / (float) atlasWidth, (g.y + g.height) / (float) atlasHeight
+            };
+
+            System.out.println(Arrays.toString(tcs2));
+
+
+            GraphicsComponent tile = new GraphicsComponent(
+                    Shader.SIMPLE,
+                    this.texture,
+                    new Vector3f((float) g.width / 100, (float)g.height / 100, 0.0f),
+                    tcs2,
+//                    new float[] {
+//                            g.x, g.y + g.height,
+//                            g.x, g.y,
+//                            g.x + g.width, g.y,
+//                            g.x + g.width, g.y + g.height},
+                    false
+                );
+            tile.render(new Vector3f(drawX, drawY, 0.0f));
+            drawX += g.width / 100.0f;
+        }
     }
 }
