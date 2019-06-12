@@ -364,19 +364,18 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
 
         // Add leg animations
         Vector3f[] footPosLeft = new Vector3f[]{
-                new Vector3f(0.66f, 0.0f, 0.0f),
-                new Vector3f(0.66f, 0.0f, 0.0f),
-                new Vector3f(0.66f, 0.0f, 0.0f),
-                new Vector3f(0.66f, 0.0f, 0.0f)
-        };
-
-        Vector3f[] footPosRight = new Vector3f[]{
                 new Vector3f(0.33f, 0.0f, 0.0f),
                 new Vector3f(0.33f, 0.0f, 0.0f),
                 new Vector3f(0.33f, 0.0f, 0.0f),
                 new Vector3f(0.33f, 0.0f, 0.0f)
         };
 
+        };
+                new Vector3f(-.33f, 0.0f, 0.0f)
+                new Vector3f(-.33f, 0.0f, 0.0f),
+                new Vector3f(-.33f, 0.0f, 0.0f),
+                new Vector3f(-.33f, 0.0f, 0.0f),
+        Vector3f[] footPosRight = new Vector3f[]{
         DelayedSplineAnimation foot_L = new DelayedSplineAnimation(this.IKHandles.get("foot_L"), 0.0f, footPosLeft);
         DelayedSplineAnimation foot_R = new DelayedSplineAnimation(this.IKHandles.get("foot_R"), 0.0f, footPosRight);
 
@@ -475,14 +474,22 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         );
 
         // Add leg animations
-        Vector3f[] footPath = new Vector3f[]{
-                new Vector3f(0.0f, 0.0f, 0.0f),
-                new Vector3f(0.0f, 0.0f, 0.0f),
-                new Vector3f(0.0f, 0.0f, 0.0f),
-                new Vector3f(0.0f, 0.0f, 0.0f),
+        Vector3f[] footPosLeft = new Vector3f[]{
+                new Vector3f(0.33f, 0.0f, 0.0f),
+                new Vector3f(0.33f, 0.0f, 0.0f),
+                new Vector3f(0.33f, 0.0f, 0.0f),
+                new Vector3f(0.33f, 0.0f, 0.0f)
         };
-        SplineAnimation foot_L = new SplineAnimation(this.IKHandles.get("foot_L"), 0.5f, footPath);
-        SplineAnimation foot_R = new SplineAnimation(this.IKHandles.get("foot_R"), 0.0f, footPath);
+
+        Vector3f[] footPosRight = new Vector3f[]{
+                new Vector3f(-.33f, 0.0f, 0.0f),
+                new Vector3f(-.33f, 0.0f, 0.0f),
+                new Vector3f(-.33f, 0.0f, 0.0f),
+                new Vector3f(-.33f, 0.0f, 0.0f)
+        };
+
+        SplineAnimation foot_L = new SplineAnimation(this.IKHandles.get("foot_L"), 0.0f, footPosLeft);
+        SplineAnimation foot_R = new SplineAnimation(this.IKHandles.get("foot_R"), 0.0f, footPosRight);
 
         // Really small hand animation
         float vShift = 0.1f;
@@ -625,17 +632,17 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
     private AnimationSet generateJumpAnim() {
         // Add leg animations
         Vector3f[] footPosLeft = new Vector3f[]{
-                new Vector3f(0.66f, 0.0f, 0.0f),
-                new Vector3f(0.66f, 0.0f, 0.0f),
-                new Vector3f(0.66f, 0.0f, 0.0f),
-                new Vector3f(0.66f, 0.0f, 0.0f)
+                new Vector3f(0.33f, 0.00f, 0.0f),
+                new Vector3f(0.26f, 0.13f, 0.0f),
+                new Vector3f(0.20f, 0.26f, 0.0f),
+                new Vector3f(0.15f, 0.39f, 0.0f)
         };
 
         Vector3f[] footPosRight = new Vector3f[]{
-                new Vector3f(0.33f, 0.0f, 0.0f),
-                new Vector3f(0.33f, 0.0f, 0.0f),
-                new Vector3f(0.33f, 0.0f, 0.0f),
-                new Vector3f(0.33f, 0.0f, 0.0f)
+                new Vector3f(-.33f, 0.00f, 0.0f),
+                new Vector3f(-.38f, 0.13f, 0.0f),
+                new Vector3f(-.43f, 0.26f, 0.0f),
+                new Vector3f(-.46f, 0.39f, 0.0f)
         };
 
         SplineAnimation foot_L = new SplineAnimation(this.IKHandles.get("foot_L"), 0.0f, footPosLeft);
