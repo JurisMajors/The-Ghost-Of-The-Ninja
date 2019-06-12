@@ -184,6 +184,8 @@ public class Main implements Runnable {
         // Set up a camera for our game
         this.camera = new Camera();
         this.engine.addEntity(camera); // Adding the camera to the module (which adds it to the engine?)
+        Level level = new FileLevel("./src/group4/res/maps/level_02");
+
     }
 
     /**
@@ -195,8 +197,6 @@ public class Main implements Runnable {
         final long optimalTime = (long) 1e9 / targetFps;
         double lastFpsTime = 0.0;
         int fps = 0;
-        
-        Level level = new FileLevel("./src/group4/res/maps/level_02");
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
