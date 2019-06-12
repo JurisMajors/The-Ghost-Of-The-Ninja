@@ -47,13 +47,6 @@ public class StartScreen {
                 )
         );
 
-        this.entities.add(
-                new ArtTile(
-                        Texture.LOGO_FULLSCREEN,
-                        RenderLayer.MAIN
-                )
-        );
-
         this.load();
 
         // PRESS_ENTER should initially be hidden, but the default load() behaviour adds ALL entities in this class.
