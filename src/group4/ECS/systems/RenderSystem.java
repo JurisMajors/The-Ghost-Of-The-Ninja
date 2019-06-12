@@ -275,17 +275,7 @@ public class RenderSystem extends EntitySystem {
 
     private void drawBar(Vector3f position, Vector3f dimension, Texture texture) {
         GraphicsComponent bar = new GraphicsComponent(Shader.SIMPLE, texture, dimension, true);
-        bar.render(position);
-        bar.shader.bind();
-        // Set uniforms
-        bar.shader.setUniformMat4f("md_matrix", Matrix4f.translate(position)); //pc.position.add(new Vector3f(dc.dimension.x / 2.0f, 1.1f * dc.dimension.y, 0.0f))));
-        bar.shader.setUniform1f("tex", bar.texture.getTextureID()); // Specify which texture slot to use
-
-        // Bind texture and specify texture slot
-        bar.texture.bind();
-        glActiveTexture(bar.texture.getTextureID());
-
-        bar.geometry.render();
+        bar.flush(position);
     }
 
     /**

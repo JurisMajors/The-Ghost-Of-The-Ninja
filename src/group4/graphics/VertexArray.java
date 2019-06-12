@@ -74,4 +74,20 @@ public class VertexArray {
         bind();
         draw();
     }
+
+    public void deleteBuffers() {
+//        System.out.println("deleting!");
+        glDisableVertexAttribArray(0);
+        // Delete the VBOs
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glDeleteBuffers(this.vertexBufferObject);
+        glDeleteBuffers(this.indexBufferObject);
+        glDeleteBuffers(this.texCoordBufferObject);
+
+        // Delete the VAO
+        glBindVertexArray(0);
+        glDeleteVertexArrays(this.vertexArrayObject);
+
+
+    }
 }

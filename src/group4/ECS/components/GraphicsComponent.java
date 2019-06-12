@@ -326,4 +326,9 @@ public class GraphicsComponent implements Component {
 
         this.geometry.render();
     }
+
+    public void flush(Vector3f position) {
+        this.render(position);
+        this.geometry.deleteBuffers();
+    }
 }
