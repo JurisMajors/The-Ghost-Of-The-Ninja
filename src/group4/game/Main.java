@@ -195,6 +195,9 @@ public class Main implements Runnable {
         final long optimalTime = (long) 1e9 / targetFps;
         double lastFpsTime = 0.0;
         int fps = 0;
+        
+        Level level = new FileLevel("./src/group4/res/maps/level_02");
+
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
@@ -219,11 +222,10 @@ public class Main implements Runnable {
                 lastFpsTime = 0;
                 fps = 0;
             }
-
             if (STATE == GameState.PLAYING || STATE == GameState.STARTSCREEN) {
-                if (STATE == GameState.STARTSCREEN) {
-                    this.startScreen.update(); // Allows for the startscreen logic to update.. Should perhaps be an entity? But this works.
-                }
+//                if (STATE == GameState.STARTSCREEN) {
+//                    this.startScreen.update(); // Allows for the startscreen logic to update.. Should perhaps be an entity? But this works.
+//                }
                 this.engine.update((float) delta); // Update the gamestate
             }
 
