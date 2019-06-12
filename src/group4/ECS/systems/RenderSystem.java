@@ -282,6 +282,9 @@ public class RenderSystem extends EntitySystem {
      * @return Map<Layer, List < Entity>>, the entities sorted by layer
      */
     private Map<RenderLayer, List<Entity>> sortEntitiesByLayer() {
+        glClearColor(10 / 255.0f, 10 / 255.0f, 10 / 255.0f, 1.0f); // If merge conflict, do not pick this one :)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
         // Construct an empty hashmap and create a key for each layer
         Map<RenderLayer, List<Entity>> entityLayers = new HashMap<>();
         for (RenderLayer layer : RenderLayer.values()) {

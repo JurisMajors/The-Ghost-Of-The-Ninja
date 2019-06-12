@@ -10,10 +10,7 @@ import group4.ECS.entities.mobs.*;
 import group4.ECS.entities.totems.EndingTotem;
 import group4.ECS.entities.totems.StartTotem;
 import group4.ECS.entities.totems.Totem;
-import group4.ECS.entities.world.ArtTile;
-import group4.ECS.entities.world.Exit;
-import group4.ECS.entities.world.Platform;
-import group4.ECS.entities.world.SplinePlatform;
+import group4.ECS.entities.world.*;
 import group4.ECS.etc.TheEngine;
 import group4.game.Main;
 import group4.graphics.Shader;
@@ -156,11 +153,13 @@ public class Module {
             } else if (layerName.equals("COINS")) {
                 if (Main.AI) continue;
                 parseCoinLayer(layer);
-            }else if (layerName.equals("TOTEMS")) {
+            } else if (layerName.equals("TOTEMS")) {
                 if (Main.AI) continue;
                 parseTotemLayer(layer);
             } else if (layerName.equals("EXITS")) {
                 setupExits(layer);
+            } else if (layerName.equals("LIGHTS")) {
+                parseLightLayer(layer);
             } else {
                 // In case the layer is not MAIN or EXITS
                 System.err.println("Unrecognized layer name: " + layer.getString("name"));
@@ -198,6 +197,32 @@ public class Module {
 
     }
 
+    private void parseLightLayer(JSONObject layer) {
+        // Get height and width of layer
+        int layerHeight = layer.getInt("height");
+        int layerWidth = layer.getInt("width");
+
+        // Loop over the data grid
+        JSONArray data = layer.getJSONArray("data");
+        for (int tile = 0; tile < data.length(); tile++) {
+            // Get the grid position of the tile
+            int tileGridX = tile % layerWidth;
+            int tileGridY = layerHeight - tile / layerWidth;
+
+            // Get the type of the tile
+            int tileId = data.getInt(tile) - 1;
+            String entityId = moduleTileMap.get(tileId);
+            if (entityId == null) {
+                continue;
+            } else if (entityId.equals(Torch.getName())) {
+                addTorch(new Vector3f(tileGridX, tileGridY, 0), tileId);
+            } else {
+                System.err.println("Some tiles not drawing!");
+                continue;
+            }
+        }
+    }
+
     private void parseMainLayer(JSONObject layer) {
         // Get height and width of layer
         int layerHeight = layer.getInt("height");
@@ -233,12 +258,18 @@ public class Module {
                 continue;
             }
         }
-
     }
 
     private void addCoin(Vector3f position, int i) {
         Coin c = new Coin(position, Coin.LARGE_SIZE, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i), Coin.LARGE_VALUE);
         this.addEntity(c);
+    }
+
+    private void addTorch(Vector3f position, int i) {
+        Torch torch = new Torch(position);
+        TorchLight torchLight = new TorchLight(position);
+        this.addEntity(torch);
+        this.addEntity(torchLight);
     }
 
     private void parseTotemLayer(JSONObject layer) {
@@ -443,21 +474,26 @@ public class Module {
         Spikes p;
 
         switch (i) {
-            case 48: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
-                    new Vector3f(0.0f,1.0f,0.0f));
-                    break;
-            case 49: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
-                    new Vector3f(1.0f,0.0f,0.0f));
-                    break;
-            case 50: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
-                    new Vector3f(0.0f,-1.0f,0.0f));
-                    break;
-            case 51: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
-                    new Vector3f(-1.0f,0.0f,0.0f));
-                    break;
-            default: p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
-                    new Vector3f(0.0f,1.0f,0.0f));
-                    break;
+            case 48:
+                p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                        new Vector3f(0.0f, 1.0f, 0.0f));
+                break;
+            case 49:
+                p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                        new Vector3f(1.0f, 0.0f, 0.0f));
+                break;
+            case 50:
+                p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                        new Vector3f(0.0f, -1.0f, 0.0f));
+                break;
+            case 51:
+                p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                        new Vector3f(-1.0f, 0.0f, 0.0f));
+                break;
+            default:
+                p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                        new Vector3f(0.0f, 1.0f, 0.0f));
+                break;
         }
 
         this.addEntity(p);
@@ -560,6 +596,7 @@ public class Module {
         int walkingmob = 40;
         int flyingmob = 41;
         int coin = 13;
+        int torch = 15;
         int totemStart = 21;
         int totemEnd = 29;
 
@@ -588,7 +625,7 @@ public class Module {
         moduleTileMap.put(flyingmob, FlyingMob.getName());
 
         moduleTileMap.put(coin, Coin.getName());
-
+        moduleTileMap.put(torch, Torch.getName());
         moduleTileMap.put(totemStart, StartTotem.getName());
         moduleTileMap.put(totemEnd, EndingTotem.getName());
     }

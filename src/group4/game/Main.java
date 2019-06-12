@@ -220,6 +220,7 @@ public class Main implements Runnable {
                 lastFpsTime = 0;
                 fps = 0;
             }
+
             if (STATE == GameState.PLAYING || STATE == GameState.STARTSCREEN) {
                 if (STATE == GameState.STARTSCREEN) {
                     this.startScreen.update(); // Allows for the startscreen logic to update.. Should perhaps be an entity? But this works.
