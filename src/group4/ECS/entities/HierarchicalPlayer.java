@@ -348,7 +348,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         ac.addAnimation(EntityState.PLAYER_POSTFALL, postFallAS);
     }
 
-    private DelayedAnimationSet generatePreJumpAnim() {
+    protected DelayedAnimationSet generatePreJumpAnim() {
         // Have player crouch a bit
         DelayedSplineAnimation hip = new DelayedSplineAnimation(
                 this.torso, 0.0f,
@@ -405,7 +405,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         return preJumpAnimationSet;
     }
 
-    private DelayedAnimationSet generatePostFallAnim() {
+    protected DelayedAnimationSet generatePostFallAnim() {
         // Have player crouch a bit
         DelayedSplineAnimation hip = new DelayedSplineAnimation(
                 this.torso, 0.0f,
