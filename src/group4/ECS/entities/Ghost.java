@@ -58,4 +58,13 @@ public class Ghost extends HierarchicalPlayer {
     public static String getName() {
         return "Ghost";
     }
+
+
+    @Override
+    protected void createHierarchy() {
+        // Check which ghost we are, i.e. challenging or not, and set the appropriate textures
+
+
+        super.createHierarchy();
+    }
 }
