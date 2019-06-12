@@ -184,8 +184,6 @@ public class Main implements Runnable {
         // Set up a camera for our game
         this.camera = new Camera();
         this.engine.addEntity(camera); // Adding the camera to the module (which adds it to the engine?)
-        Level level = new FileLevel("./src/group4/res/maps/level_02");
-
     }
 
     /**
@@ -223,9 +221,9 @@ public class Main implements Runnable {
                 fps = 0;
             }
             if (STATE == GameState.PLAYING || STATE == GameState.STARTSCREEN) {
-//                if (STATE == GameState.STARTSCREEN) {
-//                    this.startScreen.update(); // Allows for the startscreen logic to update.. Should perhaps be an entity? But this works.
-//                }
+                if (STATE == GameState.STARTSCREEN) {
+                    this.startScreen.update(); // Allows for the startscreen logic to update.. Should perhaps be an entity? But this works.
+                }
                 this.engine.update((float) delta); // Update the gamestate
             }
 
