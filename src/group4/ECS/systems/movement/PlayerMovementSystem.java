@@ -136,10 +136,8 @@ public class PlayerMovementSystem extends IteratingSystem {
         if (!Mappers.healthMapper.get(e).state.contains(EntityConst.EntityState.KNOCKED)) {
             if (shouldRight(ref)) {
                 moveRight(mc, pc);
-                mc.orientation = RIGHT;
             } else if (shouldLeft(ref)) {
                 moveLeft(mc, pc);
-                mc.orientation = LEFT;
             } else {
                 // stay still if no keys are pressed
                 mc.velocity.x = 0;
@@ -225,12 +223,6 @@ public class PlayerMovementSystem extends IteratingSystem {
     private void moveDirection(int moveDir, MovementComponent mc, PositionComponent pc) {
         if (!Main.AI && !Sound.isPlaying(Sound.STEP) && canJump(pc)) {
             Sound.playRandom(Sound.STEP);
-        }
-        // set orientation of player in accordance to mouse position
-        if (pc.position.x <= MouseMovement.mouseX) {
-            mc.orientation = RIGHT;
-        } else {
-            mc.orientation = MovementComponent.LEFT;
         }
 
         if (shouldSprint() && canSprint(pc)) {
