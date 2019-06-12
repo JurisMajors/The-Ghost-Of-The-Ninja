@@ -24,10 +24,10 @@ public class StartTotem extends Totem {
     }
 
     public Ghost getChallangeGhost(Player master) {
+        master.challanging = true;
         Ghost g = new Ghost(this.getComponent(PositionComponent.class).position,
                 level, this.ghostBrain, master);
         g.endTotem = this.getID();
-        master.challanging = true;
         return g;
     }
 

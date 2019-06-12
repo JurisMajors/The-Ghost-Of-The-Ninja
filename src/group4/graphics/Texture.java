@@ -3,6 +3,7 @@ package group4.graphics;
 import group4.utils.BufferUtils;
 
 import javax.imageio.ImageIO;
+import javax.xml.soap.Text;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -40,6 +41,33 @@ public class Texture {
     public static Texture PLAYER_DARK_ARM_LOWER;
     public static Texture PLAYER_LIGHT_ARM_UPPER;
     public static Texture PLAYER_LIGHT_ARM_LOWER;
+
+    // Storing all red ghost related textures
+    public static Texture RED_GHOST_TORSO;
+    public static Texture RED_GHOST_HEAD;
+    public static Texture RED_GHOST_DARK_LEG_UPPER;
+    public static Texture RED_GHOST_DARK_LEG_LOWER;
+    public static Texture RED_GHOST_LIGHT_LEG_UPPER;
+    public static Texture RED_GHOST_LIGHT_LEG_LOWER;
+    public static Texture RED_GHOST_DARK_ARM_UPPER;
+    public static Texture RED_GHOST_DARK_ARM_LOWER;
+    public static Texture RED_GHOST_LIGHT_ARM_UPPER;
+    public static Texture RED_GHOST_LIGHT_ARM_LOWER;
+    public static Texture RED_GHOST_LEG_BLOB;
+
+    // Storing all blue ghost related textures
+    public static Texture BLUE_GHOST_TORSO;
+    public static Texture BLUE_GHOST_HEAD;
+    public static Texture BLUE_GHOST_DARK_LEG_UPPER;
+    public static Texture BLUE_GHOST_DARK_LEG_LOWER;
+    public static Texture BLUE_GHOST_LIGHT_LEG_UPPER;
+    public static Texture BLUE_GHOST_LIGHT_LEG_LOWER;
+    public static Texture BLUE_GHOST_DARK_ARM_UPPER;
+    public static Texture BLUE_GHOST_DARK_ARM_LOWER;
+    public static Texture BLUE_GHOST_LIGHT_ARM_UPPER;
+    public static Texture BLUE_GHOST_LIGHT_ARM_LOWER;
+    public static Texture BLUE_GHOST_LEG_BLOB;
+
     
     // GAME UI / OVERLAYS
     public static Texture START_BG;
@@ -87,6 +115,31 @@ public class Texture {
         PLAYER_DARK_ARM_LOWER = new Texture("src/group4/res/textures/player/ninja3withlayers_0006_lowerfurtherarm.png");
         PLAYER_LIGHT_ARM_UPPER = new Texture("src/group4/res/textures/player/ninja3withlayers_0005_uppercloserarm.png");
         PLAYER_LIGHT_ARM_LOWER = new Texture("src/group4/res/textures/player/ninja3withlayers_0004_lowercloserarm.png");
+
+        RED_GHOST_TORSO = new Texture("src/group4/res/textures/ghost/red/torso.png");
+        RED_GHOST_HEAD = new Texture("src/group4/res/textures/ghost/red/head.png");
+        RED_GHOST_DARK_LEG_LOWER = NOTHINGNESS;
+        RED_GHOST_DARK_LEG_UPPER = NOTHINGNESS;
+        RED_GHOST_LIGHT_LEG_LOWER = NOTHINGNESS;
+        RED_GHOST_LIGHT_LEG_UPPER = NOTHINGNESS;
+        RED_GHOST_DARK_ARM_UPPER = new Texture("src/group4/res/textures/ghost/red/darkarmupper.png");
+        RED_GHOST_DARK_ARM_LOWER = new Texture("src/group4/res/textures/ghost/red/darkarmlower.png");
+        RED_GHOST_LIGHT_ARM_UPPER = new Texture("src/group4/res/textures/ghost/red/lightarmupper.png");
+        RED_GHOST_LIGHT_ARM_LOWER = new Texture("src/group4/res/textures/ghost/red/lightarmlower.png");
+        RED_GHOST_LEG_BLOB = new Texture("src/group4/res/textures/ghost/red/legblob.png");
+
+        BLUE_GHOST_TORSO = new Texture("src/group4/res/textures/ghost/blue/torso.png");
+        BLUE_GHOST_HEAD = new Texture("src/group4/res/textures/ghost/blue/head.png");
+        BLUE_GHOST_DARK_LEG_LOWER = NOTHINGNESS;
+        BLUE_GHOST_DARK_LEG_UPPER = NOTHINGNESS;
+        BLUE_GHOST_LIGHT_LEG_LOWER = NOTHINGNESS;
+        BLUE_GHOST_LIGHT_LEG_UPPER = NOTHINGNESS;
+        BLUE_GHOST_DARK_ARM_UPPER = new Texture("src/group4/res/textures/ghost/blue/darkarmupper.png");
+        BLUE_GHOST_DARK_ARM_LOWER = new Texture("src/group4/res/textures/ghost/blue/darkarmlower.png");
+        BLUE_GHOST_LIGHT_ARM_UPPER = new Texture("src/group4/res/textures/ghost/blue/lightarmupper.png");
+        BLUE_GHOST_LIGHT_ARM_LOWER = new Texture("src/group4/res/textures/ghost/blue/lightarmlower.png");
+        BLUE_GHOST_LEG_BLOB = new Texture("src/group4/res/textures/ghost/blue/legblob.png");
+
         
         TOTEM_START = new Texture("src/group4/res/textures/start-totem.png");
         TOTEM_END = new Texture("src/group4/res/textures/end-totem.png");
