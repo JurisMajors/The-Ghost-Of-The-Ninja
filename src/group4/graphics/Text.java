@@ -23,8 +23,9 @@ public class Text {
     public Text(String path) {
         this.atlas = new HashMap<>();
         try {
-            Font font = new Font ("TimesRoman", Font.BOLD, 32);
-//            Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(path));
+//            Font font = new Font ("TimesRoman", Font.BOLD, 32);
+            Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(path));
+            font = font.deriveFont(50F);
             this.texture = createAtlas(font);
         } catch (Exception e) {
             System.err.println("[WARNING] Could not load font!");
@@ -178,7 +179,6 @@ public class Text {
 
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
-            System.out.print(ch);
             if (ch == '\n') {
                 /* Line feed, set x and y to draw at the next line */
                 drawY -= fontHeight;
@@ -193,28 +193,18 @@ public class Text {
             // Create the texture and draw!
             Glyph g = this.atlas.get(ch);
 
-            float[] tcs = new float[]{
-                    0, 1,
-                    0, 0,
-                    1, 0,
-                    1, 1
-            };
-
-            float[] tcs2 = new float[]{
+            float[] glyphTexCoords = new float[]{
                 g.x / (float) atlasWidth, (g.y + g.height) / (float) atlasHeight,
                 g.x / (float) atlasWidth, g.y / (float) atlasHeight,
                 (g.x + g.width) / (float) atlasWidth, g.y / (float) atlasHeight,
                 (g.x + g.width) / (float) atlasWidth, (g.y + g.height) / (float) atlasHeight
             };
 
-            System.out.println(Arrays.toString(tcs2));
-
-
             GraphicsComponent tile = new GraphicsComponent(
                     Shader.SIMPLE,
                     this.texture,
                     new Vector3f((float) g.width / 100, (float)g.height / 100, 0.0f),
-                    tcs2,
+                    glyphTexCoords,
 //                    new float[] {
 //                            g.x, g.y + g.height,
 //                            g.x, g.y,
