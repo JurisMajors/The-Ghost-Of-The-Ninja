@@ -579,7 +579,7 @@ public class Module {
 
                     The following line below this comment works however as expected...
                  */
-                addExit(tileGridX, tileGridY, targetModule - TileMapping.MAIN_SIZE);
+                addExit(tileGridX, tileGridY, targetModule - TileMapping.MAIN_SIZE - 16);
             }
         }
     }
