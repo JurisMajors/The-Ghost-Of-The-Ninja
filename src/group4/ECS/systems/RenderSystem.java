@@ -15,7 +15,6 @@ import group4.ECS.entities.BodyPart;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.mobs.Mob;
-import group4.ECS.entities.totems.Totem;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
@@ -27,7 +26,6 @@ import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 import group4.utils.DebugUtils;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +42,7 @@ public class RenderSystem extends EntitySystem {
     // array of registered entities in the graphicsFamily
     private ImmutableArray<Entity> entities;
     private Text textGenerator;
+
     public RenderSystem() {
         this.textGenerator = new Text("src/group4/res/fonts/PressStart2P.ttf");
     }

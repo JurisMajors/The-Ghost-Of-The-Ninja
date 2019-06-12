@@ -43,16 +43,17 @@ public class Ghost extends HierarchicalPlayer {
         this.add(new GhostComponent(brain));
     }
 
-    public Ghost (Vector3f position, Level level, String brainPath) {
+    public Ghost(Vector3f position, Level level, String brainPath) {
         this(position, level, new Brain(brainPath));
     }
 
-    public Ghost (Level level, Brain brain, Player master) {
+    public Ghost(Level level, Brain brain, Player master) {
         this(master.getComponent(PositionComponent.class).position,
                 level, brain);
         this.master = master;
     }
-    public Ghost (Vector3f pos, Level level, Brain brain, Player master) {
+
+    public Ghost(Vector3f pos, Level level, Brain brain, Player master) {
         this(pos, level, brain);
         this.master = master;
     }
@@ -93,7 +94,7 @@ public class Ghost extends HierarchicalPlayer {
 
         super.createHierarchy();
 
-        BodyPart legBlob = new BodyPart(this.torso, new Vector3f(-0.09375f, -0.46875f,0.0f), new Vector3f(0.75f, 0.53125f, 0.0f), 0, LegBlobTexture);
+        BodyPart legBlob = new BodyPart(this.torso, new Vector3f(-0.09375f, -0.46875f, 0.0f), new Vector3f(0.75f, 0.53125f, 0.0f), 0, LegBlobTexture);
         this.hierarchy.add(legBlob);
     }
 }
