@@ -85,9 +85,9 @@ public class RenderSystem extends EntitySystem {
      */
     public void update(float deltaTime) {
         glClearColor(
-                58 / 255.0f,
-                46 / 255.0f,
-                43   / 255.0f,
+                21 / 255.0f,
+                21 / 255.0f,
+                29   / 255.0f,
                 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
