@@ -46,10 +46,8 @@ public class AStarPathSystem extends AbstractMovementHandler {
             boolean canSee;
             if (mobC.currentVisionRange == MobComponent.chaseRange) {
                 canSee = distance <= MobComponent.chaseRange;
-                System.out.println("Chasing");
             } else {
                 canSee = canSeePlayer(mobPos, mobDim, mobC.currentVisionRange);
-                System.out.println("Seeing");
             }
 
             if (canSee) {
