@@ -15,10 +15,13 @@ import group4.maths.Vector3f;
 public abstract class Totem extends Entity {
 
     private Vector3f dimension = new Vector3f(2f, 2f, 0);
+    public static final int HELPCOST = 100;
+    public static final int CARRYCOST = 500;
+    public static final int CHALLANGEREWARD = 500;
 
-    private String name;
+    private String name; // name of the totem
 
-    public Level level;
+    public Level level; // level taht it resides in
 
     //public Vector3f rgbMask;
 
@@ -40,7 +43,7 @@ public abstract class Totem extends Entity {
             return new GraphicsComponent(shader, Texture.TOTEM_START, dimension, RenderLayer.BACKGROUND, false);
         }
     }
-
+    // unique identification of the totem
     public int getID() {
         return Integer.parseInt(this.name.substring(1));
     }

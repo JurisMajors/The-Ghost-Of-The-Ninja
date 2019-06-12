@@ -195,6 +195,7 @@ public class Main implements Runnable {
         final long optimalTime = (long) 1e9 / targetFps;
         double lastFpsTime = 0.0;
         int fps = 0;
+
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
