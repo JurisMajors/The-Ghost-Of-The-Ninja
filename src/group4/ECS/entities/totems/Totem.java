@@ -38,9 +38,9 @@ public abstract class Totem extends Entity {
     private GraphicsComponent getGraphicsComponent() {
         Shader shader = Shader.SIMPLE;
         if (isEnd()) {
-            return new GraphicsComponent(shader, Texture.TOTEM_END, dimension, RenderLayer.BACKGROUND, false);
+            return new GraphicsComponent(shader, Texture.TOTEM, dimension, RenderLayer.BACKGROUND, false);
         } else {
-            return new GraphicsComponent(shader, Texture.TOTEM_START, dimension, RenderLayer.BACKGROUND, false);
+            return new GraphicsComponent(shader, Texture.TOTEM, dimension, RenderLayer.BACKGROUND, false);
         }
     }
     // unique identification of the totem
@@ -60,13 +60,13 @@ public abstract class Totem extends Entity {
         // use the ID to create a unique colour mask
         switch (getID()) {
             case 0:
-                rgbMask = new Vector3f(0.5f, 0f, 0f);
+                rgbMask = new Vector3f(0.1f, 0f, 0f);
                 break;
             case 1:
-                rgbMask = new Vector3f(0f, 0.5f, 0f);
+                rgbMask = new Vector3f(0f, 0.25f, 0f);
                 break;
             case 2:
-                rgbMask = new Vector3f(0f, 0f, 0.5f);
+                rgbMask = new Vector3f(0f, 0f, 0.25f);
                 break;
             case 3:
                 rgbMask = new Vector3f(0.25f, 0.25f, 0f);
