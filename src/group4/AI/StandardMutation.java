@@ -6,6 +6,7 @@ import org.uncommons.maths.number.ConstantGenerator;
 import org.uncommons.maths.number.NumberGenerator;
 import org.uncommons.maths.random.Probability;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**

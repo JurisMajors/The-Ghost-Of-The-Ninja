@@ -4,15 +4,13 @@ import com.badlogic.ashley.core.Entity;
 import group4.AI.Brain;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
+import group4.ECS.entities.hazards.Spikes;
 import group4.ECS.entities.items.consumables.Coin;
 import group4.ECS.entities.mobs.*;
 import group4.ECS.entities.totems.EndingTotem;
 import group4.ECS.entities.totems.StartTotem;
 import group4.ECS.entities.totems.Totem;
-import group4.ECS.entities.world.ArtTile;
-import group4.ECS.entities.world.Exit;
-import group4.ECS.entities.world.Platform;
-import group4.ECS.entities.world.SplinePlatform;
+import group4.ECS.entities.world.*;
 import group4.ECS.etc.TheEngine;
 import group4.game.Main;
 import group4.graphics.RenderLayer;
@@ -52,8 +50,7 @@ public class Module {
     // List that keeps track of all the entities in the module
     private List<Entity> entities;
 
-    // ghost model
-    private Brain ghostModel = null;
+    // ghost directory
     private String ghostModelDir;
 
     // Keeps track of the initial player position
@@ -72,9 +69,9 @@ public class Module {
      * Default construct, which constructs a module based on a Tiled .tmx file
      */
 
-    public Module(Level l, String tiledModuleLocation, String ghostModelLocation) {
-        if (ghostModelLocation != null) {
-            loadGhost(ghostModelLocation);
+    public Module(Level l, String tiledModuleLocation, String ghostModelDir) {
+        if (ghostModelDir != null) {
+            loadGhost(ghostModelDir);
         }
         this.configureMap();
         this.splineMap = new HashMap<>();
@@ -86,18 +83,16 @@ public class Module {
     /**
      * Constructor to work with non-tiled modules
      */
-    public Module(Level l, String ghostModelLocation) {
-        if (ghostModelLocation != null) {
-            loadGhost(ghostModelLocation);
+    public Module(Level l, String ghostModelDir) {
+        if (ghostModelDir != null) {
+            loadGhost(ghostModelDir);
         }
         this.setup(l);
     }
 
 
     private void loadGhost(String loc) {
-        File f = new File(loc);
-        this.ghostModelDir = f.getParent() + "/";
-        this.ghostModel = new Brain(loc);
+        this.ghostModelDir = loc;
     }
 
     /**
@@ -156,14 +151,18 @@ public class Module {
                 parseMainLayer(layer);
             } else if (layerName.equals("SPLINES")) {
                 parseSplineLayer(layer);
-            } else if (layerName.equals("COINS") && !Main.AI) {
+            } else if (layerName.equals("COINS")) {
+                if (Main.AI) continue;
                 parseCoinLayer(layer);
-            }else if (layerName.equals("TOTEMS")) {
+            } else if (layerName.equals("TOTEMS")) {
+                if (Main.AI) continue;
                 parseTotemLayer(layer);
             } else if (layerName.equals("EXITS")) {
                 setupExits(layer);
             } else if (layerName.equals("BG")) {
                 parseBackgroundLayer(layer);
+            } else if (layerName.equals("LIGHTS")) {
+                parseLightLayer(layer);
             } else {
                 // In case the layer is not MAIN or EXITS
                 System.err.println("Unrecognized layer name: " + layer.getString("name"));
@@ -230,6 +229,32 @@ public class Module {
         }
     }
 
+    private void parseLightLayer(JSONObject layer) {
+        // Get height and width of layer
+        int layerHeight = layer.getInt("height");
+        int layerWidth = layer.getInt("width");
+
+        // Loop over the data grid
+        JSONArray data = layer.getJSONArray("data");
+        for (int tile = 0; tile < data.length(); tile++) {
+            // Get the grid position of the tile
+            int tileGridX = tile % layerWidth;
+            int tileGridY = layerHeight - tile / layerWidth;
+
+            // Get the type of the tile
+            int tileId = data.getInt(tile) - 1;
+            String entityId = moduleTileMap.get(tileId);
+            if (entityId == null) {
+                continue;
+            } else if (entityId.equals(Torch.getName())) {
+                addTorch(new Vector3f(tileGridX, tileGridY, 0), tileId);
+            } else {
+                System.err.println("Some tiles not drawing!");
+                continue;
+            }
+        }
+    }
+
     private void parseMainLayer(JSONObject layer) {
         // Get height and width of layer
         int layerHeight = layer.getInt("height");
@@ -255,19 +280,28 @@ public class Module {
                 this.addArtTile(tileGridX, tileGridY, tileId);
             } else if (entityId.equals(Player.getName())) {
                 this.initialPlayerPos = new Vector3f(tileGridX, tileGridY, 0.0f);
-            } else if (entityId.endsWith(Mob.getName()) && !Main.AI) {
+            } else if (entityId.endsWith(Mob.getName())) {
+                if (Main.AI) continue;
                 this.addMob(tileGridX, tileGridY, tileId, entityId);
+            } else if (entityId.equals(Spikes.getName())) {
+                this.addSpike(tileGridX, tileGridY, tileId);
             } else {
                 System.err.println("Some tiles not drawing!");
                 continue;
             }
         }
-
     }
 
     private void addCoin(Vector3f position, int i) {
         Coin c = new Coin(position, Coin.LARGE_SIZE, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i), Coin.LARGE_VALUE);
         this.addEntity(c);
+    }
+
+    private void addTorch(Vector3f position, int i) {
+        Torch torch = new Torch(position);
+        TorchLight torchLight = new TorchLight(position);
+        this.addEntity(torch);
+        this.addEntity(torchLight);
     }
 
     private void parseTotemLayer(JSONObject layer) {
@@ -403,25 +437,6 @@ public class Module {
 
 
     /**
-     * Add a ghost to the current module
-     */
-    public void addGhost(Player master) throws IllegalStateException {
-        if (Main.AI) return;
-
-        if (this.entities == null) {
-            throw new IllegalStateException("Adding ghost before initialized entities container");
-        }
-        if (this.ghostModel != null) {
-            Ghost g = new Ghost(this.level, this.ghostModel, master);
-            this.addEntity(g);
-            TheEngine.getInstance().addEntity(g);
-        } else {
-            System.err.println("WARNING: Not loading ghost in module");
-        }
-    }
-
-
-    /**
      * Get the width of the module grid
      */
     public int getWidth() {
@@ -483,6 +498,43 @@ public class Module {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
         Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
         Platform p = new Platform(tempPosition, tempDimension, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        this.addEntity(p);
+    }
+
+    /**
+     * Adds an artTile entity to the module. These entities only render. They have no collision.
+     *
+     * @param x the x position of the platform in the module grid
+     * @param y the y position of the platform in the module grid
+     * @param i the identifier for the tile within the TileMap
+     */
+    private void addSpike(int x, int y, int i) {
+        Vector3f tempPosition = new Vector3f(x, y, 0.0f);
+        Spikes p;
+
+        switch (i) {
+            case 48:
+                p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                        new Vector3f(0.0f, 1.0f, 0.0f));
+                break;
+            case 49:
+                p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                        new Vector3f(1.0f, 0.0f, 0.0f));
+                break;
+            case 50:
+                p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                        new Vector3f(0.0f, -1.0f, 0.0f));
+                break;
+            case 51:
+                p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                        new Vector3f(-1.0f, 0.0f, 0.0f));
+                break;
+            default:
+                p = new Spikes(tempPosition, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i),
+                        new Vector3f(0.0f, 1.0f, 0.0f));
+                break;
+        }
+
         this.addEntity(p);
     }
 
@@ -571,6 +623,11 @@ public class Module {
      * Function which contains the mapping from the tileMap index as on the texture, to the appropriate Entity class.
      */
     private void configureMap() {
+        int spike_up = 48;
+        int spike_right = 49;
+        int spike_down = 50;
+        int spike_left = 51;
+        int torch = 15;
         int totemStart = 21;
         int totemEnd = 29;
         int[] platforms = new int[]{0, 1, 2, 3, 4, 6, 7, 8, 9,
@@ -606,13 +663,19 @@ public class Module {
             moduleTileMap.put(i, Player.getName());
         }
 
+        // spikes
+        moduleTileMap.put(spike_up, Spikes.getName());
+        moduleTileMap.put(spike_right, Spikes.getName());
+        moduleTileMap.put(spike_down, Spikes.getName());
+        moduleTileMap.put(spike_left, Spikes.getName());
+
         moduleTileMap.put(jumpingwalkingmob, JumpingWalkingMob.getName());
         moduleTileMap.put(flappingmob, FlappingMob.getName());
         moduleTileMap.put(walkingmob, WalkingMob.getName());
         moduleTileMap.put(flyingmob, FlyingMob.getName());
 
         moduleTileMap.put(coin, Coin.getName());
-
+        moduleTileMap.put(torch, Torch.getName());
         moduleTileMap.put(totemStart, StartTotem.getName());
         moduleTileMap.put(totemEnd, EndingTotem.getName());
     }

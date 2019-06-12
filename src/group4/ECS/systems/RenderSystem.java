@@ -8,9 +8,12 @@ import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.identities.CameraComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.components.stats.ScoreComponent;
 import group4.ECS.entities.BodyPart;
 import group4.ECS.entities.Camera;
+import group4.ECS.entities.Ghost;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.Totem;
@@ -20,11 +23,13 @@ import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
+import group4.graphics.Text;
 import group4.graphics.Texture;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 import group4.utils.DebugUtils;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,10 +45,12 @@ public class RenderSystem extends EntitySystem {
     private boolean DEBUG = false;
     // array of registered entities in the graphicsFamily
     private ImmutableArray<Entity> entities;
+    private Text textGenerator;
     private GraphicsComponent vignette = null;
     private GraphicsComponent noise = null;
 
     public RenderSystem() {
+        this.textGenerator = new Text("src/group4/res/fonts/PressStart2P.ttf");
     }
 
     /**
@@ -51,6 +58,7 @@ public class RenderSystem extends EntitySystem {
      */
     public RenderSystem(int priority) {
         super(priority);
+        this.textGenerator = new Text("src/group4/res/fonts/PressStart2P.ttf");
     }
 
     /**
@@ -101,6 +109,7 @@ public class RenderSystem extends EntitySystem {
         PositionComponent pc;
         GraphicsComponent gc;
         MovementComponent mc;
+        ScoreComponent sc = null; // Must be initialized to at least null
         for (RenderLayer layer : RenderLayer.values()) {
             glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
             for (Entity entity : entityLayers.get(layer)) {
@@ -109,6 +118,11 @@ public class RenderSystem extends EntitySystem {
                     pc = Mappers.positionMapper.get(entity);
                     mc = Mappers.movementMapper.get(entity);
                     gc = Mappers.graphicsMapper.get(entity);
+                    if (entity instanceof Ghost) {
+                        // do nothing
+                    } else {
+                        sc = Mappers.scoreMapper.get(entity);
+                    }
                     if (mc.orientation == MovementComponent.LEFT) {
                         // Set the mirrored projection matrix
                         gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrixHorizontalFlip);
@@ -129,7 +143,7 @@ public class RenderSystem extends EntitySystem {
                         gc.shader.bind();
 
                         // create color overlay over textures
-                        handleColorMask(gc);
+                        gc.handleColorMask();
 
                         // Set uniforms
                         gc.shader.setUniformMat4f("md_matrix", bp.getModelMatrix()); // Tmp fix for giving correct positions to vertices in the vertexbuffers
@@ -146,33 +160,23 @@ public class RenderSystem extends EntitySystem {
                     // Restore the default projection and view matrices
                     gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrix);
                     gc.shader.setUniformMat4f("vw_matrix", cc.viewMatrix);
-
-
                 } else {
                     // Get components via mapper for O(1) component retrieval
                     pc = Mappers.positionMapper.get(entity);
                     gc = Mappers.graphicsMapper.get(entity);
 
-                    // Bind shader
-                    gc.shader.bind();
-
-                    // create color overlay over textures
-                    handleColorMask(gc);
-
-                    // Set uniforms
-                    gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers
-                    gc.shader.setUniform1f("tex", gc.texture.getTextureID()); // Specify which texture slot to use
-
-                    // Bind texture and specify texture slot
-                    gc.texture.bind();
-                    glActiveTexture(gc.texture.getTextureID());
-
-                    // Render!
-                    gc.geometry.render();
+                    gc.render(pc.position);
                 }
             }
         }
 
+        // Draw all the health bars in the currently active module for all entities which have a HealthComponent.
+        // Dead entities are automatically removed from the engine, and hence also their healthbars.
+        this.drawHealthBars();
+
+        if (sc != null) {
+            this.drawScore(sc.getScore(), cc.viewMatrix.getTranslation());
+        }
         // Draw some transparent things on top of the render
 //        this.drawOverlays((Camera) camera);
 
@@ -202,13 +206,6 @@ public class RenderSystem extends EntitySystem {
                 DimensionComponent dca = Mappers.dimensionMapper.get(a);
                 DebugUtils.drawBox(pca.position, pca.position.add(dca.dimension));
 
-//                for (int i = 0; i < entities.size(); i++) { // NOTE: Can't access Iterator in a nested fashion for some reason.. Hence the for(i = 0... style
-////                    Entity b = entities.get(i);
-////                    PositionComponent pcb = Mappers.positionMapper.get(b);
-////                    DebugUtils.drawLine(pca.position, pcb.position);
-////                    DebugUtils.drawCircle(pca.position, 2.0f, 50);
-//                }
-
                 if (a instanceof HierarchicalPlayer) {
                     DebugUtils.drawCircle(a.getComponent(PositionComponent.class).position.add(new Vector3f(a.getComponent(DimensionComponent.class).dimension.x / 2, 0.8f, 0.0f)), 0.9f, 50);
                 }
@@ -234,20 +231,60 @@ public class RenderSystem extends EntitySystem {
 //    }
 
     /**
-     * Adds a color on top of the texture of a graphics component.
-     * If the graphics component has a personal color that takes priority.
-     * Else we look at the global color mask in GraphicsComponent.GLOBAL_COLOR_MASK.
-     * If neither are set we have a color mask of 0 which does nothing.
-     * @param gc graphics component
+     * Draws the score of the player
      */
-    private void handleColorMask(GraphicsComponent gc) {
-        if (gc.hasMask) { // per texture mask has priority
-            gc.shader.setUniform3f("color_mask", gc.colorMask);
-        } else if (GraphicsComponent.HAS_MASK) { // global mask comes next
-            gc.shader.setUniform3f("color_mask", GraphicsComponent.GLOBAL_COLOR_MASK);
-        } else { // no mask
-            gc.shader.setUniform3f("color_mask", new Vector3f());
+    private void drawScore(int score, Vector3f position) {
+        String text = "Score: " + String.format("%05d", score);
+        this.textGenerator.drawText(text, -position.x + 3.5f, -position.y + 4.0f);
+    }
+
+    /**
+     * Draw the health bars
+     */
+    private void drawHealthBars() {
+        // Ad hoc way of drawing the healthbars
+        glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
+        PositionComponent pc;
+        DimensionComponent dc;
+        HealthComponent hc;
+        for (Entity entity : this.entities) {
+            hc = Mappers.healthMapper.get(entity);
+            if (hc != null && !(entity instanceof Ghost)) {
+                pc = Mappers.positionMapper.get(entity);
+                dc = Mappers.dimensionMapper.get(entity);
+
+                Vector3f fullBarSize = new Vector3f(1.0f, 0.1f, 0.0f);
+                Vector3f healthBarSize = new Vector3f(hc.health / (float) hc.initialHealth, 0.1f, 0.0f);
+                // Foreground (GREEN)
+                this.drawBar(
+                        pc.position.add(new Vector3f(dc.dimension.x / 2.0f, 1.1f * dc.dimension.y, 0.0f)),
+                        healthBarSize,
+                        Texture.GREEN
+                );
+
+                // Background (RED)
+                this.drawBar(
+                        pc.position.add(new Vector3f(dc.dimension.x / 2.0f, 1.1f * dc.dimension.y, 0.0f)),
+                        fullBarSize,
+                        Texture.RED
+                );
+            }
         }
+    }
+
+    private void drawBar(Vector3f position, Vector3f dimension, Texture texture) {
+        GraphicsComponent bar = new GraphicsComponent(Shader.SIMPLE, texture, dimension, true);
+        bar.render(position);
+        bar.shader.bind();
+        // Set uniforms
+        bar.shader.setUniformMat4f("md_matrix", Matrix4f.translate(position)); //pc.position.add(new Vector3f(dc.dimension.x / 2.0f, 1.1f * dc.dimension.y, 0.0f))));
+        bar.shader.setUniform1f("tex", bar.texture.getTextureID()); // Specify which texture slot to use
+
+        // Bind texture and specify texture slot
+        bar.texture.bind();
+        glActiveTexture(bar.texture.getTextureID());
+
+        bar.geometry.render();
     }
 
     /**
@@ -272,6 +309,9 @@ public class RenderSystem extends EntitySystem {
      * @return Map<Layer, List < Entity>>, the entities sorted by layer
      */
     private Map<RenderLayer, List<Entity>> sortEntitiesByLayer() {
+        glClearColor(10 / 255.0f, 10 / 255.0f, 10 / 255.0f, 1.0f); // If merge conflict, do not pick this one :)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
         // Construct an empty hashmap and create a key for each layer
         Map<RenderLayer, List<Entity>> entityLayers = new HashMap<>();
         for (RenderLayer layer : RenderLayer.values()) {

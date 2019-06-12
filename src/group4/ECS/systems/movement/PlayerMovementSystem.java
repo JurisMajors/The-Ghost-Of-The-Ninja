@@ -7,9 +7,12 @@ import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
-import group4.ECS.entities.Ghost;
+import group4.ECS.components.stats.ScoreComponent;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
+import group4.ECS.entities.totems.Totem;
+import group4.ECS.etc.EntityConst;
+import group4.ECS.entities.Ghost;
 import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
@@ -20,6 +23,8 @@ import group4.input.KeyBoard;
 import group4.input.MouseMovement;
 import group4.maths.Vector3f;
 
+import static group4.ECS.components.stats.MovementComponent.LEFT;
+import static group4.ECS.components.stats.MovementComponent.RIGHT;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
@@ -54,6 +59,8 @@ public class PlayerMovementSystem extends IteratingSystem {
         // apply gravity
         this.doGravity(mc, gc);
 
+        this.ghostSpawning(entity);
+
         // move in the specified direction
         pc.position.addi(mc.velocity);
     }
@@ -78,10 +85,12 @@ public class PlayerMovementSystem extends IteratingSystem {
                 pc.onPlatform && !jumpInProgress;
 
         // We are either wandering, or not. See the state diagram.
+        ((HierarchicalPlayer) player).getTorso().rotation = 0;  // Reset torso rotation angle
         if (wandering) {
             if (Math.abs(mc.velocity.x) > 1e-3) {
-                if (shouldSprint() && canSprint(mc)) {
+                if (shouldSprint() && canSprint(pc)) {
                     nextState = EntityState.PLAYER_RUNNING;
+                    ((HierarchicalPlayer) player).getTorso().rotation = 15;  // Running player
                 } else {
                     nextState = EntityState.PLAYER_WALKING;
                 }
@@ -90,7 +99,7 @@ public class PlayerMovementSystem extends IteratingSystem {
             }
 
             // jump if space is pressed and if canJump is satisfied
-            if (shouldJump(ref) && canJump(mc)) {
+            if (shouldJump(ref) && canJump(pc)) {
                 nextState = EntityState.PLAYER_PREJUMP;
             }
         } else {
@@ -122,42 +131,82 @@ public class PlayerMovementSystem extends IteratingSystem {
         Player player = (Player) e;
         EntityState playerState = player.getState();
 
-        // set velocity in the direction that keyboard asks for
-        if (shouldRight(ref)) {
-            moveRight(mc, pc);
-        } else if (shouldLeft(ref)) {
-            moveLeft(mc, pc);
-        } else {
-            // stay still if no keys are pressed
-            mc.velocity.x = 0;
-        }
 
-        // Catch if we have transitioned to the actual jump phase of our jump
-        if (!jumpInProgress && playerState == EntityState.PLAYER_JUMPING) {
-            jump(mc);
-            jumpInProgress = true;
-        }
+        // if entity is not being knocked back
+        if (!Mappers.healthMapper.get(e).state.contains(EntityConst.EntityState.KNOCKED)) {
+            if (shouldRight(ref)) {
+                moveRight(mc, pc);
+                mc.orientation = RIGHT;
+            } else if (shouldLeft(ref)) {
+                moveLeft(mc, pc);
+                mc.orientation = LEFT;
+            } else {
+                // stay still if no keys are pressed
+                mc.velocity.x = 0;
+            }
 
-        // If we're tracking the jump is in progress, but it obviously isn't, toggle it off.
-        if (jumpInProgress && playerState != EntityState.PLAYER_JUMPING) {
-            jumpInProgress = false;
-        }
-        // if the entity shoudlspawnghost and its previous ghost is not alive and it is on a start totem
-        if (shouldSpawnGhost(ref) && !player.spawnedGhost && player.totemStatus != null) {
-            player.spawnedGhost = true; // spawn the ghost
-            Ghost newGhost = player.totemStatus.getGhost(player); // get a ghost from the totem
+            if (!jumpInProgress && playerState == EntityState.PLAYER_JUMPING) {
+                // Catch if we have transitioned to the actual jump phase of our jump
+                jump(mc);
+                jumpInProgress = true;
+            }
 
-            // set a background color while in the 'ghost' world
-            // TODO: this color should be chosen by someone artistic
-            GraphicsComponent.setGlobalColorMask(new Vector3f(0.2f, 0f, 0f));
-
-            // add it to engine an module
-            player.level.getCurrentModule().addEntity(newGhost);
-            TheEngine.getInstance().addEntity(newGhost);
+            // If we're tracking the jump is in progress, but it obviously isn't, toggle it off.
+            if (jumpInProgress && playerState != EntityState.PLAYER_JUMPING) {
+                jumpInProgress = false;
+            }
         }
 
         // Finally limit the velocity vector
         mc.velocity.capValuesi(mc.velocityRange);
+    }
+
+    private void ghostSpawning(Entity e) {
+        Player player = (Player) e;
+        int score = player.getComponent(ScoreComponent.class).getScore();
+        // if the player previous ghost is not alive and player is on a start totem
+        if (!player.spawnedGhost && player.totemStatus != null) {
+            boolean spawned = false; // whether player decided to spawn a ghost
+            Ghost newGhost = null; // the spawned ghost
+            Vector3f mask = new Vector3f(); // the global mask to apply for the world
+
+            // process keypresses/conditions for spawning
+            if (challangeGhost()) {
+                spawned = true;
+                newGhost = player.totemStatus.getChallangeGhost(player); // get a challanger ghost from the totem
+                player.startTotemID = player.totemStatus.getID();
+                mask.x = 0.2f;
+            } else if (helpGhost(score)) {
+                spawned = true;
+                player.getComponent(ScoreComponent.class).subScore(Totem.HELPCOST);
+                newGhost = player.totemStatus.getHelpGhost(player);
+                mask.z = 0.2f;
+            } else if (carryGhost(score)) {
+                spawned = true;
+                player.getComponent(ScoreComponent.class).subScore(Totem.CARRYCOST);
+                newGhost = player.totemStatus.getCarryGhost(player);
+                mask.z = 0.5f;
+            }
+            if (spawned) {
+                player.spawnedGhost = true;
+                // set a background color while in the 'ghost' world
+                GraphicsComponent.setGlobalColorMask(mask);
+                // add it to engine an module
+                player.level.getCurrentModule().addEntity(newGhost);
+                TheEngine.getInstance().addEntity(newGhost);
+            }
+        }
+    }
+
+    protected boolean helpGhost(int score) {
+        return KeyBoard.isKeyDown(GLFW_KEY_G) && score >= Totem.HELPCOST;
+    }
+
+    protected boolean challangeGhost() {
+        return KeyBoard.isKeyDown(GLFW_KEY_C);
+    }
+    protected boolean carryGhost(int score) {
+        return KeyBoard.isKeyDown(GLFW_KEY_H) && score >= Totem.CARRYCOST;
     }
 
     private void moveRight(MovementComponent mc, PositionComponent pc) {
@@ -174,17 +223,17 @@ public class PlayerMovementSystem extends IteratingSystem {
      * Moves along the x axis in the specified direction
      */
     private void moveDirection(int moveDir, MovementComponent mc, PositionComponent pc) {
-        if (!Main.AI && !Sound.isPlaying(Sound.STEP) && canJump(mc)) {
+        if (!Main.AI && !Sound.isPlaying(Sound.STEP) && canJump(pc)) {
             Sound.playRandom(Sound.STEP);
         }
         // set orientation of player in accordance to mouse position
         if (pc.position.x <= MouseMovement.mouseX) {
-            mc.orientation = MovementComponent.RIGHT;
+            mc.orientation = RIGHT;
         } else {
             mc.orientation = MovementComponent.LEFT;
         }
 
-        if (shouldSprint() && canSprint(mc)) {
+        if (shouldSprint() && canSprint(pc)) {
             mc.velocity.x = moveDir * getSprintingVel(mc);
             mc.velocity.x += moveDir * mc.acceleration.x;
         } else {
@@ -207,12 +256,12 @@ public class PlayerMovementSystem extends IteratingSystem {
         mc.velocity.y = mc.velocityRange.y;
     }
 
-    private boolean canJump(MovementComponent mc) {
-        return Math.abs(mc.velocity.y) < 1e-3;
+    private boolean canJump(PositionComponent pc) {
+        return pc.onPlatform;
     }
 
-    private boolean canSprint(MovementComponent mc) {
-        return Math.abs(mc.velocity.y) < 1e-3;
+    private boolean canSprint(PositionComponent pc) {
+        return pc.onPlatform;
     }
 
 
@@ -267,9 +316,6 @@ public class PlayerMovementSystem extends IteratingSystem {
         return false; // In all other cases, we do not jump or update
     }
 
-    protected boolean shouldSpawnGhost(Object ref) {
-        return KeyBoard.isKeyDown(GLFW_KEY_G);
-    }
 
     /**
      * Provides a reference object, if one needed for determining

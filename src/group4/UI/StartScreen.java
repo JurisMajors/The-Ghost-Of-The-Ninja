@@ -67,7 +67,6 @@ public class StartScreen {
     }
 
     private void playGame() {
-        System.out.println("PLAYGAME!");
         Sound.MENU.play();
         // Immediately unload this Startscreen and initialize the level
         this.unload();

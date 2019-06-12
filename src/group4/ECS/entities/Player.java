@@ -50,6 +50,8 @@ public class Player extends Entity {
      * Whether the player has spawned a ghost and it is alive
      */
     public boolean spawnedGhost;
+    public boolean challanging = false;
+    public int startTotemID = -1;
 
     /**
      * The starting totem that the player is touching
@@ -73,7 +75,7 @@ public class Player extends Entity {
         // shader
         Shader shader = Shader.SIMPLE;
         // TODO: proper texture
-        Texture texture = Texture.PLAYER;
+        Texture texture = Texture.DEBUG;
 
         // Level
         this.level = level;
