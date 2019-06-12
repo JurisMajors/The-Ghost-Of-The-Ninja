@@ -75,6 +75,9 @@ public class RenderSystem extends EntitySystem {
      * @param deltaTime time between last and current update
      */
     public void update(float deltaTime) {
+        glClearColor(90 / 255.0f, 90 / 255.0f, 90 / 255.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
         // Match objects to RenderLayers so we can draw layer by layer
         Map<RenderLayer, List<Entity>> entityLayers = sortEntitiesByLayer();
 

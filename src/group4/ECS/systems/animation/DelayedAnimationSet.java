@@ -19,7 +19,7 @@ public class DelayedAnimationSet extends AnimationSet {
     @Override
     public boolean update(float deltaTime) {
         for (Animation a : this.animations) {
-            a.update(this.currentFrame / this.frames);
+            a.update(this.currentFrame / (float) this.frames);
         }
 
         // Move to next timestep for this animation
