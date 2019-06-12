@@ -305,6 +305,9 @@ public class Module {
     }
 
     private void parseTotemLayer(JSONObject layer) {
+        if (true) {
+            return;
+        }
         JSONArray data = layer.getJSONArray("objects");
         for (int point = 0; point < data.length(); point++) {
             // get information about the object
@@ -623,11 +626,11 @@ public class Module {
      * Function which contains the mapping from the tileMap index as on the texture, to the appropriate Entity class.
      */
     private void configureMap() {
-        int spike_up = 48;
-        int spike_right = 49;
-        int spike_down = 50;
-        int spike_left = 51;
-        int torch = 15;
+        int spike_up = 118;
+        int spike_right = 119;
+        int spike_down = 120;
+        int spike_left = 121;
+        int torch = 127;
         int totemStart = 21;
         int totemEnd = 29;
         int[] platforms = new int[]{0, 1, 2, 3, 4, 6, 7, 8, 9,
