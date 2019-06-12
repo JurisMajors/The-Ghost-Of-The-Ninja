@@ -8,6 +8,7 @@ import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.components.stats.ScoreComponent;
+import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.totems.Totem;
 import group4.ECS.etc.EntityConst;
@@ -84,10 +85,12 @@ public class PlayerMovementSystem extends IteratingSystem {
                 pc.onPlatform && !jumpInProgress;
 
         // We are either wandering, or not. See the state diagram.
+        ((HierarchicalPlayer) player).getTorso().rotation = 0;  // Reset torso rotation angle
         if (wandering) {
             if (Math.abs(mc.velocity.x) > 1e-3) {
                 if (shouldSprint() && canSprint(pc)) {
                     nextState = EntityState.PLAYER_RUNNING;
+                    ((HierarchicalPlayer) player).getTorso().rotation = 15;  // Running player
                 } else {
                     nextState = EntityState.PLAYER_WALKING;
                 }

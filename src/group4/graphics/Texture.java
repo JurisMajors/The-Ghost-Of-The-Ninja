@@ -3,6 +3,7 @@ package group4.graphics;
 import group4.utils.BufferUtils;
 
 import javax.imageio.ImageIO;
+import javax.xml.soap.Text;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -21,7 +22,6 @@ public class Texture {
     public static Texture GREEN;
     public static Texture RED;
     public static Texture MAIN_TILES;
-    public static Texture PLAYER;
     public static Texture BACKGROUND;
     public static Texture HITBOX;
     public static Texture NOTHINGNESS;
@@ -30,6 +30,45 @@ public class Texture {
     public static Texture TOTEM_END;
     public static Texture TOTEM_HELP;
 
+    // Storing all player related textures
+    public static Texture PLAYER_TORSO;
+    public static Texture PLAYER_HEAD;
+    public static Texture PLAYER_DARK_LEG_UPPER;
+    public static Texture PLAYER_DARK_LEG_LOWER;
+    public static Texture PLAYER_LIGHT_LEG_UPPER;
+    public static Texture PLAYER_LIGHT_LEG_LOWER;
+    public static Texture PLAYER_DARK_ARM_UPPER;
+    public static Texture PLAYER_DARK_ARM_LOWER;
+    public static Texture PLAYER_LIGHT_ARM_UPPER;
+    public static Texture PLAYER_LIGHT_ARM_LOWER;
+
+    // Storing all red ghost related textures
+    public static Texture RED_GHOST_TORSO;
+    public static Texture RED_GHOST_HEAD;
+    public static Texture RED_GHOST_DARK_LEG_UPPER;
+    public static Texture RED_GHOST_DARK_LEG_LOWER;
+    public static Texture RED_GHOST_LIGHT_LEG_UPPER;
+    public static Texture RED_GHOST_LIGHT_LEG_LOWER;
+    public static Texture RED_GHOST_DARK_ARM_UPPER;
+    public static Texture RED_GHOST_DARK_ARM_LOWER;
+    public static Texture RED_GHOST_LIGHT_ARM_UPPER;
+    public static Texture RED_GHOST_LIGHT_ARM_LOWER;
+    public static Texture RED_GHOST_LEG_BLOB;
+
+    // Storing all blue ghost related textures
+    public static Texture BLUE_GHOST_TORSO;
+    public static Texture BLUE_GHOST_HEAD;
+    public static Texture BLUE_GHOST_DARK_LEG_UPPER;
+    public static Texture BLUE_GHOST_DARK_LEG_LOWER;
+    public static Texture BLUE_GHOST_LIGHT_LEG_UPPER;
+    public static Texture BLUE_GHOST_LIGHT_LEG_LOWER;
+    public static Texture BLUE_GHOST_DARK_ARM_UPPER;
+    public static Texture BLUE_GHOST_DARK_ARM_LOWER;
+    public static Texture BLUE_GHOST_LIGHT_ARM_UPPER;
+    public static Texture BLUE_GHOST_LIGHT_ARM_LOWER;
+    public static Texture BLUE_GHOST_LEG_BLOB;
+
+    
     // GAME UI / OVERLAYS
     public static Texture START_BG;
     public static Texture VIGNETTE_OVERLAY;
@@ -43,7 +82,11 @@ public class Texture {
     private int texture;
 
     public Texture(String path) {
-        texture = load(path);
+        texture = loadFromPath(path);
+    }
+
+    public Texture(BufferedImage img) {
+        texture = loadFromBuffer(img);
     }
 
     /**
@@ -64,8 +107,44 @@ public class Texture {
         RED = new Texture("src/group4/res/textures/red.png");
         HITBOX = new Texture("src/group4/res/textures/hitbox.png");
         NOTHINGNESS = new Texture("src/group4/res/textures/FF4D00-0.png");
-        PLAYER = new Texture("src/group4/res/textures/char1.png");
         SPLINE = new Texture("src/group4/res/textures/spline.png");
+
+        PLAYER_TORSO = new Texture("src/group4/res/textures/player/ninja3withlayers_0008_body.png");
+        PLAYER_HEAD = new Texture("src/group4/res/textures/player/ninja3withlayers_0009_head.png");
+        PLAYER_DARK_LEG_LOWER = new Texture("src/group4/res/textures/player/ninja3withlayers_0002_lowerfurtherleg.png");
+        PLAYER_DARK_LEG_UPPER = new Texture("src/group4/res/textures/player/ninja3withlayers_0003_upperfurtherleg.png");
+        PLAYER_LIGHT_LEG_LOWER = new Texture("src/group4/res/textures/player/ninja3withlayers_0000_lowerfurtherleg.png");
+        PLAYER_LIGHT_LEG_UPPER = new Texture("src/group4/res/textures/player/ninja3withlayers_0001_uppercloserleg.png");
+        PLAYER_DARK_ARM_UPPER = new Texture("src/group4/res/textures/player/ninja3withlayers_0007_upperfurtherarm.png");
+        PLAYER_DARK_ARM_LOWER = new Texture("src/group4/res/textures/player/ninja3withlayers_0006_lowerfurtherarm.png");
+        PLAYER_LIGHT_ARM_UPPER = new Texture("src/group4/res/textures/player/ninja3withlayers_0005_uppercloserarm.png");
+        PLAYER_LIGHT_ARM_LOWER = new Texture("src/group4/res/textures/player/ninja3withlayers_0004_lowercloserarm.png");
+
+        RED_GHOST_TORSO = new Texture("src/group4/res/textures/ghost/red/torso.png");
+        RED_GHOST_HEAD = new Texture("src/group4/res/textures/ghost/red/head.png");
+        RED_GHOST_DARK_LEG_LOWER = NOTHINGNESS;
+        RED_GHOST_DARK_LEG_UPPER = NOTHINGNESS;
+        RED_GHOST_LIGHT_LEG_LOWER = NOTHINGNESS;
+        RED_GHOST_LIGHT_LEG_UPPER = NOTHINGNESS;
+        RED_GHOST_DARK_ARM_UPPER = new Texture("src/group4/res/textures/ghost/red/darkarmupper.png");
+        RED_GHOST_DARK_ARM_LOWER = new Texture("src/group4/res/textures/ghost/red/darkarmlower.png");
+        RED_GHOST_LIGHT_ARM_UPPER = new Texture("src/group4/res/textures/ghost/red/lightarmupper.png");
+        RED_GHOST_LIGHT_ARM_LOWER = new Texture("src/group4/res/textures/ghost/red/lightarmlower.png");
+        RED_GHOST_LEG_BLOB = new Texture("src/group4/res/textures/ghost/red/legblob.png");
+
+        BLUE_GHOST_TORSO = new Texture("src/group4/res/textures/ghost/blue/torso.png");
+        BLUE_GHOST_HEAD = new Texture("src/group4/res/textures/ghost/blue/head.png");
+        BLUE_GHOST_DARK_LEG_LOWER = NOTHINGNESS;
+        BLUE_GHOST_DARK_LEG_UPPER = NOTHINGNESS;
+        BLUE_GHOST_LIGHT_LEG_LOWER = NOTHINGNESS;
+        BLUE_GHOST_LIGHT_LEG_UPPER = NOTHINGNESS;
+        BLUE_GHOST_DARK_ARM_UPPER = new Texture("src/group4/res/textures/ghost/blue/darkarmupper.png");
+        BLUE_GHOST_DARK_ARM_LOWER = new Texture("src/group4/res/textures/ghost/blue/darkarmlower.png");
+        BLUE_GHOST_LIGHT_ARM_UPPER = new Texture("src/group4/res/textures/ghost/blue/lightarmupper.png");
+        BLUE_GHOST_LIGHT_ARM_LOWER = new Texture("src/group4/res/textures/ghost/blue/lightarmlower.png");
+        BLUE_GHOST_LEG_BLOB = new Texture("src/group4/res/textures/ghost/blue/legblob.png");
+
+        
         TOTEM_START = new Texture("src/group4/res/textures/start-totem.png");
         TOTEM_END = new Texture("src/group4/res/textures/end-totem.png");
         START_BG = new Texture("src/group4/res/textures/start-bg.png");
@@ -76,13 +155,40 @@ public class Texture {
         TOTEM_HELP = new Texture("src/group4/res/textures/totemhelp.png");
     }
 
+    private int loadFromBuffer(BufferedImage image) {
+        // read image from file and store contents in integer array
+        int[] pixels = null;
+        width = image.getWidth();
+        height = image.getHeight();
+        pixels = new int[width * height];
+        // get the RGB values of the whole image, read it into the pixel array. (offset 0, stride=width)
+        image.getRGB(0, 0, width, height, pixels, 0, width);
+
+        // get a texture ID from opengl
+        int result = glGenTextures();
+        // bind the texture so we can change its parameters
+        glBindTexture(GL_TEXTURE_2D, result);
+        /*
+        These two parameters prevent blurring: when we don't know the color of a pixel we take the value of the
+        nearest pixel and we don't use linear interpolation (because that causes blurring).
+         */
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        // add our image data to the texture
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, BufferUtils.getIntBuffer(pixels));
+        // unbind the texture after setup is done
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        return result;
+    }
+
     /**
      * Loads a texture located at path into openGL.
      *
      * @param path relative path to the project root.
      * @return integer id for this texture in opengl
      */
-    private int load(String path) {
+    private int loadFromPath(String path) {
         // read image from file and store contents in integer array
         int[] pixels = null;
         try {
