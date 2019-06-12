@@ -1,34 +1,20 @@
 package group4.ECS.systems.GraphHandlers;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphComponent;
-import group4.ECS.components.SplinePathComponent;
-import group4.ECS.components.identities.GhostComponent;
-import group4.ECS.components.identities.MobComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
-import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.AStarMobs.AStarMob;
-import group4.ECS.entities.Ghost;
-import group4.ECS.entities.Player;
-import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.world.Platform;
 import group4.ECS.entities.world.SplinePlatform;
-import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
-import group4.ECS.etc.TheEngine;
-import group4.levelSystem.Level;
-import group4.levelSystem.Module;
-import group4.maths.IntersectionPair;
-import group4.maths.Ray;
 import group4.maths.Vector3f;
-import group4.utils.DebugUtils;
-import javafx.util.Pair;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 
