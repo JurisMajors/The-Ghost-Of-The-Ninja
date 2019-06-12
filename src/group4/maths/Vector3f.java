@@ -315,6 +315,15 @@ public class Vector3f {
         return this.capValues(new Vector3f(max, max, max));
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Vector3f) {
+            Vector3f vec = (Vector3f) obj;
+            return this.x == vec.x && this.y == vec.y && this.z == vec.z;
+        }
+
+        return false;
+    }
 
     private float capDirection(float cur, float max) throws IllegalArgumentException {
         if (max < 0) throw new IllegalArgumentException(this.getClass().getName() + " capDirection(cur,max) received " +

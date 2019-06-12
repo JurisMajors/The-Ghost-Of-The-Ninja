@@ -8,7 +8,7 @@ public class SplinePlatformCollision extends AbstractCollisionHandler<SplinePlat
     /**
      * Singleton
      **/
-    private static AbstractCollisionHandler me = new PlatformCollision();
+    private static AbstractCollisionHandler me = new SplinePlatformCollision();
 
     @Override
     public void collision(SplinePlatform e, CollisionComponent cc) {

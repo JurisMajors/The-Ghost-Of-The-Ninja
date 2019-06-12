@@ -9,10 +9,12 @@ import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.DamageComponent;
+import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.mobs.Mob;
+import group4.ECS.etc.EntityConst;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
@@ -23,6 +25,9 @@ import group4.utils.DebugUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static group4.ECS.components.stats.MovementComponent.LEFT;
+import static group4.ECS.components.stats.MovementComponent.RIGHT;
 
 
 public abstract class AbstractMovementHandler<T extends Mob> {
@@ -102,6 +107,12 @@ public abstract class AbstractMovementHandler<T extends Mob> {
     protected void move(Entity e, Vector3f targetPosition, float deltaTime) {
         PositionComponent pc = Mappers.positionMapper.get(e);
         MovementComponent mc = Mappers.movementMapper.get(e);
+        // TODO: store specific states in different components
+        HealthComponent hc = Mappers.healthMapper.get(e);
+
+        if (hc == null || hc.state.contains(EntityConst.EntityState.KNOCKED)) {
+            return;
+        }
 
         // set velocity.x in the direction towards the player
         if (Math.abs(pc.position.x - targetPosition.x) <= Math.abs(mc.velocity.x)) {
@@ -109,8 +120,10 @@ public abstract class AbstractMovementHandler<T extends Mob> {
             mc.velocity.x = targetPosition.x - pc.position.x;
         } else if (pc.position.x < targetPosition.x && canMoveRight(mc.velocity)) {
             moveRight(mc);
+            mc.orientation = RIGHT;
         } else if (pc.position.x > targetPosition.x && canMoveLeft(mc.velocity)) {
             moveLeft(mc);
+            mc.orientation = LEFT;
         } else {
             mc.velocity.x = 0;
         }

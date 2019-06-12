@@ -17,10 +17,10 @@ public abstract class Animation {
 
     public boolean update(float deltaTime) {
         this.currentT = (this.currentT + deltaTime) % 1.0f;
-        this.stepAnimation();
+        this.stepAnimation(deltaTime);
         return true;
     }
 
 
-    protected abstract void stepAnimation();
+    protected abstract void stepAnimation(float deltaTime);
 }

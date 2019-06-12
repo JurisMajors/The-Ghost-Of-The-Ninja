@@ -15,6 +15,7 @@ import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.CameraSystem;
 import group4.ECS.systems.RenderSystem;
+import group4.ECS.systems.animation.AnimationSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
 import group4.ECS.systems.collision.LastSystem;
@@ -44,13 +45,9 @@ import static org.lwjgl.opengl.GL11.glClear;
  */
 public class Evaluator implements FitnessEvaluator<Brain> {
 
-    /**
-     * timer for determining the time passed during game
-     **/
+    /** timer for determining the time passed during game **/
     private Timer timer;
-    /**
-     * evaluation strategy for individuals
-     **/
+    /** evaluation strategy for individuals **/
     private AbstractEvaluationStrategy strategy;
 
     public Evaluator(AbstractEvaluationStrategy strategy) {
@@ -154,11 +151,12 @@ public class Evaluator implements FitnessEvaluator<Brain> {
         engine.addSystem(new CollisionSystem(2));
         engine.addSystem(new CollisionEventSystem(3));
         engine.addSystem(new UncollidingSystem(4));
-        engine.addSystem(new GhostDyingSystem(false, 5));
+        engine.addSystem(new GhostDyingSystem(false,5));
+        engine.addSystem(new AnimationSystem(6));
         if (Evolver.render) {
-            engine.addSystem(new RenderSystem(6));
+            engine.addSystem(new RenderSystem(7));
         }
-        engine.addSystem(new LastSystem(7));
+        engine.addSystem(new LastSystem(8));
     }
 
     private void clearPlayers(Engine engine, Module cur) {

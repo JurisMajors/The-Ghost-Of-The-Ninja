@@ -14,11 +14,13 @@ import group4.maths.Vector3f;
  * The helper Ghost
  */
 public class Ghost extends HierarchicalPlayer {
-    public boolean best; // whether has reached the exit
-    public Player master = null;
-    public int endTotem;
+    public boolean best; // whether has reached the exit (used during training)
 
-    private boolean blockMovement = false;
+    public Player master = null; // the player which spawned the ghost
+    public int endTotem; // totem identification to determine when it has reached end of its path
+
+    public boolean helping = false; // whether this ghost is a helper
+    public boolean carrying = false; // whether this ghost is a carrier
 
     /**
      * @param position center point of Ghost
@@ -39,47 +41,21 @@ public class Ghost extends HierarchicalPlayer {
         this.add(new GhostComponent(brain));
     }
 
-    public Ghost(Vector3f position, Level level, String brainPath) {
+    public Ghost (Vector3f position, Level level, String brainPath) {
         this(position, level, new Brain(brainPath));
     }
 
-    /**
-     * Ghost constructor which also sets the master,
-     * this constructor must be used when ghost is
-     * spawned in-game by the player
-     *
-     * @param master the player which spawned the ghost
-     */
-    public Ghost(Level level, Brain brain, Player master) {
+    public Ghost (Level level, Brain brain, Player master) {
         this(master.getComponent(PositionComponent.class).position,
                 level, brain);
         this.master = master;
     }
-
-    public Ghost(Vector3f pos, Level level, Brain brain, Player master) {
-        this(new Vector3f(pos)
-                , level, brain);
+    public Ghost (Vector3f pos, Level level, Brain brain, Player master) {
+        this(pos, level, brain);
         this.master = master;
     }
 
     public static String getName() {
         return "Ghost";
     }
-
-    /**
-     * Whether movement is blocked
-     */
-    public boolean isBlocked() {
-        return this.blockMovement;
-    }
-
-    /**
-     * Set whether or not movement should be blocked
-     *
-     * @param blocked new value for the movement block
-     */
-    public void setBlocked(boolean blocked) {
-        this.blockMovement = blocked;
-    }
-
 }

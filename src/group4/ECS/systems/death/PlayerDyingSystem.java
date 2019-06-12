@@ -63,7 +63,11 @@ public class PlayerDyingSystem extends AbstractDyingSystem {
     @Override
     protected boolean die(Entity entity, float deltaTime) {
         entity.getComponent(HealthComponent.class).health = 0;
-        GraphicsComponent.clearGlobalColorMask();
+
+        // hacky fix since apparently the mob dying sytem inherits this..?
+        if (!(entity instanceof Mob)) {
+            GraphicsComponent.clearGlobalColorMask();
+        }
         // If auto reset is enabled, reset the module to its original state
         // and reposition the player, while giving it new health
         if (this.autoReset) {

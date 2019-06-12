@@ -8,15 +8,17 @@ import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.ScoreComponent;
-import group4.ECS.entities.DamageArea;
 import group4.ECS.entities.Ghost;
+import group4.ECS.entities.damage.DamageArea;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.entities.items.consumables.Coin;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.StartTotem;
 import group4.ECS.entities.totems.Totem;
+import group4.ECS.entities.totems.TotemHelp;
 import group4.ECS.entities.world.Exit;
+import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.collision.CollisionData;
@@ -47,31 +49,6 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
         for (CollisionData cd : others) {
             Entity other = cd.entity;
 
-            // Ghost on platform/spline detection (while not training)
-//            if (player instanceof Ghost && (other instanceof Platform || Families.collidableSplineFamily.matches(other)) && !Main.AI) {
-//                Entity mainCamera = TheEngine.getInstance().getEntitiesFor(Families.cameraFamily).get(0);
-
-//                // Check whether the ghost is off screen
-//                Vector3f mainCameraPosition = mainCamera.getComponent(PositionComponent.class).position;
-//                Vector3f ghostPosition = player.getComponent(PositionComponent.class).position;
-
-//                if (!(ghostPosition.x <= mainCameraPosition.x + Main.SCREEN_WIDTH / 2 && ghostPosition.x >= mainCameraPosition.x - Main.SCREEN_WIDTH / 2
-//                        && ghostPosition.y <= mainCameraPosition.y + Main.SCREEN_HEIGHT / 2 && ghostPosition.y >= mainCameraPosition.y - Main.SCREEN_HEIGHT / 2)) {
-//                    // Ghost is on a platform and not visible on the screen of the user, so let it wait
-//                    ((Ghost) player).setBlocked(true);
-//                } else {
-//                    // Ghost is on a platform and visible on the screen of the user, check if is is blocked
-//                    if (((Ghost) player).isBlocked()) {
-//                        // Ghost is indeed blocked, wait until it is sufficiently visible on the screen and then continue moving the ghost
-//                        Vector3f ghostDimension = player.getComponent(DimensionComponent.class).dimension;
-//                        if (ghostPosition.x <= mainCameraPosition.x + Main.SCREEN_WIDTH / 2 - 2 * ghostDimension.x) {
-//                            ((Ghost) player).setBlocked(false);
-//                        }
-//                    }
-//                }
-
-//            }
-
             // example
             if (other instanceof Mob) {
                 handleMob(player, (Mob) other);
@@ -83,10 +60,10 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
                 handleExit(player, (Exit) other);
                 // after player exit interaction we dont want to fix their positions (we are just going to execute the exit action)
                 removables.add(cd);
-            } else if (other instanceof DamageArea) { // TODO: super janky, damageArea does not apply to player whatsoever
+            } else if (other instanceof DamageArea) {
                 removables.add(cd);
-            } else if (other instanceof Coin && !(player instanceof Ghost)) {
-                handleCoin(player, (Coin) other);
+            } else if (other instanceof Coin) {
+                if (!(player instanceof Ghost)) handleCoin(player, (Coin) other);
                 removables.add(cd);
             } else if (other instanceof Totem) {
                 if (player instanceof Ghost) {
@@ -122,16 +99,27 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
     }
 
     private void resetTotem(Player player) {
-        player.totemStatus = null;
+        player.totemStatus = null; // reset totem status
+        TheEngine.getInstance().removeEntity(TotemHelp.getInstance()); // remove help
     }
 
     private void playerHandleTotem(Player player, Totem totem) {
         if (totem.isEnd()) {
+            if (player.spawnedGhost && player.challanging && player.startTotemID == totem.getID()) { // ghost is still alive
+                // means that we got the there faster
+                player.getComponent(ScoreComponent.class).addScore(Totem.CHALLANGEREWARD);
+                player.challanging = false;
+            }
             // end totem, player cannot do a lot here
         } else {
             // starting totem
+            if (player.spawnedGhost) return; // if a ghost is alive dont do shit
             player.totemStatus = (StartTotem) totem;
-            // TODO: Draw help
+            // otherwise player is on starting totem and he need to see the help image
+            Vector3f helpPos = new Vector3f(totem.getComponent(PositionComponent.class).position);
+            helpPos.y += totem.getComponent(DimensionComponent.class).dimension.y;
+            helpPos.x += totem.getComponent(DimensionComponent.class).dimension.x * 0.1f;
+            TheEngine.getInstance().addEntity(TotemHelp.getHelp(helpPos));
         }
     }
 
@@ -140,7 +128,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
         Vector3f gPos = ghost.getComponent(PositionComponent.class).position;
         Vector3f tPos = totem.getComponent(PositionComponent.class).position;
         Vector3f tDim = totem.getComponent(DimensionComponent.class).dimension;
-        if (gPos.x >= tPos.add(tDim.scale(0.5f)).x) {
+        if (gPos.x >= tPos.add(tDim.scale(0.3f)).x) {
             ghost.getComponent(HealthComponent.class).health = 0;
             GraphicsComponent.clearGlobalColorMask();
         }
@@ -160,6 +148,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
 //    }
 
     private static void handleExit(Player player, Exit exit) {
+        GraphicsComponent.clearGlobalColorMask();
         if (player instanceof Ghost) { // kill ghost if has reached exit
             player.getComponent(HealthComponent.class).health = 0;
             GraphicsComponent.clearGlobalColorMask();

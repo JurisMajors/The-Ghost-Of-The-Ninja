@@ -2,7 +2,7 @@ package group4.ECS.systems.collision.CollisionHandlers;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.physics.CollisionComponent;
-import group4.ECS.entities.DamageArea;
+import group4.ECS.entities.damage.DamageArea;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.systems.collision.CollisionData;
 
