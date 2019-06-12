@@ -123,6 +123,7 @@ public class RenderSystem extends EntitySystem {
                     } else {
                         sc = Mappers.scoreMapper.get(entity);
                     }
+
                     if (mc.orientation == MovementComponent.LEFT) {
                         // Set the mirrored projection matrix
                         gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrixHorizontalFlip);
