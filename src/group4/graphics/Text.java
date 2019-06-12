@@ -71,13 +71,6 @@ public class Text {
 
         this.atlasWidth = atlasImage.getWidth();
         this.atlasHeight = atlasImage.getHeight();
-        System.out.println(this.atlasWidth + ", " + this.atlasHeight);
-        try{
-            File file = new File("C:\\Users\\S4K4YUME\\Desktop/myimage.png");
-            ImageIO.write(atlasImage, "png", file);
-        } catch (Exception e) {
-
-        }
 
         return new Texture(atlasImage);
     }
