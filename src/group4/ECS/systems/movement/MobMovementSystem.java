@@ -15,7 +15,7 @@ public class MobMovementSystem extends IteratingSystem {
     @Override
     public void processEntity(Entity entity, float deltaTime) {
         MobComponent mobComponent = Mappers.mobMapper.get(entity);
-
+        if (mobComponent.handler == null) return;
         mobComponent.handler.handleMovement(entity, deltaTime);
     }
 }

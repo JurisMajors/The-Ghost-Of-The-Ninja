@@ -9,6 +9,7 @@ import group4.ECS.entities.AStarMobs.WalkingAStarMob;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.hazards.Spikes;
 import group4.ECS.entities.items.consumables.Coin;
+import group4.ECS.entities.mobs.FlyingMob;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.EndingTotem;
 import group4.ECS.entities.totems.StartTotem;
@@ -456,16 +457,20 @@ public class Module {
 
     private void addMob(int x, int y, int i, String mobName) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
-        AStarMob m = null;
+        Mob m = null;
         if (mobName.equals(JumpingWalkingAStarMob.getName())) {
             m = new JumpingWalkingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i), jwGraph);
         } else if (mobName.equals(WalkingAStarMob.getName())) {
             m = new WalkingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i), wGraph);
         } else if (mobName.equals(JumpingAStarMob.getName())) {
             m = new JumpingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i), jGraph);
+        } else if (mobName.equals(FlyingMob.getName())) {
+            m = new FlyingMob(tempPosition, this.level);
         }
         if (m == null) return;
-        this.mobs.add(m);
+        if (!(m instanceof FlyingMob)) {
+            this.mobs.add(m);
+        }
         this.addEntity(m);
     }
 
@@ -655,6 +660,7 @@ public class Module {
         moduleTileMap.put(jumpingwalkingmob, JumpingWalkingAStarMob.getName());
         moduleTileMap.put(jumpingmob, JumpingAStarMob.getName());
         moduleTileMap.put(walkingmob, WalkingAStarMob.getName());
+        moduleTileMap.put(flyingmob, FlyingMob.getName());
 
         moduleTileMap.put(coin, Coin.getName());
         moduleTileMap.put(torch, Torch.getName());
