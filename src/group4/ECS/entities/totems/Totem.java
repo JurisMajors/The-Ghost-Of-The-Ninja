@@ -38,9 +38,9 @@ public abstract class Totem extends Entity {
     private GraphicsComponent getGraphicsComponent() {
         Shader shader = Shader.SIMPLE;
         if (isEnd()) {
-            return new GraphicsComponent(shader, Texture.TOTEM, dimension, RenderLayer.BACKGROUND, false);
+            return new GraphicsComponent(shader, Texture.TOTEM, dimension, RenderLayer.TOTEM, false);
         } else {
-            return new GraphicsComponent(shader, Texture.TOTEM, dimension, RenderLayer.BACKGROUND, false);
+            return new GraphicsComponent(shader, Texture.TOTEM, dimension, RenderLayer.TOTEM, false);
         }
     }
     // unique identification of the totem
