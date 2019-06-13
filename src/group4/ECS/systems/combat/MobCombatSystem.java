@@ -83,8 +83,8 @@ public class MobCombatSystem extends IteratingSystem {
 
     }
 
-    private void rangedAttack() {
-        // TODO
+    private void rangedAttack(Mob mob) {
+
     }
 
     private void cooldown(float deltaTime, Mob mob) {

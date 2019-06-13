@@ -14,7 +14,7 @@ import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
 
-public class Bullet extends Entity {
+public class Projectile extends Entity {
 
     protected Vector3f dimension = new Vector3f(0.5f, 0.5f, 0.0f);
 
@@ -23,9 +23,9 @@ public class Bullet extends Entity {
      *
      * @param position          left-bottom-back corner of the cuboid representing the bullet
      * @param velocityDirection direction (normalized) of velocity vector
-     * @param origin            origin of the Bullet, i.e. weapon
+     * @param origin            origin of the Projectile, i.e. weapon
      */
-    public Bullet(Vector3f position, Vector3f velocityDirection, Entity origin) {
+    public Projectile(Vector3f position, Vector3f velocityDirection, Entity origin, int damage) {
 
         // velocity range
         Vector3f velocityRange = new Vector3f(0.25f, 0.25f, 0.0f);
@@ -41,7 +41,7 @@ public class Bullet extends Entity {
 
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
-        this.add(new DamageComponent(1, origin));
+        this.add(new DamageComponent(damage, origin));
         this.add(new MovementComponent(velocityDirection.scale(velocityMagnitude), velocityRange));
         this.add(new GraphicsComponent(shader, texture, dimension, false));
         this.add(new BulletComponent());
@@ -53,7 +53,7 @@ public class Bullet extends Entity {
     }
 
     public static String getName() {
-        return "Bullet";
+        return "Projectile";
     }
 
 }

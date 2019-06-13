@@ -97,7 +97,7 @@ public class Texture {
         DEBUG = new Texture("src/group4/res/textures/debug.jpeg");
         BRICK = new Texture("src/group4/res/textures/brick.png");
         AK47 = new Texture("src/group4/res/textures/weapons/AK47.png");
-        MG_BULLET = new Texture("src/group4/res/textures/weapons/Bullet.png");
+        MG_BULLET = new Texture("src/group4/res/textures/weapons/Projectile.png");
         EXIT = new Texture("src/group4/res/textures/exit.jpg");
         MAIN_TILES = new Texture("src/group4/res/textures/tilemap-main.png");
         BACKGROUND = new Texture("src/group4/res/textures/cave.jpg");
