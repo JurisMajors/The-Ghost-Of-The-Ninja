@@ -24,7 +24,7 @@ public class AStarMob extends Mob {
     protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f);
 
     public AStarMob(Vector3f position, Level l, Module module, String inFile, String outFile, AbstractGraphHandler handler, GraphComponent graphComponent) {
-        Vector3f velocityRange = new Vector3f(0.05f, 0.25f, 0.0f);
+        Vector3f velocityRange = new Vector3f(0.10f, 0.25f, 0.0f);
         Shader shader = Shader.SIMPLE;
         Texture texture = Texture.EXIT;
         this.level = l;
