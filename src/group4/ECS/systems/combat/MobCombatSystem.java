@@ -84,7 +84,7 @@ public class MobCombatSystem extends IteratingSystem {
             excluded.add(Ghost.class);
 
             new DamageArea(trueOffset, trueHitbox,
-                    mwc.damage, excluded, 0, mob);
+                    mwc.damage, excluded, 4, mob);
         }
 
     }

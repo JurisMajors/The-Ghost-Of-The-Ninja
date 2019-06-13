@@ -1,6 +1,7 @@
 package group4.ECS.entities.mobs;
 
 import group4.ECS.components.GraphicsComponent;
+import group4.ECS.components.SplinePathComponent;
 import group4.ECS.components.identities.AnimationComponent;
 import group4.ECS.components.identities.MobComponent;
 import group4.ECS.components.physics.CollisionComponent;
@@ -10,6 +11,7 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.items.weapons.MobRangedAttack;
+import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Mappers;
 import group4.ECS.systems.animation.FrameAnimation;
@@ -21,6 +23,7 @@ import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.maths.Vector3f;
+import group4.maths.spline.MultiSpline;
 
 public class FlyingMob extends Mob {
 
@@ -61,6 +64,13 @@ public class FlyingMob extends Mob {
         this.add(new GraphicsComponent(Shader.SIMPLE, Texture.DEBUG, bigBatDimension, false));
         this.add(new AnimationComponent());
         this.setupAnimation();
+    }
+
+
+    public FlyingMob(Vector3f position, Level l, MultiSpline spline) {
+        this(position, l);
+        SplinePathComponent spc = new SplinePathComponent(spline, new Vector3f(), new Vector3f(1,1,0), 2.0f, 100);
+        this.add(spc);
     }
 
     private void setupAnimation() {

@@ -153,7 +153,7 @@ public class PlayerCombatSystem extends IteratingSystem {
         excluded.add(Ghost.class);
 
         new DamageArea(hitboxCorner, trueHitbox,
-                wc.damage, excluded, 0, entity);
+                wc.damage, excluded, 4, entity);
 
     }
 

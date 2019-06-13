@@ -8,23 +8,16 @@ import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.components.stats.ScoreComponent;
+import group4.ECS.entities.Ghost;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.totems.Totem;
-import group4.ECS.etc.EntityConst;
-import group4.ECS.entities.Ghost;
-import group4.ECS.etc.EntityState;
-import group4.ECS.etc.Families;
-import group4.ECS.etc.Mappers;
-import group4.ECS.etc.TheEngine;
+import group4.ECS.etc.*;
 import group4.audio.Sound;
 import group4.game.Main;
 import group4.input.KeyBoard;
-import group4.input.MouseMovement;
 import group4.maths.Vector3f;
 
-import static group4.ECS.components.stats.MovementComponent.LEFT;
-import static group4.ECS.components.stats.MovementComponent.RIGHT;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
@@ -136,10 +129,8 @@ public class PlayerMovementSystem extends IteratingSystem {
         if (!Mappers.healthMapper.get(e).state.contains(EntityConst.EntityState.KNOCKED)) {
             if (shouldRight(ref)) {
                 moveRight(mc, pc);
-                mc.orientation = RIGHT;
             } else if (shouldLeft(ref)) {
                 moveLeft(mc, pc);
-                mc.orientation = LEFT;
             } else {
                 // stay still if no keys are pressed
                 mc.velocity.x = 0;
@@ -205,6 +196,7 @@ public class PlayerMovementSystem extends IteratingSystem {
     protected boolean challangeGhost() {
         return KeyBoard.isKeyDown(GLFW_KEY_C);
     }
+
     protected boolean carryGhost(int score) {
         return KeyBoard.isKeyDown(GLFW_KEY_H) && score >= Totem.CARRYCOST;
     }
@@ -225,12 +217,6 @@ public class PlayerMovementSystem extends IteratingSystem {
     private void moveDirection(int moveDir, MovementComponent mc, PositionComponent pc) {
         if (!Main.AI && !Sound.isPlaying(Sound.STEP) && canJump(pc)) {
             Sound.playRandom(Sound.STEP);
-        }
-        // set orientation of player in accordance to mouse position
-        if (pc.position.x <= MouseMovement.mouseX) {
-            mc.orientation = RIGHT;
-        } else {
-            mc.orientation = MovementComponent.LEFT;
         }
 
         if (shouldSprint() && canSprint(pc)) {

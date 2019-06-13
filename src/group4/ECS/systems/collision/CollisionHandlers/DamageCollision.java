@@ -131,7 +131,7 @@ public class DamageCollision extends AbstractCollisionHandler<Entity> {
             knockback.invoke();
         }
 
-        if (entity instanceof DamageArea) {
+        if (entity instanceof DamageArea && Mappers.damageMapper.get(entity).damage != 0) {
             DamageComponent wc = Mappers.damageMapper.get(entity);
 
             if (wc.origin instanceof Player) {

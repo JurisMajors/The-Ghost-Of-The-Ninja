@@ -13,6 +13,7 @@ public class ImageSequence {
     public static ImageSequence BAT;
     public static ImageSequence BAT2;
     public static ImageSequence PROJECTILE;
+    public static ImageSequence SLASH;
 
     public List<Texture> frames;
     public int frameCount;
@@ -43,6 +44,7 @@ public class ImageSequence {
         BAT = new ImageSequence("src/group4/res/textures/animated/bat/");
         BAT2 = new ImageSequence("src/group4/res/textures/animated/bat2/");
         PROJECTILE = new ImageSequence("src/group4/res/textures/animated/projectile/");
+        SLASH = new ImageSequence("src/group4/res/textures/animated/slash/");
     }
 
 }

@@ -59,7 +59,7 @@ public class Main implements Runnable {
     public static long window; // The id of the window
 
     private Audio audio;
-  
+
     private Level level;
     private Engine engine;
     private Camera camera;

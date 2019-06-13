@@ -19,7 +19,7 @@ public abstract class Totem extends Entity {
     public static final int CARRYCOST = 500;
     public static final int CHALLANGEREWARD = 500;
 
-    private String name; // name of the totem
+    protected String name; // name of the totem
 
     public Level level; // level taht it resides in
 
@@ -36,16 +36,16 @@ public abstract class Totem extends Entity {
     }
 
     private GraphicsComponent getGraphicsComponent() {
-        Shader shader = Shader.SIMPLE;
+        Shader shader = Shader.TOTEM;
         if (isEnd()) {
-            return new GraphicsComponent(shader, Texture.TOTEM_END, dimension, RenderLayer.BACKGROUND, false);
+            return new GraphicsComponent(shader, Texture.TOTEM, dimension, RenderLayer.TOTEM, false);
         } else {
-            return new GraphicsComponent(shader, Texture.TOTEM_START, dimension, RenderLayer.BACKGROUND, false);
+            return new GraphicsComponent(shader, Texture.TOTEM, dimension, RenderLayer.TOTEM, false);
         }
     }
     // unique identification of the totem
     public int getID() {
-        return Integer.parseInt(this.name.substring(1));
+        return Character.getNumericValue(this.name.charAt(1));
     }
 
     public abstract boolean isEnd();
@@ -60,13 +60,13 @@ public abstract class Totem extends Entity {
         // use the ID to create a unique colour mask
         switch (getID()) {
             case 0:
-                rgbMask = new Vector3f(0.5f, 0f, 0f);
+                rgbMask = new Vector3f(0.1f, 0f, 0f);
                 break;
             case 1:
-                rgbMask = new Vector3f(0f, 0.5f, 0f);
+                rgbMask = new Vector3f(0f, 0.25f, 0f);
                 break;
             case 2:
-                rgbMask = new Vector3f(0f, 0f, 0.5f);
+                rgbMask = new Vector3f(0f, 0f, 0.25f);
                 break;
             case 3:
                 rgbMask = new Vector3f(0.25f, 0.25f, 0f);

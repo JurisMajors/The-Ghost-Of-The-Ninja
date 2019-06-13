@@ -36,7 +36,7 @@ public class AStarPathSystem extends AbstractMovementHandler {
         DimensionComponent mobDim = Mappers.dimensionMapper.get(entity);
         MobComponent mobC = Mappers.mobMapper.get(entity);
 
-        if(pathc.vertex == null) initialVertex(entity);
+        if (pathc.vertex == null) initialVertex(entity);
 
         if (pathc.vertex != -1) {
             setVisionRange(entity);
@@ -103,8 +103,9 @@ public class AStarPathSystem extends AbstractMovementHandler {
         for (int i = 0; i < hValue.length; i++) {
             int value = (int) (Math.abs(gc.vertexCoords.get(i).x - gc.vertexCoords.get(dest).x) / mc.velocityRange.x);
             if (gc.vertexCoords.get(i).y <= gc.vertexCoords.get(dest).y) {
-                value += gc.yHValue.ceilingKey(gc.vertexCoords.get(dest).y - gc.vertexCoords.get(i).y);
-            } else value += gc.yHValue.floorKey(gc.vertexCoords.get(i).y - gc.vertexCoords.get(dest).y);
+                value = (int) Math.max(gc.yHValue.ceilingKey(gc.vertexCoords.get(dest).y - gc.vertexCoords.get(i).y), value);
+            } else
+                value = (int) Math.max(gc.yHValue.floorKey(gc.vertexCoords.get(i).y - gc.vertexCoords.get(dest).y), value);
             hValue[i] = value;
         }
 
