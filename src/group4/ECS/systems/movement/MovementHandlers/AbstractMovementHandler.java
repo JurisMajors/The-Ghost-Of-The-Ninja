@@ -15,6 +15,7 @@ import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
+import group4.ECS.entities.items.weapons.MobRangedAttack;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.etc.EntityConst;
 import group4.ECS.etc.Families;
@@ -99,12 +100,26 @@ public abstract class AbstractMovementHandler<T extends Mob> extends IteratingSy
             }
         }
 
-        if (needsToMove) {
+        if (needsToMove && mobComponent.state.equals(EntityConst.MobState.DEFAULT)) {
             // get velocity for mob
             move(entity, targetPosition, deltaTime);
-        } else {
+        } else if (!Mappers.healthMapper.get(entity).state.contains(EntityConst.EntityState.KNOCKED)){
             becomeIdle(mc);
         }
+
+        MobComponent mobC = Mappers.mobMapper.get(entity);
+        boolean shouldAttack = canSeePlayer && pc.position.euclidDist(getPlayerPosition()) <= mobC.attackRange;
+        // process combat state
+        if (shouldAttack) {
+            if (mobC.weapon instanceof MobRangedAttack) {
+                mobC.state = EntityConst.MobState.RANGED;
+            } else {
+                mobC.state = EntityConst.MobState.MELEE;
+            }
+        } else {
+            mobC.state = EntityConst.MobState.DEFAULT;
+        }
+
         // apply gravity
         doGravity(mc, gc);
 

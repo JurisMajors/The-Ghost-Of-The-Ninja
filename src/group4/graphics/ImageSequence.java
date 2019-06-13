@@ -2,6 +2,7 @@ package group4.graphics;
 
 import group4.utils.FileUtils;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ public class ImageSequence {
     public static ImageSequence TORCH_LIGHT;
     public static ImageSequence BAT;
     public static ImageSequence BAT2;
+    public static ImageSequence PROJECTILE;
     public static ImageSequence SLASH;
 
     public List<Texture> frames;
@@ -41,6 +43,8 @@ public class ImageSequence {
         TORCH_LIGHT = new ImageSequence("src/group4/res/textures/animated/torchlight/");
         BAT = new ImageSequence("src/group4/res/textures/animated/bat/");
         BAT2 = new ImageSequence("src/group4/res/textures/animated/bat2/");
+        PROJECTILE = new ImageSequence("src/group4/res/textures/animated/projectile/");
         SLASH = new ImageSequence("src/group4/res/textures/animated/slash/");
     }
+
 }
