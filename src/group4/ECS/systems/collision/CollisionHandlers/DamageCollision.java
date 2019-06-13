@@ -135,10 +135,8 @@ public class DamageCollision extends AbstractCollisionHandler<Entity> {
             DamageComponent wc = Mappers.damageMapper.get(entity);
 
             if (wc.origin instanceof Player) {
-                MeleeWeaponComponent mwc = Mappers.meleeWeaponMapper.get(other);
                 MovementComponent mc_player = Mappers.movementMapper.get(wc.origin);
 
-                // TODO: meleeweapon should define how much kickback
                 Vector3f knockback_vec = new Vector3f(0.2f, 0.1f, 0.0f);
                 if (mc_player.orientation == LEFT) {
                     knockback_vec.x *= -1;
@@ -155,6 +153,7 @@ public class DamageCollision extends AbstractCollisionHandler<Entity> {
 
                 // trigger event
                 knockback.invoke();
+
             }
         }
     }

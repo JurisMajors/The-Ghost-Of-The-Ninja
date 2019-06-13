@@ -15,6 +15,7 @@ public class Texture {
     public static Texture BRICK;
     public static Texture AK47;
     public static Texture PROJECTILE;
+    public static Texture SPLASH;
     public static Texture EXIT;  // TODO: More to be added.
     public static Texture BLACK;
     public static Texture WHITE;
@@ -97,6 +98,7 @@ public class Texture {
         BRICK = new Texture("src/group4/res/textures/brick.png");
         AK47 = new Texture("src/group4/res/textures/weapons/AK47.png");
         PROJECTILE = new Texture("src/group4/res/textures/weapons/Projectile.png");
+        SPLASH = new Texture("src/group4/res/textures/splash.png");
         EXIT = new Texture("src/group4/res/textures/exit.jpg");
         MAIN_TILES = new Texture("src/group4/res/textures/tilemap-main.png");
         BACKGROUND = new Texture("src/group4/res/textures/cave.jpg");

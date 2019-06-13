@@ -101,7 +101,7 @@ public abstract class AbstractMovementHandler<T extends Mob> extends IteratingSy
         if (needsToMove && mobComponent.state.equals(EntityConst.MobState.DEFAULT)) {
             // get velocity for mob
             move(entity, targetPosition, deltaTime);
-        } else {
+        } else if (!Mappers.healthMapper.get(entity).state.contains(EntityConst.EntityState.KNOCKED)){
             becomeIdle(mc);
         }
 
