@@ -5,19 +5,19 @@ import group4.maths.Vector3f;
 
 public class RangeWeaponComponent extends WeaponComponent {
 
-    public Vector3f bulletPos; //position where the bullets appear with respect to the entity position
+    public Vector3f bulletOffset; //position where the bullets appear with respect to the entity position
     public EntityConst.BulletType type;
 
     /**
      * @param damage
      * @param cooldown
-     * @param bulletPos
+     * @param bulletOffset
      * @param type
      */
-    public RangeWeaponComponent(int damage, int cooldown,
-                                Vector3f bulletPos, EntityConst.BulletType type) {
+    public RangeWeaponComponent(int damage, float cooldown,
+                                Vector3f bulletOffset, EntityConst.BulletType type) {
         super(damage, cooldown);
-        this.bulletPos = bulletPos;
+        this.bulletOffset = bulletOffset;
         this.type = type;
     }
 
