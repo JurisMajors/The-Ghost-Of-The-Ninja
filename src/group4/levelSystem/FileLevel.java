@@ -26,7 +26,6 @@ public class FileLevel extends Level {
      */
     private void configurePaths() {
         this.modulePaths = FileUtils.getFilePaths(this.levelRoot + "/modules");
-        System.out.println(this.modulePaths);
         this.ghostDir = this.levelRoot + "/ghosts/";
     }
 
