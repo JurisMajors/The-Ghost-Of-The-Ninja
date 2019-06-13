@@ -7,6 +7,8 @@ import group4.ECS.components.identities.MobComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.entities.items.weapons.MobMeleeAttack;
+import group4.ECS.entities.items.weapons.MobRangedAttack;
 import group4.ECS.etc.EntityConst;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
@@ -32,7 +34,7 @@ public class AStarPathSystem extends AbstractMovementHandler {
         DimensionComponent mobDim = Mappers.dimensionMapper.get(entity);
         MobComponent mobC = Mappers.mobMapper.get(entity);
 
-        if(pathc.vertex == null)initialVertex(entity);
+        if(pathc.vertex == null) initialVertex(entity);
 
         if (pathc.vertex != -1) {
             setVisionRange(entity);
@@ -63,8 +65,10 @@ public class AStarPathSystem extends AbstractMovementHandler {
                     computePath(entity, pathc.vertex, playerVertexID);
                 }
             } else {
-                if (shouldAttack) {
+                if (shouldAttack && mobC.weapon instanceof MobMeleeAttack) {
                     mobC.state = EntityConst.MobState.MELEE;
+                } else if (shouldAttack && mobC.weapon instanceof MobRangedAttack) {
+                    mobC.state = EntityConst.MobState.RANGED;
                 }
                 pathc.vertexID.clear();
                 pathc.coordinates.clear();
