@@ -9,6 +9,8 @@ import group4.graphics.VertexArray;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
 
+import java.util.Arrays;
+
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 public class GraphicsComponent implements Component {
@@ -298,10 +300,6 @@ public class GraphicsComponent implements Component {
     public void handleColorMask() {
         if (this.hasMask) { // per texture mask has priority
             this.shader.setUniform3f("color_mask", this.colorMask);
-        } else if (GraphicsComponent.HAS_MASK) { // global mask comes next
-            this.shader.setUniform3f("color_mask", GraphicsComponent.GLOBAL_COLOR_MASK);
-        } else { // no mask
-            this.shader.setUniform3f("color_mask", new Vector3f());
         }
     }
 
@@ -323,5 +321,10 @@ public class GraphicsComponent implements Component {
         glActiveTexture(this.texture.getTextureID());
 
         this.geometry.render();
+    }
+
+    public void flush(Vector3f position) {
+        this.render(position);
+        this.geometry.deleteBuffers();
     }
 }

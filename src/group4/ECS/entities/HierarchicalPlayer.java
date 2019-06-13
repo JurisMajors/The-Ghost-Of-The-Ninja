@@ -11,12 +11,10 @@ import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.maths.Matrix4f;
 import group4.maths.Vector3f;
-import org.apache.commons.math3.stat.descriptive.moment.VectorialCovariance;
-import org.bytedeco.javacv.ProjectiveColorTransformer;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -350,7 +348,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         ac.addAnimation(EntityState.PLAYER_POSTFALL, postFallAS);
     }
 
-    private DelayedAnimationSet generatePreJumpAnim() {
+    protected DelayedAnimationSet generatePreJumpAnim() {
         // Have player crouch a bit
         DelayedSplineAnimation hip = new DelayedSplineAnimation(
                 this.torso, 0.0f,
@@ -407,7 +405,7 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         return preJumpAnimationSet;
     }
 
-    private DelayedAnimationSet generatePostFallAnim() {
+    protected DelayedAnimationSet generatePostFallAnim() {
         // Have player crouch a bit
         DelayedSplineAnimation hip = new DelayedSplineAnimation(
                 this.torso, 0.0f,
@@ -610,10 +608,10 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         float vShift = 0.2f;
         float hShift = -.7f;
         Vector3f[] handPath = new Vector3f[]{
-                new Vector3f(0.0f + hShift,	0.0f + vShift,	0.0f),
-                new Vector3f(0.0f + hShift,	0.0f + vShift,	0.0f),
-                new Vector3f(0.0f + hShift,	0.0f + vShift,	0.0f),
-                new Vector3f(0.0f + hShift,	0.0f + vShift,	0.0f),
+                new Vector3f(0.0f + hShift, 0.0f + vShift, 0.0f),
+                new Vector3f(0.0f + hShift, 0.0f + vShift, 0.0f),
+                new Vector3f(0.0f + hShift, 0.0f + vShift, 0.0f),
+                new Vector3f(0.0f + hShift, 0.0f + vShift, 0.0f),
         };
 
         SplineAnimation hand_L = new SplineAnimation(this.IKHandles.get("hand_L"), 0.0f, handPath);
@@ -662,19 +660,19 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         float vShift = 0.3f;
         float hShift = -.3f;
         Vector3f[] leftHandPath = new Vector3f[]{
-                new Vector3f(hShift + 0.00f,	vShift + 0.00f,	0.0f),
-                new Vector3f(hShift + 0.05f,	vShift + 0.05f,	0.0f),
-                new Vector3f(hShift + 0.075f,	vShift + 0.10f,	0.0f),
-                new Vector3f(hShift + 0.1f,	vShift + 0.15f,	0.0f),
+                new Vector3f(hShift + 0.00f, vShift + 0.00f, 0.0f),
+                new Vector3f(hShift + 0.05f, vShift + 0.05f, 0.0f),
+                new Vector3f(hShift + 0.075f, vShift + 0.10f, 0.0f),
+                new Vector3f(hShift + 0.1f, vShift + 0.15f, 0.0f),
         };
 
         vShift = 0.3f;
         hShift = 0.3f;
         Vector3f[] rightHandPath = new Vector3f[]{
-                new Vector3f(hShift + 0.00f,	vShift + 0.00f,	0.0f),
-                new Vector3f(hShift + 0.05f,	vShift + 0.05f,	0.0f),
-                new Vector3f(hShift + 0.075f,	vShift + 0.10f,	0.0f),
-                new Vector3f(hShift + 0.1f,	vShift + 0.15f,	0.0f),
+                new Vector3f(hShift + 0.00f, vShift + 0.00f, 0.0f),
+                new Vector3f(hShift + 0.05f, vShift + 0.05f, 0.0f),
+                new Vector3f(hShift + 0.075f, vShift + 0.10f, 0.0f),
+                new Vector3f(hShift + 0.1f, vShift + 0.15f, 0.0f),
         };
 
         SplineAnimation hand_L = new SplineAnimation(this.IKHandles.get("hand_L"), 0.0f, leftHandPath);
@@ -724,14 +722,14 @@ public class HierarchicalPlayer extends Player implements GraphicsHierarchy {
         // Add hand animations
         float vShift = 1.1f;
         Vector3f[] handPath = new Vector3f[]{
-                new Vector3f(0.01f,	0.0f + vShift,	0.0f),
-                new Vector3f(-0.3f,	0.0f + vShift,	0.0f),
-                new Vector3f(0.075f,	0.0f + vShift,	0.0f),
-                new Vector3f(0.0f,	0.0f + vShift,	0.0f),
-                new Vector3f(-.06f,	0.0f + vShift,	0.0f),
-                new Vector3f(0.0f,	0.0f + vShift,	0.0f),
-                new Vector3f(0.2f,	0.0f + vShift,	0.0f),
-                new Vector3f(0.0f,	0.0f + vShift,	0.0f),
+                new Vector3f(0.01f, 0.0f + vShift, 0.0f),
+                new Vector3f(-0.3f, 0.0f + vShift, 0.0f),
+                new Vector3f(0.075f, 0.0f + vShift, 0.0f),
+                new Vector3f(0.0f, 0.0f + vShift, 0.0f),
+                new Vector3f(-.06f, 0.0f + vShift, 0.0f),
+                new Vector3f(0.0f, 0.0f + vShift, 0.0f),
+                new Vector3f(0.2f, 0.0f + vShift, 0.0f),
+                new Vector3f(0.0f, 0.0f + vShift, 0.0f),
         };
 
         SplineAnimation hand_L = new SplineAnimation(this.IKHandles.get("hand_L"), 0.0f, handPath);
