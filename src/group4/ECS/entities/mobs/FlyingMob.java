@@ -1,5 +1,6 @@
 package group4.ECS.entities.mobs;
 
+import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.identities.AnimationComponent;
 import group4.ECS.components.identities.FlyingMobComponent;
@@ -10,6 +11,8 @@ import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.entities.items.weapons.MobRangedAttack;
+import group4.ECS.etc.EntityConst;
 import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Mappers;
 import group4.ECS.systems.animation.FrameAnimation;
@@ -25,6 +28,7 @@ import group4.maths.spline.MultiSpline;
 
 public class FlyingMob extends Mob {
     protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f); //dimension of the mob, aka bounding box
+
 
     /**
      * Creates a mob
@@ -43,7 +47,11 @@ public class FlyingMob extends Mob {
         // limit the velocity of the flying mob to prevent shaking of the texture
         MovementComponent mc = Mappers.movementMapper.get(this);
         mc.velocityRange = new Vector3f(0.03f, 0.03f, 0);
-        this.add(new MobComponent(handler));
+        float attackRange = 5.0f;
+        // TODO; more sensible wpn for a bat plz
+        Entity wpn = new MobRangedAttack(5, 0,
+                new Vector3f(1, 1, 0), EntityConst.BulletType.PISTOL);
+        this.add(new MobComponent(handler, attackRange, wpn));
     }
 
     public FlyingMob(Vector3f position, Level l) {
