@@ -15,6 +15,7 @@ import group4.ECS.entities.BodyPart;
 import group4.ECS.entities.Camera;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.HierarchicalPlayer;
+import group4.ECS.entities.damage.DamageArea;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.world.ArtTile;
@@ -107,12 +108,44 @@ public class RenderSystem extends EntitySystem {
 
         PositionComponent pc;
         GraphicsComponent gc;
-        MovementComponent mc;
+        MovementComponent mc = null;
         ScoreComponent sc = null; // Must be initialized to at least null
         for (RenderLayer layer : RenderLayer.values()) {
             glClear(GL_DEPTH_BUFFER_BIT); // Allows drawing on top of all the other stuff
             for (Entity entity : entityLayers.get(layer)) {
-                if (entity instanceof HierarchicalPlayer) {
+                if (entity instanceof DamageArea) {
+                    gc = Mappers.graphicsMapper.get(entity);
+                    pc = Mappers.positionMapper.get(entity);
+
+                    gc.shader.bind();
+                    if (mc != null && mc.orientation == MovementComponent.LEFT) {
+                        // Set the mirrored projection matrix
+                        gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrixHorizontalFlip);
+                        // Since player aligns with center screen with its bottom left corner, we need to temporarily
+                        // also offset the view matrix.
+                        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
+                        Vector3f currentTranslation = cc.viewMatrix.getTranslation();
+                        gc.shader.setUniformMat4f("vw_matrix",
+                                Matrix4f.translate(
+                                        currentTranslation.add(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
+                        );
+                    }
+
+                    // Set uniforms
+                    gc.shader.setUniformMat4f("md_matrix", Matrix4f.translate(pc.position)); // Tmp fix for giving correct positions to vertices in the vertexbuffers
+                    gc.shader.setUniform1f("tex", gc.texture.getTextureID()); // Specify which texture slot to use
+
+                    // Bind texture and specify texture slot
+                    gc.texture.bind();
+                    glActiveTexture(gc.texture.getTextureID());
+
+                    // Render!
+                    gc.geometry.render();
+
+                    // Restore the default projection and view matrices
+                    gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrix);
+                    gc.shader.setUniformMat4f("vw_matrix", cc.viewMatrix);
+                } else if (entity instanceof HierarchicalPlayer) {
                     // Get components via mapper for O(1) component retrieval
                     pc = Mappers.positionMapper.get(entity);
                     mc = Mappers.movementMapper.get(entity);
@@ -120,6 +153,7 @@ public class RenderSystem extends EntitySystem {
                     if (entity instanceof Ghost) {
                         // do nothing
                     } else {
+                        // Extract the score component, we've encountered the player! For later use...
                         sc = Mappers.scoreMapper.get(entity);
                     }
 
