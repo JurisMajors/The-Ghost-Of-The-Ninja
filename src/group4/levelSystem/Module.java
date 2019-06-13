@@ -21,6 +21,7 @@ import group4.ECS.systems.GraphHandlers.JumpingAStarMobGraphHandler;
 import group4.ECS.systems.GraphHandlers.JumpingWalkingAStarMobGraphHandler;
 import group4.ECS.systems.GraphHandlers.WalkingAStarMobGraphHandler;
 import group4.game.Main;
+import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.graphics.TileMapping;
@@ -64,6 +65,9 @@ public class Module {
 
     // JSON Object containing the tiled data
     JSONObject tiledData;
+
+    // module file
+    private File modulePath;
 
     // Storing the mapping from the tilemap indices to the engine Entities
     private Map<Integer, String> moduleTileMap;
@@ -111,7 +115,6 @@ public class Module {
     }
 
 
-
     private void loadGhost(String loc) {
         this.ghostModelDir = loc;
     }
@@ -123,6 +126,7 @@ public class Module {
         // Try to read the tiled json file
         try {
             FileReader fileReader = new FileReader(fileLocation);
+            this.modulePath = new File(fileLocation);
 
             // Construct the JSON object containing the tiled module information
             this.tiledData = new JSONObject(new JSONTokener(fileReader));
@@ -180,6 +184,8 @@ public class Module {
                 parseTotemLayer(layer);
             } else if (layerName.equals("EXITS")) {
                 setupExits(layer);
+            } else if (layerName.equals("BG")) {
+                parseBackgroundLayer(layer);
             } else if (layerName.equals("LIGHTS")) {
                 parseLightLayer(layer);
             } else {
@@ -217,6 +223,35 @@ public class Module {
             }
         }
 
+    }
+
+    private void parseBackgroundLayer(JSONObject layer) {
+        // Get height and width of layer
+        int layerHeight = layer.getInt("height");
+        int layerWidth = layer.getInt("width");
+
+        // Loop over the data grid
+        JSONArray data = layer.getJSONArray("data");
+        for (int tile = 0; tile < data.length(); tile++) {
+            // Get the grid position of the tile
+            int tileGridX = tile % layerWidth;
+            int tileGridY = layerHeight - tile / layerWidth;
+
+            // Get the type of the tile
+            int tileId = data.getInt(tile) - 1;
+
+            String entityId = moduleTileMap.get(tileId);
+
+            if (entityId == null) {
+                continue;
+            } else if (entityId.equals(ArtTile.getName())) {
+                this.addBackgroundElement(tileGridX, tileGridY, tileId);
+            } else {
+                System.out.println(entityId);
+                System.err.println("Some background tiles not drawing!");
+                continue;
+            }
+        }
     }
 
     private void parseLightLayer(JSONObject layer) {
@@ -303,6 +338,7 @@ public class Module {
             float pointX = pointInfo.getFloat("x") / 32f;
             float pointY = this.height - pointInfo.getFloat("y") / 32f + 1;
             String tileName = pointInfo.getString("name");
+            tileName += this.modulePath.getName().split("\\.")[0];
             Vector3f position = new Vector3f(pointX, pointY, 0);
             Totem totem;
             if (Totem.isEnd(tileName)) {
@@ -455,6 +491,13 @@ public class Module {
         this.addEntity(p);
     }
 
+    private void addBackgroundElement(int x, int y, int i) {
+        Vector3f tempPosition = new Vector3f(x, y, 0.0f);
+        Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
+        ArtTile p = new ArtTile(tempPosition, tempDimension, Shader.SIMPLE, Texture.MAIN_TILES, TileMapping.MAIN.get(i), RenderLayer.BACKGROUND);
+        this.addEntity(p);
+    }
+
     private void addMob(int x, int y, int i, String mobName) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
         Mob m = null;
@@ -575,7 +618,9 @@ public class Module {
 
                     The following line below this comment works however as expected...
                  */
-                addExit(tileGridX, tileGridY, targetModule - TileMapping.MAIN_SIZE);
+                int exitNumber = targetModule - TileMapping.MAIN_SIZE - 16;
+
+                addExit(tileGridX, tileGridY, exitNumber < 0 ? exitNumber + 16 : exitNumber);
             }
         }
     }
@@ -622,21 +667,32 @@ public class Module {
      * Function which contains the mapping from the tileMap index as on the texture, to the appropriate Entity class.
      */
     private void configureMap() {
-        int[] platforms = new int[]{0, 1, 2, 5, 6, 8, 9, 10, 16, 17, 18, 19, 20, 24, 25, 26, 27, 28, 32, 33, 34, 35};
-        int[] artTiles = new int[]{3, 4, 11, 12};
-        int[] players = new int[]{7};
-        int spike_up = 48;
-        int spike_right = 49;
-        int spike_down = 50;
-        int spike_left = 51;
-        int jumpingwalkingmob = 36;
-        int jumpingmob = 42;
-        int walkingmob = 40;
-        int flyingmob = 41;
-        int coin = 13;
-        int torch = 15;
+        int spike_up = 118;
+        int spike_right = 119;
+        int spike_down = 120;
+        int spike_left = 121;
+        int torch = 127;
         int totemStart = 21;
         int totemEnd = 29;
+        int[] platforms = new int[]{0, 1, 2, 3, 4, 6, 7, 8, 9,
+                                    16, 17, 18, 19, 22, 25,
+                                    32, 33, 34, 35, 38, 41,
+                                    48, 49, 50, 51, 54, 55, 56, 57,
+                                    70, 71, 72, 73, 87, 88};
+        int[] artTiles = new int[]{ 23, 24, 39, 40,
+                                    64, 65, 66, 67,
+                                    80, 81, 82, 83,
+                                    96, 97, 98, 99,
+                                    112, 113, 114, 115,
+                                    128, 129, 130, 131, 132,
+                                    144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156,
+                                    162, 163,      165, 166, 167, 168, 169, 170, 171, 172, 173, 174};
+        int[] players = new int[]{15};
+        int jumpingwalkingmob = 31;
+        int flappingmob = 47;
+        int walkingmob = 79;
+        int flyingmob = 63;
+        int coin = 95;
 
         moduleTileMap = new HashMap<Integer, String>();
         for (int i : platforms) {

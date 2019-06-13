@@ -198,14 +198,9 @@ public class Text {
                     this.texture,
                     new Vector3f((float) g.width / 100, (float)g.height / 100, 0.0f),
                     glyphTexCoords,
-//                    new float[] {
-//                            g.x, g.y + g.height,
-//                            g.x, g.y,
-//                            g.x + g.width, g.y,
-//                            g.x + g.width, g.y + g.height},
                     false
                 );
-            tile.render(new Vector3f(drawX, drawY, 0.0f));
+            tile.flush(new Vector3f(drawX, drawY, 0.0f));
             drawX += g.width / 100.0f;
         }
     }

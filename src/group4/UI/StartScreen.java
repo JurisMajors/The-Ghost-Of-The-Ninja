@@ -9,7 +9,6 @@ import group4.game.Main;
 import group4.graphics.RenderLayer;
 import group4.graphics.Texture;
 import group4.input.KeyBoard;
-import group4.levelSystem.AStarLevel;
 import group4.levelSystem.FileLevel;
 import group4.levelSystem.Level;
 
@@ -48,27 +47,6 @@ public class StartScreen {
                 )
         );
 
-        this.entities.add(
-                new ArtTile(
-                        Texture.VIGNETTE_OVERLAY,
-                        RenderLayer.VIGNETTE
-                )
-        );
-
-        this.entities.add(
-                new ArtTile(
-                        Texture.NOISE_OVERLAY,
-                        RenderLayer.NOISE
-                )
-        );
-
-        this.entities.add(
-                new ArtTile(
-                        Texture.LOGO_FULLSCREEN,
-                        RenderLayer.MAIN
-                )
-        );
-
         this.load();
 
         // PRESS_ENTER should initially be hidden, but the default load() behaviour adds ALL entities in this class.
@@ -85,8 +63,7 @@ public class StartScreen {
         Sound.MENU.play();
         // Immediately unload this Startscreen and initialize the level
         this.unload();
-        new FileLevel("./src/group4/res/maps/level_02");
-//        new AStarLevel();
+        new FileLevel("./src/group4/res/maps/level_01");
     }
 
     public void update() {

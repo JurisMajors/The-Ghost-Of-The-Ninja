@@ -8,6 +8,7 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.etc.EntityState;
 import group4.ECS.systems.animation.FrameAnimation;
 import group4.graphics.ImageSequence;
+import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
@@ -23,7 +24,7 @@ public class TorchLight extends Entity {
         this.add(new PositionComponent(position));//.add(new Vector3f(0.0f, 0.4f, 0.0f))));
 
         // This is a temp new one to illustrate the animation
-        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.DEBUG, defaultDimension, true));
+        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.DEBUG, defaultDimension, RenderLayer.LIGHTS, true));
         this.add(new AnimationComponent());
         this.setupAnimation();
     }
