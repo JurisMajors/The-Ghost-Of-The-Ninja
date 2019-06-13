@@ -1,7 +1,6 @@
 package group4.ECS.systems;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.systems.IteratingSystem;
 import group4.ECS.components.GraphComponent;
 import group4.ECS.components.PathComponent;
 import group4.ECS.components.identities.MobComponent;
@@ -12,7 +11,6 @@ import group4.ECS.etc.EntityConst;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.collision.CollisionHandlers.MobCollision;
 import group4.ECS.systems.movement.MovementHandlers.AbstractMovementHandler;
 import group4.maths.Vector3f;
 
@@ -66,7 +64,7 @@ public class AStarPathSystem extends AbstractMovementHandler {
                 }
             } else {
                 if (shouldAttack) {
-                    mobC.state = EntityConst.MobState.ATTACKING;
+                    mobC.state = EntityConst.MobState.MELEE;
                 }
                 pathc.vertexID.clear();
                 pathc.coordinates.clear();

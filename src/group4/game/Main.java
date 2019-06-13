@@ -14,6 +14,7 @@ import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
 import group4.ECS.systems.collision.LastSystem;
 import group4.ECS.systems.collision.UncollidingSystem;
+import group4.ECS.systems.combat.MobCombatSystem;
 import group4.ECS.systems.combat.PlayerCombatSystem;
 import group4.ECS.systems.death.GhostDyingSystem;
 import group4.ECS.systems.death.MobDyingSystem;
@@ -158,18 +159,18 @@ public class Main implements Runnable {
             // Set up all engine systems
             // Systems which change the gamestate
             this.engine.addSystem(new EventSystem(0));
-            this.engine.addSystem(new AStarPathSystem(2));
-            this.engine.addSystem(new PathMovementSystem(3));
+            this.engine.addSystem(new AStarPathSystem(1));
+            this.engine.addSystem(new PathMovementSystem(2));
 
-            this.engine.addSystem(new PlayerMovementSystem(4));
-            this.engine.addSystem(new GhostMovementSystem(5));
-            this.engine.addSystem(new MobMovementSystem(6));
-            this.engine.addSystem(new BulletMovementSystem(7));
-            this.engine.addSystem(new CollisionSystem(8));
-            this.engine.addSystem(new PlayerCombatSystem(9));
-            this.engine.addSystem(new CollisionSystem(10));
-            this.engine.addSystem(new CollisionEventSystem(11));
-            this.engine.addSystem(new UncollidingSystem(12));
+            this.engine.addSystem(new PlayerMovementSystem(3));
+            this.engine.addSystem(new GhostMovementSystem(4));
+            this.engine.addSystem(new MobMovementSystem(5));
+            this.engine.addSystem(new BulletMovementSystem(6));
+            this.engine.addSystem(new PlayerCombatSystem(7));
+            this.engine.addSystem(new MobCombatSystem(8));
+            this.engine.addSystem(new CollisionSystem(9));
+            this.engine.addSystem(new CollisionEventSystem(10));
+            this.engine.addSystem(new UncollidingSystem(11));
             this.engine.addSystem(new PlayerDyingSystem(true, 13));
             this.engine.addSystem(new GhostDyingSystem(false, 14));
             this.engine.addSystem(new MobDyingSystem(15));

@@ -37,7 +37,8 @@ public class EntityConst {
     }
 
     public enum MobState {
-        ATTACKING,
+        MELEE,
+        RANGED,
         DEFAULT
     }
 

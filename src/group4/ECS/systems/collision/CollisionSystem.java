@@ -8,9 +8,11 @@ import group4.ECS.components.SplineComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.bullets.Bullet;
+import group4.ECS.entities.damage.DamageArea;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.world.Block;
@@ -66,6 +68,8 @@ public class CollisionSystem extends IteratingSystem {
         for (Entity other : entities) {
             // dont process collision with itself
             if (e.equals(other)) continue;
+            
+            if (other instanceof DamageArea) System.out.println(e);
 
             // dont register collisions bullets of bullets
             if (other instanceof Bullet && e instanceof Bullet) continue;
