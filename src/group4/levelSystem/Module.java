@@ -459,11 +459,11 @@ public class Module {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
         Mob m = null;
         if (mobName.equals(JumpingWalkingAStarMob.getName())) {
-            m = new JumpingWalkingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i), jwGraph);
+            m = new JumpingWalkingAStarMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i), jwGraph);
         } else if (mobName.equals(WalkingAStarMob.getName())) {
-            m = new WalkingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i), wGraph);
+            m = new WalkingAStarMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i), wGraph);
         } else if (mobName.equals(JumpingAStarMob.getName())) {
-            m = new JumpingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i), jGraph);
+            m = new JumpingAStarMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i), jGraph);
         } else if (mobName.equals(FlyingMob.getName())) {
             m = new FlyingMob(tempPosition, this.level);
         }

@@ -18,14 +18,12 @@ import group4.ECS.systems.collision.CollisionHandlers.MobCollision;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
-import group4.levelSystem.Module;
 import group4.maths.Vector3f;
 
 public class AStarMob extends Mob {
     protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f);
 
-    public AStarMob(Vector3f position, Level l, Module module, String inFile, String outFile,
-                    AbstractGraphHandler handler, GraphComponent graphComponent,
+    public AStarMob(Vector3f position, Level l, AbstractGraphHandler handler, GraphComponent graphComponent,
                     float attackRange, Entity weapon) {
         Vector3f velocityRange = new Vector3f(0.05f, 0.25f, 0.0f);
         Shader shader = Shader.SIMPLE;
@@ -46,10 +44,9 @@ public class AStarMob extends Mob {
         this.add(new MobComponent(null, attackRange, weapon));
     }
 
-    public AStarMob(Vector3f position, Level l, Module module, String inFile,
-                    String outFile, Texture tex, float[] texCoord, AbstractGraphHandler handler,
+    public AStarMob(Vector3f position, Level l, Texture tex, float[] texCoord, AbstractGraphHandler handler,
                     GraphComponent graphComponent, float attackRange, Entity weapon) {
-        this(position, l, module, inFile, outFile, handler, graphComponent, attackRange, weapon);
+        this(position, l, handler, graphComponent, attackRange, weapon);
         this.remove(GraphicsComponent.class);
         this.add(new GraphicsComponent(Shader.SIMPLE, tex, dimension, texCoord, false));
 
