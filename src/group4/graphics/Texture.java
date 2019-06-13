@@ -107,7 +107,7 @@ public class Texture {
         RED = new Texture("src/group4/res/textures/red.png");
         HITBOX = new Texture("src/group4/res/textures/hitbox.png");
         NOTHINGNESS = new Texture("src/group4/res/textures/FF4D00-0.png");
-        SPLINE = new Texture("src/group4/res/textures/spline.png");
+        SPLINE = new Texture("src/group4/res/textures/spline1.png");
         TOTEM = new Texture("src/group4/res/textures/totem.png");
 
         PLAYER_TORSO = new Texture("src/group4/res/textures/player/ninja3withlayers_0008_body.png");
