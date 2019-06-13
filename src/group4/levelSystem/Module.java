@@ -2,7 +2,6 @@ package group4.levelSystem;
 
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphComponent;
-import group4.ECS.entities.AStarMobs.AStarMob;
 import group4.ECS.entities.AStarMobs.JumpingAStarMob;
 import group4.ECS.entities.AStarMobs.JumpingWalkingAStarMob;
 import group4.ECS.entities.AStarMobs.WalkingAStarMob;
@@ -31,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -689,7 +689,7 @@ public class Module {
                                     162, 163,      165, 166, 167, 168, 169, 170, 171, 172, 173, 174};
         int[] players = new int[]{15};
         int jumpingwalkingmob = 31;
-        int flappingmob = 47;
+        int jumpingmob = 47;
         int walkingmob = 79;
         int flyingmob = 63;
         int coin = 95;
