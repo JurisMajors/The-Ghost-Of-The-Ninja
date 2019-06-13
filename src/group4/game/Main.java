@@ -21,6 +21,7 @@ import group4.ECS.systems.death.PlayerDyingSystem;
 import group4.ECS.systems.event.EventSystem;
 import group4.ECS.systems.movement.BulletMovementSystem;
 import group4.ECS.systems.movement.GhostMovementSystem;
+import group4.ECS.systems.movement.MobMovementSystem;
 import group4.ECS.systems.movement.PlayerMovementSystem;
 import group4.UI.StartScreen;
 import group4.UI.Window;
@@ -157,28 +158,27 @@ public class Main implements Runnable {
             // Set up all engine systems
             // Systems which change the gamestate
             this.engine.addSystem(new EventSystem(0));
-//            this.engine.addSystem(new AStarMobGraphSystem(1));
             this.engine.addSystem(new AStarPathSystem(2));
             this.engine.addSystem(new PathMovementSystem(3));
 
             this.engine.addSystem(new PlayerMovementSystem(4));
             this.engine.addSystem(new GhostMovementSystem(5));
-//            this.engine.addSystem(new MobMovementSystem(2));
-            this.engine.addSystem(new BulletMovementSystem(6));
-            this.engine.addSystem(new CollisionSystem(7));
-            this.engine.addSystem(new PlayerCombatSystem(8));
-            this.engine.addSystem(new CollisionSystem(9));
-            this.engine.addSystem(new CollisionEventSystem(10));
-            this.engine.addSystem(new UncollidingSystem(11));
-            this.engine.addSystem(new PlayerDyingSystem(true, 12));
-            this.engine.addSystem(new GhostDyingSystem(false, 13));
-            this.engine.addSystem(new MobDyingSystem(14));
-            this.engine.addSystem(new AnimationSystem(15));
+            this.engine.addSystem(new MobMovementSystem(6));
+            this.engine.addSystem(new BulletMovementSystem(7));
+            this.engine.addSystem(new CollisionSystem(8));
+            this.engine.addSystem(new PlayerCombatSystem(9));
+            this.engine.addSystem(new CollisionSystem(10));
+            this.engine.addSystem(new CollisionEventSystem(11));
+            this.engine.addSystem(new UncollidingSystem(12));
+            this.engine.addSystem(new PlayerDyingSystem(true, 13));
+            this.engine.addSystem(new GhostDyingSystem(false, 14));
+            this.engine.addSystem(new MobDyingSystem(15));
+            this.engine.addSystem(new AnimationSystem(16));
 
             // Systems which are essentially observers of the changed gamestate
-            this.engine.addSystem(new CameraSystem(Families.playerFamily, 16));
-            this.engine.addSystem(new RenderSystem(17));
-            this.engine.addSystem(new LastSystem(18));
+            this.engine.addSystem(new CameraSystem(Families.playerFamily, 17));
+            this.engine.addSystem(new RenderSystem(18));
+            this.engine.addSystem(new LastSystem(19));
 
             // Initialize the StartScreen, this will load the level
             this.startScreen = new StartScreen();
