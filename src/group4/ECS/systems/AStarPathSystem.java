@@ -8,6 +8,7 @@ import group4.ECS.components.identities.MobComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.etc.EntityConst;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
@@ -33,7 +34,7 @@ public class AStarPathSystem extends AbstractMovementHandler {
         DimensionComponent mobDim = Mappers.dimensionMapper.get(entity);
         MobComponent mobC = Mappers.mobMapper.get(entity);
 
-        if(pathc.vertex==null)initialVertex(entity);
+        if(pathc.vertex == null)initialVertex(entity);
 
         if (pathc.vertex != -1) {
             setVisionRange(entity);
@@ -49,8 +50,11 @@ public class AStarPathSystem extends AbstractMovementHandler {
             } else {
                 canSee = canSeePlayer(mobPos, mobDim, mobC.currentVisionRange);
             }
+            // TODO: change when new attack range thing
+            boolean shouldAttack = canSee && ppc.position.euclidDist(mobPos.position) <= mobC.attackRange; // whether the mob should attack
 
-            if (canSee) {
+            if (canSee && !shouldAttack) {
+                mobC.state = EntityConst.MobState.DEFAULT;
                 int playerVertexID = 0;
                 for (int i = 0; i < gc.vertexCoords.size(); i++) {
                     if (Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(i).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(i).y, 2)) < Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(playerVertexID).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(playerVertexID).y, 2))) {
@@ -61,6 +65,9 @@ public class AStarPathSystem extends AbstractMovementHandler {
                     computePath(entity, pathc.vertex, playerVertexID);
                 }
             } else {
+                if (shouldAttack) {
+                    mobC.state = EntityConst.MobState.ATTACKING;
+                }
                 pathc.vertexID.clear();
                 pathc.coordinates.clear();
             }
