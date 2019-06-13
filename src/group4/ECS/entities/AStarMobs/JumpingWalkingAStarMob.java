@@ -11,7 +11,7 @@ import group4.maths.Vector3f;
 
 public class JumpingWalkingAStarMob extends AStarMob {
     private static float attackRange = 0.7f;
-    private static MobMeleeAttack wpn = new MobMeleeAttack(5, 0.5f,
+    private static MobMeleeAttack wpn = new MobMeleeAttack(5, 3.0f,
             new Vector3f(1,1,0), new Vector3f(0.1f, 0.3f, 0.0f));
 
     public JumpingWalkingAStarMob(Vector3f position, Level l, GraphComponent graphComponent) {

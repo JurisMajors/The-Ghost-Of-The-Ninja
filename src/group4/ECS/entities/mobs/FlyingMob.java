@@ -49,7 +49,7 @@ public class FlyingMob extends Mob {
         mc.velocityRange = new Vector3f(0.03f, 0.03f, 0);
         float attackRange = 5.0f;
         // TODO; more sensible wpn for a bat plz
-        Entity wpn = new MobRangedAttack(5, 0,
+        Entity wpn = new MobRangedAttack(5, 0.1f,
                 new Vector3f(1, 1, 0), EntityConst.BulletType.PISTOL);
         this.add(new MobComponent(handler, attackRange, wpn));
     }
