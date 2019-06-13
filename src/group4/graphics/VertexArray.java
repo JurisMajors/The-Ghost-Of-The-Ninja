@@ -19,8 +19,8 @@ public class VertexArray {
      * positions, and finally texture coordinates for every vertex. Given this the VertexArray
      * will allow the caller to draw the buffers via the draw() method.
      *
-     * @param vertices Float[], all the vertex positions
-     * @param indices Byte[], the order in which vertices should be (re)-used. `indices.length` must be multiple of 3!
+     * @param vertices  Float[], all the vertex positions
+     * @param indices   Byte[], the order in which vertices should be (re)-used. `indices.length` must be multiple of 3!
      * @param texCoords Float[], a uv/st-coordinate for every vertex.
      */
     public VertexArray(float[] vertices, byte[] indices, float[] texCoords) {

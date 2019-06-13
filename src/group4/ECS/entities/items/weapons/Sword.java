@@ -20,7 +20,7 @@ public class Sword extends Entity {
         // graphics stats
 
         // Construct vertex array
-        float[] vertices = new float[] {
+        float[] vertices = new float[]{
                 0, 0, 0,
                 0, 1.0f, 0,
                 0.2f, 1.0f, 0,
@@ -28,13 +28,13 @@ public class Sword extends Entity {
         };
 
         // Construct index array (used for geometry mesh)
-        byte[] indices = new byte[] {
+        byte[] indices = new byte[]{
                 0, 1, 2,
                 2, 3, 0
         };
 
         // Construct texture coords
-        float[] tcs = new float[] {
+        float[] tcs = new float[]{
                 0, 1,
                 0, 0,
                 1, 0,

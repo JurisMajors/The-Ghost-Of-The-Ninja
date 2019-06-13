@@ -8,7 +8,7 @@ import org.json.JSONObject;
 /**
  * Starts the ray casting on an angle, relative to the velocity of the ghost
  */
-public class ConeVisionStateDecoder extends RayStateDecoder{
+public class ConeVisionStateDecoder extends RayStateDecoder {
 
     public ConeVisionStateDecoder(int n, float angleRange, int length) {
         super(n, angleRange, length);
@@ -33,6 +33,7 @@ public class ConeVisionStateDecoder extends RayStateDecoder{
 
     /**
      * Initialize based on given settings
+     *
      * @param settings jsonObject of settings to load in this decoder
      */
     public static ConeVisionStateDecoder loadOnSettings(JSONObject settings) {

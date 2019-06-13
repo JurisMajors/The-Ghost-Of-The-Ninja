@@ -10,10 +10,10 @@ import org.json.JSONObject;
 public class CircleVisionStateDecoder extends RayStateDecoder implements StateDecoderInterface {
 
     private int gap;
+
     /**
-     * @param n number of rays to be casted
+     * @param n        number of rays to be casted
      * @param angleGap the gap in degrees between the first and the last ray
-     *
      */
     public CircleVisionStateDecoder(int n, int angleGap, int length) {
         super(n, 360.0f - angleGap, length);
@@ -42,6 +42,7 @@ public class CircleVisionStateDecoder extends RayStateDecoder implements StateDe
 
     /**
      * Initialize based on given settings
+     *
      * @param settings jsonObject of settings to load in this decoder
      */
     public static CircleVisionStateDecoder loadOnSettings(JSONObject settings) {

@@ -35,10 +35,10 @@ public class Block extends Entity {
     /**
      * Construct a simple block (flexible texture and shader) in a certain position of certain size
      *
-     * @param position The position of the block (lower left corner)
+     * @param position  The position of the block (lower left corner)
      * @param dimension The dimensions of the block
-     * @param shader The shader for rendering the block
-     * @param texture texture to use for the block
+     * @param shader    The shader for rendering the block
+     * @param texture   texture to use for the block
      */
     public Block(Vector3f position, Vector3f dimension, Shader shader, Texture texture) {
         // add needed components

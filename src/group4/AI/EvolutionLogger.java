@@ -13,13 +13,19 @@ import java.util.logging.SimpleFormatter;
  * Logs the evolutionary process.
  */
 public class EvolutionLogger implements EvolutionObserver<Brain> {
-    /** every genToSave best individual is saved **/
+    /**
+     * every genToSave best individual is saved
+     **/
     private int genToSave;
 
-    /** directory where to save the best individuals **/
+    /**
+     * directory where to save the best individuals
+     **/
     String filePath;
 
-    /** best fitness in the whole training process **/
+    /**
+     * best fitness in the whole training process
+     **/
     double bestFitness = Evolver.evaluationStrat.isNatural() ? -1 : 1;
 
     private final static Logger LOGGER = Logger.getLogger("EvolutionLog"); // used for logging to file
@@ -32,7 +38,7 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
 
         try {
             FileHandler fh = new FileHandler(filePath + "evolution-log-" + System.currentTimeMillis()
-                    + "-.log") ;
+                    + "-.log");
             LOGGER.addHandler(fh);
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);
@@ -52,7 +58,7 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
      * Use this constructor if don't want to save intermediate best individuals
      */
     EvolutionLogger() {
-        this (null, -1);
+        this(null, -1);
     }
 
 
@@ -72,7 +78,7 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
         }
         boolean forceSave = false; // whether to save the model if other conditions dont suffice
         if ((data.isNaturalFitness() && bestFitness < data.getBestCandidateFitness()) ||
-        !data.isNaturalFitness() && bestFitness > data.getBestCandidateFitness()) { // found better fitness than before
+                !data.isNaturalFitness() && bestFitness > data.getBestCandidateFitness()) { // found better fitness than before
             bestFitness = data.getBestCandidateFitness(); // save it in the variable
             forceSave = true; // and save the model
         }
@@ -93,7 +99,7 @@ public class EvolutionLogger implements EvolutionObserver<Brain> {
                 best.toFile(modelName, !(Evolver.saveSettingsOnce && data.getGenerationNumber() > genToSave));
             } catch (IOException e) {
                 System.err.println("WARNING: Individuals are not being saved because " +
-                                    "IOException was thrown on path " + this.filePath);
+                        "IOException was thrown on path " + this.filePath);
             }
         }
     }

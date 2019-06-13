@@ -14,10 +14,10 @@ public class ArtTile extends Entity {
     /**
      * Simple tile for displaying art which does not have to deal with collisions.
      *
-     * @param position Vector3f, where to place the tile
+     * @param position  Vector3f, where to place the tile
      * @param dimension Vector3f, the size of the tile
-     * @param shader Shader, the material to use
-     * @param texture Texture, the image to load into the material (Likely a tilemap)
+     * @param shader    Shader, the material to use
+     * @param texture   Texture, the image to load into the material (Likely a tilemap)
      * @param texCoords Float[], st-coordinates within the Texture
      */
     public ArtTile(Vector3f position, Vector3f dimension, Shader shader, Texture texture, float[] texCoords) {
@@ -28,6 +28,7 @@ public class ArtTile extends Entity {
 
     /**
      * A simple constructor for displaying a fullscreen image on a specific layer.
+     *
      * @param texture
      */
     public ArtTile(Texture texture, RenderLayer layer) {

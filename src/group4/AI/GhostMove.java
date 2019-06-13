@@ -5,9 +5,9 @@ package group4.AI;
  */
 public enum GhostMove {
 
-    LEFT (0),
-    RIGHT (1),
-    JUMP (2);
+    LEFT(0),
+    RIGHT(1),
+    JUMP(2);
 
     private int move;
 
@@ -15,7 +15,7 @@ public enum GhostMove {
         this.move = move;
     }
 
-    public boolean equals (Integer i) {
+    public boolean equals(Integer i) {
         return i.equals(this.move);
     }
 

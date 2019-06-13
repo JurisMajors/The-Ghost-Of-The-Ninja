@@ -65,7 +65,7 @@ public class RayCastDecoder {
         ignorables.add(PlayerComponent.class);
         ignorables.add(CoinComponent.class);
 
-        for (int i = ghostFeatures.length; i < this.nrRays ; i+=2) {
+        for (int i = ghostFeatures.length; i < this.nrRays; i += 2) {
             // create ray with appropriate direction
             // by rotating upwards from the start ray
             Ray r = new Ray(ghostCenter, start.rotateXY((i - ghostFeatures.length) * deltaTheta), ignorables, this.rayLength);

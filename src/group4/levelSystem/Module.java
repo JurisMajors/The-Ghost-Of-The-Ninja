@@ -1,17 +1,24 @@
 package group4.levelSystem;
 
 import com.badlogic.ashley.core.Entity;
-import group4.AI.Brain;
-import group4.ECS.entities.Ghost;
+import group4.ECS.components.GraphComponent;
+import group4.ECS.entities.AStarMobs.JumpingAStarMob;
+import group4.ECS.entities.AStarMobs.JumpingWalkingAStarMob;
+import group4.ECS.entities.AStarMobs.WalkingAStarMob;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.hazards.Spikes;
 import group4.ECS.entities.items.consumables.Coin;
-import group4.ECS.entities.mobs.*;
+import group4.ECS.entities.mobs.FlyingMob;
+import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.EndingTotem;
 import group4.ECS.entities.totems.StartTotem;
 import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.world.*;
 import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.GraphHandlers.AbstractGraphHandler;
+import group4.ECS.systems.GraphHandlers.JumpingAStarMobGraphHandler;
+import group4.ECS.systems.GraphHandlers.JumpingWalkingAStarMobGraphHandler;
+import group4.ECS.systems.GraphHandlers.WalkingAStarMobGraphHandler;
 import group4.game.Main;
 import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
@@ -67,6 +74,20 @@ public class Module {
     // maps character of spline to its control points
     private Map<Character, List<Vector3f>> splineMap;
 
+    /**
+     * Graphs for AStar mobs to not recompute again
+     */
+    GraphComponent jwGraph = new GraphComponent(this); // jumping walking
+    GraphComponent wGraph = new GraphComponent(this); // walking
+    GraphComponent jGraph = new GraphComponent(this); // jumping graph
+    /**
+     * A star handlers for all different types of mobs.
+     */
+    public static AbstractGraphHandler jwHandler = new JumpingWalkingAStarMobGraphHandler();
+    public static AbstractGraphHandler wHandler = new WalkingAStarMobGraphHandler();
+    public static AbstractGraphHandler jHandler = new JumpingAStarMobGraphHandler();
+
+    List<Mob> mobs = new ArrayList<>();
 
     /**
      * Default construct, which constructs a module based on a Tiled .tmx file
@@ -480,16 +501,32 @@ public class Module {
     private void addMob(int x, int y, int i, String mobName) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
         Mob m = null;
-        if (mobName.equals(JumpingWalkingMob.getName())) {
-            m = new JumpingWalkingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
-        } else if (mobName.equals(WalkingMob.getName())) {
-            m = new WalkingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+        if (mobName.equals(JumpingWalkingAStarMob.getName())) {
+            m = new JumpingWalkingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i), jwGraph);
+        } else if (mobName.equals(WalkingAStarMob.getName())) {
+            m = new WalkingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i), wGraph);
+        } else if (mobName.equals(JumpingAStarMob.getName())) {
+            m = new JumpingAStarMob(tempPosition, this.level, this, Texture.MAIN_TILES, TileMapping.MAIN.get(i), jGraph);
         } else if (mobName.equals(FlyingMob.getName())) {
-            m = new FlyingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
-        } else if (mobName.equals(FlappingMob.getName())) {
-            m = new FlappingMob(tempPosition, this.level, Texture.MAIN_TILES, TileMapping.MAIN.get(i));
+            m = new FlyingMob(tempPosition, this.level);
+        }
+        if (m == null) return;
+        if (!(m instanceof FlyingMob)) {
+            this.mobs.add(m);
         }
         this.addEntity(m);
+    }
+
+    public void finalizeMobs() {
+        for (Mob m : this.mobs) {
+            if (m instanceof JumpingAStarMob) {
+                jHandler.constructGraph(m,jGraph);
+            } else if (m instanceof WalkingAStarMob) {
+                wHandler.constructGraph(m, wGraph);
+            } else if (m instanceof JumpingWalkingAStarMob) {
+                jwHandler.constructGraph(m, jwGraph);
+            }
+        }
     }
 
     /**
@@ -652,7 +689,7 @@ public class Module {
                                     162, 163,      165, 166, 167, 168, 169, 170, 171, 172, 173, 174};
         int[] players = new int[]{15};
         int jumpingwalkingmob = 31;
-        int flappingmob = 47;
+        int jumpingmob = 47;
         int walkingmob = 79;
         int flyingmob = 63;
         int coin = 95;
@@ -676,9 +713,9 @@ public class Module {
         moduleTileMap.put(spike_down, Spikes.getName());
         moduleTileMap.put(spike_left, Spikes.getName());
 
-        moduleTileMap.put(jumpingwalkingmob, JumpingWalkingMob.getName());
-        moduleTileMap.put(flappingmob, FlappingMob.getName());
-        moduleTileMap.put(walkingmob, WalkingMob.getName());
+        moduleTileMap.put(jumpingwalkingmob, JumpingWalkingAStarMob.getName());
+        moduleTileMap.put(jumpingmob, JumpingAStarMob.getName());
+        moduleTileMap.put(walkingmob, WalkingAStarMob.getName());
         moduleTileMap.put(flyingmob, FlyingMob.getName());
 
         moduleTileMap.put(coin, Coin.getName());

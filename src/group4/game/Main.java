@@ -5,7 +5,9 @@ import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.AStarPathSystem;
 import group4.ECS.systems.CameraSystem;
+import group4.ECS.systems.PathMovementSystem;
 import group4.ECS.systems.RenderSystem;
 import group4.ECS.systems.animation.AnimationSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
@@ -156,6 +158,9 @@ public class Main implements Runnable {
             // Set up all engine systems
             // Systems which change the gamestate
             this.engine.addSystem(new EventSystem(0));
+            this.engine.addSystem(new AStarPathSystem(2));
+            this.engine.addSystem(new PathMovementSystem(3));
+
             this.engine.addSystem(new PlayerMovementSystem(1));
             this.engine.addSystem(new GhostMovementSystem(2));
             this.engine.addSystem(new MobMovementSystem(3));

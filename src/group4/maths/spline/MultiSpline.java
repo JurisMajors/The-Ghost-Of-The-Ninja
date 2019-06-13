@@ -9,9 +9,10 @@ public class MultiSpline {
 
     /**
      * Creates a multispline, a list of splines concatinated.
+     *
      * @param points control points for the splines in order.
      * @throws IllegalArgumentException if the number of input points is not a multiple of 4 (currently works for cubic
-     * bezier splines)
+     *                                  bezier splines)
      */
     public MultiSpline(Vector3f[] points) throws IllegalArgumentException {
         if (points.length % 4 != 0) {
@@ -50,7 +51,7 @@ public class MultiSpline {
         return splines[i].getPoint(time);
     }
 
-     /**
+    /**
      * Gets the tangent on this multi spline at time u
      *
      * @param u float between 0.0f and 1.0f
@@ -67,7 +68,7 @@ public class MultiSpline {
         return splines[i].getTangent(time);
     }
 
-     /**
+    /**
      * Gets the normal on this multi spline at time u
      *
      * @param u float between 0.0f and 1.0f
@@ -100,6 +101,7 @@ public class MultiSpline {
 
     /**
      * Given a global time u between 0.0f and 1.0f, find the local time on the spline for this time.
+     *
      * @param u float
      * @return local time between 0.0f and 1.0f
      */

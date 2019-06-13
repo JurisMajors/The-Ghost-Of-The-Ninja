@@ -9,7 +9,9 @@ import java.util.HashMap;
  */
 public class TheEngine {
 
-    /** ThreadID -> Engine Instance **/
+    /**
+     * ThreadID -> Engine Instance
+     **/
     private static HashMap<Long, Engine> threadEngines = new HashMap<>();
 
     public synchronized static Engine getInstance() {

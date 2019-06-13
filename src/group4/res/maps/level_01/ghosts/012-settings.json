@@ -1,1 +1,9 @@
-{"decoder":{"name":"group4.AI.decoders.CircleVisionStateDecoder","raylength":10,"rays":30,"gap":10},"evaluator":"group4.AI.evaluation.XCoordStrategy"}
+{
+  "decoder": {
+    "name": "group4.AI.decoders.CircleVisionStateDecoder",
+    "raylength": 10,
+    "rays": 30,
+    "gap": 10
+  },
+  "evaluator": "group4.AI.evaluation.XCoordStrategy"
+}

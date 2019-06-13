@@ -11,7 +11,7 @@ public class PositionComponent implements Component {
     /**
      * default constructor
      *
-     * @param position    left-bottom-back corner of the cuboid representing the entity
+     * @param position left-bottom-back corner of the cuboid representing the entity
      */
     public PositionComponent(Vector3f position) {
         this.position = position;

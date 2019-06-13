@@ -184,6 +184,7 @@ public class Texture {
 
     /**
      * Loads a texture located at path into openGL.
+     *
      * @param path relative path to the project root.
      * @return integer id for this texture in opengl
      */

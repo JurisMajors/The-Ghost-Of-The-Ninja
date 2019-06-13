@@ -6,7 +6,9 @@ import group4.ECS.etc.TheEngine;
 
 public class BulletCollision extends AbstractCollisionHandler<Bullet> {
 
-    /** Singleton **/
+    /**
+     * Singleton
+     **/
     private static AbstractCollisionHandler me = new BulletCollision();
 
     @Override

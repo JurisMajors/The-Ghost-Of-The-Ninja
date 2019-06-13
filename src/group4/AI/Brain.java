@@ -1,4 +1,4 @@
-        package group4.AI;
+package group4.AI;
 
 import group4.AI.decoders.CircleVisionStateDecoder;
 import group4.AI.decoders.ConeVisionStateDecoder;
@@ -26,17 +26,23 @@ import java.util.List;
  * Contains the neural network which acts as the "ghost" brain.
  */
 public class Brain {
-    /** the network that does the calculations **/
+    /**
+     * the network that does the calculations
+     **/
     MultiLayerNetwork nn;
-    /** state decoder for this brain, by default: the current training decoder **/
+    /**
+     * state decoder for this brain, by default: the current training decoder
+     **/
     private StateDecoderInterface decoder = Evolver.decoder;
-    /** evaluator **/
+    /**
+     * evaluator
+     **/
     private AbstractEvaluationStrategy evaluation = Evolver.evaluationStrat;
 
     /**
      * Given information about the layers, initialize a MLP
      */
-    Brain (int[] layerSizes) {
+    Brain(int[] layerSizes) {
         NeuralNetConfiguration.ListBuilder lb = new NeuralNetConfiguration.Builder()
                 .weightInit(WeightInit.XAVIER)
                 .list();
@@ -78,25 +84,26 @@ public class Brain {
         nn.init();
     }
 
-    Brain (MultiLayerNetwork network) {
+    Brain(MultiLayerNetwork network) {
         this.nn = network;
     }
 
-    Brain (Brain b) {
-         // clone the network
+    Brain(Brain b) {
+        // clone the network
         this.nn = b.nn.clone();
         this.decoder = b.decoder;
     }
 
-    Brain () {
+    Brain() {
         this(Evolver.layerSizes);
     }
 
     /**
      * Loads a network and its settings from files
+     *
      * @param modelPath model file defined by deeplearning4j (the neural net)
      */
-    public Brain (String modelPath) {
+    public Brain(String modelPath) {
         String settings = modelPath + "-settings.json"; // definition of settings path
         try {
             File f = new File(modelPath); // get path to model path
@@ -170,6 +177,7 @@ public class Brain {
 
     /**
      * Calculates the move the ghost should take
+     *
      * @return the move the ghost should take, according to {@link GhostMove} enum
      */
     public int think() {
