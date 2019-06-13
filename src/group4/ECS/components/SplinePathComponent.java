@@ -40,7 +40,7 @@ public class SplinePathComponent implements Component {
         this.position = position;
         this.dimension = dimension;
         this.visionRange = visionRange;
-        this.speed = 500f;
+        this.speed = 0.002f;
         createSplinePoints(spline, position, detail);
     }
 
@@ -89,8 +89,8 @@ public class SplinePathComponent implements Component {
         return spline.getPoint(u).add(position);
     }
 
-    public void updateU(float deltaTime) {
-        u += (deltaTime / speed);
+    public void updateU() {
+        u += (speed);
         if (u > 1f) u--;
     }
 
