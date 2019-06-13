@@ -174,12 +174,13 @@ public class RenderSystem extends EntitySystem {
         // Draw all the health bars in the currently active module for all entities which have a HealthComponent.
         // Dead entities are automatically removed from the engine, and hence also their healthbars.
         this.drawHealthBars();
-        this.drawOverlays((Camera) camera);
+
         if (sc != null) {
             this.drawScore(sc.getScore(), cc.viewMatrix.getTranslation());
         }
-        // Draw some transparent things on top of the render
-//        this.drawOverlays((Camera) camera);
+
+        this.drawOverlays((Camera) camera);
+
 
         // Start of debug drawing
         if (DEBUG) {

@@ -300,7 +300,7 @@ public class GraphicsComponent implements Component {
     public void handleColorMask() {
         if (this.hasMask) { // per texture mask has priority
             this.shader.setUniform3f("color_mask", this.colorMask);
-        } 
+        }
     }
 
     /**
