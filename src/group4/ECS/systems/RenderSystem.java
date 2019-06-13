@@ -174,7 +174,7 @@ public class RenderSystem extends EntitySystem {
         // Draw all the health bars in the currently active module for all entities which have a HealthComponent.
         // Dead entities are automatically removed from the engine, and hence also their healthbars.
         this.drawHealthBars();
-
+        this.drawOverlays((Camera) camera);
         if (sc != null) {
             this.drawScore(sc.getScore(), cc.viewMatrix.getTranslation());
         }
@@ -216,20 +216,21 @@ public class RenderSystem extends EntitySystem {
         }
     }
 
-//    private void drawOverlays(Camera camera) {
-//        if (this.vignette == null) {
-//            Vector3f dimension = new Vector3f(16.0f, 9.0f, 0.0f); // Fullscreen
-//            this.vignette = new GraphicsComponent(Shader.SIMPLE, Texture.VIGNETTE_OVERLAY, dimension, RenderLayer.VIGNETTE);
-//        }
-//
-//        if (this.noise == null) {
-//            Vector3f dimension = new Vector3f(16.0f, 9.0f, 0.0f); // Fullscreen
-//            this.add(new GraphicsComponent(Shader.SIMPLE, Texture.NOISE_OVERLAY, dimension, RenderLayer.NOISE));
-//        }
-//
-//        Vector3f position = camera.getComponent(PositionComponent.class).position;
-//        this.vignette
-//    }
+    private void drawOverlays(Camera camera) {
+        Vector3f dimension = new Vector3f(16.0f, 9.0f, 0.0f); // Fullscreen
+
+        if (this.vignette == null) {
+            this.vignette = new GraphicsComponent(Shader.SIMPLE, Texture.VIGNETTE_OVERLAY, dimension, RenderLayer.VIGNETTE, false);
+        }
+
+        if (this.noise == null) {
+            this.noise = new GraphicsComponent(Shader.SIMPLE, Texture.NOISE_OVERLAY, dimension, RenderLayer.NOISE, false);
+        }
+
+        Vector3f position = camera.getComponent(PositionComponent.class).position.sub(dimension.scale(0.5f));
+        this.vignette.render(position);
+        this.noise.render(position);
+    }
 
     /**
      * Draws the score of the player

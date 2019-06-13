@@ -72,6 +72,7 @@ public class Texture {
     public static Texture START_BG;
     public static Texture VIGNETTE_OVERLAY;
     public static Texture NOISE_OVERLAY;
+    public static Texture TEST_OVERLAY;
     public static Texture PRESS_ENTER;
     public static Texture LOGO_FULLSCREEN;
 
@@ -148,6 +149,7 @@ public class Texture {
         START_BG = new Texture("src/group4/res/textures/start-bg.png");
         VIGNETTE_OVERLAY = new Texture("src/group4/res/textures/vignette-overlay.png");
         NOISE_OVERLAY = new Texture("src/group4/res/textures/noise-overlay.png");
+        TEST_OVERLAY = new Texture("src/group4/res/textures/overlay-test.png");
         PRESS_ENTER = new Texture("src/group4/res/textures/press-enter.png");
         LOGO_FULLSCREEN = new Texture("src/group4/res/textures/logo-fullscreen.png");
         TOTEM_HELP = new Texture("src/group4/res/textures/totemhelp.png");
