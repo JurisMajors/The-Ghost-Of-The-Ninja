@@ -300,10 +300,6 @@ public class GraphicsComponent implements Component {
     public void handleColorMask() {
         if (this.hasMask) { // per texture mask has priority
             this.shader.setUniform3f("color_mask", this.colorMask);
-        } else if (GraphicsComponent.HAS_MASK) { // global mask comes next
-//            this.shader.setUniform3f("color_mask", GraphicsComponent.GLOBAL_COLOR_MASK);
-        } else { // no mask
-//            this.shader.setUniform3f("color_mask", new Vector3f());
         }
     }
 
