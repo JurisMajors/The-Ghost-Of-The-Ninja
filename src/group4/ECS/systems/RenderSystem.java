@@ -22,6 +22,7 @@ import group4.ECS.entities.world.ArtTile;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
+import group4.game.Main;
 import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
 import group4.graphics.Text;
@@ -127,7 +128,7 @@ public class RenderSystem extends EntitySystem {
                         Vector3f currentTranslation = cc.viewMatrix.getTranslation();
                         gc.shader.setUniformMat4f("vw_matrix",
                                 Matrix4f.translate(
-                                        currentTranslation.add(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
+                                        currentTranslation.sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
                         );
                     }
 
@@ -210,7 +211,7 @@ public class RenderSystem extends EntitySystem {
         this.drawHealthBars();
 
         if (sc != null) {
-            this.drawScore(sc.getScore(), cc.viewMatrix.getTranslation());
+            this.drawScore(sc.getScore(), cc.viewMatrix.getTranslation().sub(new Vector3f(Main.SCREEN_WIDTH / 4, Main.SCREEN_HEIGHT / 4, 0.0f)));
         }
 
         this.drawOverlays((Camera) camera);
@@ -252,7 +253,7 @@ public class RenderSystem extends EntitySystem {
     }
 
     private void drawOverlays(Camera camera) {
-        Vector3f dimension = new Vector3f(16.0f, 9.0f, 0.0f); // Fullscreen
+        Vector3f dimension = new Vector3f(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT, 0.0f); // Fullscreen
 
         if (this.vignette == null) {
             this.vignette = new GraphicsComponent(Shader.SIMPLE, Texture.VIGNETTE_OVERLAY, dimension, RenderLayer.VIGNETTE, false);
