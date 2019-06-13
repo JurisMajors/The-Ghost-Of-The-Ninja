@@ -1,10 +1,12 @@
 package group4.ECS.systems.combat;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import group4.ECS.components.identities.MobComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.ItemComponent;
 import group4.ECS.components.stats.MeleeWeaponComponent;
 import group4.ECS.components.stats.RangeWeaponComponent;
 import group4.ECS.entities.Ghost;
@@ -27,29 +29,37 @@ public class MobCombatSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-
         // whatever for now
         if (entity instanceof FlyingMob) return;
 
+        MeleeWeaponComponent mwc = Mappers.meleeWeaponMapper.get(((Mob) entity).wpn);
         MobComponent mobc = Mappers.mobMapper.get(entity);
         RangeWeaponComponent rwc = Mappers.rangeWeaponMapper.get(((Mob) entity).wpn);
 
-        cooldown(deltaTime, entity);
+        // tick down cooldowns
+        cooldown(deltaTime, (Mob) entity);
 
         if (mobc.state.equals(EntityConst.MobState.MELEE)) {
-            meleeAttack(entity);
-        } else if(mobc.state.equals(EntityConst.MobState.RANGED)) {
+            // check cooldown
+            if (mwc.currCooldown <= 0.0f) {
+                mwc.currCooldown = mwc.cooldown;
 
+                // attack melee
+                meleeAttack((Mob) entity);
+            }
+        } else if (mobc.state.equals(EntityConst.MobState.RANGED)) {
+                // TODO: ranged
         }
     }
 
-    private void meleeAttack(Entity entity) {
-        MeleeWeaponComponent mwc = Mappers.meleeWeaponMapper.get(((Mob) entity).wpn);
-        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
-        PositionComponent pc = Mappers.positionMapper.get(entity);
-        PositionComponent ppc = Mappers.positionMapper.get(((Mob) entity).level.getPlayer());
+    private void meleeAttack(Mob mob) {
+        MeleeWeaponComponent mwc = Mappers.meleeWeaponMapper.get(mob.wpn);
+        DimensionComponent dc = Mappers.dimensionMapper.get(mob);
+        PositionComponent pc = Mappers.positionMapper.get(mob);
+        PositionComponent ppc = Mappers.positionMapper.get(mob.level.getPlayer());
 
         if (mwc != null) {
+
 
             // hitbox offsets
             Vector3f trueOffset = new Vector3f(mwc.hitboxOffset);
@@ -67,21 +77,34 @@ public class MobCombatSystem extends IteratingSystem {
             excluded.add(Mob.class);
             excluded.add(Ghost.class);
 
-//                System.out.println(trueOffset);
-//                System.out.println(trueHitbox);
-
             new DamageArea(trueOffset, trueHitbox,
-                    mwc.damage, excluded, 0, entity);
+                    mwc.damage, excluded, 0, mob);
         }
 
     }
 
     private void rangedAttack() {
-
+        // TODO
     }
 
-    private void cooldown(float deltaTime, Entity entity) {
+    private void cooldown(float deltaTime, Mob mob) {
+        // hacky way to get the super component to itemcomponent
+        ItemComponent ic = null;
+        for (Component c : mob.wpn.getComponents()) {
+            if (c instanceof ItemComponent) {
+                ic = (ItemComponent) c;
+            }
+        }
 
+        // if item slot used, but not item, throw exception
+        if (ic == null) {
+            throw new IllegalStateException("Mob holds invalid weapon: " + mob.wpn.getClass());
+        }
+
+        // update cooldown
+        if (ic.currCooldown >= 0.0f) {
+            ic.currCooldown -= deltaTime;
+        }
     }
 
 }
