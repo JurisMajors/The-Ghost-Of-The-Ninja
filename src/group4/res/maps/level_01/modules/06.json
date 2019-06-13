@@ -99,6 +99,113 @@
         }, 
         {
          "draworder":"topdown",
+         "id":11,
+         "name":"SPLINEPATHS",
+         "objects":[
+                {
+                 "height":0,
+                 "id":7,
+                 "name":"a0",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1090,
+                 "y":710
+                }, 
+                {
+                 "height":0,
+                 "id":8,
+                 "name":"a1",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1233,
+                 "y":708
+                }, 
+                {
+                 "height":0,
+                 "id":9,
+                 "name":"a2",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1232,
+                 "y":539
+                }, 
+                {
+                 "height":0,
+                 "id":10,
+                 "name":"a3",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1084,
+                 "y":539
+                }, 
+                {
+                 "height":0,
+                 "id":11,
+                 "name":"a4",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1084,
+                 "y":538
+                }, 
+                {
+                 "height":0,
+                 "id":12,
+                 "name":"a5",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":942,
+                 "y":535
+                }, 
+                {
+                 "height":0,
+                 "id":13,
+                 "name":"a6",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":945,
+                 "y":710
+                }, 
+                {
+                 "height":0,
+                 "id":14,
+                 "name":"a7",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1090,
+                 "y":710
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":9,
          "name":"TOTEMS",
          "objects":[
@@ -132,11 +239,11 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":11,
- "nextobjectid":7,
+ "nextlayerid":12,
+ "nextobjectid":15,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.2.4",
+ "tiledversion":"1.2.3",
  "tileheight":32,
  "tilesets":[
         {

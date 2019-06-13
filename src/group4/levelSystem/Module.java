@@ -73,6 +73,8 @@ public class Module {
     private Map<Integer, String> moduleTileMap;
     // maps character of spline to its control points
     private Map<Character, List<Vector3f>> splineMap;
+    // same but for spline path mob
+    private Map<Character, List<Vector3f>> splinePathMap;
 
     /**
      * Graphs for AStar mobs to not recompute again
@@ -99,6 +101,7 @@ public class Module {
         }
         this.configureMap();
         this.splineMap = new HashMap<>();
+        this.splinePathMap = new HashMap<>();
         this.loadTiledObject(tiledModuleLocation);
         this.setup(l);
     }
@@ -188,6 +191,8 @@ public class Module {
                 parseBackgroundLayer(layer);
             } else if (layerName.equals("LIGHTS")) {
                 parseLightLayer(layer);
+            }else if (layerName.equals("SPLINEPATHS")) {
+                parseSplineMobLayer(layer);
             } else {
                 // In case the layer is not MAIN or EXITS
                 System.err.println("Unrecognized layer name: " + layer.getString("name"));
@@ -350,6 +355,43 @@ public class Module {
         }
     }
 
+    private void parseSplineMobLayer(JSONObject layer) {
+         // only load in the splines if they are not loaded yet
+        if (splinePathMap.isEmpty()) {
+            // Loop over the data grid
+            JSONArray data = layer.getJSONArray("objects");
+            for (int point = 0; point < data.length(); point++) {
+                // get information about the object
+                JSONObject pointInfo = data.getJSONObject(point);
+                // get the coordinates for the control point
+                float pointX = pointInfo.getFloat("x") / 32f;
+                float pointY = this.height - pointInfo.getFloat("y") / 32f + 1;
+
+                String tileName = pointInfo.getString("name");
+                // get the identification of the spline (first character in the string)
+                char splineId = tileName.charAt(0);
+                // get the identification of the current point within the spline
+                int pointId = Integer.parseInt(tileName.substring(1));
+
+                if (!splinePathMap.containsKey(splineId)) { // create a new spline array if none exists for this spline
+                    splinePathMap.put(splineId, new ArrayList<>(data.length()));
+                }
+                // add the control point to the spline
+                List<Vector3f> points = splinePathMap.get(splineId);
+                if (pointId >= points.size()) {
+                    points.add(new Vector3f(pointX, pointY, 0));
+                } else {
+                    points.add(pointId, new Vector3f(pointX, pointY, 0));
+                }
+            }
+        }
+
+        // add splines from our cached spline map
+        for (List<Vector3f> cPoints : splinePathMap.values()) { // for each given control point
+            addSplineMob(cPoints);
+        }
+    }
+
     private void parseSplineLayer(JSONObject layer) {
         // only load in the splines if they are not loaded yet
         if (splineMap.isEmpty()) {
@@ -385,6 +427,16 @@ public class Module {
         for (List<Vector3f> cPoints : splineMap.values()) { // for each given control point
             addSpline(cPoints);
         }
+    }
+
+    private void addSplineMob(List<Vector3f> cPoints) throws IllegalStateException {
+        if (cPoints.size() % 4 != 0) throw new IllegalStateException("Module.addSpline() " +
+                "Control points must be multiple of 4, " +
+                "was given " + cPoints.size() + " control points instead!");
+        Vector3f[] cPointsArr = cPoints.toArray(new Vector3f[0]);
+        MultiSpline spline = new MultiSpline(cPointsArr);
+        FlyingMob tempMob = new FlyingMob(cPointsArr[0], this.level, spline);
+        this.addEntity(tempMob);
     }
 
     /**

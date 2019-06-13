@@ -48,7 +48,9 @@ public abstract class AbstractMovementHandler<T extends Mob> extends IteratingSy
         MobComponent mobComponent = Mappers.mobMapper.get(entity);
 
         // determine the range of vision this mob has, depends on if its 'chasing' or 'idle'
-        setVisionRange(entity);
+        if (!isSplineMob(entity)) {
+            setVisionRange(entity);
+        }
 
         boolean needsToMove = true;
         boolean canSeePlayer = canSeePlayer(pc, dc, mobComponent.currentVisionRange);
@@ -70,7 +72,7 @@ public abstract class AbstractMovementHandler<T extends Mob> extends IteratingSy
 
                 if (spc.isOnSpline()) {
                     // do movement using the spline path system
-                    spc.updateU(deltaTime);
+                    spc.updateU();
                     pc.position = spc.getPoint();
                     targetPosition = pc.position;
                 } else {
