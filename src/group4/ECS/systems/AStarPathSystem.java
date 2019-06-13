@@ -53,7 +53,7 @@ public class AStarPathSystem extends AbstractMovementHandler {
             // TODO: change when new attack range thing
             boolean shouldAttack = canSee && ppc.position.euclidDist(mobPos.position) <= mobC.attackRange; // whether the mob should attack
 
-            if (canSee && !shouldAttack) {
+            if (!shouldAttack) {
                 mobC.state = EntityConst.MobState.DEFAULT;
                 int playerVertexID = 0;
                 for (int i = 0; i < gc.vertexCoords.size(); i++) {
@@ -65,9 +65,9 @@ public class AStarPathSystem extends AbstractMovementHandler {
                     computePath(entity, pathc.vertex, playerVertexID);
                 }
             } else {
-                if (shouldAttack && mobC.weapon instanceof MobMeleeAttack) {
+                if (mobC.weapon instanceof MobMeleeAttack) {
                     mobC.state = EntityConst.MobState.MELEE;
-                } else if (shouldAttack && mobC.weapon instanceof MobRangedAttack) {
+                } else if (mobC.weapon instanceof MobRangedAttack) {
                     mobC.state = EntityConst.MobState.RANGED;
                 }
                 pathc.vertexID.clear();
