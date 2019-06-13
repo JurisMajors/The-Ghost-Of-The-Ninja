@@ -52,22 +52,24 @@ public class AStarPathSystem extends AbstractMovementHandler {
             } else {
                 canSee = canSeePlayer(mobPos, mobDim, mobC.currentVisionRange);
             }
+
+            if (!canSee) {
+                return;
+            }
             // TODO: change when new attack range thing
             boolean shouldAttack = canSee && ppc.position.euclidDist(mobPos.position) <= mobC.attackRange; // whether the mob should attack
 
             if (!shouldAttack) {
                 mobC.state = EntityConst.MobState.DEFAULT;
                 int playerVertexID = 0;
-                boolean range=inRange((Mob)entity,gc.vertexCoords.get(playerVertexID));
                 for (int i = 0; i < gc.vertexCoords.size(); i++) {
-                    if ((!range&&!inRange((Mob)entity,gc.vertexCoords.get(i))&&Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(i).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(i).y, 2)) < Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(playerVertexID).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(playerVertexID).y, 2)))
-                            ||(!range&&inRange((Mob)entity,gc.vertexCoords.get(i)))
-                            ||(range&&inRange((Mob)entity,gc.vertexCoords.get(i))&&Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(i).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(i).y, 2)) < Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(playerVertexID).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(playerVertexID).y, 2)))) {
+                    if (Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(i).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(i).y, 2)) < Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(playerVertexID).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(playerVertexID).y, 2))) {
                         playerVertexID = i;
-                        range=inRange((Mob)entity,gc.vertexCoords.get(i));
                     }
                 }
-                computePath(entity, pathc.vertex, playerVertexID);
+                if (Math.sqrt(Math.pow(mc.velocityRange.x, 2) + Math.pow(mc.velocityRange.y, 2)) >= Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(playerVertexID).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(playerVertexID).y, 2))) {
+                    computePath(entity, pathc.vertex, playerVertexID);
+                }
             } else {
                 if (mobC.weapon instanceof MobMeleeAttack) {
                     mobC.state = EntityConst.MobState.MELEE;
