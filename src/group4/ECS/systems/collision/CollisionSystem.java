@@ -67,8 +67,6 @@ public class CollisionSystem extends IteratingSystem {
         for (Entity other : entities) {
             // dont process collision with itself
             if (e.equals(other)) continue;
-            
-            if (other instanceof DamageArea) System.out.println(e);
 
             // dont register collisions bullets of bullets
             if (other instanceof Projectile && e instanceof Projectile) continue;

@@ -40,6 +40,7 @@ public class BulletCollision extends AbstractCollisionHandler<Projectile> {
             } else if (other instanceof Player) {
                 // deal damage
                 Mappers.healthMapper.get(other).health -= Mappers.damageMapper.get(e).damage;
+                TheEngine.getInstance().removeEntity(e);
             }
 
             // TODO: play animation

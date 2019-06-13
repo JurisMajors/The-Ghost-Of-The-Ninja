@@ -3,7 +3,6 @@ package group4.graphics;
 import group4.utils.BufferUtils;
 
 import javax.imageio.ImageIO;
-import javax.xml.soap.Text;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,7 +14,7 @@ public class Texture {
     public static Texture DEBUG; // TODO: More to be added.
     public static Texture BRICK;
     public static Texture AK47;
-    public static Texture MG_BULLET;
+    public static Texture PROJECTILE;
     public static Texture EXIT;  // TODO: More to be added.
     public static Texture BLACK;
     public static Texture WHITE;
@@ -97,7 +96,7 @@ public class Texture {
         DEBUG = new Texture("src/group4/res/textures/debug.jpeg");
         BRICK = new Texture("src/group4/res/textures/brick.png");
         AK47 = new Texture("src/group4/res/textures/weapons/AK47.png");
-        MG_BULLET = new Texture("src/group4/res/textures/weapons/Projectile.png");
+        PROJECTILE = new Texture("src/group4/res/textures/weapons/Projectile.png");
         EXIT = new Texture("src/group4/res/textures/exit.jpg");
         MAIN_TILES = new Texture("src/group4/res/textures/tilemap-main.png");
         BACKGROUND = new Texture("src/group4/res/textures/cave.jpg");

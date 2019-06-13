@@ -27,8 +27,8 @@ import group4.maths.Vector3f;
 import group4.maths.spline.MultiSpline;
 
 public class FlyingMob extends Mob {
-    protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f); //dimension of the mob, aka bounding box
 
+    protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f); //dimension of the mob, aka bounding box
 
     /**
      * Creates a mob
@@ -44,13 +44,15 @@ public class FlyingMob extends Mob {
         this.add(new GravityComponent());
         this.add(new CollisionComponent(MobCollision.getInstance()));
         this.add(new HealthComponent(30));
+
         // limit the velocity of the flying mob to prevent shaking of the texture
         MovementComponent mc = Mappers.movementMapper.get(this);
         mc.velocityRange = new Vector3f(0.03f, 0.03f, 0);
         float attackRange = 5.0f;
+
         // TODO; more sensible wpn for a bat plz
-        Entity wpn = new MobRangedAttack(5, 0.1f,
-                new Vector3f(1, 1, 0), EntityConst.BulletType.PISTOL);
+        this.wpn = new MobRangedAttack(5, 2.0f,
+                new Vector3f(1f, 1f, 0), new Vector3f(1f, 1f, 0f), Texture.PROJECTILE);
         this.add(new MobComponent(handler, attackRange, wpn));
     }
 

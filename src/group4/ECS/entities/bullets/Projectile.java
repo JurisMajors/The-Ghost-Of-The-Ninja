@@ -16,8 +16,6 @@ import group4.maths.Vector3f;
 
 public class Projectile extends Entity {
 
-    protected Vector3f dimension = new Vector3f(0.5f, 0.5f, 0.0f);
-
     /**
      * Creates a bullet
      *
@@ -25,24 +23,22 @@ public class Projectile extends Entity {
      * @param velocityDirection direction (normalized) of velocity vector
      * @param origin            origin of the Projectile, i.e. weapon
      */
-    public Projectile(Vector3f position, Vector3f velocityDirection, Entity origin, int damage) {
+    public Projectile(Vector3f position, Vector3f velocityDirection, Vector3f dimension, Entity origin,
+                      int damage, Texture texture) {
 
         // velocity range
-        Vector3f velocityRange = new Vector3f(0.25f, 0.25f, 0.0f);
+        Vector3f velocityRange = new Vector3f(5.5f, 5.5f, 0.0f);
 
-        //magnitude of velocity vector
-        float velocityMagnitude = 0.25f;
+        // magnitude of velocity vector
+        float velocityMagnitude = 5.5f;
 
-        //shader
+        // shader
         Shader shader = Shader.SIMPLE;
-
-        // texture
-        Texture texture = Texture.MG_BULLET;
 
         this.add(new PositionComponent(position));
         this.add(new DimensionComponent(dimension));
         this.add(new DamageComponent(damage, origin));
-        this.add(new MovementComponent(velocityDirection.scale(velocityMagnitude), velocityRange));
+        this.add(new MovementComponent(velocityDirection.normalized().scale(velocityMagnitude), velocityRange));
         this.add(new GraphicsComponent(shader, texture, dimension, false));
         this.add(new BulletComponent());
         this.add(new CollisionComponent(BulletCollision.getInstance()));
