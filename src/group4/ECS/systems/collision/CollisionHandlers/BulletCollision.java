@@ -43,7 +43,10 @@ public class BulletCollision extends AbstractCollisionHandler<Projectile> {
                 TheEngine.getInstance().removeEntity(e);
             }
 
-            // TODO: play animation
+            // TODO: play animation e.g. change between two textures repeatedly
+            // TODO: play sound on creation and impact
+            // TODO: change bullet texture
+            // TODO: change texture of bullet on impact
         }
     }
 

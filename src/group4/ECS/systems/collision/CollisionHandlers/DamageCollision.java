@@ -102,7 +102,6 @@ public class DamageCollision extends AbstractCollisionHandler<Entity> {
             // if incoming velocity too low, set outgoing vector to minimum knockback
             float knock_factor = knockback_vel / mc.velocity.length();
 
-            System.out.println(mc.velocity);
             Vector3f n = ((Spikes) entity).normal;
             if (mc.velocity.x != 0.0f) {
                 // compute reflection vector

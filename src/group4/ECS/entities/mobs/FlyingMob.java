@@ -1,9 +1,7 @@
 package group4.ECS.entities.mobs;
 
-import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.identities.AnimationComponent;
-import group4.ECS.components.identities.FlyingMobComponent;
 import group4.ECS.components.identities.MobComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
@@ -12,7 +10,6 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
 import group4.ECS.entities.items.weapons.MobRangedAttack;
-import group4.ECS.etc.EntityConst;
 import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Mappers;
 import group4.ECS.systems.animation.FrameAnimation;
@@ -24,7 +21,6 @@ import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.maths.Vector3f;
-import group4.maths.spline.MultiSpline;
 
 public class FlyingMob extends Mob {
 
@@ -52,7 +48,7 @@ public class FlyingMob extends Mob {
 
         // TODO; more sensible wpn for a bat plz
         this.wpn = new MobRangedAttack(5, 2.0f,
-                new Vector3f(1f, 1f, 0), new Vector3f(1f, 1f, 0f), Texture.PROJECTILE);
+                new Vector3f(1f, 1f, 0), new Vector3f(1f, 0.5f, 0f), Texture.PROJECTILE, 0.8f);
         this.add(new MobComponent(handler, attackRange, wpn));
     }
 

@@ -8,10 +8,9 @@ import group4.maths.Vector3f;
 
 public class MobRangedAttack extends Entity {
 
-    public MobRangedAttack(int dmg, float cooldown, Vector3f hitBoxOffset, Vector3f bulletHitbox, Texture texture) {
-
-        this.add(new RangeWeaponComponent(dmg, cooldown, hitBoxOffset, bulletHitbox, texture));
-
+    public MobRangedAttack(int dmg, float cooldown, Vector3f hitBoxOffset, Vector3f bulletHitbox,
+                           Texture texture, float accuracy) {
+        this.add(new RangeWeaponComponent(dmg, cooldown, hitBoxOffset, bulletHitbox, texture, accuracy));
     }
 
 }

@@ -93,14 +93,16 @@ public class MobCombatSystem extends IteratingSystem {
         RangeWeaponComponent rwc = Mappers.rangeWeaponMapper.get(mob.wpn);
         PositionComponent pc = Mappers.positionMapper.get(mob);
 
-        System.out.println("here");
-
         // determine direction of bullet
         Vector3f bulletInitPos = pc.position.add(rwc.bulletOffset);
         Vector3f dir = ppc.position.sub(bulletInitPos);
 
+        // resolve accuracy
+        float shootingAngle = 90.0f * (1.0f - rwc.accuracy) * ((float) Math.random() * 2.0f - 1.0f);
+        dir.rotateXYi(shootingAngle);
+
         // shoot bullet
-        new Projectile(bulletInitPos, dir, new Vector3f(1f, 1f, 0f), mob, 10, rwc.texture);
+        new Projectile(bulletInitPos, dir, rwc.bulletHitbox, mob, 10, rwc.texture);
     }
 
     private void cooldown(float deltaTime, Mob mob) {
