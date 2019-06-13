@@ -41,6 +41,8 @@ public class AStarMob extends Mob {
 
         this.add(new AStarMobComponent(handler));
         this.add(new PathComponent());
+        this.wpn = weapon;
+        this.attackRange = attackRange;
         this.add(new MobComponent(null, attackRange, weapon));
     }
 
