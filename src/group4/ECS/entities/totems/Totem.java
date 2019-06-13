@@ -36,7 +36,7 @@ public abstract class Totem extends Entity {
     }
 
     private GraphicsComponent getGraphicsComponent() {
-        Shader shader = Shader.SIMPLE;
+        Shader shader = Shader.TOTEM;
         if (isEnd()) {
             return new GraphicsComponent(shader, Texture.TOTEM, dimension, RenderLayer.TOTEM, false);
         } else {
