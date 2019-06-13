@@ -64,7 +64,7 @@ public class Main implements Runnable {
     private Camera camera;
     private StartScreen startScreen;
 
-    public static final float SCREEN_WIDTH = 16.0f;
+    public static final float SCREEN_WIDTH = 32.0f;
     public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
     public static GameState STATE;
 
