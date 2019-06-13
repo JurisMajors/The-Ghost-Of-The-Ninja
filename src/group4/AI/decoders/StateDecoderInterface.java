@@ -24,6 +24,7 @@ public interface StateDecoderInterface {
 
     /**
      * Write the settings of this decoder to a json object
+     *
      * @return json object representing the settings of the decoder instance
      */
     JSONObject getSettings();

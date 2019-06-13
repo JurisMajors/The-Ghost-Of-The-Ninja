@@ -37,6 +37,7 @@ public class Vector3f {
 
     /**
      * Give this vector the values of the vector to copy
+     *
      * @param toCopy vector to copy
      */
     public void setVector(Vector3f toCopy) {
@@ -120,6 +121,7 @@ public class Vector3f {
 
     /**
      * Computes the angle between this vector and other in degrees
+     *
      * @param other vector
      * @return angle between this and other in degrees
      */
@@ -195,6 +197,7 @@ public class Vector3f {
 
     /**
      * Calculates the manhattan distance between two vectors
+     *
      * @param other the vector to calculate the distance to
      * @return manhattan dist between this and other
      */

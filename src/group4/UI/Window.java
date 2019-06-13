@@ -54,7 +54,7 @@ public class Window {
     }
 
     public static int[] getSize() {
-        return new int[] {width, height};
+        return new int[]{width, height};
     }
 
     public static void setSize(int w, int h) {
@@ -64,6 +64,7 @@ public class Window {
 
     /**
      * Updates the title of the window with the given string.
+     *
      * @param title String, the new title of the window.
      */
     public void setWindowTitle(String title) {

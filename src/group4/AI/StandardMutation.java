@@ -14,7 +14,7 @@ import java.util.Random;
  * According to the given probability on initialization of the class it
  * replaces a single element of the weight matrix by  a random double.
  */
-public class StandardMutation extends AbstractBrainMutation{
+public class StandardMutation extends AbstractBrainMutation {
 
     public StandardMutation(Probability prob) {
         super(new ConstantGenerator(prob));

@@ -16,12 +16,13 @@ public class Exit extends Entity {
 
     public Module module;
     public int targetModule;
+
     /**
      * Construct a simple block (flexible texture and shader) in a certain position of certain size
      *
-     * @param p       The position of the block (lower left corner)
-     * @param d       The dimensions of the block
-     * @param m       The module the exit is part of
+     * @param p The position of the block (lower left corner)
+     * @param d The dimensions of the block
+     * @param m The module the exit is part of
      */
     public Exit(Vector3f p, Vector3f d, Module m) {
         this.add(new PositionComponent(p));
@@ -37,9 +38,9 @@ public class Exit extends Entity {
     /**
      * Construct a simple block (flexible texture and shader) in a certain position of certain size
      *
-     * @param p       The position of the block (lower left corner)
-     * @param d       The dimensions of the block
-     * @param m       The module the exit is part of
+     * @param p The position of the block (lower left corner)
+     * @param d The dimensions of the block
+     * @param m The module the exit is part of
      */
     public Exit(Vector3f p, Vector3f d, Module m, int targetModule) {
         this.add(new PositionComponent(p));

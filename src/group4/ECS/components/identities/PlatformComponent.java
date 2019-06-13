@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 
 public class PlatformComponent implements Component {
 
-    public PlatformComponent() {}
+    public PlatformComponent() {
+    }
 
 }

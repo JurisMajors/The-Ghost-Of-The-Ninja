@@ -23,7 +23,6 @@ import java.util.Random;
 
 /**
  * Does the process of evolving and outputs the best fitting network.
- *
  */
 public class Evolver {
     /**
@@ -70,13 +69,21 @@ public class Evolver {
      * Evaluation strategy
      */
     static AbstractEvaluationStrategy evaluationStrat = new EuclideanStrategy();
-    /** time limit for the module to train, after this time has reached, the ghost is killed **/
+    /**
+     * time limit for the module to train, after this time has reached, the ghost is killed
+     **/
     public static double timelimit = 5.00;
-    /** Path to save trained models**/
+    /**
+     * Path to save trained models
+     **/
     public static String path = "src/group4/AI/models/";
-    /** Path for loading the module to train on **/
-    public static String modulePath ="./src/group4/res/maps/level_01/modules/1.json";
-    /** How often (in generations) to save a model **/
+    /**
+     * Path for loading the module to train on
+     **/
+    public static String modulePath = "./src/group4/res/maps/level_01/modules/1.json";
+    /**
+     * How often (in generations) to save a model
+     **/
     public static int checkpoint = 2;
 
     /**
@@ -143,8 +150,8 @@ public class Evolver {
                 new GenerationCount(Evolver.genCount),
                 new TargetFitness(Evolver.maxFit, false));
         try {
-            Evolver.toFile(result, path + "BEST-"+System.currentTimeMillis());
-        }catch (IOException e) {
+            Evolver.toFile(result, path + "BEST-" + System.currentTimeMillis());
+        } catch (IOException e) {
             System.err.println("Warning: Could not save final model on path:\n" + path);
         }
     }

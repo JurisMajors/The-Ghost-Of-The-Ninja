@@ -17,7 +17,7 @@ public class StartTotem extends Totem {
 
     private void setGhost(String dir) {
         if (dir != null) {
-            this.ghostBrain = new Brain(dir + this.getID());
+            this.ghostBrain = new Brain(dir + this.name.substring(1));
         } else {
             System.err.println("[WARNING] not loading ghost for totem " + this.getID());
         }

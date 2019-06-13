@@ -35,10 +35,12 @@ public class CameraSystem extends EntitySystem {
     /**
      * @param priority used for creating a systems pipeline (lowest prio gets executed first)
      */
-    public CameraSystem(int priority) {}
+    public CameraSystem(int priority) {
+    }
 
     /**
      * when added to engine, this function will register all entities in the graphicsFamily
+     *
      * @param engine a single instance throughout program which manages ECS
      */
     public void addedToEngine(Engine engine) {
@@ -47,13 +49,16 @@ public class CameraSystem extends EntitySystem {
 
     /**
      * Do something when this system gets removed from engine
+     *
      * @param engine a single instance throughout program which manages ECS
      */
-    public void removedFromEngine(Engine engine) {}
+    public void removedFromEngine(Engine engine) {
+    }
 
     /**
      * The heart piece of a system. This method gets called on each
      * update on the single instance of the engine
+     *
      * @param deltaTime time between last and current update
      */
     public void update(float deltaTime) {
@@ -83,15 +88,20 @@ public class CameraSystem extends EntitySystem {
         PositionComponent pc = Mappers.positionMapper.get(player);
         return pc.position;
     }
+
     /**
      * @return whether this system is active or not
      */
-    public boolean checkProcessing() { return true; }
+    public boolean checkProcessing() {
+        return true;
+    }
 
     /**
      * Set the system to be either active (true) or inactive (false)
+     *
      * @param processing in {true, false}
      */
-    public void setProcessing(boolean processing) {}
+    public void setProcessing(boolean processing) {
+    }
 
 }

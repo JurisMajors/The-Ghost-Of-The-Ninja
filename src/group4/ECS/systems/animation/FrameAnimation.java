@@ -14,7 +14,7 @@ public class FrameAnimation extends Animation {
     public FrameAnimation(Entity target, float offsetT, ImageSequence sequence, int fps) {
         super(target, offsetT);
         this.sequence = sequence;
-        this.fps = fps; // TODO: all anims now take 1 second. fix.
+        this.fps = fps;
         this.scaledT = 0.0f;
     }
 

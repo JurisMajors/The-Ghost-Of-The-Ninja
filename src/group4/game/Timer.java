@@ -30,7 +30,7 @@ public class Timer {
     /**
      * Gets the time difference between a current call and the previous call, and keeps track of
      * the total time we are running behind on running the target targetFPS. (So we don't skip frames)
-     *
+     * <p>
      * Additionally tracks the total time elapsed since the last measuring point for the targetFPS the
      * game actually achieves.
      *
@@ -70,6 +70,7 @@ public class Timer {
 
     /**
      * Gives back 1.0 / targetFPS.
+     *
      * @return double, the intended time delta between two frames.
      */
     public double getFrameTime() {
@@ -78,6 +79,7 @@ public class Timer {
 
     /**
      * Gives the current system time as a double.
+     *
      * @return double, the current system time.
      */
     public double getTime() {

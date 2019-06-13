@@ -30,6 +30,7 @@ public abstract class AbstractBrainMutation implements EvolutionaryOperator<Brai
 
     /**
      * Applies the mutation on a single brain
+     *
      * @param b brain to potentially mutate
      * @param r rng for determening whether to mutate according to probability
      * @return a new brain with mutated weights
@@ -58,8 +59,9 @@ public abstract class AbstractBrainMutation implements EvolutionaryOperator<Brai
 
     /**
      * Mutates the weight according to the rng
-     * @param w weight to attempt to mutate
-     * @param rng  number generator, for determining whether to mutate
+     *
+     * @param w   weight to attempt to mutate
+     * @param rng number generator, for determining whether to mutate
      * @modifies w possibly mutating some elements in it according to mutationProb
      */
     protected abstract void mutateWeight(INDArray w, Random rng);
@@ -67,7 +69,8 @@ public abstract class AbstractBrainMutation implements EvolutionaryOperator<Brai
     /**
      * Apply the mutation on all given brains
      * watchmakers framework specifies that new objects have to be created without modifying the given
-     * @param list list of brains
+     *
+     * @param list   list of brains
      * @param random rng for determining the probability to mutate
      * @return new list of brains that have the mutation rule applied to them
      */

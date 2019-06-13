@@ -5,9 +5,11 @@ import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.animation.AnimationSystem;
+import group4.ECS.systems.AStarPathSystem;
 import group4.ECS.systems.CameraSystem;
+import group4.ECS.systems.PathMovementSystem;
 import group4.ECS.systems.RenderSystem;
+import group4.ECS.systems.animation.AnimationSystem;
 import group4.ECS.systems.collision.CollisionEventSystem;
 import group4.ECS.systems.collision.CollisionSystem;
 import group4.ECS.systems.collision.LastSystem;
@@ -16,11 +18,11 @@ import group4.ECS.systems.combat.PlayerCombatSystem;
 import group4.ECS.systems.death.GhostDyingSystem;
 import group4.ECS.systems.death.MobDyingSystem;
 import group4.ECS.systems.death.PlayerDyingSystem;
+import group4.ECS.systems.event.EventSystem;
 import group4.ECS.systems.movement.BulletMovementSystem;
 import group4.ECS.systems.movement.GhostMovementSystem;
 import group4.ECS.systems.movement.MobMovementSystem;
 import group4.ECS.systems.movement.PlayerMovementSystem;
-import group4.ECS.systems.event.EventSystem;
 import group4.UI.StartScreen;
 import group4.UI.Window;
 import group4.audio.Sound;
@@ -31,7 +33,6 @@ import group4.graphics.TileMapping;
 import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
-import group4.levelSystem.FileLevel;
 import group4.levelSystem.Level;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -40,8 +41,6 @@ import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.openal.ALC10.alcCloseDevice;
 import static org.lwjgl.openal.ALC10.alcDestroyContext;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Main implements Runnable {
@@ -59,13 +58,13 @@ public class Main implements Runnable {
     public static long window; // The id of the window
 
     private Audio audio;
-  
+
     private Level level;
     private Engine engine;
     private Camera camera;
     private StartScreen startScreen;
 
-    public static final float SCREEN_WIDTH = 16.0f;
+    public static final float SCREEN_WIDTH = 32.0f;
     public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
     public static GameState STATE;
 
@@ -159,6 +158,9 @@ public class Main implements Runnable {
             // Set up all engine systems
             // Systems which change the gamestate
             this.engine.addSystem(new EventSystem(0));
+            this.engine.addSystem(new AStarPathSystem(2));
+            this.engine.addSystem(new PathMovementSystem(3));
+
             this.engine.addSystem(new PlayerMovementSystem(1));
             this.engine.addSystem(new GhostMovementSystem(2));
             this.engine.addSystem(new MobMovementSystem(3));

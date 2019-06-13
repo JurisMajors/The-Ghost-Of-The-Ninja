@@ -7,7 +7,7 @@ import group4.maths.Vector3f;
 public class Gun extends Entity {
 
     // Construct vertex array
-    protected float[] vertices = new float[] {
+    protected float[] vertices = new float[]{
             0, 0, 0,
             0, 1.0f, 0,
             2.0f, 1.0f, 0,
@@ -15,13 +15,13 @@ public class Gun extends Entity {
     };
 
     // Construct index array (used for geometry mesh)
-    protected byte[] indices = new byte[] {
+    protected byte[] indices = new byte[]{
             0, 1, 2,
             2, 3, 0
     };
 
     // Construct texture coords
-    protected float[] tcs = new float[] {
+    protected float[] tcs = new float[]{
             0, 1,
             0, 0,
             1, 0,

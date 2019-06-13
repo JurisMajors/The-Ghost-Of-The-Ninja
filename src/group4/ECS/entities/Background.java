@@ -14,13 +14,14 @@ import group4.maths.Vector3f;
  */
 public class Background extends Entity {
     // TODO: This and other tiles can be part of a more general entity, which we haven't thought out yet. -Nico
+
     /**
      * Construct a simple background rectangle (flexible texture and shader) in a certain position of certain size
      *
-     * @param position The position of the block (lower left corner)
+     * @param position  The position of the block (lower left corner)
      * @param dimension The dimensions of the block
-     * @param shader The shader for rendering the block
-     * @param texture texture to use for the block
+     * @param shader    The shader for rendering the block
+     * @param texture   texture to use for the block
      */
     public Background(Vector3f position, Vector3f dimension, Shader shader, Texture texture) {
         // add needed components

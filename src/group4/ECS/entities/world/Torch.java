@@ -11,6 +11,7 @@ import group4.ECS.etc.EntityState;
 import group4.ECS.systems.animation.FrameAnimation;
 import group4.ECS.systems.collision.CollisionHandlers.CoinCollision;
 import group4.graphics.ImageSequence;
+import group4.graphics.RenderLayer;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.maths.Vector3f;
@@ -26,7 +27,7 @@ public class Torch extends Entity {
         this.add(new PositionComponent(position));
 
         // This is a temp new one to illustrate the animation
-        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.DEBUG, defaultDimension, true));
+        this.add(new GraphicsComponent(Shader.SIMPLE, Texture.DEBUG, defaultDimension, RenderLayer.BACKGROUND, true));
         this.add(new AnimationComponent());
         this.setupAnimation();
     }

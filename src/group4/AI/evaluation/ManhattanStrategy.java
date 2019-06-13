@@ -7,6 +7,7 @@ public class ManhattanStrategy extends AbstractEvaluationStrategy {
     public float evaluate(Vector3f pos, Vector3f startPos, Vector3f goalPos) {
         return pos.manhDist(goalPos) / startPos.manhDist(goalPos);
     }
+
     @Override
     public boolean isNatural() {
         return false;

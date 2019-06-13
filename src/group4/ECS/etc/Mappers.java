@@ -91,4 +91,13 @@ public class Mappers {
 
     public static final ComponentMapper<AnimationComponent> animationMapper =
             ComponentMapper.getFor(AnimationComponent.class);
+
+    public static final ComponentMapper<AStarMobComponent> aStarMobMapper =
+            ComponentMapper.getFor(AStarMobComponent.class);
+
+    public static final ComponentMapper<GraphComponent> graphMapper =
+            ComponentMapper.getFor(GraphComponent.class);
+
+    public static final ComponentMapper<PathComponent> pathMapper =
+            ComponentMapper.getFor(PathComponent.class);
 }

@@ -72,6 +72,7 @@ public abstract class RayStateDecoder implements StateDecoderInterface {
 
     /**
      * Determines the direction from which ray casting starts
+     *
      * @param ghost the current ghost
      * @return direction where the first ray will be cast
      */

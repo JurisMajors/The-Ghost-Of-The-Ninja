@@ -9,11 +9,11 @@ import group4.game.Main;
 
 public class GhostDyingSystem extends PlayerDyingSystem {
 
-    public GhostDyingSystem (boolean reset, int priority) {
+    public GhostDyingSystem(boolean reset, int priority) {
         super(Families.ghostFamily, reset, priority);
     }
 
-    public GhostDyingSystem (int priority) {
+    public GhostDyingSystem(int priority) {
         super(Families.ghostFamily, false, priority);
     }
 
@@ -23,12 +23,12 @@ public class GhostDyingSystem extends PlayerDyingSystem {
         int argMax = 0;
         int zerosCount = 0;
         // find freq of best move and how many moves are zero
-        for (int i = 0; i < moveFreq.length ; i++) {
+        for (int i = 0; i < moveFreq.length; i++) {
             if (moveFreq[i] > moveFreq[argMax]) {
                 argMax = i;
             }
             if (moveFreq[i] == 0) {
-                zerosCount ++;
+                zerosCount++;
             }
         }
         // if best move has more than 50 calls, but there are still

@@ -175,6 +175,7 @@ public abstract class Level {
 
         // Load the new module
         this.currentModule.load();
+        this.currentModule.finalizeMobs();
     }
 
 

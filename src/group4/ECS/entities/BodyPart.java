@@ -32,11 +32,12 @@ public class BodyPart extends Entity implements GraphicsHierarchy {
 
     /**
      * Constructs a new body part
-     * @param parent the entity that this body part should be positioned to relatively
+     *
+     * @param parent           the entity that this body part should be positioned to relatively
      * @param relativePosition position of body part relative to bottom left position of the parent
-     * @param dimension dimension of this body part
-     * @param rotation the rotation of the body part
-     * @param texture the texture to apply to the body part
+     * @param dimension        dimension of this body part
+     * @param rotation         the rotation of the body part
+     * @param texture          the texture to apply to the body part
      */
     public BodyPart(GraphicsHierarchy parent, Vector3f relativePosition, Vector3f dimension, float rotation, Texture texture) {
         // Set the parent entity

@@ -1,10 +1,7 @@
 package group4.ECS.etc;
 
 import com.badlogic.ashley.core.Family;
-import group4.ECS.components.AudioComponent;
-import group4.ECS.components.GraphicsComponent;
-import group4.ECS.components.SplineComponent;
-import group4.ECS.components.SplinePathComponent;
+import group4.ECS.components.*;
 import group4.ECS.components.events.EventComponent;
 import group4.ECS.components.identities.*;
 import group4.ECS.components.physics.CollisionComponent;
@@ -133,4 +130,12 @@ public class Families {
     // all entities which react to a event event
     public static final Family timedEventFamily = Family.all(EventComponent.class).get();
 
+    public static final Family graphFamily = Family
+            .all(GraphComponent.class).get();
+
+    public static final Family aStarMobFamily = Family
+            .all(AStarMobComponent.class).get();
+
+    public static final Family pathFamily = Family
+            .all(PathComponent.class).get();
 }

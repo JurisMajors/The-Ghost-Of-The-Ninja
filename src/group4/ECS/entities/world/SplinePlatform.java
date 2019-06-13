@@ -187,6 +187,36 @@ public class SplinePlatform extends Entity {
         return result;
     }
 
+    public float highestPoint(float x1, float x2) {
+        PositionComponent pc = this.getComponent(PositionComponent.class);
+        SplineComponent sc = this.getComponent(SplineComponent.class);
+
+        float y = -1.0f;
+        for (int k = 0; k < sc.points.length; k++) {
+            Vector3f point = sc.points[k].sub(sc.normals[k].scale(0.5f * sc.thickness));
+            if (point.x > x1 - pc.position.x && point.x < x2 - pc.position.x && y < point.y) y = point.y;
+            point = sc.points[k].add(sc.normals[k].scale(0.5f * sc.thickness));
+            if (point.x > x1 - pc.position.x && point.x < x2 - pc.position.x && y < point.y) y = point.y;
+        }
+        if (y < 0.0f) return -1.0f;
+        return pc.position.y + y;
+    }
+
+    public float lowestPoint(float x1, float x2) {
+        PositionComponent pc = this.getComponent(PositionComponent.class);
+        SplineComponent sc = this.getComponent(SplineComponent.class);
+
+        float y = -1.0f;
+        for (int k = 0; k < sc.points.length; k++) {
+            Vector3f point = sc.points[k].sub(sc.normals[k].scale(0.5f * sc.thickness));
+            if (point.x > x1 - pc.position.x && point.x < x2 - pc.position.x && (y < 0 || y > point.y)) y = point.y;
+            point = sc.points[k].add(sc.normals[k].scale(0.5f * sc.thickness));
+            if (point.x > x1 - pc.position.x && point.x < x2 - pc.position.x && (y < 0 || y > point.y)) y = point.y;
+        }
+        if (y < 0.0f) return -1.0f;
+        return pc.position.y + y;
+    }
+
     public static String getName() {
         return "SplinePlatform";
     }

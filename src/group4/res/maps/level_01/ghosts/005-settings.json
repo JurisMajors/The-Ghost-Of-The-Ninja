@@ -1,0 +1,9 @@
+{
+  "decoder": {
+    "name": "group4.AI.decoders.CircleVisionStateDecoder",
+    "raylength": 10,
+    "rays": 60,
+    "gap": 10
+  },
+  "evaluator": "group4.AI.evaluation.XCoordStrategy"
+}
