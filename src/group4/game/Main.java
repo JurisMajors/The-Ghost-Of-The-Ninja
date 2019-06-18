@@ -38,6 +38,9 @@ import group4.levelSystem.Level;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
+import java.io.File;
+import java.io.FileWriter;
+
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.openal.ALC10.alcCloseDevice;
@@ -68,6 +71,9 @@ public class Main implements Runnable {
     public static final float SCREEN_WIDTH = 32.0f;
     public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
     public static GameState STATE;
+
+    public static File file;
+    public static FileWriter fileWriter;
 
     /**
      * Creates a new thread on which it wel run() the game.
@@ -118,6 +124,14 @@ public class Main implements Runnable {
      * - ...
      */
     private void init() {
+        try{
+            file = new File("C:/dev/validation.txt");
+        } catch (Exception e) {
+            System.err.println("[ERROR] Could not create file or something. " + e);
+        }
+
+
+
         // Setup an error callback to output errors to System.err.
         GLFWErrorCallback.createPrint(System.err).set();
 

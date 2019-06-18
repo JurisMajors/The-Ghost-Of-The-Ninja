@@ -13,10 +13,13 @@ import group4.ECS.components.stats.ScoreComponent;
 import group4.ECS.entities.totems.StartTotem;
 import group4.ECS.etc.EntityState;
 import group4.ECS.systems.collision.CollisionHandlers.PlayerCollision;
+import group4.game.Main;
 import group4.graphics.Shader;
 import group4.graphics.Texture;
 import group4.levelSystem.Level;
 import group4.maths.Vector3f;
+
+import java.io.FileWriter;
 
 
 public class Player extends Entity {
@@ -106,7 +109,14 @@ public class Player extends Entity {
     public void setState(EntityState s) {
         if (this.state != s) {
             this.state = s;
-//            System.out.println(s); // Uncomment for state change logging
+            try{
+                FileWriter fileWriter = new FileWriter(Main.file, true);
+                fileWriter.write(s.toString() + "\n");
+                fileWriter.close();
+            } catch (Exception e) {
+                System.err.println("no" + e);
+            }
+            System.out.println(s); // Uncomment for state change logging
         }
     }
 
