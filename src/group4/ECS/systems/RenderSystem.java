@@ -43,7 +43,7 @@ import static org.lwjgl.opengl.GL41.*;
  * position as well as a graphics component
  */
 public class RenderSystem extends EntitySystem {
-    private boolean DEBUG = false;
+    private boolean DEBUG = true;
     // array of registered entities in the graphicsFamily
     private ImmutableArray<Entity> entities;
     private Text textGenerator;
@@ -240,11 +240,6 @@ public class RenderSystem extends EntitySystem {
             for (Entity a : entities) { // For all A, for all B...  N^2 loop
                 PositionComponent pca = Mappers.positionMapper.get(a);
                 DimensionComponent dca = Mappers.dimensionMapper.get(a);
-                DebugUtils.drawBox(pca.position, pca.position.add(dca.dimension));
-
-                if (a instanceof HierarchicalPlayer) {
-                    DebugUtils.drawCircle(a.getComponent(PositionComponent.class).position.add(new Vector3f(a.getComponent(DimensionComponent.class).dimension.x / 2, 0.8f, 0.0f)), 0.9f, 50);
-                }
             }
 
             DebugUtils.flush();

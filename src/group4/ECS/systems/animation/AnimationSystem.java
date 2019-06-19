@@ -63,7 +63,7 @@ public class AnimationSystem extends IteratingSystem {
 
             // Move handle.endPos to be relative of the player position
             PositionComponent pc = Mappers.positionMapper.get(handle);
-            DebugUtils.drawCircle(pc.position.add(player.getComponent(PositionComponent.class).position).add(new Vector3f(player.getComponent(DimensionComponent.class).dimension.x / 2, 0.0f, 0.0f)), .05f, 30);
+
             pc.position = pc.position.add(new Vector3f(player.getComponent(DimensionComponent.class).dimension.x / 2, 0.0f, 0.0f));
 
             // Get the length of the body parts involved in the IK system
@@ -78,6 +78,15 @@ public class AnimationSystem extends IteratingSystem {
             handle.upper.rotation = angles[0];
             handle.lower.rotation = angles[1];
 
+
+            // Debug Drawings
+            Vector3f baseDebugPosition = pc.position.add(player.getComponent(PositionComponent.class).position);
+
+            if (!bendForward)
+                baseDebugPosition.addi(player.shoulderOffset);
+
+            DebugUtils.drawLine(baseDebugPosition.sub(new Vector3f(0.1f, 0.1f, 0.0f)), baseDebugPosition.add(new Vector3f(0.1f, 0.1f, 0.0f)));
+            DebugUtils.drawLine(baseDebugPosition.sub(new Vector3f(0.1f, -0.1f, 0.0f)), baseDebugPosition.add(new Vector3f(0.1f, -0.1f, 0.0f)));
         }
     }
 }
