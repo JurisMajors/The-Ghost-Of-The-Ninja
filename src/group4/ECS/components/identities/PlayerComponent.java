@@ -11,6 +11,8 @@ public class PlayerComponent implements Component {
     public Entity[] inventory;
     public Entity activeItem;
 
+    public boolean onSpline = false;
+
     public PlayerComponent() {
         this.inventory = new Entity[8];
         // temp!!!
