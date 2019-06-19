@@ -98,7 +98,7 @@ public class AnimationSystem extends IteratingSystem {
             for (Animation a : ((AnimationSet) ac.getCurrentAnimation()).animations) {
                 if (a instanceof SplineAnimation) {
                     // Dont clutter screen
-                    if (!(a.target instanceof IKEndEffector) || !((IKEndEffector) a.target).label.endsWith("R") || !((IKEndEffector) a.target).label.startsWith("hand")) {
+                    if (!(a.target instanceof IKEndEffector) || !((IKEndEffector) a.target).label.endsWith("R") || !((IKEndEffector) a.target).label.startsWith("foot")) {
                         continue;
                     }
 
