@@ -52,19 +52,10 @@ public class Brain {
                 weightInit(WeightInit.XAVIER).
                 build());
 
-        lb.layer(new DenseLayer.Builder().nIn(layerSizes[0]).
-                nOut(layerSizes[1]).
-                activation(Activation.RELU).
-                weightInit(WeightInit.XAVIER).
-                build());
-        lb.layer(new LSTM.Builder().nIn(layerSizes[1]).nOut(layerSizes[2])
-                .activation(Activation.RELU)
-                .weightInit(WeightInit.XAVIER)
-                .build());
 
         // build the dense layers
-        for (int i = 2; i < layerSizes.length - 2; i++) {
-            lb.layer(new LSTM.Builder().nIn(layerSizes[i]).nOut(layerSizes[i + 1])
+        for (int i = 1; i < layerSizes.length - 2; i++) {
+            lb.layer(new DenseLayer.Builder().nIn(layerSizes[i]).nOut(layerSizes[i + 1])
                     .activation(Activation.RELU)
                     .weightInit(WeightInit.XAVIER)
                     .build());
