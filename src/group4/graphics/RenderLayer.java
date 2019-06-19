@@ -8,5 +8,6 @@ public enum RenderLayer {
     FOREGROUND,
     FX,
     VIGNETTE,
-    NOISE
+    NOISE,
+    LOADING_SCREEN
 }
