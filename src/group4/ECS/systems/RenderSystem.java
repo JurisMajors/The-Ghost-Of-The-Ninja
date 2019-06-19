@@ -261,7 +261,7 @@ public class RenderSystem extends EntitySystem {
         Vector3f dimension = new Vector3f(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT, 0.0f); // Fullscreen
 
         if (this.loadingScreen == null) {
-            this.loadingScreen = new GraphicsComponent(Shader.SIMPLE, Texture.TEST_OVERLAY, dimension, RenderLayer.LOADING_SCREEN, false);
+            this.loadingScreen = new GraphicsComponent(Shader.SIMPLE, Texture.LOADING, dimension, RenderLayer.LOADING_SCREEN, false);
         }
 
         if (this.vignette == null) {
