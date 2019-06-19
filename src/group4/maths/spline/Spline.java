@@ -41,4 +41,11 @@ public abstract class Spline {
      * @return normal vector
      */
     public abstract Vector3f getNormal(float u);
+
+    /**
+     * Gets the points of the spline
+     */
+    public Vector3f[] getPoints() {
+        return this.points;
+    }
 }

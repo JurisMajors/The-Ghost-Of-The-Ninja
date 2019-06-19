@@ -10,7 +10,9 @@ import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.maths.Vector3f;
+import group4.maths.spline.Spline;
 import group4.utils.DebugUtils;
+import sun.security.ssl.Debug;
 
 public class AnimationSystem extends IteratingSystem {
     float deltaTime;
@@ -79,14 +81,44 @@ public class AnimationSystem extends IteratingSystem {
             handle.lower.rotation = angles[1];
 
 
-            // Debug Drawings
+            // Debug Drawings Of position
             Vector3f baseDebugPosition = pc.position.add(player.getComponent(PositionComponent.class).position);
 
             if (!bendForward)
                 baseDebugPosition.addi(player.shoulderOffset);
 
-            DebugUtils.drawLine(baseDebugPosition.sub(new Vector3f(0.1f, 0.1f, 0.0f)), baseDebugPosition.add(new Vector3f(0.1f, 0.1f, 0.0f)));
-            DebugUtils.drawLine(baseDebugPosition.sub(new Vector3f(0.1f, -0.1f, 0.0f)), baseDebugPosition.add(new Vector3f(0.1f, -0.1f, 0.0f)));
+            if (left || !bendForward) continue; // Don't  clutter screen
+
+            DebugUtils.drawLine(baseDebugPosition.sub(new Vector3f(0.2f, 0.2f, 0.0f)), baseDebugPosition.add(new Vector3f(0.2f, 0.2f, 0.0f)));
+            DebugUtils.drawLine(baseDebugPosition.sub(new Vector3f(0.2f, -0.2f, 0.0f)), baseDebugPosition.add(new Vector3f(0.2f, -0.2f, 0.0f)));
         }
+
+        // Draw the spline for debug
+        if (ac.getCurrentAnimation() instanceof AnimationSet) {
+            for (Animation a : ((AnimationSet) ac.getCurrentAnimation()).animations) {
+                if (a instanceof SplineAnimation) {
+                    // Dont clutter screen
+                    if (!(a.target instanceof IKEndEffector) || !((IKEndEffector) a.target).label.endsWith("R") || !((IKEndEffector) a.target).label.startsWith("hand")) {
+                        continue;
+                    }
+
+                    SplineAnimation currentAnim = (SplineAnimation) a;
+                    for (Spline s : currentAnim.getSpline().getSplines()) {
+                        // Translate to right position
+                        Vector3f[] sp = s.getPoints().clone();
+                        for (int i = 0; i < sp.length; i++) {
+                            sp[i] = sp[i].add(new Vector3f(player.getComponent(DimensionComponent.class).dimension.x / 2, 0.0f, 0.0f)).add(player.getComponent(PositionComponent.class).position);
+
+                            if (((IKEndEffector) a.target).label.startsWith("hand")) {
+                                sp[i] = sp[i].add(player.shoulderOffset);
+                            }
+                        }
+
+                        DebugUtils.drawSpline(sp);
+                    }
+                }
+            }
+        }
+
     }
 }

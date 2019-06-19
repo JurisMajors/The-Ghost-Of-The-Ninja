@@ -116,4 +116,11 @@ public class MultiSpline {
         return scaled;
     }
 
+    /**
+     * Return the splines that make up this multispline
+     */
+    public Spline[] getSplines() {
+        return this.splines;
+    }
+
 }
