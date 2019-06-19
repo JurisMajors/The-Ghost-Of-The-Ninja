@@ -28,6 +28,7 @@ public class Texture {
     public static Texture SPLINE;
     public static Texture TOTEM;
     public static Texture TOTEM_HELP;
+    public static Texture LOADING;
 
     // Storing all player related textures
     public static Texture PLAYER_TORSO;
@@ -110,6 +111,7 @@ public class Texture {
         NOTHINGNESS = new Texture("src/group4/res/textures/FF4D00-0.png");
         SPLINE = new Texture("src/group4/res/textures/spline1.png");
         TOTEM = new Texture("src/group4/res/textures/totem.png");
+        LOADING = new Texture("src/group4/res/textures/loading.png");
 
         PLAYER_TORSO = new Texture("src/group4/res/textures/player/ninja3withlayers_0008_body.png");
         PLAYER_HEAD = new Texture("src/group4/res/textures/player/ninja3withlayers_0009_head.png");

@@ -1,12 +1,16 @@
 package group4.levelSystem;
 
+import group4.ECS.components.GraphComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.world.Exit;
 import group4.ECS.etc.TheEngine;
+import group4.ECS.systems.CameraSystem;
+import group4.ECS.systems.RenderSystem;
 import group4.game.GameState;
 import group4.game.Main;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -173,9 +177,16 @@ public abstract class Level {
         // Update the player's position to the initial position in the new module
         this.player.getComponent(PositionComponent.class).position = this.currentModule.getPlayerInitialPosition();
 
+        Main.loading = true;
+
+        TheEngine.getInstance().getSystem(CameraSystem.class).update(0f);
+        TheEngine.getInstance().getSystem(RenderSystem.class).update(0f);
+
         // Load the new module
         this.currentModule.load();
         this.currentModule.finalizeMobs();
+
+        Main.loading = false;
     }
 
 

@@ -69,6 +69,8 @@ public class Main implements Runnable {
     public static final float SCREEN_HEIGHT = SCREEN_WIDTH * 9.0f / 16.0f;
     public static GameState STATE;
 
+    public static boolean loading = false;
+
     /**
      * Creates a new thread on which it wel run() the game.
      */
@@ -232,7 +234,6 @@ public class Main implements Runnable {
                 this.engine.update((float) delta); // Update the gamestate
             }
 
-            glfwSwapBuffers(this.window); // swap the color buffers
 
             // Poll for window events. The key callback above will only be
             // invoked during this call.

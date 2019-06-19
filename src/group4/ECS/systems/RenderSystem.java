@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.utils.ImmutableArray;
+import group4.ECS.components.GraphComponent;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.identities.CameraComponent;
 import group4.ECS.components.physics.DimensionComponent;
@@ -36,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.opengl.GL41.*;
 
 /**
@@ -49,6 +51,7 @@ public class RenderSystem extends EntitySystem {
     private Text textGenerator;
     private GraphicsComponent vignette = null;
     private GraphicsComponent noise = null;
+    private GraphicsComponent loadingScreen = null;
 
     public RenderSystem() {
         this.textGenerator = new Text("src/group4/res/fonts/PressStart2P.ttf");
@@ -89,7 +92,7 @@ public class RenderSystem extends EntitySystem {
         glClearColor(
                 21 / 255.0f,
                 21 / 255.0f,
-                29   / 255.0f,
+                29 / 255.0f,
                 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
@@ -205,12 +208,14 @@ public class RenderSystem extends EntitySystem {
             }
         }
 
-        // Draw all the health bars in the currently active module for all entities which have a HealthComponent.
-        // Dead entities are automatically removed from the engine, and hence also their healthbars.
-        this.drawHealthBars();
+        if (!Main.loading) {
+            // Draw all the health bars in the currently active module for all entities which have a HealthComponent.
+            // Dead entities are automatically removed from the engine, and hence also their healthbars.
+            this.drawHealthBars();
 
-        if (sc != null) {
-            this.drawScore(sc.getScore(), cc.viewMatrix.getTranslation().sub(new Vector3f(Main.SCREEN_WIDTH / 4, Main.SCREEN_HEIGHT / 4, 0.0f)));
+            if (sc != null) {
+                this.drawScore(sc.getScore(), cc.viewMatrix.getTranslation().sub(new Vector3f(Main.SCREEN_WIDTH / 4, Main.SCREEN_HEIGHT / 4, 0.0f)));
+            }
         }
 
         this.drawOverlays((Camera) camera);
@@ -249,10 +254,15 @@ public class RenderSystem extends EntitySystem {
 
             DebugUtils.flush();
         }
+        glfwSwapBuffers(Main.window); // swap the color buffers
     }
 
     private void drawOverlays(Camera camera) {
         Vector3f dimension = new Vector3f(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT, 0.0f); // Fullscreen
+
+        if (this.loadingScreen == null) {
+            this.loadingScreen = new GraphicsComponent(Shader.SIMPLE, Texture.TEST_OVERLAY, dimension, RenderLayer.LOADING_SCREEN, false);
+        }
 
         if (this.vignette == null) {
             this.vignette = new GraphicsComponent(Shader.SIMPLE, Texture.VIGNETTE_OVERLAY, dimension, RenderLayer.VIGNETTE, false);
@@ -263,8 +273,12 @@ public class RenderSystem extends EntitySystem {
         }
 
         Vector3f position = camera.getComponent(PositionComponent.class).position.sub(dimension.scale(0.5f));
-        this.vignette.render(position);
-        this.noise.render(position);
+        if (Main.loading) {
+            this.loadingScreen.render(position);
+        } else {
+            this.vignette.render(position);
+            this.noise.render(position);
+        }
     }
 
     /**
