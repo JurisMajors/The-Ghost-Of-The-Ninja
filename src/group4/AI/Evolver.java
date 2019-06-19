@@ -80,7 +80,7 @@ public class Evolver {
     /**
      * Path for loading the module to train on
      **/
-    public static String modulePath = "./src/group4/res/maps/level_01/modules/1.json";
+    public static String modulePath = "./src/group4/res/maps/level_01/modules/01.json";
     /**
      * How often (in generations) to save a model
      **/

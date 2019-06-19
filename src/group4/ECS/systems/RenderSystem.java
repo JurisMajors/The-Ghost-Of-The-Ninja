@@ -238,10 +238,6 @@ public class RenderSystem extends EntitySystem {
             // Temporary example for drawing lines or boxes.
             // NOTE: Uncomment to see the effect
             for (Entity a : entities) { // For all A, for all B...  N^2 loop
-                PositionComponent pca = Mappers.positionMapper.get(a);
-                DimensionComponent dca = Mappers.dimensionMapper.get(a);
-                DebugUtils.drawBox(pca.position, pca.position.add(dca.dimension));
-
                 if (a instanceof HierarchicalPlayer) {
                     DebugUtils.drawCircle(a.getComponent(PositionComponent.class).position.add(new Vector3f(a.getComponent(DimensionComponent.class).dimension.x / 2, 0.8f, 0.0f)), 0.9f, 50);
                 }
