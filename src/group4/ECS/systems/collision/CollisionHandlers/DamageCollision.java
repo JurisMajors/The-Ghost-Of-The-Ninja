@@ -102,7 +102,6 @@ public class DamageCollision extends AbstractCollisionHandler<Entity> {
             // if incoming velocity too low, set outgoing vector to minimum knockback
             float knock_factor = knockback_vel / mc.velocity.length();
 
-            System.out.println(mc.velocity);
             Vector3f n = ((Spikes) entity).normal;
             if (mc.velocity.x != 0.0f) {
                 // compute reflection vector
@@ -132,14 +131,12 @@ public class DamageCollision extends AbstractCollisionHandler<Entity> {
             knockback.invoke();
         }
 
-        if (entity instanceof DamageArea) {
+        if (entity instanceof DamageArea && Mappers.damageMapper.get(entity).damage != 0) {
             DamageComponent wc = Mappers.damageMapper.get(entity);
 
             if (wc.origin instanceof Player) {
-                MeleeWeaponComponent mwc = Mappers.meleeWeaponMapper.get(other);
                 MovementComponent mc_player = Mappers.movementMapper.get(wc.origin);
 
-                // TODO: meleeweapon should define how much kickback
                 Vector3f knockback_vec = new Vector3f(0.2f, 0.1f, 0.0f);
                 if (mc_player.orientation == LEFT) {
                     knockback_vec.x *= -1;
@@ -156,6 +153,7 @@ public class DamageCollision extends AbstractCollisionHandler<Entity> {
 
                 // trigger event
                 knockback.invoke();
+
             }
         }
     }

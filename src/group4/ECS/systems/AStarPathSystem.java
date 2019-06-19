@@ -1,17 +1,20 @@
 package group4.ECS.systems;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.systems.IteratingSystem;
 import group4.ECS.components.GraphComponent;
 import group4.ECS.components.PathComponent;
 import group4.ECS.components.identities.MobComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
+import group4.ECS.components.stats.MeleeWeaponComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.entities.items.weapons.MobMeleeAttack;
+import group4.ECS.entities.items.weapons.MobRangedAttack;
+import group4.ECS.entities.mobs.Mob;
+import group4.ECS.etc.EntityConst;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
-import group4.ECS.systems.collision.CollisionHandlers.MobCollision;
 import group4.ECS.systems.movement.MovementHandlers.AbstractMovementHandler;
 import group4.maths.Vector3f;
 
@@ -50,7 +53,14 @@ public class AStarPathSystem extends AbstractMovementHandler {
                 canSee = canSeePlayer(mobPos, mobDim, mobC.currentVisionRange);
             }
 
-            if (canSee) {
+            if (!canSee) {
+                return;
+            }
+            // TODO: change when new attack range thing
+            boolean shouldAttack = canSee && ppc.position.euclidDist(mobPos.position) <= mobC.attackRange; // whether the mob should attack
+
+            if (!shouldAttack) {
+                mobC.state = EntityConst.MobState.DEFAULT;
                 int playerVertexID = 0;
                 for (int i = 0; i < gc.vertexCoords.size(); i++) {
                     if (Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(i).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(i).y, 2)) < Math.sqrt(Math.pow(ppc.position.x - gc.vertexCoords.get(playerVertexID).x, 2) + Math.pow(ppc.position.y - gc.vertexCoords.get(playerVertexID).y, 2))) {
@@ -61,6 +71,11 @@ public class AStarPathSystem extends AbstractMovementHandler {
                     computePath(entity, pathc.vertex, playerVertexID);
                 }
             } else {
+                if (mobC.weapon instanceof MobMeleeAttack) {
+                    mobC.state = EntityConst.MobState.MELEE;
+                } else if (mobC.weapon instanceof MobRangedAttack) {
+                    mobC.state = EntityConst.MobState.RANGED;
+                }
                 pathc.vertexID.clear();
                 pathc.coordinates.clear();
             }
@@ -152,4 +167,16 @@ public class AStarPathSystem extends AbstractMovementHandler {
             }
         }
     }
+
+    public boolean inRange(Mob entity, Vector3f p){
+        PositionComponent pc = Mappers.positionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
+        DimensionComponent dc = Mappers.dimensionMapper.get(TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0));
+        float x=entity.wpn.getComponent(MeleeWeaponComponent.class).hitBox.x+entity.wpn.getComponent(MeleeWeaponComponent.class).hitboxOffset.x;
+        float y=entity.wpn.getComponent(MeleeWeaponComponent.class).hitBox.y+entity.wpn.getComponent(MeleeWeaponComponent.class).hitboxOffset.y;
+        if((p.x>pc.position.x&&p.x<pc.position.x+dc.dimension.x+x)||(p.x<pc.position.x&&p.x>pc.position.x-x)
+                &&(p.y>pc.position.y&&p.y<pc.position.y+dc.dimension.y+y)||(p.y<pc.position.y&&p.y>pc.position.y-y)) return true;
+        return false;
+    }
+
+
 }

@@ -36,4 +36,10 @@ public class EntityConst {
         KNOCKED         // knocked back, so not be able to move
     }
 
+    public enum MobState {
+        MELEE,
+        RANGED,
+        DEFAULT
+    }
+
 }

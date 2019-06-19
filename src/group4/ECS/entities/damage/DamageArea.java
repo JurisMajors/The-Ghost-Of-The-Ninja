@@ -9,6 +9,7 @@ import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.DamageComponent;
 import group4.ECS.etc.EntityState;
+import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.animation.FrameAnimation;
 import group4.ECS.systems.collision.CollisionHandlers.DamageCollision;
@@ -75,6 +76,10 @@ public class DamageArea extends Entity {
 
          event = new Event(this, duration,
                  (entity, dur, passed) -> {
+             if (passed == 0) {
+                 Mappers.damageMapper.get(entity).damage = 0;
+             }
+
              if (passed == dur) {
                  TheEngine.getInstance().removeEntity(entity);
              }

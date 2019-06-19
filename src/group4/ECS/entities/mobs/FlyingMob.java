@@ -3,7 +3,6 @@ package group4.ECS.entities.mobs;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.SplinePathComponent;
 import group4.ECS.components.identities.AnimationComponent;
-import group4.ECS.components.identities.FlyingMobComponent;
 import group4.ECS.components.identities.MobComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
@@ -11,6 +10,7 @@ import group4.ECS.components.physics.GravityComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.MovementComponent;
+import group4.ECS.entities.items.weapons.MobRangedAttack;
 import group4.ECS.entities.world.SplinePlatform;
 import group4.ECS.etc.EntityState;
 import group4.ECS.etc.Mappers;
@@ -26,6 +26,7 @@ import group4.maths.Vector3f;
 import group4.maths.spline.MultiSpline;
 
 public class FlyingMob extends Mob {
+
     protected Vector3f dimension = new Vector3f(1.0f, 1.0f, 0.0f); //dimension of the mob, aka bounding box
 
     /**
@@ -42,10 +43,16 @@ public class FlyingMob extends Mob {
         this.add(new GravityComponent());
         this.add(new CollisionComponent(MobCollision.getInstance()));
         this.add(new HealthComponent(30));
+
         // limit the velocity of the flying mob to prevent shaking of the texture
         MovementComponent mc = Mappers.movementMapper.get(this);
         mc.velocityRange = new Vector3f(0.03f, 0.03f, 0);
-        this.add(new MobComponent(handler));
+        float attackRange = 5.0f;
+
+        // TODO; more sensible wpn for a bat plz
+        this.wpn = new MobRangedAttack(5, 2.0f,
+                new Vector3f(1f, 1f, 0), new Vector3f(1f, 0.5f, 0f), Texture.PROJECTILE, 0.8f);
+        this.add(new MobComponent(handler, attackRange, wpn));
     }
 
     public FlyingMob(Vector3f position, Level l) {

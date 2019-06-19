@@ -127,8 +127,7 @@ public class RenderSystem extends EntitySystem {
                         DimensionComponent dc = Mappers.dimensionMapper.get(entity);
                         Vector3f currentTranslation = cc.viewMatrix.getTranslation();
                         gc.shader.setUniformMat4f("vw_matrix",
-                                Matrix4f.translate(
-                                        currentTranslation.sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
+                                Matrix4f.translate(currentTranslation.add(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
                         );
                     }
 

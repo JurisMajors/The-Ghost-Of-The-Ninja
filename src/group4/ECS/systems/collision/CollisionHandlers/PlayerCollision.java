@@ -9,21 +9,19 @@ import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.components.stats.HealthComponent;
 import group4.ECS.components.stats.ScoreComponent;
 import group4.ECS.entities.Ghost;
+import group4.ECS.entities.bullets.Projectile;
 import group4.ECS.entities.damage.DamageArea;
 import group4.ECS.entities.Player;
-import group4.ECS.entities.bullets.Bullet;
 import group4.ECS.entities.items.consumables.Coin;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.StartTotem;
 import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.totems.TotemHelp;
 import group4.ECS.entities.world.Exit;
-import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.collision.CollisionData;
 import group4.audio.Sound;
-import group4.game.Main;
 import group4.maths.Vector3f;
 
 import java.util.ArrayList;
@@ -52,8 +50,8 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
             // example
             if (other instanceof Mob) {
                 handleMob(player, (Mob) other);
-            } else if (other instanceof Bullet) {
-//                handleBullet(player, (Bullet) other);
+            } else if (other instanceof Projectile) {
+//                handleBullet(player, (Projectile) other);
                 // after player bullet interaction we dont want to fix their positions (because the bullet might die)
                 removables.add(cd);
             } else if (other instanceof Exit) {
@@ -138,7 +136,7 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
         // this is a placeholder to show how the system would work
     }
 
-//    private static void handleBullet(Player player, Bullet bullet) {
+//    private static void handleBullet(Player player, Projectile bullet) {
 //        HealthComponent h = player.getComponent(HealthComponent.class);
 //        DamageComponent dmg = bullet.getComponent(DamageComponent.class);
 //

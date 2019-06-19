@@ -10,7 +10,8 @@ import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.Player;
-import group4.ECS.entities.bullets.Bullet;
+import group4.ECS.entities.bullets.Projectile;
+import group4.ECS.entities.damage.DamageArea;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.world.Block;
@@ -55,7 +56,7 @@ public class CollisionSystem extends IteratingSystem {
         // all relevant entities
         ImmutableArray<Entity> entities;
 
-        if (e instanceof Bullet) {
+        if (e instanceof Projectile) {
             entities = TheEngine.getInstance().getEntitiesFor(Families.allCollidableFamily);
         } else {
             entities = TheEngine.getInstance().getEntitiesFor(Families.collidableFamily);
@@ -68,8 +69,8 @@ public class CollisionSystem extends IteratingSystem {
             if (e.equals(other)) continue;
 
             // dont register collisions bullets of bullets
-            if (other instanceof Bullet && e instanceof Bullet) continue;
-            if (e instanceof Bullet && (other instanceof Ghost || other instanceof Mob)) continue;
+            if (other instanceof Projectile && e instanceof Projectile) continue;
+            if (e instanceof Projectile && (other instanceof Ghost || other instanceof Mob)) continue;
             if (other instanceof Player && e instanceof Player) continue;
             if (other instanceof Totem && !(e instanceof Player)) continue;
 
