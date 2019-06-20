@@ -154,7 +154,7 @@ public class RenderSystem extends EntitySystem {
                     mc = Mappers.movementMapper.get(entity);
                     gc = Mappers.graphicsMapper.get(entity);
                     if (entity instanceof Ghost) {
-                        // do nothing
+                        // Do nothing
                     } else {
                         // Extract the score component, we've encountered the player! For later use...
                         sc = Mappers.scoreMapper.get(entity);
@@ -164,15 +164,26 @@ public class RenderSystem extends EntitySystem {
                         gc.shader.bind();
                         // Set the mirrored projection matrix
                         gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrixHorizontalFlip);
-                        // Since player aligns with center screen with its bottom left corner, we need to temporarily
-                        // also offset the view matrix.
-                        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
-                        Vector3f currentTranslation = cc.viewMatrix.getTranslation();
-                        gc.shader.setUniformMat4f("vw_matrix",
-                                Matrix4f.translate(
-                                        currentTranslation.sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
-                        );
+                        if (!(entity instanceof Ghost)) {
+                            // Since player aligns with center screen with its bottom left corner, we need to temporarily
+                            // also offset the view matrix.
+                            DimensionComponent dc = Mappers.dimensionMapper.get(entity);
+                            Vector3f currentTranslation = cc.viewMatrix.getTranslation();
+                            gc.shader.setUniformMat4f("vw_matrix",
+                                    Matrix4f.translate(
+                                            currentTranslation.sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
+                            );
+                        } else if (entity instanceof Ghost) {
+                            Entity p = TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0);
+                            DimensionComponent dc = Mappers.dimensionMapper.get(entity);
+                            Vector3f currentTranslation = cc.viewMatrix.getTranslation();
+                            gc.shader.setUniformMat4f("vw_matrix",
+                                    Matrix4f.translate(
+                                            currentTranslation.sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
+                            );
+                        }
                     }
+
                     // Loop over the entities hierarchy and draw it correctly
                     for (BodyPart bp : ((HierarchicalPlayer) entity).hierarchy) {
                         gc = bp.getComponent(GraphicsComponent.class);
