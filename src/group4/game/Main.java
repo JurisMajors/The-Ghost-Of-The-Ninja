@@ -35,6 +35,7 @@ import group4.input.KeyBoard;
 import group4.input.MouseClicks;
 import group4.input.MouseMovement;
 import group4.levelSystem.Level;
+import org.apache.commons.cli.*;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
@@ -49,11 +50,11 @@ public class Main implements Runnable {
     /**
      * enable this if you want to run the genetic algorithm, instead of playing urself
      **/
-    public static final boolean AI = false;
+    public static boolean AI = false;
     /**
      * whether should do calls to OPENGL
      **/
-    public static final boolean SHOULD_OPENGL = !Main.AI || Evolver.render;
+    public static boolean SHOULD_OPENGL = !Main.AI || Evolver.render;
 
     private Window win;
     public static long window; // The id of the window
@@ -259,9 +260,66 @@ public class Main implements Runnable {
         STATE = state;
     }
 
+    public static OptionGroup addOptions() {
+        OptionGroup mainOpt = new OptionGroup();
+        Option shouldAI = new Option("genalgo", false, "Activate this flag if you want " +
+                "to train a ghost according to genetic algorithm");
+        shouldAI.setRequired(false);
+        mainOpt.addOption(shouldAI);
+        return mainOpt;
+    }
+
     public static void main(String[] args) {
-        if (Main.AI && args.length != 0) {
-            Evolver.parseArgs(args);
+        OptionGroup aiOptions = Evolver.addOptions();
+        OptionGroup mainOptions = Main.addOptions();
+        Options allOptions = new Options();
+        Options allAIOptions = new Options();
+
+        Option help = new Option("h", "help", false, "See helper utilities");
+        Option AIhelp = new Option("aihelp", false, "See description of genetic algorithm arguments");
+        Options helpers = new Options();
+
+        helpers.addOption(help);
+        helpers.addOption(AIhelp);
+        helpers.addOptionGroup(mainOptions);
+
+        allOptions.addOption(help);
+        allOptions.addOption(AIhelp);
+
+        allOptions.addOptionGroup(aiOptions);
+        allAIOptions.addOptionGroup(aiOptions);
+        allAIOptions.addOption(AIhelp);
+
+        allOptions.addOptionGroup(mainOptions);
+
+        CommandLineParser parser = new DefaultParser();
+        HelpFormatter formatter = new HelpFormatter();
+        CommandLine cmd = null;
+
+        try {
+            cmd = parser.parse(allOptions, args);
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            formatter.printHelp("Help utilities", helpers);
+            System.exit(1);
+        }
+        if (cmd.hasOption("help")) {
+            formatter.printHelp("Help utilities", helpers);
+            System.exit(1);
+        } else if (cmd.hasOption("aihelp")) {
+            formatter.printHelp("Genetic algorithm hyperparameters", allAIOptions);
+            System.exit(1);
+        }
+        if (cmd.hasOption("genalgo")) { // if user wants to train AI
+            System.err.println("Training a neural network! (If you want to play the game, remove genalgo flag)");
+            System.err.println("For setting different hyperparameters see -aihelp flag");
+            Main.AI = true;
+            Evolver.parseArgs(cmd); // add the argument stuff
+            Main.SHOULD_OPENGL = !Main.AI || Evolver.render;
+        } else {
+            System.err.println("Playing the game! (If you want to train a network for a module, add the genalgo flag)");
+            Main.AI = false;
+            Main.SHOULD_OPENGL = true;
         }
         new Main().start();
     }
