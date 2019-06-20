@@ -283,6 +283,9 @@ public class RenderSystem extends EntitySystem {
     private void drawScore(int score, Vector3f position) {
         String text = "Score: " + String.format("%05d", score);
         this.textGenerator.drawText(text, -position.x + 3.5f, -position.y + 4.0f);
+        this.textGenerator.drawText("the quick brown fox jumps over the lazy dog?", -position.x - 10.0f, -position.y);
+        this.textGenerator.drawText("THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG!", -position.x - 10.0f, -position.y + 0.5f);
+        this.textGenerator.drawText("0123456789!@#$%^&*()-=_+/\\|{[]},.;:", -position.x - 10.0f, -position.y + 1.0f);
     }
 
     /**
