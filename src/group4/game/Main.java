@@ -277,7 +277,7 @@ public class Main implements Runnable {
         Options allAIOptions = new Options();
 
         Option help = new Option("h", "help", false, "See helper utilities");
-        Option AIhelp = new Option("trainhelp", false, "See description of genetic algorithm arguments");
+        Option AIhelp = new Option("aiargs", false, "See description of genetic algorithm arguments");
         Options helpers = new Options();
 
         helpers.addOption(help);
