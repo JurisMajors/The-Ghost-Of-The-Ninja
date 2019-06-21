@@ -80,7 +80,7 @@ public class Evolver {
     /**
      * Path for loading the module to train on
      **/
-    public static String modulePath = "./src/group4/res/maps/level_01/modules/1.json";
+    public static String modulePath = "./src/group4/res/maps/level_01/modules/10.json";
     /**
      * How often (in generations) to save a model
      **/
@@ -89,8 +89,8 @@ public class Evolver {
     /**
      * Whether to render the training process
      */
-    public static final boolean render = false;
-    public static final boolean multiThreaded = true;
+    public static final boolean render = true;
+    public static final boolean multiThreaded = false;
 
     /**
      * Whether to save the json settings of brains only once during the training

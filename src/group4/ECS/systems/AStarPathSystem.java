@@ -107,7 +107,7 @@ public class AStarPathSystem extends AbstractMovementHandler {
             if (gc.vertexCoords.get(i).y <= gc.vertexCoords.get(dest).y) {
                 value = (int) Math.max(gc.yHValue.ceilingKey(gc.vertexCoords.get(dest).y - gc.vertexCoords.get(i).y), value);
             } else
-                value = (int) Math.max(gc.yHValue.floorKey(gc.vertexCoords.get(i).y - gc.vertexCoords.get(dest).y), value);
+                value = (int) Math.max(gc.yHValue.floorKey(gc.vertexCoords.get(dest).y - gc.vertexCoords.get(i).y), value);
             hValue[i] = value;
         }
 
@@ -128,6 +128,7 @@ public class AStarPathSystem extends AbstractMovementHandler {
 
         boolean exists = false;
         while (fVertex.size() > 0) {
+            if(fVertex.firstKey()==Float.MAX_VALUE) break;
             int vertex = fVertex.get(fVertex.firstKey()).first();
             fVertex.get(fVertex.firstKey()).remove(vertex);
             closed.add(vertex);

@@ -129,8 +129,12 @@ public class RenderSystem extends EntitySystem {
                         // also offset the view matrix.
                         DimensionComponent dc = Mappers.dimensionMapper.get(entity);
                         Vector3f currentTranslation = cc.viewMatrix.getTranslation();
+                        Vector3f offset = (pc.position.sub(currentTranslation.scale(-1.0f)));
+                        offset = new Vector3f(2.0f * offset.x, 0, 0);
+                        offset = currentTranslation.sub(offset).sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f));
+
                         gc.shader.setUniformMat4f("vw_matrix",
-                                Matrix4f.translate(currentTranslation.add(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
+                                Matrix4f.translate(offset)
                         );
                     }
 
@@ -154,7 +158,7 @@ public class RenderSystem extends EntitySystem {
                     mc = Mappers.movementMapper.get(entity);
                     gc = Mappers.graphicsMapper.get(entity);
                     if (entity instanceof Ghost) {
-                        // do nothing
+                        // Do nothing
                     } else {
                         // Extract the score component, we've encountered the player! For later use...
                         sc = Mappers.scoreMapper.get(entity);
@@ -167,12 +171,17 @@ public class RenderSystem extends EntitySystem {
                         // Since player aligns with center screen with its bottom left corner, we need to temporarily
                         // also offset the view matrix.
                         DimensionComponent dc = Mappers.dimensionMapper.get(entity);
+
                         Vector3f currentTranslation = cc.viewMatrix.getTranslation();
+                        Vector3f offset = (pc.position.sub(currentTranslation.scale(-1.0f)));
+                        offset = new Vector3f(2.0f * offset.x, 0, 0);
+                        offset = currentTranslation.sub(offset).sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f));
+
                         gc.shader.setUniformMat4f("vw_matrix",
-                                Matrix4f.translate(
-                                        currentTranslation.sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
+                                Matrix4f.translate(offset)
                         );
                     }
+
                     // Loop over the entities hierarchy and draw it correctly
                     for (BodyPart bp : ((HierarchicalPlayer) entity).hierarchy) {
                         gc = bp.getComponent(GraphicsComponent.class);
@@ -243,10 +252,6 @@ public class RenderSystem extends EntitySystem {
             // Temporary example for drawing lines or boxes.
             // NOTE: Uncomment to see the effect
             for (Entity a : entities) { // For all A, for all B...  N^2 loop
-                PositionComponent pca = Mappers.positionMapper.get(a);
-                DimensionComponent dca = Mappers.dimensionMapper.get(a);
-                DebugUtils.drawBox(pca.position, pca.position.add(dca.dimension));
-
                 if (a instanceof HierarchicalPlayer) {
                     DebugUtils.drawCircle(a.getComponent(PositionComponent.class).position.add(new Vector3f(a.getComponent(DimensionComponent.class).dimension.x / 2, 0.8f, 0.0f)), 0.9f, 50);
                 }
