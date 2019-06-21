@@ -19,8 +19,7 @@ Holding *shift* while walking causes you to move slightly.
 When walking over a totem you will see a popup with the controls available to spawn the ghosts.
 The popup looks as follows
 
-[ghostcontrols]: src/group4/res/textures/ghost_controls.jpeg
-[ghostcontrols]
+![ghostcontrols]: src/group4/res/textures/ghost_controls.jpeg
 
 In short the controls are:
 
