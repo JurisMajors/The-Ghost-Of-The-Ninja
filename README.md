@@ -27,6 +27,12 @@ In short the controls are:
 + *g* - the ghost will lead the way through the level, all you need to do is follow him. This action costs 100 score.
 + *h* - the ghost takes you on its back and moves you through the level to the next totem of the same colour as the current one. this action costs 500 score.
 
+*C* for challanging, costs no score.
+*H* for regular help. He simply shows where to go (100 score)
+*G* for carry help. He carries you with him (500 score)
+
+For testing purposes, we also added `-free` flag so that these helpers cost no score.
+
 ## Starting level
 
 When you spawn in the game you start in a beginner level which has an exit to all the levels in the game. Walk into one of those levels to start playing.
@@ -34,8 +40,13 @@ When you spawn in the game you start in a beginner level which has an exit to al
 ## AI Training
 
 We have added a live training feature to our program. You can see live training of an AI with or without GUI.
-You can also choose to multi thread the training to get smart ghosts even faster.
+To enable this feature, you must use the `-train` flag.
+If you choose the `-nogui` flag, no rendering will happend and it will apply multi-threading.
 
-If you run the jar with `-help`, you will see a menu that tells you which command line parameters are required for AI training
-and how you can change the settings.
+If you use the `-trainhelp` flag, then you can see all possible parameter changes that you can make for training (mutation, population etc.)
 
+## Other
+
+For seeing other options (not including AI params) that you have, use the `-help` flag.
+
+Enjoy !!!!
