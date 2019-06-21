@@ -15,6 +15,7 @@ import org.uncommons.watchmaker.framework.selection.StochasticUniversalSampling;
 import org.uncommons.watchmaker.framework.termination.GenerationCount;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -89,8 +90,10 @@ public class Evolver {
     /**
      * Whether to render the training process
      */
-    public static final boolean render = true;
-    public static final boolean multiThreaded = false;
+    public static boolean render = false;
+    public static boolean multiThreaded = true;
+
+    private static OptionGroup AIoptions = new OptionGroup();
 
     /**
      * Whether to save the json settings of brains only once during the training
@@ -102,22 +105,7 @@ public class Evolver {
         b.toFile(filePath, !saveSettingsOnce);
     }
 
-    public static void parseArgs(String[] args) {
-        Options options = new Options();
-        Evolver.addOptions(options);
-
-        CommandLineParser parser = new DefaultParser();
-        HelpFormatter formatter = new HelpFormatter();
-        CommandLine cmd = null;
-
-        try {
-            cmd = parser.parse(options, args);
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-            formatter.printHelp("utilities", options);
-            System.exit(1);
-        }
-
+    public static void parseArgs(CommandLine cmd) {
         Evolver.setGivenOptions(cmd);
     }
 
@@ -140,12 +128,21 @@ public class Evolver {
 
         engine.setSingleThreaded(!multiThreaded);
 
+        System.err.println("-------------------------------------------");
         EvolutionLogger logger = new EvolutionLogger(path, checkpoint);
+        System.err.println("-------------------------------------------");
+        System.err.println();
+        System.err.println("Starting genetic evolution on module at location " + Evolver.modulePath);
+        System.err.println("Saving logs (and models) at " + Evolver.path);
+        if (Evolver.multiThreaded) {
+            System.err.println("Multi threading is enabled, pay attention to CPU temps!");
+        } else if (Evolver.render) {
+            System.err.println("Rendering the training process! (do nogui flag to disable rendering)");
+        }
+        System.err.println();
 
         // add logger to the engine
         engine.addEvolutionObserver(logger);
-
-        // uncomment to run
         Brain result = engine.evolve(Evolver.populationSize, Evolver.elitism,
                 new GenerationCount(Evolver.genCount),
                 new TargetFitness(Evolver.maxFit, false));
@@ -157,53 +154,58 @@ public class Evolver {
     }
 
 
-    private static void addOptions(Options options) {
-        Option module = new Option("m", "module", true, "Training module json");
+    public static OptionGroup addOptions() {
+        Option module = new Option("m", "module", true, "Training module json, default: " + Evolver.modulePath);
         module.setRequired(false); // can use default path within source code
-        options.addOption(module);
+        AIoptions.addOption(module);
 
-        Option logPath = new Option("l", "log", true, "Path to logs for txt logs and model checkpoints");
+        Option logPath = new Option("l", "log", true, "Path to logs for txt logs and model checkpoints, default: " + Evolver.path);
         logPath.setRequired(false);
-        options.addOption(logPath);
+        AIoptions.addOption(logPath);
 
         Option popSize = new Option("p", "pop", true, "Population size, default: 50");
         popSize.setRequired(false);
-        options.addOption(popSize);
+        AIoptions.addOption(popSize);
 
         Option gen = new Option("g", "generations", true, "Nr of generations, default: 50");
         gen.setRequired(false);
-        options.addOption(gen);
+        AIoptions.addOption(gen);
 
-        Option timelimit = new Option("t", "timelimit", true, "Timelimit for the ghosts, default: 5s");
+        Option timelimit = new Option("t", "timelimit", true, "Timelimit for the ghosts (in seconds), default: 5s");
         timelimit.setRequired(false);
-        options.addOption(timelimit);
+        AIoptions.addOption(timelimit);
 
-        Option mutationProb = new Option("mutation", true, "Mutation probability [0,1], default: 0.1");
+        Option mutationProb = new Option("mutation", true, "Mutation probability in interval [0,1], default: 0.1");
         mutationProb.setRequired(false);
-        options.addOption(mutationProb);
+        AIoptions.addOption(mutationProb);
 
-        Option rays = new Option("rays", true, "Number of rays");
+        Option rays = new Option("rays", true, "Number of rays, default:60");
         rays.setRequired(false);
-        options.addOption(rays);
+        AIoptions.addOption(rays);
 
-        Option layers = new Option("layers", true, "commma seperated network layer sizes");
+        Option layers = new Option("layers", true, "commma seperated network layer sizes (not including input, output). Default value 100,100");
         layers.setRequired(false);
-        options.addOption(layers);
+        AIoptions.addOption(layers);
 
         Option check = new Option("checkpoint", true, "how often, in generations, to save models, default:2");
         check.setRequired(false);
-        options.addOption(check);
+        AIoptions.addOption(check);
 
         Option settings = new Option("s", "settings", false, "activate this flag if " +
-                "you want to save settings on each checkpoint, otherwise they are simply saved once");
+                "you want to save settings of models on each checkpoint, otherwise they are simply saved once");
         check.setRequired(false);
-        options.addOption(settings);
+        AIoptions.addOption(settings);
 
         Option evalStrat = new Option("eval", true, "Choose your evaluation strategy, " +
                 "default:euclid. [euclid, xcoord, ycoord, manh]");
         check.setRequired(false);
-        options.addOption(evalStrat);
+        AIoptions.addOption(evalStrat);
 
+        Option render = new Option("nogui",false, "Use this flag if you want to multi-thread training. Disables visualization");
+        check.setRequired(false);
+        AIoptions.addOption(render);
+
+        return AIoptions;
     }
 
     private static void setGivenOptions(CommandLine cmd) {
@@ -245,6 +247,10 @@ public class Evolver {
         }
         if (cmd.hasOption("eval")) {
             Evolver.evaluationStrat = AbstractEvaluationStrategy.of(cmd.getOptionValue("eval"));
+        }
+        if (!cmd.hasOption("nogui")) {
+            Evolver.render = true;
+            Evolver.multiThreaded = false;
         }
     }
 }
