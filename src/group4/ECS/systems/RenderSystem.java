@@ -164,24 +164,18 @@ public class RenderSystem extends EntitySystem {
                         gc.shader.bind();
                         // Set the mirrored projection matrix
                         gc.shader.setUniformMat4f("pr_matrix", cc.projectionMatrixHorizontalFlip);
-                        if (!(entity instanceof Ghost)) {
-                            // Since player aligns with center screen with its bottom left corner, we need to temporarily
-                            // also offset the view matrix.
-                            DimensionComponent dc = Mappers.dimensionMapper.get(entity);
-                            Vector3f currentTranslation = cc.viewMatrix.getTranslation();
-                            gc.shader.setUniformMat4f("vw_matrix",
-                                    Matrix4f.translate(
-                                            currentTranslation.sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
-                            );
-                        } else if (entity instanceof Ghost) {
-                            Entity p = TheEngine.getInstance().getEntitiesFor(Families.playerFamily).get(0);
-                            DimensionComponent dc = Mappers.dimensionMapper.get(entity);
-                            Vector3f currentTranslation = cc.viewMatrix.getTranslation();
-                            gc.shader.setUniformMat4f("vw_matrix",
-                                    Matrix4f.translate(
-                                            currentTranslation.sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
-                            );
-                        }
+                        // Since player aligns with center screen with its bottom left corner, we need to temporarily
+                        // also offset the view matrix.
+                        DimensionComponent dc = Mappers.dimensionMapper.get(entity);
+
+                        Vector3f currentTranslation = cc.viewMatrix.getTranslation();
+                        Vector3f offset = (pc.position.sub(currentTranslation.scale(-1.0f)));
+                        offset = new Vector3f(2.0f * offset.x, 0, 0);
+                        offset = currentTranslation.sub(offset).sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f));
+
+                        gc.shader.setUniformMat4f("vw_matrix",
+                                Matrix4f.translate(offset)
+                        );
                     }
 
                     // Loop over the entities hierarchy and draw it correctly
