@@ -8,6 +8,7 @@ import group4.ECS.entities.AStarMobs.WalkingAStarMob;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.hazards.Spikes;
 import group4.ECS.entities.items.consumables.Coin;
+import group4.ECS.entities.items.consumables.HealthPotion;
 import group4.ECS.entities.mobs.FlyingMob;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.EndingTotem;
@@ -315,6 +316,8 @@ public class Module {
                 this.addMob(tileGridX, tileGridY, tileId, entityId);
             } else if (entityId.equals(Spikes.getName())) {
                 this.addSpike(tileGridX, tileGridY, tileId);
+            } else if (entityId.equals(HealthPotion.getName())) {
+                this.addPotion(tileGridX, tileGridY, tileId);
             } else {
                 System.err.println("Some tiles not drawing!");
                 continue;
@@ -543,6 +546,12 @@ public class Module {
         this.addEntity(p);
     }
 
+    private void addPotion(int x, int y, int i) {
+        Vector3f tempPosition = new Vector3f(x, y, 0.0f);
+        HealthPotion hp = new HealthPotion(tempPosition);
+        this.addEntity(hp);
+    }
+
     private void addBackgroundElement(int x, int y, int i) {
         Vector3f tempPosition = new Vector3f(x, y, 0.0f);
         Vector3f tempDimension = new Vector3f(1.0f, 1.0f, 0.0f);
@@ -745,6 +754,7 @@ public class Module {
         int walkingmob = 79;
         int flyingmob = 63;
         int coin = 95;
+        int potion = 143;
 
         moduleTileMap = new HashMap<Integer, String>();
         for (int i : platforms) {
@@ -774,5 +784,7 @@ public class Module {
         moduleTileMap.put(torch, Torch.getName());
         moduleTileMap.put(totemStart, StartTotem.getName());
         moduleTileMap.put(totemEnd, EndingTotem.getName());
+
+        moduleTileMap.put(potion, HealthPotion.getName());
     }
 }

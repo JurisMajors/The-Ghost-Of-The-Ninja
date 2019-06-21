@@ -3,6 +3,7 @@ package group4.ECS.systems.collision.CollisionHandlers;
 import com.badlogic.ashley.core.Entity;
 import group4.ECS.components.GraphicsComponent;
 import group4.ECS.components.identities.CoinComponent;
+import group4.ECS.components.identities.ConsumableComponent;
 import group4.ECS.components.physics.CollisionComponent;
 import group4.ECS.components.physics.DimensionComponent;
 import group4.ECS.components.physics.PositionComponent;
@@ -13,11 +14,13 @@ import group4.ECS.entities.bullets.Projectile;
 import group4.ECS.entities.damage.DamageArea;
 import group4.ECS.entities.Player;
 import group4.ECS.entities.items.consumables.Coin;
+import group4.ECS.entities.items.consumables.HealthPotion;
 import group4.ECS.entities.mobs.Mob;
 import group4.ECS.entities.totems.StartTotem;
 import group4.ECS.entities.totems.Totem;
 import group4.ECS.entities.totems.TotemHelp;
 import group4.ECS.entities.world.Exit;
+import group4.ECS.etc.EntityConst;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.collision.CollisionData;
@@ -70,6 +73,9 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
                     playerHandleTotem(player, (Totem) other);
                 }
                 removables.add(cd);
+            } else if (other instanceof HealthPotion) {
+                handlePotion(player, (HealthPotion) other);
+                removables.add(cd);
             }
         }
 
@@ -94,6 +100,30 @@ public class PlayerCollision extends AbstractCollisionHandler<Player> {
         // remove coin from the module and the engine
         TheEngine.getInstance().removeEntity(c);
         player.level.getCurrentModule().removeEntity(c);
+    }
+
+    private void handlePotion(Player player, HealthPotion potion) {
+        HealthComponent hc = Mappers.healthMapper.get(player);
+        ConsumableComponent cc = Mappers.consumableMapper.get(potion);
+
+        if (hc.health == hc.initialHealth) {
+            return;
+        }
+
+        if (cc.effectID == EntityConst.EffectID.SMALL_HEAL) {
+            hc.health += 30;
+        } else if (cc.effectID == EntityConst.EffectID.MEDIUM_HEAL) {
+            hc.health += 60;
+        } else if (cc.effectID == EntityConst.EffectID.LARGE_HEAL) {
+            hc.health += 100;
+        }
+
+        if (hc.health > hc.initialHealth) {
+            hc.health = hc.initialHealth;
+        }
+
+        TheEngine.getInstance().removeEntity(potion);
+        player.level.getCurrentModule().removeEntity(potion);
     }
 
     private void resetTotem(Player player) {

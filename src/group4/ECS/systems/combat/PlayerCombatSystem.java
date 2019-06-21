@@ -12,6 +12,7 @@ import group4.ECS.components.stats.*;
 import group4.ECS.entities.Ghost;
 import group4.ECS.entities.HierarchicalPlayer;
 import group4.ECS.entities.damage.DamageArea;
+import group4.ECS.entities.items.consumables.HealthPotion;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.Mappers;
 import group4.ECS.etc.TheEngine;
@@ -119,12 +120,13 @@ public class PlayerCombatSystem extends IteratingSystem {
         // direction of ray
         Vector3f dir = rayEnd.sub(rayStart);
 
-        // ignore mobs, players, items, ghost, exits and coins
+        // ignore mobs, players, items, ghost, exits, coins and potions
         ArrayList ignoreComponets = new ArrayList();
         ignoreComponets.add(HealthComponent.class);
         ignoreComponets.add(GhostComponent.class);
         ignoreComponets.add(ItemComponent.class);
         ignoreComponets.add(CoinComponent.class);
+        ignoreComponets.add(HealthPotion.class);
 
         // cast ray from (center of player + y-component of hitboxoffset) to (playerpos + hitboxoffset)
         Ray ray = new Ray(rayStart, dir, ignoreComponets, dir.length());
