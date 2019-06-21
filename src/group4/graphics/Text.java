@@ -28,7 +28,7 @@ public class Text {
             font = font.deriveFont(35F);
             this.texture = createAtlas(font);
         } catch (Exception e) {
-            System.err.println("[WARNING] Could not load font!");
+//            System.err.println("[WARNING] Could not load font!");
         }
     }
 

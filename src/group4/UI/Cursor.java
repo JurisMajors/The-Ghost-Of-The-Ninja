@@ -47,7 +47,7 @@ public class Cursor {
             // create custom cursor and store its ID
             cursor = GLFW.glfwCreateCursor(cursorImg, 8, 8);
         } catch (Exception e) {
-            System.err.println("[ERROR] " + e);
+//            System.err.println("[ERROR] " + e);
         }
     }
 

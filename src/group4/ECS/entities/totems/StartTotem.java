@@ -19,7 +19,7 @@ public class StartTotem extends Totem {
         if (dir != null) {
             this.ghostBrain = new Brain(dir + this.name.substring(1));
         } else {
-            System.err.println("[WARNING] not loading ghost for totem " + this.getID());
+//            System.err.println("[WARNING] not loading ghost for totem " + this.getID());
         }
     }
 

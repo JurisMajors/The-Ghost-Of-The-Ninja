@@ -61,7 +61,7 @@ public class Timer {
         if (elapsedTime >= 1.0) {
             // TODO: As we do not have any visual debug utils yet, we print. Change this in the future
             //       to be a visual overlay on the game.
-            System.out.println("Real FPS: " + frameCounter); // Log
+//            System.out.println("Real FPS: " + frameCounter); // Log
 
             elapsedTime = 0;
             frameCounter = 0;

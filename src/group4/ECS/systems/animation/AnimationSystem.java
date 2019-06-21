@@ -49,7 +49,7 @@ public class AnimationSystem extends IteratingSystem {
             } else if (playerState == EntityState.PLAYER_POSTFALL) {
                 player.setState(EntityState.PLAYER_IDLE);
             } else {
-                System.err.println("[WARNING] Unhandled DelayedAnimation(Set) transition.");
+//                System.err.println("[WARNING] Unhandled DelayedAnimation(Set) transition.");
             }
         }
 

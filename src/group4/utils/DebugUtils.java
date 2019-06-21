@@ -131,7 +131,7 @@ public class DebugUtils {
 
     private static void _drawCircle(Vector3f center, float radius, int segments) {
         if (!WARNING_DRAWCIRCLE && segments > 50) {
-            System.err.println("[ drawCircle ] Warning! A high number of segments can negatively impact performance when drawing many circles.");
+//            System.err.println("[ drawCircle ] Warning! A high number of segments can negatively impact performance when drawing many circles.");
             WARNING_DRAWCIRCLE = true; // Set the flag that we have warned the user of this.
         }
         double step = 360.0f / segments;

@@ -41,7 +41,7 @@ public class AnimationComponent implements Component {
             if (animations.containsKey(state)) {
                 currentAnimation = animations.get(state);
             } else {
-                System.err.println("[WARNING] Animation '" + state + "' not found.");
+//                System.err.println("[WARNING] Animation '" + state + "' not found.");
             }
         }
     }
