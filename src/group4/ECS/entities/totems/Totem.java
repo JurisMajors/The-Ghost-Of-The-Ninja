@@ -15,9 +15,9 @@ import group4.maths.Vector3f;
 public abstract class Totem extends Entity {
 
     private Vector3f dimension = new Vector3f(2f, 2f, 0);
-    public static final int HELPCOST = 100;
-    public static final int CARRYCOST = 500;
-    public static final int CHALLANGEREWARD = 500;
+    public static int HELPCOST = 100;
+    public static int CARRYCOST = 500;
+    public static int CHALLANGEREWARD = 500;
 
     protected String name; // name of the totem
 

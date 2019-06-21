@@ -3,6 +3,7 @@ package group4.game;
 import com.badlogic.ashley.core.Engine;
 import group4.AI.Evolver;
 import group4.ECS.entities.Camera;
+import group4.ECS.entities.totems.Totem;
 import group4.ECS.etc.Families;
 import group4.ECS.etc.TheEngine;
 import group4.ECS.systems.AStarPathSystem;
@@ -267,6 +268,12 @@ public class Main implements Runnable {
                 "to train a ghost according to genetic algorithm");
         shouldAI.setRequired(false);
         mainOpt.addOption(shouldAI);
+
+        Option freeTotems = new Option("free", false, "Activate this flag if you want " +
+                "ghost helpers(carrier and direction shower) to cost no score");
+        freeTotems.setRequired(false);
+        mainOpt.addOption(freeTotems);
+
         return mainOpt;
     }
 
@@ -308,17 +315,23 @@ public class Main implements Runnable {
             formatter.printHelp("Help utilities", helpers);
             System.exit(1);
         } else if (cmd.hasOption("trainhelp")) {
-            formatter.printHelp("Genetic algorithm hyperparameters", allAIOptions);
+            formatter.printHelp("See genetic algorithm hyperparameters", allAIOptions);
             System.exit(1);
         }
+
+        if (cmd.hasOption("free")) {
+            Totem.CARRYCOST = 0;
+            Totem.HELPCOST = 0;
+        }
+
         if (cmd.hasOption("train")) { // if user wants to train AI
-            System.err.println("Training a neural network! (If you want to play the game, remove genalgo flag)");
-            System.err.println("For setting different hyperparameters see -aihelp flag");
+            System.err.println("Training a neural network! (If you want to play the game, remove trainhelp flag)");
+            System.err.println("For setting different hyperparameters see -trainhelp flag");
             Main.AI = true;
             Evolver.parseArgs(cmd); // add the argument stuff
             Main.SHOULD_OPENGL = !Main.AI || Evolver.render;
         } else {
-            System.err.println("Playing the game! (If you want to train a network for a module, add the genalgo flag)");
+            System.err.println("Playing the game! (If you want to train a network for a module, add the trainhelp flag)");
             Main.AI = false;
             Main.SHOULD_OPENGL = true;
         }
