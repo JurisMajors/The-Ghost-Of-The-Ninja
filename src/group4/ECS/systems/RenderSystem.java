@@ -129,8 +129,12 @@ public class RenderSystem extends EntitySystem {
                         // also offset the view matrix.
                         DimensionComponent dc = Mappers.dimensionMapper.get(entity);
                         Vector3f currentTranslation = cc.viewMatrix.getTranslation();
+                        Vector3f offset = (pc.position.sub(currentTranslation.scale(-1.0f)));
+                        offset = new Vector3f(2.0f * offset.x, 0, 0);
+                        offset = currentTranslation.sub(offset).sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f));
+
                         gc.shader.setUniformMat4f("vw_matrix",
-                                Matrix4f.translate(currentTranslation.add(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
+                                Matrix4f.translate(offset)
                         );
                     }
 
@@ -154,7 +158,7 @@ public class RenderSystem extends EntitySystem {
                     mc = Mappers.movementMapper.get(entity);
                     gc = Mappers.graphicsMapper.get(entity);
                     if (entity instanceof Ghost) {
-                        // do nothing
+                        // Do nothing
                     } else {
                         // Extract the score component, we've encountered the player! For later use...
                         sc = Mappers.scoreMapper.get(entity);
@@ -167,12 +171,17 @@ public class RenderSystem extends EntitySystem {
                         // Since player aligns with center screen with its bottom left corner, we need to temporarily
                         // also offset the view matrix.
                         DimensionComponent dc = Mappers.dimensionMapper.get(entity);
+
                         Vector3f currentTranslation = cc.viewMatrix.getTranslation();
+                        Vector3f offset = (pc.position.sub(currentTranslation.scale(-1.0f)));
+                        offset = new Vector3f(2.0f * offset.x, 0, 0);
+                        offset = currentTranslation.sub(offset).sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f));
+
                         gc.shader.setUniformMat4f("vw_matrix",
-                                Matrix4f.translate(
-                                        currentTranslation.sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
+                                Matrix4f.translate(offset)
                         );
                     }
+
                     // Loop over the entities hierarchy and draw it correctly
                     for (BodyPart bp : ((HierarchicalPlayer) entity).hierarchy) {
                         gc = bp.getComponent(GraphicsComponent.class);
