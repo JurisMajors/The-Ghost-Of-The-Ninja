@@ -277,7 +277,7 @@ public class Main implements Runnable {
         Options allAIOptions = new Options();
 
         Option help = new Option("h", "help", false, "See helper utilities");
-        Option AIhelp = new Option("aiargs", false, "See description of genetic algorithm arguments");
+        Option AIhelp = new Option("trainhelp", false, "See description of genetic algorithm arguments");
         Options helpers = new Options();
 
         helpers.addOption(help);
@@ -307,11 +307,11 @@ public class Main implements Runnable {
         if (cmd.hasOption("help")) {
             formatter.printHelp("Help utilities", helpers);
             System.exit(1);
-        } else if (cmd.hasOption("aihelp")) {
+        } else if (cmd.hasOption("trainhelp")) {
             formatter.printHelp("Genetic algorithm hyperparameters", allAIOptions);
             System.exit(1);
         }
-        if (cmd.hasOption("genalgo")) { // if user wants to train AI
+        if (cmd.hasOption("train")) { // if user wants to train AI
             System.err.println("Training a neural network! (If you want to play the game, remove genalgo flag)");
             System.err.println("For setting different hyperparameters see -aihelp flag");
             Main.AI = true;
