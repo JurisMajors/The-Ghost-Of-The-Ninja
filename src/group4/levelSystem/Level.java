@@ -180,7 +180,7 @@ public abstract class Level {
 
         Main.loading = true;
 
-        if (Evolver.render) {
+        if (Main.SHOULD_OPENGL) {
             TheEngine.getInstance().getSystem(CameraSystem.class).update(0f);
             TheEngine.getInstance().getSystem(RenderSystem.class).update(0f);
         }
