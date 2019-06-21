@@ -196,7 +196,7 @@ public class Module {
                 parseSplineMobLayer(layer);
             } else {
                 // In case the layer is not MAIN or EXITS
-                System.err.println("Unrecognized layer name: " + layer.getString("name"));
+//                System.err.println("Unrecognized layer name: " + layer.getString("name"));
                 setupExits(layer);
             }
         }
@@ -224,7 +224,7 @@ public class Module {
             } else if (entityId.equals(Coin.getName())) {
                 addCoin(new Vector3f(tileGridX, tileGridY, 0), tileId);
             } else {
-                System.err.println("Some tiles not drawing!");
+//                System.err.println("Some tiles not drawing!");
                 continue;
             }
         }
@@ -253,8 +253,8 @@ public class Module {
             } else if (entityId.equals(ArtTile.getName())) {
                 this.addBackgroundElement(tileGridX, tileGridY, tileId);
             } else {
-                System.out.println(entityId);
-                System.err.println("Some background tiles not drawing!");
+//                System.out.println(entityId);
+//                System.err.println("Some background tiles not drawing!");
                 continue;
             }
         }
@@ -280,7 +280,7 @@ public class Module {
             } else if (entityId.equals(Torch.getName())) {
                 addTorch(new Vector3f(tileGridX, tileGridY, 0), tileId);
             } else {
-                System.err.println("Some tiles not drawing!");
+//                System.err.println("Some tiles not drawing!");
                 continue;
             }
         }
@@ -319,7 +319,7 @@ public class Module {
             } else if (entityId.equals(HealthPotion.getName())) {
                 this.addPotion(tileGridX, tileGridY, tileId);
             } else {
-                System.err.println("Some tiles not drawing!");
+//                System.err.println("Some tiles not drawing!");
                 continue;
             }
         }

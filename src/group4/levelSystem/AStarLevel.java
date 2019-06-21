@@ -85,7 +85,7 @@ public class AStarLevel extends Level {
         ExitAction global = new ExitAction() {
             @Override
             public void exit() {
-                System.out.println("Ghost has reached the exit");
+//                System.out.println("Ghost has reached the exit");
             }
         };
 
