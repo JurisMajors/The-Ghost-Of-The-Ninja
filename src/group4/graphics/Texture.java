@@ -29,6 +29,7 @@ public class Texture {
     public static Texture TOTEM;
     public static Texture TOTEM_HELP;
     public static Texture LOADING;
+    public static Texture POTION;
 
     // Storing all player related textures
     public static Texture PLAYER_TORSO;
@@ -112,6 +113,7 @@ public class Texture {
         SPLINE = new Texture("src/group4/res/textures/spline1.png");
         TOTEM = new Texture("src/group4/res/textures/totem.png");
         LOADING = new Texture("src/group4/res/textures/loading.png");
+        POTION = new Texture("src/group4/res/textures/potion.png");
 
         PLAYER_TORSO = new Texture("src/group4/res/textures/player/ninja3withlayers_0008_body.png");
         PLAYER_HEAD = new Texture("src/group4/res/textures/player/ninja3withlayers_0009_head.png");

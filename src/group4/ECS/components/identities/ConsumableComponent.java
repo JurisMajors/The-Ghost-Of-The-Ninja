@@ -11,4 +11,9 @@ public class ConsumableComponent implements Component {
     // non-defined effect, itemID's stored in etc.EntityConst
     public EntityConst.EffectID effectID = EntityConst.EffectID.UNDEFINED_EFFECT;
 
+    public ConsumableComponent(EntityConst.ItemID itemID, EntityConst.EffectID effectID) {
+        this.itemID = itemID;
+        this.effectID = effectID;
+    }
+
 }
