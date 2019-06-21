@@ -35,5 +35,8 @@ If you choose the `-nogui` flag, no rendering will happend and it will apply mul
 
 If you use the `-trainhelp` flag, then you can see all possible parameter changes that you can make for training (mutation, population etc.)
 
+## Other
+
+For seeing other options (not including AI params) that you have, use the `-help` flag.
 
 Enjoy !!!!
