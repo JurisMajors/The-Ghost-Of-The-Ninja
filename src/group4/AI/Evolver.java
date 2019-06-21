@@ -155,11 +155,11 @@ public class Evolver {
 
 
     public static OptionGroup addOptions() {
-        Option module = new Option("m", "module", true, "Training module json");
+        Option module = new Option("m", "module", true, "Training module json, default: " + Evolver.modulePath);
         module.setRequired(false); // can use default path within source code
         AIoptions.addOption(module);
 
-        Option logPath = new Option("l", "log", true, "Path to logs for txt logs and model checkpoints");
+        Option logPath = new Option("l", "log", true, "Path to logs for txt logs and model checkpoints, default: " + Evolver.path);
         logPath.setRequired(false);
         AIoptions.addOption(logPath);
 
@@ -171,19 +171,19 @@ public class Evolver {
         gen.setRequired(false);
         AIoptions.addOption(gen);
 
-        Option timelimit = new Option("t", "timelimit", true, "Timelimit for the ghosts, default: 5s");
+        Option timelimit = new Option("t", "timelimit", true, "Timelimit for the ghosts (in seconds), default: 5s");
         timelimit.setRequired(false);
         AIoptions.addOption(timelimit);
 
-        Option mutationProb = new Option("mutation", true, "Mutation probability [0,1], default: 0.1");
+        Option mutationProb = new Option("mutation", true, "Mutation probability in interval [0,1], default: 0.1");
         mutationProb.setRequired(false);
         AIoptions.addOption(mutationProb);
 
-        Option rays = new Option("rays", true, "Number of rays");
+        Option rays = new Option("rays", true, "Number of rays, default:60");
         rays.setRequired(false);
         AIoptions.addOption(rays);
 
-        Option layers = new Option("layers", true, "commma seperated network layer sizes");
+        Option layers = new Option("layers", true, "commma seperated network layer sizes (not including input, output). Default value 100,100");
         layers.setRequired(false);
         AIoptions.addOption(layers);
 
@@ -192,7 +192,7 @@ public class Evolver {
         AIoptions.addOption(check);
 
         Option settings = new Option("s", "settings", false, "activate this flag if " +
-                "you want to save settings on each checkpoint, otherwise they are simply saved once");
+                "you want to save settings of models on each checkpoint, otherwise they are simply saved once");
         check.setRequired(false);
         AIoptions.addOption(settings);
 

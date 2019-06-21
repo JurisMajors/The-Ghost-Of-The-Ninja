@@ -262,7 +262,7 @@ public class Main implements Runnable {
 
     public static OptionGroup addOptions() {
         OptionGroup mainOpt = new OptionGroup();
-        Option shouldAI = new Option("genalgo", false, "Activate this flag if you want " +
+        Option shouldAI = new Option("train", false, "Activate this flag if you want " +
                 "to train a ghost according to genetic algorithm");
         shouldAI.setRequired(false);
         mainOpt.addOption(shouldAI);
@@ -276,7 +276,7 @@ public class Main implements Runnable {
         Options allAIOptions = new Options();
 
         Option help = new Option("h", "help", false, "See helper utilities");
-        Option AIhelp = new Option("aihelp", false, "See description of genetic algorithm arguments");
+        Option AIhelp = new Option("trainhelp", false, "See description of genetic algorithm arguments");
         Options helpers = new Options();
 
         helpers.addOption(help);
