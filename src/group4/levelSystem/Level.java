@@ -1,5 +1,6 @@
 package group4.levelSystem;
 
+import group4.AI.Evolver;
 import group4.ECS.components.GraphComponent;
 import group4.ECS.components.physics.PositionComponent;
 import group4.ECS.entities.Player;
@@ -179,8 +180,10 @@ public abstract class Level {
 
         Main.loading = true;
 
-        TheEngine.getInstance().getSystem(CameraSystem.class).update(0f);
-        TheEngine.getInstance().getSystem(RenderSystem.class).update(0f);
+        if (Evolver.render) {
+            TheEngine.getInstance().getSystem(CameraSystem.class).update(0f);
+            TheEngine.getInstance().getSystem(RenderSystem.class).update(0f);
+        }
 
         // Load the new module
         this.currentModule.load();
