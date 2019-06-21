@@ -23,13 +23,10 @@ The popup looks as follows
 [ghostcontrols]
 
 In short the controls are:
-+ *c* - challenge the ghost, you have to race the ghost to the next totem with the same colour as the totem you are currently standing on. If you beat him you win 500 points.
-+ *g* - the ghost will lead the way through the level, all you need to do is follow him. This action costs 100 score.
-+ *h* - the ghost takes you on its back and moves you through the level to the next totem of the same colour as the current one. this action costs 500 score.
 
-*C* for challanging, costs no score.
-*H* for regular help. He simply shows where to go (100 score)
-*G* for carry help. He carries you with him (500 score)
+- *C* for challanging, costs no score.
+- *H* for regular help. He simply shows where to go (100 score)
+- *G* for carry help. He carries you with him (500 score)
 
 For testing purposes, we also added `-free` flag so that these helpers cost no score.
 
