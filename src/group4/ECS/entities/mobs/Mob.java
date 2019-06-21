@@ -5,6 +5,8 @@ import group4.levelSystem.Level;
 
 public class Mob extends Entity {
 
+    public static int SCORE = 50; // score the player gets on killing a mob
+
     public Level level;
     public Entity wpn;
     public float attackRange;
