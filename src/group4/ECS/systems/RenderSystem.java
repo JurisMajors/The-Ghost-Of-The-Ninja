@@ -129,8 +129,12 @@ public class RenderSystem extends EntitySystem {
                         // also offset the view matrix.
                         DimensionComponent dc = Mappers.dimensionMapper.get(entity);
                         Vector3f currentTranslation = cc.viewMatrix.getTranslation();
+                        Vector3f offset = (pc.position.sub(currentTranslation.scale(-1.0f)));
+                        offset = new Vector3f(2.0f * offset.x, 0, 0);
+                        offset = currentTranslation.sub(offset).sub(new Vector3f(dc.dimension.x, 0.0f, 0.0f));
+
                         gc.shader.setUniformMat4f("vw_matrix",
-                                Matrix4f.translate(currentTranslation.add(new Vector3f(dc.dimension.x, 0.0f, 0.0f)))
+                                Matrix4f.translate(offset)
                         );
                     }
 
